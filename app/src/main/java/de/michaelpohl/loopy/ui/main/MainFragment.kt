@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 
-class MainFragment : Fragment() {
+class MainFragment : BaseFragment() {
 
     companion object {
         fun newInstance() = MainFragment()

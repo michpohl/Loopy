@@ -23,4 +23,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    //TODO these are from audioguide, how did that work again
+//    override fun addFragment(fragment: Fragment, targetView: Int, addToBackStack: Boolean, tag: String) {
+//        getFragment(addToBackStack, mFragmentManager) { add(targetView, fragment, tag) }
+//        Timber.v("added Fragment %s to Backstack. Backstack count is: %s", fragment, mFragmentManager.getBackStackEntryCount())
+//    }
+//
+//    override fun replaceFragment(fragment: Fragment, targetView: Int, addToBackStack: Boolean, tag: String) {
+//        getFragment(addToBackStack, mFragmentManager) { replace(targetView, fragment, tag) }
+//        Timber.v("added Fragment %s to Backstack. Backstack count is: %s", fragment, mFragmentManager.getBackStackEntryCount())
+//    }
+//
+//    override fun goBack() {
+//        onBackPressed()
+//    }
+
 }
