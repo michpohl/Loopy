@@ -26,8 +26,6 @@ class MainFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         var myView: View = binding.root
         return myView
-
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
