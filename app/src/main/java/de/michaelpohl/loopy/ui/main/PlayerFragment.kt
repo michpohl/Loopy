@@ -23,7 +23,7 @@ class PlayerFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player, container, false)
         var myView: View = binding.root
         return myView
     }

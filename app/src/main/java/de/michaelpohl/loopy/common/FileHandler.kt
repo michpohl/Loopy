@@ -1,10 +1,8 @@
 package de.michaelpohl.loopy.common
 
-import hugo.weaving.DebugLog
 import timber.log.Timber
 import java.io.File
 
-@DebugLog
 class FileHandler {
 
     fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
@@ -42,7 +40,8 @@ class FileHandler {
 
     fun isValidFileType(fileModel: FileModel): Boolean {
 
-        //filtering for .wav files for now
+        //filtering only for .wav files for now
+        // in the future there should be an enum "allowedExtensions" or so
         if (fileModel.fileType == FileType.FILE) {
             return fileModel.name.endsWith("wav")
         }

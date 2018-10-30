@@ -31,15 +31,15 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
 
         setContentView(R.layout.main_activity)
         //todo return to this
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.container, PlayerFragment.newInstance())
-//                .commitNow()
-//        }
-
         if (savedInstanceState == null) {
-            addFileFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, PlayerFragment.newInstance())
+                .commitNow()
         }
+
+//        if (savedInstanceState == null) {
+//            addFileFragment()
+//        }
 
         Timber.d("Timber works!")
     }
