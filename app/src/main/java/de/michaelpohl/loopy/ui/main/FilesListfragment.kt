@@ -13,6 +13,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
+import timber.log.Timber
 
 @DebugLog
 class FilesListFragment : BaseFragment() {
@@ -22,11 +23,6 @@ class FilesListFragment : BaseFragment() {
     private lateinit var path: String
     private lateinit var mCallback: OnItemClickListener
 
-    interface OnItemClickListener {
-        fun onClick(fileModel: FileModel)
-
-        fun onLongClick(fileModel: FileModel)
-    }
 
     companion object {
 
@@ -91,6 +87,12 @@ class FilesListFragment : BaseFragment() {
         viewModel.getAdapter().onItemLongClickListener = {
             mCallback.onLongClick(it)
         }
+    }
+
+    interface OnItemClickListener {
+        fun onClick(fileModel: FileModel)
+
+        fun onLongClick(fileModel: FileModel)
     }
 
 

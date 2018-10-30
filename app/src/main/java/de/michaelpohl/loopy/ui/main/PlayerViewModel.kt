@@ -3,6 +3,7 @@ package de.michaelpohl.loopy.ui.main
 import android.app.Application
 import android.databinding.ObservableField
 import android.view.View
+import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.model.LoopedPlayer
 import timber.log.Timber
@@ -10,8 +11,11 @@ import timber.log.Timber
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     var looper: LoopedPlayer = LoopedPlayer.create(application, R.raw.loop)
+    lateinit var selectFolderListener: OnSelectFolderClickedListener
+
 
     var testLabel = ObservableField<String>("hohoho")
+
 
     fun onStartClicked(view: View) {
         testLabel.set("hahaha")
@@ -28,5 +32,12 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         if (looper.isPlaying()) looper.pause()
     }
 
+    fun onSelectFolderClicked(view: View) {
+        Timber.d("Clicked on Select Folder")
+        selectFolderListener.onSelectFolderClicked()
+    }
+    interface OnSelectFolderClickedListener {
+        fun onSelectFolderClicked()
+    }
 
 }

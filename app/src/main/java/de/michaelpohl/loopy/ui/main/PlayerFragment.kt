@@ -7,16 +7,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.databinding.FragmentMainBinding
+import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.FileSet
+import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
+import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
+    private lateinit var loopFiles: List<FileModel>
+
     companion object {
-        fun newInstance() = PlayerFragment()
+
+        fun newInstance(loopFiles : List<FileModel>): PlayerFragment {
+            val fragment = PlayerFragment()
+            val args = Bundle()
+            val loops = FileSet(loopFiles)
+            args.putParcelable("loops", loops)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     private lateinit var viewModel: PlayerViewModel
-    private lateinit var binding: FragmentMainBinding
+
+    private lateinit var binding: FragmentPlayerBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (arguments != null) {
+            val loops : FileSet= arguments!!.getParcelable("loops")
+            loopFiles = loops.models}
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +52,20 @@ class PlayerFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
+
         binding.model = viewModel
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        //TODO find a nicer way for this
+        try {
+            viewModel.selectFolderListener = context as PlayerViewModel.OnSelectFolderClickedListener
+        } catch (e: Exception) {
+            throw Exception("${context} should implement FilesListFragment.OnItemCLickListener")
+        }
+        Timber.d("Loop selection: %s", loopFiles)
     }
 
 }

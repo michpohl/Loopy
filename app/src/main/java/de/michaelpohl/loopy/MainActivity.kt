@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy
 
+import android.app.FragmentManager
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
@@ -8,9 +9,12 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.ui.main.FilesListFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
+import de.michaelpohl.loopy.ui.main.PlayerViewModel
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener {
+class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
+    PlayerViewModel.OnSelectFolderClickedListener {
+
 
     //TODO this is a constant one as a starting point. Improve handling this situaltion, please
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -32,9 +36,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
         setContentView(R.layout.main_activity)
         //todo return to this
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, PlayerFragment.newInstance())
-                .commitNow()
+            addPlayerFragment()
         }
 
 //        if (savedInstanceState == null) {
@@ -43,7 +45,6 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
 
         Timber.d("Timber works!")
     }
-
 
     //TODO these are from audioguide, how did that work again
 //    override fun addFragment(fragment: Fragment, targetView: Int, addToBackStack: Boolean, tag: String) {
@@ -69,19 +70,34 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
     }
 
     override fun onLongClick(fileModel: FileModel) {
-        val fileHandler= FileHandler()
+        val fileHandler = FileHandler()
         if (fileModel.fileType == FileType.FOLDER) {
             if (fileHandler.containsAudioFiles(fileModel.path)) {
-                Timber.d("contains wave")
+                addPlayerFragment(fileHandler.getFileModelsFromFiles(fileHandler.getFilesFromPath(fileModel.path)))
             }
         }
+    }
+
+    override fun onSelectFolderClicked() {
+        addFileFragment()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         if (supportFragmentManager.backStackEntryCount == 0) {
-            finish()
+//            finish()
         }
+    }
+
+    private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
+        Timber.d("AddingPlayerFragment with loops: %s", loops)
+        while (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStackImmediate()
+            Timber.d("popping backStack")
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, PlayerFragment.newInstance(loops), "player")
+            .commit()
     }
 
     private fun addFileFragment(path: String = defaultFilesPath) {
@@ -93,5 +109,4 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
     }
-
 }

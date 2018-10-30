@@ -16,6 +16,8 @@ class FilesAdapter : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
     var onItemLongClickListener: ((FileModel) -> Unit)? = null
     var filesList = listOf<FileModel>()
+    var currentFilesList = listOf<FileModel>()
+
 
     private val fileHandler = FileHandler()
 
@@ -44,6 +46,7 @@ class FilesAdapter : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
         }
 
         override fun onLongClick(v: View?): Boolean {
+            currentFilesList = filesList
             onItemLongClickListener?.invoke(filesList[adapterPosition])
             return true
         }
