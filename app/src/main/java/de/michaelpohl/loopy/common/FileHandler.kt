@@ -49,4 +49,12 @@ class FileHandler {
         // Folders stay in the list
         return true
     }
+
+    fun containsAudioFiles(path: String): Boolean {
+        var filesToCheck: List<File> = getFilesFromPath(path)
+        if (getFileModelsFromFiles(filesToCheck).isEmpty()) {
+            return false
+        }
+        return true
+    }
 }

@@ -3,6 +3,7 @@ package de.michaelpohl.loopy
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import de.michaelpohl.loopy.common.FileHandler
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.ui.main.FilesListFragment
@@ -68,7 +69,12 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
     }
 
     override fun onLongClick(fileModel: FileModel) {
-
+        val fileHandler= FileHandler()
+        if (fileModel.fileType == FileType.FOLDER) {
+            if (fileHandler.containsAudioFiles(fileModel.path)) {
+                Timber.d("contains wave")
+            }
+        }
     }
 
     override fun onBackPressed() {
