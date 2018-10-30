@@ -2,6 +2,9 @@ package de.michaelpohl.loopy.model
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
+import android.os.Environment
+import android.support.v4.content.FileProvider
 import hugo.weaving.DebugLog
 import timber.log.Timber
 import java.io.File
@@ -17,8 +20,9 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
     private var mCounter = 1
     private var shouldBePlaying = false
 
-    private var mCurrentPlayer: MediaPlayer
+    private lateinit var mCurrentPlayer: MediaPlayer
     private lateinit var mNextPlayer: MediaPlayer
+    private lateinit var loopUri: Uri
 
     private val onCompletionListener = MediaPlayer.OnCompletionListener { mediaPlayer ->
         mediaPlayer.release()
@@ -33,18 +37,18 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
         mContext = context
         mResId = resId
 
-        mCurrentPlayer = MediaPlayer.create(mContext, mResId)
-        mCurrentPlayer.setOnPreparedListener {
-
-            if (shouldBePlaying) mCurrentPlayer.start()
-        }
-
-        createNextMediaPlayer()
+//        mCurrentPlayer = MediaPlayer.create(mContext, mResId)
+//        mCurrentPlayer.setOnPreparedListener {
+//
+//            if (shouldBePlaying) mCurrentPlayer.start()
+//        }
+//
+//        createNextMediaPlayer()
     }
 
     // repeats the necessary parts of init() so the player starts immediately again when start() is called
     private fun reInit() {
-        mCurrentPlayer = MediaPlayer.create(mContext, mResId)
+        mCurrentPlayer = MediaPlayer.create(mContext, loopUri)
         mCurrentPlayer.setOnPreparedListener {
 
             if (shouldBePlaying) mCurrentPlayer.start()
@@ -54,7 +58,7 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
     }
 
     private fun createNextMediaPlayer() {
-        mNextPlayer = MediaPlayer.create(mContext, mResId)
+        mNextPlayer = MediaPlayer.create(mContext, loopUri)
         mCurrentPlayer.setNextMediaPlayer(mNextPlayer)
         mCurrentPlayer.setOnCompletionListener(onCompletionListener)
     }
@@ -78,8 +82,11 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
         return mCurrentPlayer.isPlaying
     }
 
-    fun setLoop(loop: File) {
-        Timber.d("Did I get it? %s, %s", loop.absolutePath, loop.absoluteFile.name)
+    fun setLoop(context: Context, loop: File) {
+        loopUri = FileProvider.getUriForFile(context,"com.de.michaelpohl.loopy", loop)
+//        loopUri = Uri.parse(Environment.getExternalStorageDirectory().path + loop.absolutePath)
+        Timber.d("This is my path: %s", loopUri.toString())
+        reInit()
     }
 
     companion object {
