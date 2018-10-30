@@ -91,10 +91,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
 
     private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
         Timber.d("AddingPlayerFragment with loops: %s", loops)
-        while (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStackImmediate()
-            Timber.d("popping backStack")
-        }
+        clearBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, PlayerFragment.newInstance(loops), "player")
             .commit()
@@ -108,5 +105,12 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
         fragmentTransaction.replace(R.id.container, filesListFragment)
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
+    }
+
+    private fun clearBackStack() {
+        while (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStackImmediate()
+            Timber.d("popping backStack")
+        }
     }
 }
