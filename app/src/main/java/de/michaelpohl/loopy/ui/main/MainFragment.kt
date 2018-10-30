@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentMainBinding
+import de.michaelpohl.loopy.model.LoopedPlayer
+import kotlinx.android.synthetic.main.fragment_main.view.*
 
 class MainFragment : BaseFragment() {
 
@@ -32,6 +34,7 @@ class MainFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding.model = viewModel
+        viewModel.looper = LoopedPlayer.create(context!!, R.raw.loop)
 
         // TODO: Use the ViewModel
     }
