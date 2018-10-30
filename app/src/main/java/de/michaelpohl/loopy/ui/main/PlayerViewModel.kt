@@ -14,7 +14,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var testLabel = ObservableField<String>("hohoho")
 
     fun onStartClicked(view: View) {
-        Timber.d("Hi!")
         testLabel.set("hahaha")
         looper.start()
     }

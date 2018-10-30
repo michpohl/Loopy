@@ -1,16 +1,11 @@
 package de.michaelpohl.loopy.common
 
-import android.os.Environment
 import hugo.weaving.DebugLog
 import timber.log.Timber
 import java.io.File
 
 @DebugLog
 class FileHandler {
-
-    //TODO this is a constant one as a starting point. Improve handling this situaltion, please
-    private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
-
 
     fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
@@ -23,7 +18,8 @@ class FileHandler {
     }
 
     fun getFileModelsFromFiles(files: List<File>): List<FileModel> {
-        return files.map {
+        var filesToReturn: List<FileModel>
+        val allFiles: List<FileModel> = files.map {
             FileModel(
                 it.path,
                 FileType.getFileType(it),
@@ -34,10 +30,23 @@ class FileHandler {
                     ?: 0
             )
         }
+        filesToReturn = allFiles.filter { isValidFileType(it) }
+
+
+        return filesToReturn
     }
 
     fun convertFileSizeToMB(sizeInBytes: Long): Double {
         return (sizeInBytes.toDouble()) / (1024 * 1024)
     }
 
+    fun isValidFileType(fileModel: FileModel): Boolean {
+
+        //filtering for .wav files for now
+        if (fileModel.fileType == FileType.FILE) {
+            return fileModel.name.endsWith("wav")
+        }
+        // Folders stay in the list
+        return true
+    }
 }

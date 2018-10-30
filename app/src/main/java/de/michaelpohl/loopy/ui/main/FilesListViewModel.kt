@@ -25,7 +25,6 @@ class FilesListViewModel(application: Application) : BaseViewModel(application) 
         } else {
             emptyFolderLayoutVisibility.set(View.INVISIBLE)
         }
-
         adapter.updateData(files)
     }
 }

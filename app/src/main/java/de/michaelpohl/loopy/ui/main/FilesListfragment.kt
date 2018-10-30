@@ -63,12 +63,6 @@ class FilesListFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(FilesListViewModel::class.java)
         binding.model = viewModel
-
-//        val filesPath = viewModel.getFilesPath()
-//        if (filesPath == null) {
-//            Toast.makeText(context, "Path should not be null!", Toast.LENGTH_SHORT).show()
-//            return
-//        }
         initViews()
 
     }
