@@ -16,7 +16,7 @@ class LoopsAdapter : RecyclerView.Adapter<LoopsAdapter.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoopsAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_file, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loop, parent, false)
         return ViewHolder(view)
     }
 
@@ -50,15 +50,6 @@ class LoopsAdapter : RecyclerView.Adapter<LoopsAdapter.ViewHolder>(){
             val fileModel = loopsList[position]
             itemView.nameTextView.text = fileModel.name
 
-            if (fileModel.fileType == FileType.FOLDER) {
-                itemView.folderTextView.visibility = View.VISIBLE
-                itemView.totalSizeTextView.visibility = View.GONE
-                itemView.folderTextView.text = "(${fileModel.subFiles} files)"
-            } else {
-                itemView.folderTextView.visibility = View.GONE
-                itemView.totalSizeTextView.visibility = View.VISIBLE
-                itemView.totalSizeTextView.text = "${String.format("%.2f", fileModel.sizeInMB)} mb"
-            }
         }
     }
 }
