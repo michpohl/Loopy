@@ -7,10 +7,12 @@ import java.io.File
 
 @DebugLog
 class FileHandler {
-    private val filesPath = Environment.getExternalStorageDirectory().toString()
+
+    //TODO this is a constant one as a starting point. Improve handling this situaltion, please
+    private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
 
 
-    fun getFilesFromPath(path: String = filesPath, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+    fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
         Timber.d("path: %s, files:%s", path, file.listFiles())
 

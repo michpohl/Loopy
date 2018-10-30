@@ -11,6 +11,9 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener {
 
+    //TODO this is a constant one as a starting point. Improve handling this situaltion, please
+    private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
         }
 
         setContentView(R.layout.main_activity)
+        //todo return to this
 //        if (savedInstanceState == null) {
 //            supportFragmentManager.beginTransaction()
 //                .replace(R.id.container, PlayerFragment.newInstance())
@@ -33,13 +37,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
 //        }
 
         if (savedInstanceState == null) {
-            val filesListFragment = FilesListFragment.newInstance(path = Environment.getExternalStorageDirectory().absolutePath)
-
-            supportFragmentManager.beginTransaction()
-                .add(R.id.container, filesListFragment)
-                .addToBackStack(Environment.getExternalStorageDirectory().absolutePath)
-                .commit()
-
+            addFileFragment()
         }
 
         Timber.d("Timber works!")
@@ -63,8 +61,9 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
 
     override fun onClick(fileModel: FileModel) {
         Timber.d("onClick")
+        Timber.d("Trying to add fragment with this path: %s", fileModel)
         if (fileModel.fileType == FileType.FOLDER) {
-            addFileFragment(fileModel)
+            addFileFragment(fileModel.path)
         }
     }
 
@@ -79,17 +78,13 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
         }
     }
 
-    private fun addFileFragment(fileModel: FileModel) {
-        Timber.d("adding File Fragment")
-        val filesListFragment = FilesListFragment.newInstance(fileModel.path)
-//        {
-//            Timber.d("path: %s", fileModel.path)
-//            path = fileModel.path
-//        }
+    private fun addFileFragment(path: String = defaultFilesPath) {
+        Timber.d("adding File Fragment: %s", path)
+        val filesListFragment = FilesListFragment.newInstance(path)
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.container, filesListFragment)
-        fragmentTransaction.addToBackStack(fileModel.path)
+        fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
     }
 

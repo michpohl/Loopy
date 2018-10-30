@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.common.FileHandler
 class FilesListViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = FilesAdapter()
     private var fileHandler = FileHandler()
-    private lateinit var path: String
+    lateinit var path: String
 
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE)
 
@@ -19,7 +19,7 @@ class FilesListViewModel(application: Application) : BaseViewModel(application) 
 
     fun updateData() {
 
-        val files = fileHandler.getFileModelsFromFiles(fileHandler.getFilesFromPath())
+        val files = fileHandler.getFileModelsFromFiles(fileHandler.getFilesFromPath(path))
         if (files.isEmpty()) {
             emptyFolderLayoutVisibility.set(View.VISIBLE)
         } else {
