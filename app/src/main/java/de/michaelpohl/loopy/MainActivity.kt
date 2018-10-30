@@ -3,11 +3,13 @@ package de.michaelpohl.loopy
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.ui.main.FilesListFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,5 +62,36 @@ class MainActivity : AppCompatActivity() {
 //    override fun goBack() {
 //        onBackPressed()
 //    }
+
+    override fun onClick(fileModel: FileModel) {
+        Timber.d("onClick")
+        if (fileModel.fileType == FileType.FOLDER) {
+            addFileFragment(fileModel)
+        }
+    }
+
+    override fun onLongClick(fileModel: FileModel) {
+
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            finish()
+        }
+    }
+
+    private fun addFileFragment(fileModel: FileModel) {
+        Timber.d("adding File Fragment")
+        val filesListFragment = FilesListFragment.build {
+            Timber.d("path: %s", path)
+            path = fileModel.path
+        }
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.container, filesListFragment)
+        fragmentTransaction.addToBackStack(fileModel.path)
+        fragmentTransaction.commit()
+    }
 
 }

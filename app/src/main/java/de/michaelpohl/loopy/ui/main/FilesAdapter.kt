@@ -5,16 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileHandler
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import kotlinx.android.synthetic.main.item_recycler_file.view.*
 
-class FilesRecyclerAdapter : RecyclerView.Adapter<FilesRecyclerAdapter.ViewHolder>() {
+class FilesAdapter : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
     var onItemClickListener: ((FileModel) -> Unit)? = null
-    var onItemLongClickListener: ((FileModel) -> Unit)? = null
 
+    var onItemLongClickListener: ((FileModel) -> Unit)? = null
     var filesList = listOf<FileModel>()
+
+    private val fileHandler = FileHandler()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_file, parent, false)

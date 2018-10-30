@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
@@ -19,7 +21,13 @@ class FilesListFragment : BaseFragment() {
     private lateinit var viewModel: FilesListViewModel
     private lateinit var binding: FragmentFilesListBinding
 
+    private lateinit var mCallback: OnItemClickListener
 
+    interface OnItemClickListener {
+        fun onClick(fileModel: FileModel)
+
+        fun onLongClick(fileModel: FileModel)
+    }
 
     companion object {
         private const val ARG_PATH: String = "com.de.michaelpohl.loopy.fileslist.path"
@@ -35,6 +43,16 @@ class FilesListFragment : BaseFragment() {
             args.putString(ARG_PATH, path)
             fragment.arguments = args;
             return fragment
+        }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        try {
+            mCallback = context as OnItemClickListener
+        } catch (e: Exception) {
+            throw Exception("${context} should implement FilesListFragment.OnItemCLickListener")
         }
     }
 
@@ -72,6 +90,14 @@ class FilesListFragment : BaseFragment() {
         filesRecyclerView.layoutManager = LinearLayoutManager(context)
         filesRecyclerView.adapter = viewModel.getAdapter()
         viewModel.updateDate()
+
+        viewModel.getAdapter().onItemClickListener = {
+            mCallback.onClick(it)
+        }
+
+        viewModel.getAdapter().onItemLongClickListener = {
+            mCallback.onLongClick(it)
+        }
     }
 
 
