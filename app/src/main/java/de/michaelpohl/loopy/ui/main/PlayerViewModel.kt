@@ -1,4 +1,5 @@
 package de.michaelpohl.loopy.ui.main
+
 import android.app.Application
 import android.databinding.ObservableField
 import android.view.View
@@ -8,20 +9,24 @@ import timber.log.Timber
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
-    var looper : LoopedPlayer =LoopedPlayer.create(application, R.raw.loop)
+    var looper: LoopedPlayer = LoopedPlayer.create(application, R.raw.loop)
 
-    var testLabel= ObservableField<String>("hohoho")
+    var testLabel = ObservableField<String>("hohoho")
 
-    fun onClick(view: View) {
+    fun onStartClicked(view: View) {
         Timber.d("Hi!")
         testLabel.set("hahaha")
         looper.start()
-
     }
 
-    fun onClick2(view: View) {
+    fun onStopClicked(view: View) {
         testLabel.set("Hohoho")
         looper.stop()
+    }
+
+    fun onPauseClicked(view: View) {
+        testLabel.set("Hihihi")
+        if (looper.isPlaying()) looper.pause()
     }
 
 

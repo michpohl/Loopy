@@ -32,9 +32,6 @@ class PlayerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         binding.model = viewModel
-//        viewModel.looper = LoopedPlayer.create(context!!, R.raw.loop)
-
-        // TODO: Use the ViewModel
     }
 
 }

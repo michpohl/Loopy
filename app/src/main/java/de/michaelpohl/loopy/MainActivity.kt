@@ -1,7 +1,9 @@
 package de.michaelpohl.loopy
 
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import de.michaelpohl.loopy.ui.main.FilesListFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import timber.log.Timber
 
@@ -22,10 +24,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.main_activity)
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.container, PlayerFragment.newInstance())
+//                .commitNow()
+//        }
+
         if (savedInstanceState == null) {
+            val filesListFragment = FilesListFragment.build {
+                path = Environment.getExternalStorageDirectory().absolutePath
+            }
+
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, PlayerFragment.newInstance())
-                .commitNow()
+                .add(R.id.container, filesListFragment)
+                .addToBackStack(Environment.getExternalStorageDirectory().absolutePath)
+                .commit()
+
         }
 
         Timber.d("Timber works!")

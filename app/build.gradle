@@ -39,5 +39,5 @@ dependencies {
 
     //added by me
     implementation 'com.jakewharton.timber:timber:4.7.0'
-
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }
