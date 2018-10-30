@@ -1,15 +1,18 @@
 package de.michaelpohl.loopy.common
 
+import android.os.Environment
 import hugo.weaving.DebugLog
 import timber.log.Timber
 import java.io.File
 
 @DebugLog
 class FileHandler {
+    private val filesPath = Environment.getExternalStorageDirectory().toString()
 
-    fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
-        Timber.d("path: %s, files: not yet", path)
+
+    fun getFilesFromPath(path: String = filesPath, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
+        Timber.d("path: %s, files:%s", path, file.listFiles())
 
         return file.listFiles()
             .filter { showHiddenFiles || !it.name.startsWith(".") }

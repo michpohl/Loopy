@@ -8,8 +8,8 @@ import de.michaelpohl.loopy.common.FileHandler
 
 class FilesListViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = FilesAdapter()
-    private var filesPath = Environment.getExternalStorageDirectory().toString()
     private var fileHandler = FileHandler()
+    private lateinit var path: String
 
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE)
 
@@ -17,9 +17,9 @@ class FilesListViewModel(application: Application) : BaseViewModel(application) 
         return adapter
     }
 
-    fun updateDate() {
+    fun updateData() {
 
-        val files = fileHandler.getFileModelsFromFiles(fileHandler.getFilesFromPath(filesPath))
+        val files = fileHandler.getFileModelsFromFiles(fileHandler.getFilesFromPath())
         if (files.isEmpty()) {
             emptyFolderLayoutVisibility.set(View.VISIBLE)
         } else {

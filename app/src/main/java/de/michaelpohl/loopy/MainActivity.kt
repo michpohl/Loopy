@@ -33,9 +33,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
 //        }
 
         if (savedInstanceState == null) {
-            val filesListFragment = FilesListFragment.build {
-                path = Environment.getExternalStorageDirectory().absolutePath
-            }
+            val filesListFragment = FilesListFragment.newInstance(path = Environment.getExternalStorageDirectory().absolutePath)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.container, filesListFragment)
@@ -83,10 +81,11 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener 
 
     private fun addFileFragment(fileModel: FileModel) {
         Timber.d("adding File Fragment")
-        val filesListFragment = FilesListFragment.build {
-            Timber.d("path: %s", path)
-            path = fileModel.path
-        }
+        val filesListFragment = FilesListFragment.newInstance(fileModel.path)
+//        {
+//            Timber.d("path: %s", fileModel.path)
+//            path = fileModel.path
+//        }
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.container, filesListFragment)
