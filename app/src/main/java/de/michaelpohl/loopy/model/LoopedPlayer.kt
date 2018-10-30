@@ -70,6 +70,14 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
         reInit()
     }
 
+    fun pause() {
+        mCurrentPlayer.pause()
+    }
+
+    fun isPlaying(): Boolean {
+        return mCurrentPlayer.isPlaying
+    }
+
     companion object {
 
         val TAG = LoopedPlayer::class.java.simpleName
