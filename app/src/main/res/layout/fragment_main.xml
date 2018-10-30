@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="de.michaelpohl.loopy.ui.main.MainViewModel"/>
+        <variable name="model" type="de.michaelpohl.loopy.ui.main.PlayerViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -13,7 +13,7 @@
             android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.main.MainFragment">
+            tools:context=".ui.main.PlayerFragment">
 
 
         <TextView

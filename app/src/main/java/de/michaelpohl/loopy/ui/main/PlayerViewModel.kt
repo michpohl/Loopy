@@ -2,12 +2,13 @@ package de.michaelpohl.loopy.ui.main
 import android.app.Application
 import android.databinding.ObservableField
 import android.view.View
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.model.LoopedPlayer
 import timber.log.Timber
 
-class MainViewModel(application: Application) : BaseViewModel(application) {
+class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
-    lateinit var looper : LoopedPlayer
+    var looper : LoopedPlayer =LoopedPlayer.create(application, R.raw.loop)
 
     var testLabel= ObservableField<String>("hohoho")
 

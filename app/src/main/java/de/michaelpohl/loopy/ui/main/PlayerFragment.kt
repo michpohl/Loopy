@@ -8,16 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentMainBinding
-import de.michaelpohl.loopy.model.LoopedPlayer
-import kotlinx.android.synthetic.main.fragment_main.view.*
 
-class MainFragment : BaseFragment() {
+class PlayerFragment : BaseFragment() {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = PlayerFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(
@@ -32,9 +30,9 @@ class MainFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         binding.model = viewModel
-        viewModel.looper = LoopedPlayer.create(context!!, R.raw.loop)
+//        viewModel.looper = LoopedPlayer.create(context!!, R.raw.loop)
 
         // TODO: Use the ViewModel
     }
