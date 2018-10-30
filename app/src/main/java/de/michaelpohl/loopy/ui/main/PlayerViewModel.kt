@@ -25,7 +25,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun onStartClicked(view: View) {
         testLabel.set("hahaha")
-        looper.start()
+        if (looper.hasLoopFile) looper.start()
     }
 
     fun onStopClicked(view: View) {

@@ -15,6 +15,8 @@ this thing comes from here: https://stackoverflow.com/questions/26274182/not-abl
 @DebugLog
 class LoopedPlayer private constructor(context: Context, resId: Int) {
 
+    var hasLoopFile = false
+
     private var mContext: Context? = null
     private var mResId = 0
     private var mCounter = 1
@@ -64,6 +66,7 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
     }
 
     fun start() {
+        //TODO show user that no file is selected yet
         shouldBePlaying = true
         mCurrentPlayer.start()
     }
@@ -71,6 +74,7 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
     fun stop() {
         shouldBePlaying = false
         mCurrentPlayer.stop()
+        mNextPlayer.stop()
         reInit()
     }
 
@@ -83,10 +87,11 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
     }
 
     fun setLoop(context: Context, loop: File) {
+        if (hasLoopFile) stop()
         loopUri = FileProvider.getUriForFile(context,"com.de.michaelpohl.loopy", loop)
-//        loopUri = Uri.parse(Environment.getExternalStorageDirectory().path + loop.absolutePath)
         Timber.d("This is my path: %s", loopUri.toString())
         reInit()
+        hasLoopFile = true
     }
 
     companion object {
