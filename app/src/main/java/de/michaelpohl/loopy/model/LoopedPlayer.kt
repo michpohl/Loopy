@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import hugo.weaving.DebugLog
 import timber.log.Timber
-
+import java.io.File
 
 /*
 this thing comes from here: https://stackoverflow.com/questions/26274182/not-able-to-achieve-gapless-audio-looping-so-far-on-android
@@ -76,6 +76,10 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
 
     fun isPlaying(): Boolean {
         return mCurrentPlayer.isPlaying
+    }
+
+    fun setLoop(loop: File) {
+        Timber.d("Did I get it? %s, %s", loop.absolutePath, loop.absoluteFile.name)
     }
 
     companion object {

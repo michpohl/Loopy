@@ -34,6 +34,10 @@ class FileHandler {
         return filesToReturn
     }
 
+    fun getSingleFile(path: String): File {
+        return File(path)
+    }
+
     fun convertFileSizeToMB(sizeInBytes: Long): Double {
         return (sizeInBytes.toDouble()) / (1024 * 1024)
     }

@@ -82,6 +82,10 @@ class PlayerFragment : BaseFragment() {
         viewModel.loopsList = loopsList
         viewModel.updateData()
 
+        viewModel.getAdapter().onItemClickListener = {
+            viewModel.onItemSelected(it)
+        }
+
 //        viewModel.getAdapter().onItemClickListener = {
 //            mCallback.onClick(it)
 //        }

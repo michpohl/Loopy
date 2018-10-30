@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.item_recycler_file.view.*
 class LoopsAdapter : RecyclerView.Adapter<LoopsAdapter.ViewHolder>(){
 
     var loopsList = listOf<FileModel>()
+    var onItemClickListener: ((FileModel) -> Unit)? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoopsAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_file, parent, false)
@@ -35,7 +37,7 @@ class LoopsAdapter : RecyclerView.Adapter<LoopsAdapter.ViewHolder>(){
         }
 
         override fun onClick(v: View?) {
-//            onItemClickListener?.invoke(filesList[adapterPosition])
+            onItemClickListener?.invoke(loopsList[adapterPosition])
         }
 
         override fun onLongClick(v: View?): Boolean {
