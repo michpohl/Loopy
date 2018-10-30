@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
 
-    //TODO this is a constant one as a starting point. Improve handling this situaltion, please
+    //TODO this is a constant one as a starting point. Improve handling this situation, please
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
     }
 
     private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
-        Timber.d("AddingPlayerFragment with loops: %s", loops)
+        Timber.d("AddingPlayerFragment with loopsList: %s", loops)
         clearBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, PlayerFragment.newInstance(loops), "player")

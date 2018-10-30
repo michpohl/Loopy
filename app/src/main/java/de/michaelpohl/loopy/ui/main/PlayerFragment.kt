@@ -3,6 +3,7 @@ package de.michaelpohl.loopy.ui.main
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +11,12 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileSet
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
+import kotlinx.android.synthetic.main.fragment_player.*
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
-    private lateinit var loopFiles: List<FileModel>
+    private lateinit var loopsList: List<FileModel>
 
     companion object {
 
@@ -22,7 +24,7 @@ class PlayerFragment : BaseFragment() {
             val fragment = PlayerFragment()
             val args = Bundle()
             val loops = FileSet(loopFiles)
-            args.putParcelable("loops", loops)
+            args.putParcelable("loopsList", loops)
             fragment.arguments = args
             return fragment
         }
@@ -35,8 +37,9 @@ class PlayerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            val loops : FileSet= arguments!!.getParcelable("loops")
-            loopFiles = loops.models}
+            val loops : FileSet= arguments!!.getParcelable("loopsList")
+            loopsList = loops.models}
+
     }
 
     override fun onCreateView(
@@ -56,6 +59,11 @@ class PlayerFragment : BaseFragment() {
         binding.model = viewModel
     }
 
+    override fun onStart() {
+        super.onStart()
+        initAdapter()
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -65,7 +73,22 @@ class PlayerFragment : BaseFragment() {
         } catch (e: Exception) {
             throw Exception("${context} should implement FilesListFragment.OnItemCLickListener")
         }
-        Timber.d("Loop selection: %s", loopFiles)
+        Timber.d("Loop selection: %s", loopsList)
+    }
+
+    private fun initAdapter() {
+        rv_loops.layoutManager = LinearLayoutManager(context)
+        rv_loops.adapter = viewModel.getAdapter()
+        viewModel.loopsList = loopsList
+        viewModel.updateData()
+
+//        viewModel.getAdapter().onItemClickListener = {
+//            mCallback.onClick(it)
+//        }
+//
+//        viewModel.getAdapter().onItemLongClickListener = {
+//            mCallback.onLongClick(it)
+//        }
     }
 
 }

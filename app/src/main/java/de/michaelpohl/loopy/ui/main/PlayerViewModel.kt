@@ -5,17 +5,22 @@ import android.databinding.ObservableField
 import android.view.View
 import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
 import timber.log.Timber
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     var looper: LoopedPlayer = LoopedPlayer.create(application, R.raw.loop)
+    private var adapter =  LoopsAdapter()
     lateinit var selectFolderListener: OnSelectFolderClickedListener
-
+    lateinit var loopsList: List<FileModel>
 
     var testLabel = ObservableField<String>("hohoho")
 
+    fun getAdapter(): LoopsAdapter {
+        return adapter
+    }
 
     fun onStartClicked(view: View) {
         testLabel.set("hahaha")
@@ -38,6 +43,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
     interface OnSelectFolderClickedListener {
         fun onSelectFolderClicked()
+    }
+
+    fun updateData() {
+        adapter.updateData(loopsList)
     }
 
 }

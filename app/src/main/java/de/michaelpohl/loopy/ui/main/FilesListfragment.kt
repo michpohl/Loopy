@@ -13,7 +13,6 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
-import timber.log.Timber
 
 @DebugLog
 class FilesListFragment : BaseFragment() {
@@ -75,8 +74,8 @@ class FilesListFragment : BaseFragment() {
     }
 
     private fun initViews() {
-        filesRecyclerView.layoutManager = LinearLayoutManager(context)
-        filesRecyclerView.adapter = viewModel.getAdapter()
+        rv_files.layoutManager = LinearLayoutManager(context)
+        rv_files.adapter = viewModel.getAdapter()
         viewModel.path = path
         viewModel.updateData()
 

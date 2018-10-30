@@ -5,31 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHandler
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import kotlinx.android.synthetic.main.item_recycler_file.view.*
 
-class FilesAdapter : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
+class LoopsAdapter : RecyclerView.Adapter<LoopsAdapter.ViewHolder>(){
 
-    var onItemClickListener: ((FileModel) -> Unit)? = null
+    var loopsList = listOf<FileModel>()
 
-    var onItemLongClickListener: ((FileModel) -> Unit)? = null
-    var filesList = listOf<FileModel>()
-    var currentFilesList = listOf<FileModel>()
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoopsAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_file, parent, false)
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = filesList.size
+    override fun getItemCount() = loopsList.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bindView(position)
+    override fun onBindViewHolder(holder: LoopsAdapter.ViewHolder, position: Int) = holder.bindView(position)
 
-    fun updateData(filesList: List<FileModel>) {
-        this.filesList = filesList
+
+    fun updateData(loopsList: List<FileModel>) {
+        this.loopsList = loopsList
         notifyDataSetChanged()
     }
 
@@ -40,17 +35,17 @@ class FilesAdapter : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
         }
 
         override fun onClick(v: View?) {
-            onItemClickListener?.invoke(filesList[adapterPosition])
+//            onItemClickListener?.invoke(filesList[adapterPosition])
         }
 
         override fun onLongClick(v: View?): Boolean {
-            currentFilesList = filesList
-            onItemLongClickListener?.invoke(filesList[adapterPosition])
+//            currentFilesList = filesList
+//            onItemLongClickListener?.invoke(filesList[adapterPosition])
             return true
         }
 
         fun bindView(position: Int) {
-            val fileModel = filesList[position]
+            val fileModel = loopsList[position]
             itemView.nameTextView.text = fileModel.name
 
             if (fileModel.fileType == FileType.FOLDER) {
