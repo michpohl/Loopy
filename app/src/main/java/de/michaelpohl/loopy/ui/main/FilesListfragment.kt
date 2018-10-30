@@ -1,5 +1,7 @@
 package de.michaelpohl.loopy.ui.main
 
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -7,17 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.getFileModelsFromFiles
-import de.michaelpohl.loopy.common.getFilesFromPath
+import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
+import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
+@DebugLog
 class FilesListFragment : BaseFragment() {
-    private lateinit var mFilesAdapter: FilesRecyclerAdapter
-    private lateinit var PATH: String
+
+    private lateinit var viewModel: FilesListViewModel
+    private lateinit var binding: FragmentFilesListBinding
+
 
 
     companion object {
-        private const val ARG_PATH: String = "com.thetechnocafe.gurleensethi.kotlinfileexplorer.fileslist.path"
+        private const val ARG_PATH: String = "com.de.michaelpohl.loopy.fileslist.path"
         fun build(block: Builder.() -> Unit) = Builder().apply(block).build()
     }
 
@@ -33,39 +38,41 @@ class FilesListFragment : BaseFragment() {
         }
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(FilesListViewModel::class.java)
+        binding.model = viewModel
+
+//        val filesPath = viewModel.getFilesPath()
+//        if (filesPath == null) {
+//            Toast.makeText(context, "Path should not be null!", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+        initViews()
+
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_files_list, container, false)
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_files_list, container, false)
+        var myView: View = binding.root
+        return myView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val filePath = arguments?.getString(ARG_PATH)
-        if (filePath == null) {
-            Toast.makeText(context, "Path should not be null!", Toast.LENGTH_SHORT).show()
-            return
-        }
-        PATH = filePath
+    }
 
+    override fun onStart() {
+        super.onStart()
         initViews()
     }
 
     private fun initViews() {
         filesRecyclerView.layoutManager = LinearLayoutManager(context)
-        mFilesAdapter = FilesRecyclerAdapter()
-        filesRecyclerView.adapter = mFilesAdapter
-        updateDate()
+        filesRecyclerView.adapter = viewModel.getAdapter()
+        viewModel.updateDate()
     }
 
-    fun updateDate() {
-        val files = getFileModelsFromFiles(getFilesFromPath(PATH))
 
-        if (files.isEmpty()) {
-            emptyFolderLayout.visibility = View.VISIBLE
-        } else {
-            emptyFolderLayout.visibility = View.INVISIBLE
-        }
-
-        mFilesAdapter.updateData(files)
-    }
 }
