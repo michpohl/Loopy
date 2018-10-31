@@ -3,7 +3,7 @@ package de.michaelpohl.loopy.common
 import timber.log.Timber
 import java.io.File
 
-class FileHandler {
+object FileHelper {
 
     fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)

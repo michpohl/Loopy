@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.ui.main
 
 import android.app.Application
 import android.view.View
-import de.michaelpohl.loopy.common.FileHandler
+import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
 import timber.log.Timber
@@ -13,7 +13,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = LoopsAdapter(application)
     lateinit var selectFolderListener: OnSelectFolderClickedListener
     lateinit var loopsList: List<FileModel>
-    private val fileHandler = FileHandler()
 
     fun getAdapter(): LoopsAdapter {
         return adapter
@@ -45,7 +44,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onItemSelected(fm: FileModel, position: Int) {
-        looper.setLoop(getApplication(), fileHandler.getSingleFile(fm.path))
+        looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
         adapter.selectedPosition = position
         adapter.updateData(adapter.loopsList)
         looper.start()
