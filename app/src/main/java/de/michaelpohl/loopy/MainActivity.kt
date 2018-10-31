@@ -14,7 +14,6 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
-
     //TODO this is a constant one as a starting point. Improve handling this situation, please
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
 
@@ -27,22 +26,12 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
             Timber.d("it works")
         }
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-            Timber.d("it works")
-        }
 
         setContentView(R.layout.main_activity)
         //todo return to this
         if (savedInstanceState == null) {
             addPlayerFragment()
         }
-
-//        if (savedInstanceState == null) {
-//            addFileFragment()
-//        }
-
-        Timber.d("Timber works!")
     }
 
     //TODO these are from audioguide, how did that work again

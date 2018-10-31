@@ -12,7 +12,6 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileSet
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import kotlinx.android.synthetic.main.fragment_player.*
-import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
@@ -20,7 +19,7 @@ class PlayerFragment : BaseFragment() {
 
     companion object {
 
-        fun newInstance(loopFiles : List<FileModel>): PlayerFragment {
+        fun newInstance(loopFiles: List<FileModel>): PlayerFragment {
             val fragment = PlayerFragment()
             val args = Bundle()
             val loops = FileSet(loopFiles)
@@ -37,9 +36,9 @@ class PlayerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            val loops : FileSet= arguments!!.getParcelable("loopsList")
-            loopsList = loops.models}
-
+            val loops: FileSet = arguments!!.getParcelable("loopsList")
+            loopsList = loops.models
+        }
     }
 
     override fun onCreateView(
@@ -73,7 +72,6 @@ class PlayerFragment : BaseFragment() {
         } catch (e: Exception) {
             throw Exception("${context} should implement FilesListFragment.OnItemCLickListener")
         }
-        Timber.d("Loop selection: %s", loopsList)
     }
 
     private fun initAdapter() {
@@ -82,17 +80,8 @@ class PlayerFragment : BaseFragment() {
         viewModel.loopsList = loopsList
         viewModel.updateData()
 
-        viewModel.getAdapter().onItemClickListener = {a: FileModel, b: Int ->
-            viewModel.onItemSelected(a, b )
+        viewModel.getAdapter().onItemClickListener = { a: FileModel, b: Int ->
+            viewModel.onItemSelected(a, b)
         }
-
-//        viewModel.getAdapter().onItemClickListener = {
-//            mCallback.onClick(it)
-//        }
-//
-//        viewModel.getAdapter().onItemSelectedListener = {
-//            mCallback.onLongClick(it)
-//        }
     }
-
 }

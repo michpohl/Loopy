@@ -4,7 +4,6 @@ import android.app.Application
 import android.databinding.ObservableField
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
-import timber.log.Timber
 
 class FilesListViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = FilesAdapter()
@@ -26,7 +25,4 @@ class FilesListViewModel(application: Application) : BaseViewModel(application) 
         }
         adapter.updateData(files)
     }
-
-    fun onSelectClicked(view: View) {
-    Timber.d("Selecting item")}
 }

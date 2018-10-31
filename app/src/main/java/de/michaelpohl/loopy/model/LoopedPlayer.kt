@@ -3,7 +3,6 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Environment
 import android.support.v4.content.FileProvider
 import hugo.weaving.DebugLog
 import timber.log.Timber
@@ -26,6 +25,15 @@ class LoopedPlayer private constructor(context: Context) {
     private lateinit var mNextPlayer: MediaPlayer
     private lateinit var loopUri: Uri
 
+    companion object {
+
+        val TAG = LoopedPlayer::class.java.simpleName
+
+        fun create(context: Context): LoopedPlayer {
+            return LoopedPlayer(context)
+        }
+    }
+
     private val onCompletionListener = MediaPlayer.OnCompletionListener { mediaPlayer ->
         mediaPlayer.release()
         mCurrentPlayer = mNextPlayer
@@ -37,12 +45,9 @@ class LoopedPlayer private constructor(context: Context) {
 
     init {
         mContext = context
-
-
     }
 
-    // repeats the necessary parts of init() so the player starts immediately again when start() is called
-    private fun reInit() {
+    private fun initPlayer() {
         mCurrentPlayer = MediaPlayer.create(mContext, loopUri)
         mCurrentPlayer.setOnPreparedListener {
 
@@ -59,7 +64,7 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun start() {
-        //TODO show user that no file is selected yet
+        //TODO show user if no file is selected yet
         shouldBePlaying = true
         isPaused = false
         mCurrentPlayer.start()
@@ -69,7 +74,7 @@ class LoopedPlayer private constructor(context: Context) {
         shouldBePlaying = false
         mCurrentPlayer.stop()
         mNextPlayer.stop()
-        reInit()
+        initPlayer()
     }
 
     fun pause() {
@@ -83,18 +88,9 @@ class LoopedPlayer private constructor(context: Context) {
 
     fun setLoop(context: Context, loop: File) {
         if (hasLoopFile) stop()
-        loopUri = FileProvider.getUriForFile(context,"com.de.michaelpohl.loopy", loop)
+        loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
         Timber.d("This is my path: %s", loopUri.toString())
-        reInit()
+        initPlayer()
         hasLoopFile = true
-    }
-
-    companion object {
-
-        val TAG = LoopedPlayer::class.java.simpleName
-
-        fun create(context: Context): LoopedPlayer {
-            return LoopedPlayer(context)
-        }
     }
 }

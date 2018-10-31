@@ -5,7 +5,6 @@ import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
-import timber.log.Timber
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
@@ -31,7 +30,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onSelectFolderClicked(view: View) {
-        Timber.d("Clicked on Select Folder")
         selectFolderListener.onSelectFolderClicked()
     }
 
@@ -49,6 +47,4 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         adapter.updateData(adapter.loopsList)
         looper.start()
     }
-
-
 }

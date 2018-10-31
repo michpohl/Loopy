@@ -49,8 +49,5 @@ class FileOrFolderItem(
         if (!FileHelper.containsAudioFilesInAnySubFolders(fileModel.path)) {
             itemView.btn_pick_folder.visibility = View.GONE
         }
-
     }
-
-
 }

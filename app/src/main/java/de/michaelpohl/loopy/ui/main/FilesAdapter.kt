@@ -12,8 +12,6 @@ class FilesAdapter : RecyclerView.Adapter<FileOrFolderItem>() {
 
     var onItemSelectedListener: ((FileModel) -> Unit)? = null
     var filesList = listOf<FileModel>()
-    var currentFilesList = listOf<FileModel>()
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileOrFolderItem {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_file, parent, false)
@@ -28,6 +26,4 @@ class FilesAdapter : RecyclerView.Adapter<FileOrFolderItem>() {
         this.filesList = filesList
         notifyDataSetChanged()
     }
-
-
 }
