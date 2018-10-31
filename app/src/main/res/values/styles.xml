@@ -3,12 +3,9 @@
 
     <style name="ActionBar" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/action_bar_background_color</item>
-        <item name="android:textColor">@color/action_bar_text_color</item>
-        <item name="android:textColorPrimary">@color/action_bar_text_color_primary</item>
     </style>
 
     <style name="Alert" parent="Theme.AppCompat.Dialog">
-        <item name="android:background">@color/eltako_blue_dark</item>
         <item name="android:textColor">@color/white</item>
         <item name="colorAccent">@color/action</item>
         <item name="android:textColorPrimary">@color/grey3</item>
@@ -21,7 +18,7 @@
     <style name="DatePicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:colorAccent">@color/eltako_blue</item>
+        <item name="android:colorAccent">@color/dark_green</item>
         <item name="android:colorBackground">@color/dialog_background</item>
         <item name="android:colorControlActivated">@color/action</item>
     </style>
@@ -36,7 +33,6 @@
 
     <style name="BurgerIcon" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
-        <item name="color">@color/action_bar_text_color</item>
     </style>
 
     <style name="Button.DetailRow">
@@ -50,16 +46,17 @@
     are used to move them back into place so that the padding doesn't mess up the layout.
     In cases where the iconButton's position is off, move them back into place by adjusting
     translationX and translationY manually in the layout.-->
+    <!--<item name="android:translationX">12dp</item>-->
+    <!--<item name="android:translationY">-12dp</item>-->
+
     <style name="Button.SmallIcon" parent="Base.Widget.AppCompat.ImageButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:backgroundTint">@null</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingRight">20dp</item>
         <item name="android:paddingBottom">12dp</item>
-        <item name="android:translationX">12dp</item>
-        <item name="android:translationY">-12dp</item>
         <item name="android:tint">@color/action</item>
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
     </style>
@@ -90,17 +87,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:backgroundTint">@color/eltako_blue</item>
+        <item name="android:backgroundTint">@color/dark_green</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Button.Wide.Light">
-        <item name="android:backgroundTint">@color/eltako_blue</item>
+        <item name="android:backgroundTint">@color/dark_green</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Button.Wide.Dark">
-        <item name="android:backgroundTint">@color/eltako_blue_dark</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
@@ -165,7 +161,6 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@color/darken</item>
     </style>
 
     <style name="EmptyMessage" parent="MatchParent">
@@ -202,7 +197,7 @@
     <style name="TextHeader1">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/eltako_blue</item>
+        <item name="android:textColor">@color/dark_green</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -210,7 +205,6 @@
 
     <style name="TextHeader2">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/eltako_blue_dark</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -219,7 +213,7 @@
 
     <style name="TextSubHeader">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/eltako_blue</item>
+        <item name="android:textColor">@color/dark_green</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -227,7 +221,7 @@
 
     <style name="TextButton">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/eltako_blue</item>
+        <item name="android:textColor">@color/dark_green</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -238,7 +232,7 @@
     <style name="EditText" parent="Base.Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/eltako_blue</item>
+        <item name="android:textColor">@color/dark_green</item>
         <item name="android:textColorHint">@color/greyblue</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:paddingTop">8dp</item>
@@ -272,7 +266,7 @@
     </style>
 
     <style name="Progress">
-        <item name="android:indeterminateTint">@color/eltako_blue</item>
+        <item name="android:indeterminateTint">@color/dark_green</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
@@ -315,7 +309,7 @@
     </style>
 
     <style name="SeekBar" parent="Base.Widget.AppCompat.SeekBar">
-        <item name="android:thumbTint">@color/eltako_blue</item>
+        <item name="android:thumbTint">@color/dark_green</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
 
@@ -326,7 +320,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">-20dp</item>
         <item name="android:dropDownSelector">?android:attr/listChoiceBackgroundIndicator</item>
-        <item name="android:textColor">@color/eltako_blue</item>
+        <item name="android:textColor">@color/dark_green</item>
         <item name="android:ellipsize">end</item>
         <item name="android:color">@color/dark_red</item>
         <item name="android:backgroundTint">@color/action</item>
@@ -343,7 +337,7 @@
     </style>
 
     <style name="SpinnerDropDownItemStyle">
-        <item name="android:textColor">@color/eltako_blue</item>
+        <item name="android:textColor">@color/dark_green</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -366,7 +360,7 @@
     <style name="TimePickerClock" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:colorAccent">@color/eltako_blue</item>
+        <item name="android:colorAccent">@color/dark_green</item>
         <item name="android:colorBackground">@color/dialog_background</item>
         <item name="android:colorControlActivated">@color/action</item>
     </style>

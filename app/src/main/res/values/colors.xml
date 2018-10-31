@@ -2,25 +2,9 @@
 <resources>
     <color name="colorPrimary">#001614</color>
     <color name="colorPrimaryDark">#001613</color>
-    <color name="colorAccent">#6d1bd8</color>
-
-    <color name="eltako_blue_dark">#1c4b77</color>
-    <color name="eltako_blue_dark_50">#881c4b77</color>
-
-    <color name="steel_grey">#dfe5ed</color>
-
-    <color name="darken">#881c4b77</color>
-    <color name="lighten">#afff</color>
-
-    <color name="darken_more">#8000</color>
-    <color name="darken_less">#2000</color>
+    <color name="colorAccent">@color/action</color>
 
 
-
-    <color name="white_90">#E6FFFFFF</color>
-    <color name="dark_blue_70">#B3dfe5ed</color>
-    <color name="white_on_steel">#f5f7fa</color>
-    <color name="cardview_light_background">@color/white_90</color>
 
 
 
@@ -37,8 +21,8 @@
 
 
     <color name="black">#000000</color>
-    <color name="eltako_blue">#0071bc</color>
-    <color name="eltako_blue_90">#E60071bc</color>
+    <color name="dark_green">#003017</color>
+    <color name="darkest_green">#001a0c</color>
     <color name="greyblue">#8193AA</color>
 
     <color name="bright_purple">#fb576b</color>
@@ -53,16 +37,16 @@
 
     <!--COLOR REFERENCES-->
 
-    <color name="window_background">@color/grey3</color>
-    <color name="content_background">@color/white</color>
-    <color name="content_background_editable">@color/cyan</color>
+    <color name="window_background">@color/darkest_green</color>
+    <color name="content_background">@color/dark_green</color>
+    <color name="content_background_editable">@color/action</color>
 
     <color name="action_bar_background_color">@color/white</color>
-    <color name="action_bar_text_color">@color/eltako_blue_dark</color>
-    <color name="action_bar_text_color_primary">@color/eltako_blue_dark</color>
+    <!--<color name="action_bar_text_color">@color/eltako_blue_dark</color>-->
+    <!--<color name="action_bar_text_color_primary">@color/eltako_blue_dark</color>-->
 
-    <color name="text_color_1">@color/eltako_blue_dark</color>
-    <color name="text_color_2">@color/eltako_blue</color>
+    <!--<color name="text_color_1">@color/eltako_blue_dark</color>-->
+    <color name="text_color_2">@color/dark_green</color>
     <color name="text_color_3">@color/grey4</color>
 
     <color name="light_red">@color/bright_purple</color>
@@ -70,16 +54,16 @@
     <color name="green">@color/base_green</color>
     <color name="yellow">@color/base_yellow</color>
 
-    <color name="active">@color/eltako_blue</color>
+    <color name="active">@color/dark_green</color>
     <color name="active_green">@color/green</color>
     <color name="inactive">@color/greyblue</color>
     <color name="disabled">@color/greyblue</color>
     <color name="enabled">@color/cyan</color>
-    <color name="button_active">@color/eltako_blue</color>
+    <color name="button_active">@color/dark_green</color>
     <color name="button_inactive">@color/grey4</color>
 
 
-    <color name="action">@color/cyan</color>
+    <color name="action">@color/light_red</color>
 
     <color name="tile_background_1">@color/white</color>
     <color name="tile_background_2">@color/white_45</color>
