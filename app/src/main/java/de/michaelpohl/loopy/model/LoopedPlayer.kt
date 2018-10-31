@@ -13,12 +13,12 @@ import java.io.File
 this thing comes from here: https://stackoverflow.com/questions/26274182/not-able-to-achieve-gapless-audio-looping-so-far-on-android
  */
 @DebugLog
-class LoopedPlayer private constructor(context: Context, resId: Int) {
+class LoopedPlayer private constructor(context: Context) {
 
     var hasLoopFile = false
+    var isPaused = false
 
     private var mContext: Context? = null
-    private var mResId = 0
     private var mCounter = 1
     private var shouldBePlaying = false
 
@@ -37,15 +37,8 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
 
     init {
         mContext = context
-        mResId = resId
 
-//        mCurrentPlayer = MediaPlayer.create(mContext, mResId)
-//        mCurrentPlayer.setOnPreparedListener {
-//
-//            if (shouldBePlaying) mCurrentPlayer.start()
-//        }
-//
-//        createNextMediaPlayer()
+
     }
 
     // repeats the necessary parts of init() so the player starts immediately again when start() is called
@@ -68,6 +61,7 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
     fun start() {
         //TODO show user that no file is selected yet
         shouldBePlaying = true
+        isPaused = false
         mCurrentPlayer.start()
     }
 
@@ -80,6 +74,7 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
 
     fun pause() {
         mCurrentPlayer.pause()
+        isPaused = true
     }
 
     fun isPlaying(): Boolean {
@@ -98,8 +93,8 @@ class LoopedPlayer private constructor(context: Context, resId: Int) {
 
         val TAG = LoopedPlayer::class.java.simpleName
 
-        fun create(context: Context, resId: Int): LoopedPlayer {
-            return LoopedPlayer(context, resId)
+        fun create(context: Context): LoopedPlayer {
+            return LoopedPlayer(context)
         }
     }
 }
