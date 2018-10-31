@@ -10,7 +10,7 @@ import timber.log.Timber
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     var looper: LoopedPlayer = LoopedPlayer.create(application)
-    private var adapter = LoopsAdapter()
+    private var adapter = LoopsAdapter(application)
     lateinit var selectFolderListener: OnSelectFolderClickedListener
     lateinit var loopsList: List<FileModel>
     private val fileHandler = FileHandler()
@@ -44,7 +44,12 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         adapter.updateData(loopsList)
     }
 
-    fun onItemSelected(fm: FileModel) {
+    fun onItemSelected(fm: FileModel, position: Int) {
         looper.setLoop(getApplication(), fileHandler.getSingleFile(fm.path))
+        adapter.selectedPosition = position
+        adapter.updateData(adapter.loopsList)
+        looper.start()
     }
+
+
 }

@@ -24,7 +24,10 @@
                 android:text="My Loops:"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="64dp"
+                app:layout_constraintHorizontal_bias="1.0"
+                />
 
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_loops"
@@ -35,7 +38,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_loops_header"
-                app:layout_constraintBottom_toTopOf="@id/btn_select_folder"
+                app:layout_constraintBottom_toTopOf="@id/btn_stop"
                 android:background="@color/window_background"/>
 
         <Button
@@ -43,33 +46,36 @@
                 style="@style/Button"
                 android:text="Select Folder"
                 android:onClick="@{model::onSelectFolderClicked}"
-                app:layout_constraintBottom_toTopOf="@id/btn_2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_loops_header"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_height="50dp"/>
 
 
 
         <ImageButton
-                android:id="@+id/btn_1"
+                android:id="@+id/btn_play"
                 style="@style/Button.SmallIcon"
                 android:src="@drawable/ic_play_arrow_black_24dp"
                 android:onClick="@{model::onStartClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_3"
+                app:layout_constraintStart_toEndOf="@id/btn_pause"
                 />
 
         <ImageButton
-                android:id="@+id/btn_2"
+                android:id="@+id/btn_stop"
                 style="@style/Button.SmallIcon"
                 android:src="@drawable/ic_stop_black_24dp"
                 android:onClick="@{model::onStopClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_3"
+                app:layout_constraintEnd_toStartOf="@id/btn_pause"
                 />
 
         <ImageButton
-                android:id="@+id/btn_3"
+                android:id="@+id/btn_pause"
                 style="@style/Button.SmallIcon"
                 android:src="@drawable/ic_pause_black_24dp"
                 android:onClick="@{model::onPauseClicked}"

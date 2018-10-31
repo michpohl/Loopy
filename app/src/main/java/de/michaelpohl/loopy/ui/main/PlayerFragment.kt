@@ -82,8 +82,8 @@ class PlayerFragment : BaseFragment() {
         viewModel.loopsList = loopsList
         viewModel.updateData()
 
-        viewModel.getAdapter().onItemClickListener = {
-            viewModel.onItemSelected(it)
+        viewModel.getAdapter().onItemClickListener = {a: FileModel, b: Int ->
+            viewModel.onItemSelected(a, b )
         }
 
 //        viewModel.getAdapter().onItemClickListener = {

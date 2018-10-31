@@ -12,10 +12,11 @@
     <TextView
             android:id="@+id/nameTextView"
             style="@style/MatchWidth"
-            android:textAppearance="@style/Text.Standard"
+            android:textAppearance="@style/Text.HeaderLarge"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="8dp"
             tools:text="item"/>
 
 </android.support.constraint.ConstraintLayout>
