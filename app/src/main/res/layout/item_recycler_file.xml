@@ -40,6 +40,7 @@
             app:layout_constraintTop_toBottomOf="@id/folderTextView"/>
 
     <ImageButton
+            android:id="@+id/btn_pick_folder"
             style="@style/Button.SmallIcon"
             android:src="@drawable/ic_check_black"
             app:layout_constraintEnd_toEndOf="parent"

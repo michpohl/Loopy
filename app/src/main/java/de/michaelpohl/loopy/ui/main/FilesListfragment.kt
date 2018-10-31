@@ -83,7 +83,7 @@ class FilesListFragment : BaseFragment() {
             mCallback.onClick(it)
         }
 
-        viewModel.getAdapter().onItemLongClickListener = {
+        viewModel.getAdapter().onItemSelectedListener = {
             mCallback.onLongClick(it)
         }
     }

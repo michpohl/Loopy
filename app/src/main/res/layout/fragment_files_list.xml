@@ -53,12 +53,6 @@
 
         </LinearLayout>
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-        android:text="Select"
-        android:onClick="@{model::onSelectClicked}"/>
-
     </android.support.constraint.ConstraintLayout>
 
 </layout>
