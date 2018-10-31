@@ -3,10 +3,10 @@ package de.michaelpohl.loopy.ui.main
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import kotlinx.android.synthetic.main.item_recycler_file.view.*
-import timber.log.Timber
 
 class FileOrFolderItem(
     itemView: View,
@@ -46,5 +46,11 @@ class FileOrFolderItem(
             itemView.totalSizeTextView.visibility = View.VISIBLE
             itemView.totalSizeTextView.text = "${String.format("%.2f", fileModel.sizeInMB)} mb"
         }
+        if (!FileHelper.containsAudioFilesInAnySubFolders(fileModel.path)) {
+            itemView.btn_pick_folder.visibility = View.GONE
+        }
+
     }
+
+
 }

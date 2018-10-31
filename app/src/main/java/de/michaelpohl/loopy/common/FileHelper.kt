@@ -9,6 +9,10 @@ object FileHelper {
         val file = File(path)
         Timber.d("path: %s, files:%s", path, file.listFiles())
 
+        if (file.listFiles() == null) {
+            return arrayListOf()
+        }
+
         return file.listFiles()
             .filter { showHiddenFiles || !it.name.startsWith(".") }
             .filter { !onlyFolders || it.isDirectory }
@@ -53,8 +57,28 @@ object FileHelper {
         return true
     }
 
+    fun containsAudioFilesInAnySubFolders(path: String): Boolean {
+        var containsAudio = false
+        val filesToCheck: List<File> = getFilesFromPath(path)
+
+        val foundFolderModels: List<FileModel> =
+            getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FOLDER }
+        val foundFileModels: List<FileModel> =
+            getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FILE }
+
+        for (fileModel in foundFileModels) {
+            if (isValidFileType(fileModel)) containsAudio = true
+        }
+        if (!foundFolderModels.isEmpty()) {
+            for (fileModel in foundFolderModels) {
+                if (containsAudioFilesInAnySubFolders(fileModel.path)) containsAudio = true
+            }
+        }
+        return containsAudio
+    }
+
     fun containsAudioFiles(path: String): Boolean {
-        var filesToCheck: List<File> = getFilesFromPath(path)
+        val filesToCheck: List<File> = getFilesFromPath(path)
         if (getFileModelsFromFiles(filesToCheck).isEmpty()) {
             return false
         }
