@@ -20,7 +20,7 @@ class FilesListFragment : BaseFragment() {
     private lateinit var viewModel: FilesListViewModel
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
-    private lateinit var mCallback: OnItemClickListener
+    private lateinit var listener: OnItemClickListener
 
 
     companion object {
@@ -40,7 +40,7 @@ class FilesListFragment : BaseFragment() {
         super.onAttach(context)
 
         try {
-            mCallback = context as OnItemClickListener
+            listener = context as OnItemClickListener
         } catch (e: Exception) {
             throw Exception("${context} should implement FilesListFragment.OnItemCLickListener")
         }
@@ -80,18 +80,18 @@ class FilesListFragment : BaseFragment() {
         viewModel.updateData()
 
         viewModel.getAdapter().onItemClickListener = {
-            mCallback.onClick(it)
+            listener.onClick(it)
         }
 
         viewModel.getAdapter().onItemSelectedListener = {
-            mCallback.onLongClick(it)
+            listener.onSelected(it)
         }
     }
 
     interface OnItemClickListener {
         fun onClick(fileModel: FileModel)
 
-        fun onLongClick(fileModel: FileModel)
+        fun onSelected(fileModel: FileModel)
     }
 
 

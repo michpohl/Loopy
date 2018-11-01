@@ -16,9 +16,10 @@ import kotlinx.android.synthetic.main.fragment_player.*
 class PlayerFragment : BaseFragment() {
 
     private lateinit var loopsList: List<FileModel>
+    private lateinit var viewModel: PlayerViewModel
+    private lateinit var binding: FragmentPlayerBinding
 
     companion object {
-
         fun newInstance(loopFiles: List<FileModel>): PlayerFragment {
             val fragment = PlayerFragment()
             val args = Bundle()
@@ -27,11 +28,8 @@ class PlayerFragment : BaseFragment() {
             fragment.arguments = args
             return fragment
         }
+
     }
-
-    private lateinit var viewModel: PlayerViewModel
-
-    private lateinit var binding: FragmentPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
