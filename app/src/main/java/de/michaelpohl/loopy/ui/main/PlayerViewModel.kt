@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.app.Application
+import android.databinding.ObservableField
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -12,6 +13,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = LoopsAdapter(application)
     lateinit var selectFolderListener: OnSelectFolderClickedListener
     lateinit var loopsList: List<FileModel>
+    var emptyMessageVisibility = ObservableField(View.VISIBLE)
 
     fun getAdapter(): LoopsAdapter {
         return adapter
@@ -39,6 +41,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun updateData() {
         adapter.updateData(loopsList)
+        if (adapter.itemCount != 0) {
+            emptyMessageVisibility.set(View.INVISIBLE)
+        } else {
+            emptyMessageVisibility.set(View.VISIBLE)
+        }
     }
 
     fun onItemSelected(fm: FileModel, position: Int) {

@@ -25,6 +25,8 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="colorAccent">@color/action</item>
+
     </style>
 
 </resources>

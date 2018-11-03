@@ -55,6 +55,18 @@
                 app:layout_constraintBottom_toTopOf="@id/btn_stop"
                 android:background="@color/window_background"/>
 
+        <TextView
+                android:id="@+id/tv_empty_message"
+                style="@style/MatchWidth"
+                android:text="TBD"
+                android:visibility="@{model.emptyMessageVisibility}"
+                android:layout_height="0dp"
+                android:textAppearance="@style/Text.HeaderLarge"
+                app:layout_constraintBottom_toBottomOf="@+id/rv_loops"
+                app:layout_constraintTop_toTopOf="@+id/rv_loops"
+                app:layout_constraintEnd_toEndOf="@+id/rv_loops"
+                app:layout_constraintStart_toStartOf="@id/rv_loops"/>
+
         <Button
                 android:id="@+id/btn_select_folder"
                 style="@style/Button"
@@ -67,8 +79,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_height="50dp"/>
-
-
 
         <ImageButton
                 android:id="@+id/btn_play"
