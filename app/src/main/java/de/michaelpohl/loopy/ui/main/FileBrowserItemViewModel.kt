@@ -2,27 +2,39 @@ package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
+import android.view.View
 import android.view.View.*
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
+import hugo.weaving.DebugLog
 import timber.log.Timber
 
-class FileBrowserItemViewModel(fileModel: FileModel): ViewModel() {
-
+@DebugLog
+class FileBrowserItemViewModel : ViewModel() {
 
     val folderLabelVisibility = ObservableField(INVISIBLE)
     val sizeLabelVisibility = ObservableField(INVISIBLE)
     val subFolderIndicatorVisibility = ObservableField(INVISIBLE)
     val pickFolderButtonVisibility = ObservableField(INVISIBLE)
 
-    val name: ObservableField<String> = ObservableField(fileModel.name)
+    var fileModel = FileModel("", FileType.FILE, "", 0.0)
+    var name = ObservableField("name")
+    var subFolders = ObservableField("folders")
+    var fileSize = ObservableField("filesize")
 
-    //TODO turn this string stuff into something proper and non-hard coded
-    val subFolders: ObservableField<String> = ObservableField("(${fileModel.subFiles} files)")
-    val fileSize: ObservableField<String> = ObservableField("${String.format("%.2f", fileModel.sizeInMB)} mb")
+    fun testBinding(view: View) {
+        Timber.d("button press works")
+    }
 
-    init {
+    fun execute() {
+        Timber.d("Filemodel: %s", fileModel)
+        name.set(fileModel.name)
+        //TODO turn this string stuff into something proper and non-hard coded
+        subFolders.set("(${fileModel.subFiles} files)")
+        fileSize.set("${String.format("%.2f", fileModel.sizeInMB)} mb")
+
+
         if (fileModel.fileType == FileType.FOLDER) {
             Timber.d("it's a folder")
             folderLabelVisibility.set(VISIBLE)
@@ -51,6 +63,5 @@ class FileBrowserItemViewModel(fileModel: FileModel): ViewModel() {
 
             pickFolderButtonVisibility.set(GONE)
         }
-
     }
 }
