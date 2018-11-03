@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="model"
+                type="de.michaelpohl.loopy.ui.main.FileBrowserItemViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@color/content_background"
+            android:foreground="?selectableItemBackground"
+            android:padding="8dp">
+
+        <TextView
+                android:id="@+id/nameTextView"
+                style="@style/MatchWidth"
+                android:layout_width="0dp"
+                android:text="@{model.name}"
+                android:textAppearance="@style/Text.HeaderLarge"
+                app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Pictuers"
+                />
+
+        <TextView
+                android:id="@+id/folderTextView"
+                style="@style/MatchWidth"
+                android:layout_width="0dp"
+                android:text="@{model.subFolders}"
+                android:textAppearance="@style/Text.HeaderSmall"
+                android:visibility="@{model.folderLabelVisibility}"
+                app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nameTextView"/>
+
+        <TextView
+                android:id="@+id/totalSizeTextView"
+                style="@style/MatchWidth"
+                android:text="@{model.fileSize}"
+                android:layout_width="0dp"
+                android:visibility="@{model.sizeLabelVisibility}"
+                android:textAppearance="@style/Text.Standard"
+                app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/folderTextView"/>
+
+        <ImageView
+                android:id="@+id/iv_subfolder_indicator"
+                style="@style/WrapContent"
+                android:tint="@color/window_background"
+                android:src="@drawable/ic_arrow_down"
+                android:paddingEnd="8dp"
+                android:visibility="@{model.subFolderIndicatorVisibility}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+        <ImageButton
+                android:id="@+id/btn_pick_folder"
+                style="@style/Button.SmallIcon"
+                android:padding="4dp"
+                android:src="@drawable/ic_check_black"
+                android:visibility="@{model.pickFolderButtonVisibility}"
+                app:layout_constraintStart_toStartOf="@id/tv_pick_folder_label"
+                app:layout_constraintEnd_toEndOf="@id/tv_pick_folder_label"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        <TextView
+                android:id="@+id/tv_pick_folder_label"
+                style="@style/WrapContent"
+                android:text="Pick folder"
+                android:textColor="@color/action"
+                android:visibility="@{model.pickFolderButtonVisibility}"
+                android:textAppearance="@style/Text.Standard"
+                app:layout_constraintTop_toBottomOf="@id/btn_pick_folder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

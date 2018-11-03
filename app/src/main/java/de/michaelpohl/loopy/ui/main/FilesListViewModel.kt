@@ -6,12 +6,12 @@ import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 
 class FilesListViewModel(application: Application) : BaseViewModel(application) {
-    private var adapter = FilesAdapter()
+    private var adapter = FileBrowserAdapter()
     lateinit var path: String
 
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE)
 
-    fun getAdapter(): FilesAdapter {
+    fun getAdapter(): FileBrowserAdapter {
         return adapter
     }
 

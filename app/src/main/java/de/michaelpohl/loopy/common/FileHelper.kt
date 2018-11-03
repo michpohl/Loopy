@@ -57,6 +57,18 @@ object FileHelper {
         return true
     }
 
+    fun hasSubFolders(path: String): Boolean {
+        var hasSubFolders = false
+        val filesToCheck: List<File> = getFilesFromPath(path)
+
+        val foundFolderModels: List<FileModel> =
+            getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FOLDER }
+
+        if (!foundFolderModels.isEmpty()) hasSubFolders = true
+
+        return hasSubFolders
+    }
+
     fun containsAudioFilesInAnySubFolders(path: String): Boolean {
         var containsAudio = false
         val filesToCheck: List<File> = getFilesFromPath(path)

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
-import kotlinx.android.synthetic.main.item_recycler_file.view.*
+import kotlinx.android.synthetic.main.item_file_browser.view.*
 class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
 
     var loopsList = listOf<FileModel>()
