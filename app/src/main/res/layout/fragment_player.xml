@@ -58,9 +58,12 @@
         <TextView
                 android:id="@+id/tv_empty_message"
                 style="@style/MatchWidth"
-                android:text="TBD"
+                android:text="You have no loops selected. Click on &quot;Find Loops&quot; to browse your phone's storage"
+                android:gravity="center"
+
                 android:visibility="@{model.emptyMessageVisibility}"
                 android:layout_height="0dp"
+                android:layout_margin="24dp"
                 android:textAppearance="@style/Text.HeaderLarge"
                 app:layout_constraintBottom_toBottomOf="@+id/rv_loops"
                 app:layout_constraintTop_toTopOf="@+id/rv_loops"
@@ -70,7 +73,7 @@
         <Button
                 android:id="@+id/btn_select_folder"
                 style="@style/Button"
-                android:text="Select Folder"
+                android:text="Find Loops"
                 android:onClick="@{model::onSelectFolderClicked}"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="8dp"
