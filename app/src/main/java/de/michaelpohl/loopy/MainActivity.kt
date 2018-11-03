@@ -6,12 +6,12 @@ import android.support.v7.app.AppCompatActivity
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.ui.main.FilesListFragment
+import de.michaelpohl.loopy.ui.main.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
+class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
     //TODO this is a constant one as a starting point. Improve handling this situation, please
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), FilesListFragment.OnItemClickListener,
 
     private fun addFileFragment(path: String = defaultFilesPath) {
         Timber.d("adding File Fragment: %s", path)
-        val filesListFragment = FilesListFragment.newInstance(path)
+        val filesListFragment = FileBrowserFragment.newInstance(path)
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.container, filesListFragment)

@@ -5,7 +5,7 @@ import android.databinding.ObservableField
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 
-class FilesListViewModel(application: Application) : BaseViewModel(application) {
+class FileBrowserViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = FileBrowserAdapter()
     lateinit var path: String
 

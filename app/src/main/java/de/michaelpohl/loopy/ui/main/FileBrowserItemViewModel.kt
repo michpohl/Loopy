@@ -23,11 +23,7 @@ class FileBrowserItemViewModel : ViewModel() {
     var subFolders = ObservableField("folders")
     var fileSize = ObservableField("filesize")
 
-    fun testBinding(view: View) {
-        Timber.d("button press works")
-    }
-
-    fun execute() {
+    fun update() {
         Timber.d("Filemodel: %s", fileModel)
         name.set(fileModel.name)
         //TODO turn this string stuff into something proper and non-hard coded

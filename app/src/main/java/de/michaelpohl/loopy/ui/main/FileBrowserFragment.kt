@@ -15,9 +15,9 @@ import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
 @DebugLog
-class FilesListFragment : BaseFragment() {
+class FileBrowserFragment : BaseFragment() {
 
-    private lateinit var viewModel: FilesListViewModel
+    private lateinit var viewModel: FileBrowserViewModel
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
     private lateinit var listener: OnItemClickListener
@@ -25,8 +25,8 @@ class FilesListFragment : BaseFragment() {
 
     companion object {
 
-        fun newInstance(path: String): FilesListFragment {
-            val fragment = FilesListFragment()
+        fun newInstance(path: String): FileBrowserFragment {
+            val fragment = FileBrowserFragment()
             val args = Bundle()
             args.putString("path", path)
             fragment.arguments = args
@@ -42,7 +42,7 @@ class FilesListFragment : BaseFragment() {
         try {
             listener = context as OnItemClickListener
         } catch (e: Exception) {
-            throw Exception("${context} should implement FilesListFragment.OnItemCLickListener")
+            throw Exception("${context} should implement FileBrowserFragment.OnItemCLickListener")
         }
     }
 
@@ -56,7 +56,7 @@ class FilesListFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FilesListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(FileBrowserViewModel::class.java)
         binding.model = viewModel
         initViews()
 

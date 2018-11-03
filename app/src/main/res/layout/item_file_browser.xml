@@ -70,7 +70,6 @@
                 style="@style/Button.SmallIcon"
                 android:padding="4dp"
                 android:src="@drawable/ic_check_black"
-                android:onClick="@{model::testBinding}"
                 android:visibility="@{model.pickFolderButtonVisibility}"
                 app:layout_constraintStart_toStartOf="@id/tv_pick_folder_label"
                 app:layout_constraintEnd_toEndOf="@id/tv_pick_folder_label"

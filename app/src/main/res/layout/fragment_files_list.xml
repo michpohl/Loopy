@@ -6,7 +6,7 @@
     <data>
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.FilesListViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.FileBrowserViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout android:layout_width="match_parent"

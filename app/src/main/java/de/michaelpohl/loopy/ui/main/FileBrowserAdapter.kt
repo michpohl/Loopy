@@ -31,7 +31,7 @@ class FileBrowserAdapter : RecyclerView.Adapter<FileBrowserItem>() {
         val vm = FileBrowserItemViewModel()
         vm.fileModel = filesList[position]
         holder.bind(vm)
-        vm.execute()
+        vm.update()
     }
 
     fun updateData(filesList: List<FileModel>) {
