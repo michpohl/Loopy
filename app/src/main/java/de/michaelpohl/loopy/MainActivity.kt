@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
 
     override fun onSelected(fileModel: FileModel) {
         if (fileModel.fileType == FileType.FOLDER) {
-            if (FileHelper.containsAudioFiles(fileModel.path)) {
-                addPlayerFragment(FileHelper.getFileModelsFromFiles(FileHelper.getFilesFromPath(fileModel.path)))
+            if (fileModel.containsAudioFiles()) {
+                addPlayerFragment(FileHelper.getFileModelsFromFiles(fileModel.getSubFiles()))
             }
         }
     }

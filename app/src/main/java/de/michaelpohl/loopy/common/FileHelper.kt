@@ -1,13 +1,11 @@
 package de.michaelpohl.loopy.common
 
-import timber.log.Timber
 import java.io.File
 
 object FileHelper {
 
     fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
-        Timber.d("path: %s, files:%s", path, file.listFiles())
 
         if (file.listFiles() == null) {
             return arrayListOf()
@@ -32,7 +30,7 @@ object FileHelper {
                     ?: 0
             )
         }
-        filesToReturn = allFiles.filter { isValidFileType(it) }
+        filesToReturn = allFiles.filter { it.isValidFileType() }
 
 
         return filesToReturn
@@ -46,29 +44,8 @@ object FileHelper {
         return (sizeInBytes.toDouble()) / (1024 * 1024)
     }
 
-    fun isValidFileType(fileModel: FileModel): Boolean {
-
-        //filtering only for .wav files for now
-        // in the future there should be an enum "allowedExtensions" or so
-        if (fileModel.fileType == FileType.FILE) {
-            return fileModel.name.endsWith("wav")
-        }
-        // Folders stay in the list
-        return true
-    }
-
-    fun hasSubFolders(path: String): Boolean {
-        var hasSubFolders = false
-        val filesToCheck: List<File> = getFilesFromPath(path)
-
-        val foundFolderModels: List<FileModel> =
-            getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FOLDER }
-
-        if (!foundFolderModels.isEmpty()) hasSubFolders = true
-
-        return hasSubFolders
-    }
-
+    //TODO this method is slooow with large file numbers. Do something about it (or limit its use)
+    //TODO also it shouldbe in FileModel, but I couldn't get it to work
     fun containsAudioFilesInAnySubFolders(path: String): Boolean {
         var containsAudio = false
         val filesToCheck: List<File> = getFilesFromPath(path)
@@ -79,7 +56,8 @@ object FileHelper {
             getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FILE }
 
         for (fileModel in foundFileModels) {
-            if (isValidFileType(fileModel)) containsAudio = true
+            if (fileModel.isValidFileType()) containsAudio = true
+            return containsAudio
         }
         if (!foundFolderModels.isEmpty()) {
             for (fileModel in foundFolderModels) {
@@ -89,11 +67,5 @@ object FileHelper {
         return containsAudio
     }
 
-    fun containsAudioFiles(path: String): Boolean {
-        val filesToCheck: List<File> = getFilesFromPath(path)
-        if (getFileModelsFromFiles(filesToCheck).isEmpty()) {
-            return false
-        }
-        return true
-    }
+
 }

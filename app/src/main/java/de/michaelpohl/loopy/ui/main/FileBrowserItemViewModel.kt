@@ -2,13 +2,11 @@ package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
-import android.view.View
 import android.view.View.*
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import hugo.weaving.DebugLog
-import timber.log.Timber
 
 @DebugLog
 class FileBrowserItemViewModel : ViewModel() {
@@ -24,7 +22,6 @@ class FileBrowserItemViewModel : ViewModel() {
     var fileSize = ObservableField("filesize")
 
     fun update() {
-        Timber.d("Filemodel: %s", fileModel)
         name.set(fileModel.name)
         //TODO turn this string stuff into something proper and non-hard coded
         subFolders.set("(${fileModel.subFiles} files)")
@@ -32,30 +29,24 @@ class FileBrowserItemViewModel : ViewModel() {
 
 
         if (fileModel.fileType == FileType.FOLDER) {
-            Timber.d("it's a folder")
             folderLabelVisibility.set(VISIBLE)
             sizeLabelVisibility.set(INVISIBLE)
         } else {
-            Timber.d("it's not a folder")
 
             folderLabelVisibility.set(INVISIBLE)
             sizeLabelVisibility.set(VISIBLE)
         }
-        if (FileHelper.hasSubFolders(fileModel.path)) {
-            Timber.d("has subfolders")
+        if (fileModel.hasSubFolders()) {
 
             subFolderIndicatorVisibility.set(VISIBLE)
         } else {
-            Timber.d("has no subfolders")
 
             subFolderIndicatorVisibility.set(INVISIBLE)
         }
         if (FileHelper.containsAudioFilesInAnySubFolders(fileModel.path)) {
-            Timber.d("contains audio")
 
             pickFolderButtonVisibility.set(VISIBLE)
         } else {
-            Timber.d("contains no audio")
 
             pickFolderButtonVisibility.set(GONE)
         }
