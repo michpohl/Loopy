@@ -4,6 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class FileSet(
+data class FileModelsList(
     val models: List<FileModel>
 ) : Parcelable

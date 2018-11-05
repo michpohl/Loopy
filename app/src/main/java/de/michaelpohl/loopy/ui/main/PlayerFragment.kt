@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -9,12 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileSet
+import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import kotlinx.android.synthetic.main.fragment_player.*
 
 class PlayerFragment : BaseFragment() {
 
+    private val sharedPrefs = context?.getSharedPreferences(
+        getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+
+
+    //TODO loopslist needs to be persistent and gets given to the fragment when creating (which means in the activity?)
     private lateinit var loopsList: List<FileModel>
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
@@ -23,7 +29,7 @@ class PlayerFragment : BaseFragment() {
         fun newInstance(loopFiles: List<FileModel>): PlayerFragment {
             val fragment = PlayerFragment()
             val args = Bundle()
-            val loops = FileSet(loopFiles)
+            val loops = FileModelsList(loopFiles)
             args.putParcelable("loopsList", loops)
             fragment.arguments = args
             return fragment
@@ -31,10 +37,12 @@ class PlayerFragment : BaseFragment() {
 
     }
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            val loops: FileSet = arguments!!.getParcelable("loopsList")
+            val loops: FileModelsList = arguments!!.getParcelable("loopsList")
             loopsList = loops.models
         }
     }
@@ -52,7 +60,9 @@ class PlayerFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
-
+        viewModel.context = context!!
+        viewModel.sharedPrefs = sharedPrefs!!
+        viewModel.loadSavedLoops()
         binding.model = viewModel
     }
 
