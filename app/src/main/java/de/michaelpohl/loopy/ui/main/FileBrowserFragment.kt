@@ -80,18 +80,18 @@ class FileBrowserFragment : BaseFragment() {
         viewModel.updateData()
 
         viewModel.getAdapter().onItemClickListener = {
-            listener.onClick(it)
+            listener.onFolderClicked(it)
         }
 
         viewModel.getAdapter().onItemSelectedListener = {
-            listener.onSelected(it)
+            listener.onFolderSelected(it)
         }
     }
 
     interface OnItemClickListener {
-        fun onClick(fileModel: FileModel)
+        fun onFolderClicked(fileModel: FileModel)
 
-        fun onSelected(fileModel: FileModel)
+        fun onFolderSelected(fileModel: FileModel)
     }
 
 

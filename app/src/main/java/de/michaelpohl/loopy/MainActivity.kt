@@ -1,10 +1,14 @@
 package de.michaelpohl.loopy
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import com.google.gson.Gson
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.ui.main.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
@@ -14,8 +18,8 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
-    //TODO this is a constant one as a starting point. Improve handling this situation, please
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
+    private lateinit var sharedPrefs : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,37 +31,23 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         }
 
 
+        sharedPrefs = getSharedPreferences(
+            resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         setContentView(R.layout.main_activity)
         //todo return to this
         if (savedInstanceState == null) {
-            addPlayerFragment()
+            addPlayerFragment(loadSavedLoopsList().models)
         }
     }
 
-    //TODO these are from audioguide, how did that work again
-//    override fun addFragment(fragment: Fragment, targetView: Int, addToBackStack: Boolean, tag: String) {
-//        getFragment(addToBackStack, mFragmentManager) { add(targetView, fragment, tag) }
-//        Timber.v("added Fragment %s to Backstack. Backstack count is: %s", fragment, mFragmentManager.getBackStackEntryCount())
-//    }
-//
-//    override fun replaceFragment(fragment: Fragment, targetView: Int, addToBackStack: Boolean, tag: String) {
-//        getFragment(addToBackStack, mFragmentManager) { replace(targetView, fragment, tag) }
-//        Timber.v("added Fragment %s to Backstack. Backstack count is: %s", fragment, mFragmentManager.getBackStackEntryCount())
-//    }
-//
-//    override fun goBack() {
-//        onBackPressed()
-//    }
+    override fun onFolderClicked(fileModel: FileModel) {
 
-    override fun onClick(fileModel: FileModel) {
-        Timber.d("onClick")
-        Timber.d("Trying to add fragment with this path: %s", fileModel)
         if (fileModel.fileType == FileType.FOLDER) {
             addFileFragment(fileModel.path)
         }
     }
 
-    override fun onSelected(fileModel: FileModel) {
+    override fun onFolderSelected(fileModel: FileModel) {
         if (fileModel.fileType == FileType.FOLDER) {
             if (fileModel.containsAudioFiles()) {
                 addPlayerFragment(FileHelper.getFileModelsFromFiles(fileModel.getSubFiles()))
@@ -76,8 +66,45 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         }
     }
 
+    fun saveLoops(list: FileModelsList) {
+        val gson = Gson()
+        val jsonString = gson.toJson(list)
+
+//        TODO put fitting assertion
+//        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
+
+        with (sharedPrefs.edit()) {
+            putString(resources.getString(de.michaelpohl.loopy.R.string.prefs_loops_key), jsonString)
+            commit()
+        }
+    }
+
+    private fun loadSavedLoopsList():FileModelsList {
+
+        //warnString is put as the defaultValue and is given if there's nothing to return from sharedPrefs
+        //this is not the most sexy way to do it, butI'll go with it for now
+        //TODO improve this
+        val warnString = "warning"
+        val jsonString = sharedPrefs.getString(getString(R.string.prefs_loops_key), warnString)
+
+        //TODO take the FileModelList and test its integrity (do the files still exist?
+
+        return if (jsonString != "warning") {
+            fileModelsListFromJson(jsonString)
+        } else FileModelsList(arrayListOf())
+    }
+
+    private fun fileModelsListFromJson(jsonString: String): FileModelsList {
+        val gson = Gson()
+         return gson.fromJson(jsonString, FileModelsList::class.java)
+
+    }
+
     private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
-        Timber.d("AddingPlayerFragment with loopsList: %s", loops)
+
+        if (!loops.isEmpty()) {
+            saveLoops(FileModelsList(loops))
+        }
         clearBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, PlayerFragment.newInstance(loops), "player")
@@ -85,7 +112,6 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     }
 
     private fun addFileFragment(path: String = defaultFilesPath) {
-        Timber.d("adding File Fragment: %s", path)
         val filesListFragment = FileBrowserFragment.newInstance(path)
 
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -97,7 +123,6 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     private fun clearBackStack() {
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
-            Timber.d("popping backStack")
         }
     }
 }

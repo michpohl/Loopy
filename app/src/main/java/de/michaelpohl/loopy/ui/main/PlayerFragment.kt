@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -15,9 +14,6 @@ import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import kotlinx.android.synthetic.main.fragment_player.*
 
 class PlayerFragment : BaseFragment() {
-
-    private val sharedPrefs = context?.getSharedPreferences(
-        getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
 
     //TODO loopslist needs to be persistent and gets given to the fragment when creating (which means in the activity?)
@@ -34,10 +30,7 @@ class PlayerFragment : BaseFragment() {
             fragment.arguments = args
             return fragment
         }
-
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,16 +46,13 @@ class PlayerFragment : BaseFragment() {
     ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player, container, false)
-        var myView: View = binding.root
-        return myView
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
-        viewModel.context = context!!
-        viewModel.sharedPrefs = sharedPrefs!!
-        viewModel.loadSavedLoops()
+        viewModel.loopsList = loopsList
         binding.model = viewModel
     }
 
