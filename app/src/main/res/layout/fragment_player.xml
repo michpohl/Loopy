@@ -86,7 +86,7 @@
         <ImageButton
                 android:id="@+id/btn_play"
                 style="@style/Button.SmallIcon"
-                android:src="@drawable/ic_play_arrow_black"
+                android:src="@drawable/ic_play"
                 android:onClick="@{model::onStartClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_pause"
@@ -95,7 +95,7 @@
         <ImageButton
                 android:id="@+id/btn_stop"
                 style="@style/Button.SmallIcon"
-                android:src="@drawable/ic_stop_black"
+                android:src="@drawable/ic_stop"
                 android:onClick="@{model::onStopClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_pause"
@@ -104,7 +104,7 @@
         <ImageButton
                 android:id="@+id/btn_pause"
                 style="@style/Button.SmallIcon"
-                android:src="@drawable/ic_pause_black"
+                android:src="@drawable/ic_pause"
                 android:onClick="@{model::onPauseClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

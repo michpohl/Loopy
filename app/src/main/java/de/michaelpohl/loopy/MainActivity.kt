@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     PlayerViewModel.OnSelectFolderClickedListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
-    private lateinit var sharedPrefs : SharedPreferences
+    private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
 
 
         sharedPrefs = getSharedPreferences(
-            resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+            resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+        )
         setContentView(R.layout.main_activity)
         //todo return to this
         if (savedInstanceState == null) {
@@ -67,19 +68,18 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     }
 
     fun saveLoops(list: FileModelsList) {
-        val gson = Gson()
-        val jsonString = gson.toJson(list)
+         val jsonString = Gson().toJson(list)
 
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
 
-        with (sharedPrefs.edit()) {
+        with(sharedPrefs.edit()) {
             putString(resources.getString(de.michaelpohl.loopy.R.string.prefs_loops_key), jsonString)
             commit()
         }
     }
 
-    private fun loadSavedLoopsList():FileModelsList {
+    private fun loadSavedLoopsList(): FileModelsList {
 
         //warnString is put as the defaultValue and is given if there's nothing to return from sharedPrefs
         //this is not the most sexy way to do it, butI'll go with it for now
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         val warnString = "warning"
         val jsonString = sharedPrefs.getString(getString(R.string.prefs_loops_key), warnString)
 
-        //TODO take the FileModelList and test its integrity (do the files still exist?
+        //TODO take the FileModelList and test its integrity (do the files still exist?)
 
         return if (jsonString != "warning") {
             fileModelsListFromJson(jsonString)
@@ -95,13 +95,10 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     }
 
     private fun fileModelsListFromJson(jsonString: String): FileModelsList {
-        val gson = Gson()
-         return gson.fromJson(jsonString, FileModelsList::class.java)
-
+        return Gson().fromJson(jsonString, FileModelsList::class.java)
     }
 
     private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
-
         if (!loops.isEmpty()) {
             saveLoops(FileModelsList(loops))
         }
@@ -113,8 +110,8 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
 
     private fun addFileFragment(path: String = defaultFilesPath) {
         val filesListFragment = FileBrowserFragment.newInstance(path)
-
         val fragmentTransaction = supportFragmentManager.beginTransaction()
+
         fragmentTransaction.replace(R.id.container, filesListFragment)
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
