@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Loopy</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="preference_file_key">de.michaelpohl.loopy</string>
+    <string name="prefs_loops_key">loops_list</string>
+
 </resources>

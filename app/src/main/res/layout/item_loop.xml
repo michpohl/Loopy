@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/Row"
+        android:background="@color/window_background"
+        android:layout_marginBottom="1dp"
+        android:foreground="?selectableItemBackground"
+        android:padding="8dp">
+
+    <TextView
+            android:id="@+id/nameTextView"
+            style="@style/MatchWidth"
+            android:textAppearance="@style/Text.HeaderLarge"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="8dp"
+            tools:text="item"/>
+
+</android.support.constraint.ConstraintLayout>
