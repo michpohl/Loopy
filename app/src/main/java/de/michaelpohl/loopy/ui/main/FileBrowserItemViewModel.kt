@@ -3,9 +3,7 @@ package de.michaelpohl.loopy.ui.main
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.databinding.ObservableField
-import android.graphics.drawable.Drawable
 import android.view.View.*
-import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
@@ -24,7 +22,6 @@ class FileBrowserItemViewModel : ViewModel() {
     var name = ObservableField("name")
     var subFolders = ObservableField("folders")
     var fileSize = ObservableField("filesize")
-    lateinit var context: Context
 
     fun update() {
 
