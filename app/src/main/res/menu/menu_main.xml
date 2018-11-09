@@ -4,21 +4,31 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".MainActivity">
+    <!--<item-->
+            <!--android:id="@+id/action_settings"-->
+            <!--android:orderInCategory="100"-->
+            <!--android:title="fdfds"-->
+            <!--app:showAsAction="never" />-->
+
     <item
-            android:id="@+id/action_settings"
+            android:id="@+id/action_help"
             android:orderInCategory="100"
-            android:title="fdfds"
-            app:showAsAction="never" />
+            android:title="help"
+            android:icon="@drawable/ic_settings"
+            app:showAsAction="ifRoom" />
+
     <item
-            android:id="@+id/action_search"
+            android:id="@+id/action_gear"
             android:orderInCategory="200"
-            android:title="Search"
-            android:icon="@drawable/ic_forbidden"
+            android:title="settings"
+            android:icon="@drawable/ic_help"
             app:showAsAction="ifRoom"/>
     <item
-            android:id="@+id/action_user"
+            android:id="@+id/action_browser"
             android:orderInCategory="300"
-            android:title="User"
-            android:icon="@drawable/ic_forbidden"
+            android:title="file_browser"
+            android:icon="@drawable/ic_folder"
             app:showAsAction="ifRoom" />
+
+
 </menu>

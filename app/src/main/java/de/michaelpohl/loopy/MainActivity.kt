@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.view.MenuItem
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -40,6 +41,28 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
             addPlayerFragment(loadSavedLoopsList().models)
         }
         setSupportActionBar(findViewById(R.id.my_toolbar))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_help -> {
+            true
+        }
+
+        R.id.action_gear -> {
+
+            true
+        }
+
+        R.id.action_browser -> {
+            addFileFragment()
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
