@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -35,10 +36,16 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
             resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
         )
         setContentView(R.layout.main_activity)
-        //todo return to this
         if (savedInstanceState == null) {
             addPlayerFragment(loadSavedLoopsList().models)
         }
+        setSupportActionBar(findViewById(R.id.my_toolbar))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
     override fun onFolderClicked(fileModel: FileModel) {
