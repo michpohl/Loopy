@@ -345,7 +345,7 @@
     </style>
 
     <style name="TileIcon"></style>
-    
+
 
     <style name="WrapContent.SingleLine">
         <item name="android:singleLine">true</item>
