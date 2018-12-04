@@ -16,6 +16,12 @@ import de.michaelpohl.loopy.ui.main.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
 import timber.log.Timber
+import android.R.array
+import android.widget.ArrayAdapter
+import android.support.v4.view.MenuItemCompat
+import android.widget.Spinner
+
+
 
 class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
@@ -68,6 +74,17 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        val item = menu.findItem(R.id.spinner)
+        val spinner = MenuItemCompat.getActionView(item) as Spinner
+
+        val adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.spinner_list_item_array, android.R.layout.simple_spinner_item
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinner.adapter = adapter
         return true
     }
 

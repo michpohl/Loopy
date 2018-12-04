@@ -13,14 +13,14 @@
     <item
             android:id="@+id/action_help"
             android:orderInCategory="100"
-            android:title="help"
+            android:title="@string/menu_item_title_help"
             android:icon="@drawable/ic_settings"
             app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/action_gear"
             android:orderInCategory="200"
-            android:title="settings"
+            android:title="@string/menu_item_title_settings"
             android:icon="@drawable/ic_help"
 
             app:showAsAction="ifRoom"/>
@@ -30,5 +30,12 @@
             android:title="file_browser"
             android:icon="@drawable/ic_folder"
             app:showAsAction="ifRoom"/>
+
+    <item
+            android:id="@+id/spinner"
+            android:title="ActionBar Spinner"
+            android:icon="@drawable/ic_forbidden"
+            app:actionViewClass="android.widget.Spinner"
+            app:showAsAction="always" />
 
 </menu>
