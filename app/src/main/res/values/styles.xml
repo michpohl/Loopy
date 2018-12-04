@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ActionBar" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:background">@color/action_bar_background_color</item>
+        <item name="android:background">@color/action</item>
     </style>
 
     <style name="Alert" parent="Theme.AppCompat.Dialog">
@@ -15,13 +15,7 @@
 
     </style>
 
-    <style name="DatePicker" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:colorAccent">@color/dark_green</item>
-        <item name="android:colorBackground">@color/dialog_background</item>
-        <item name="android:colorControlActivated">@color/action</item>
-    </style>
+
 
     <style name="BottomPaddedRecyclerView" parent="MatchWidth">
         <item name="android:paddingBottom">64dp</item>
@@ -105,9 +99,6 @@
 
     </style>
 
-    <style name="Dialog" parent="MatchParent">
-        <item name="android:background">@color/dialog_background</item>
-    </style>
 
     <style name="DialogButton" parent="WrapContent">
         <item name="android:layout_gravity">right</item>
@@ -354,14 +345,7 @@
     </style>
 
     <style name="TileIcon"></style>
-
-    <style name="TimePickerClock" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:colorAccent">@color/dark_green</item>
-        <item name="android:colorBackground">@color/dialog_background</item>
-        <item name="android:colorControlActivated">@color/action</item>
-    </style>
+    
 
     <style name="WrapContent.SingleLine">
         <item name="android:singleLine">true</item>

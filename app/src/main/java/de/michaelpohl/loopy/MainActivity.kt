@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         super.onCreate(savedInstanceState)
 
         //Timber logging on for Debugging
+        //Timber logging on for Debugging
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             Timber.d("it works")
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         }
 
         R.id.action_gear -> {
-
             true
         }
 
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     }
 
     fun saveLoops(list: FileModelsList) {
-         val jsonString = Gson().toJson(list)
+        val jsonString = Gson().toJson(list)
 
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
