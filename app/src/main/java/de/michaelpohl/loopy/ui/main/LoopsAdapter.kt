@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
+import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
 import timber.log.Timber
-import java.util.*
 
+@DebugLog
 class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
 
 
@@ -23,30 +24,6 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
 
     var selectedPosition = -1
     var context = context
-
-    //hey kotlin, this is really not sexy
-//    val progressListener = object : OnProgressChangedListener {
-//        override fun update(position: Float) {
-//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//        }
-//    }
-
-    class Test {
-        var onAction = fun(x: Int, y: Int): Int = null!!
-        fun doAction() {
-            onAction(1, 2)
-        }
-    }
-
-    class Test2{
-        fun testFun(){
-            var test = Test()
-            test.onAction = fun(x, y): Int {
-                return x + y
-            }
-        }
-    }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoopsAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loop, parent, false)
@@ -58,13 +35,19 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
 
     override fun onBindViewHolder(holder: LoopsAdapter.ViewHolder, position: Int) {
         holder.bindView(position)
-        if (holder.adapterPosition == selectedPosition) {
+
+        //TODO I guess I gotta roll back the position checking to how it was before.
+        if (holder.positionInList  == selectedPosition) {
+            Timber.d("Selected item! position in List: %s", holder.positionInList)
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.action))
             holder.selected = true
             holder.initializeOnProgressUpdatedListener()
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.window_background))
+            Timber.d("Not selected item! position in List: %s", holder.positionInList)
+            holder.selected = false
         }
+        Timber.d("selectedPosition: %s", selectedPosition )
 
     }
 
@@ -78,30 +61,34 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
-        View.OnLongClickListener, OnProgressChangedListener {
+        View.OnLongClickListener{
 
         var selected = false
-
+        var positionInList = -1
 
         init {
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
         }
 
-        override fun update(position: Float) {
-            Timber.d("progess update: %s", position)
-            if (!selected) return
-            itemView.wave.progress = position
+         fun update(progress: Float) {
+
+            if (!selected) {
+                Timber.d("not selected, position: %s", positionInList)
+
+                itemView.wave.progress = progress
+                return
+            }
+//             Timber.d("progess update: %s", progress)
+             itemView.wave.progress = progress
         }
 
         fun initializeOnProgressUpdatedListener() {
-            onProgressUpdatedListener = {
-                it -> update(it)
-            }
+            onProgressUpdatedListener = { it -> update(it) }
         }
 
         override fun onClick(v: View?) {
-            onItemClickListener?.invoke(loopsList[adapterPosition], adapterPosition)
+            onItemClickListener?.invoke(loopsList[adapterPosition], positionInList)
         }
 
         override fun onLongClick(v: View?): Boolean {
@@ -113,6 +100,7 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         fun bindView(position: Int) {
             val fileModel = loopsList[position]
             val bytes = FileHelper.getSingleFile(fileModel.path).readBytes()
+            positionInList = position
             itemView.tv_name.text = fileModel.name
             inflateWave(itemView.wave, bytes)
         }
@@ -122,8 +110,5 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         }
     }
 
-    interface OnProgressChangedListener {
-        fun update(position: Float) : Unit
-    }
 }
 

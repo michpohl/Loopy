@@ -21,7 +21,7 @@ class LoopedPlayer private constructor(context: Context) {
     private var mCounter = 1
     private var shouldBePlaying = false
 
-     lateinit var currentPlayer: MediaPlayer
+    lateinit var currentPlayer: MediaPlayer
     private lateinit var nextPlayer: MediaPlayer
     private lateinit var loopUri: Uri
 
@@ -47,10 +47,10 @@ class LoopedPlayer private constructor(context: Context) {
         mContext = context
     }
 
-    fun getCurrentPosition() : Float {
-        val unit = currentPlayer.duration/100
-        val currentPosition = currentPlayer.currentPosition/unit.toFloat()
-        Timber.d("duration: %s, Unit: %s, Current position: %s", currentPlayer.duration, unit,currentPosition)
+    fun getCurrentPosition(): Float {
+        val unit = currentPlayer.duration / 100
+        val currentPosition = currentPlayer.currentPosition / unit.toFloat()
+        Timber.d("duration: %s, Unit: %s, Current position: %s", currentPlayer.duration, unit, currentPosition)
         return currentPosition
     }
 

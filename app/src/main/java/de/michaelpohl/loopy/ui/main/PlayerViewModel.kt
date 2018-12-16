@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.databinding.ObservableField
 import android.os.Handler
@@ -9,6 +8,7 @@ import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
+import timber.log.Timber
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
@@ -16,7 +16,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = LoopsAdapter(application)
     lateinit var selectFolderListener: OnSelectFolderClickedListener
     lateinit var loopsList: List<FileModel>
-    lateinit var sharedPrefs: SharedPreferences
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
 
     private var updateHandler = Handler()
@@ -28,25 +27,23 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-
     fun getAdapter(): LoopsAdapter {
         return adapter
     }
 
     fun onStartClicked(view: View) {
-        if (looper.hasLoopFile) looper.start()
+        if (looper.hasLoopFile) startLooper()
     }
 
     fun onStopClicked(view: View) {
         looper.stop()
-    }
+onPlaybackStopped()    }
 
     fun onPauseClicked(view: View) {
-        if (looper.isPlaying()) looper.pause() else if (looper.isPaused) looper.start()
-    }
-
-    fun onSelectFolderClicked(view: View) {
-        selectFolderListener.onSelectFolderClicked()
+        if (looper.isPlaying()) {
+            looper.pause()
+            onPlaybackStopped()
+        } else if (looper.isPaused) startLooper()
     }
 
     interface OnSelectFolderClickedListener {
@@ -63,10 +60,20 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onItemSelected(fm: FileModel, position: Int) {
+        Timber.d("Item selcted: %s, Position in List: %s", fm.name, position)
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
         adapter.selectedPosition = position
         adapter.updateData(adapter.loopsList)
+        startLooper()
+    }
+
+    private fun startLooper() {
         updateRunnable.run()
         looper.start()
+    }
+
+    private fun onPlaybackStopped() {
+        updateHandler.removeCallbacks(updateRunnable)
+
     }
 }
