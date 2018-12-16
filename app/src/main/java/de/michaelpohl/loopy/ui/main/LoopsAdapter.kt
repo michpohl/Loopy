@@ -61,10 +61,10 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         if (holder.adapterPosition == selectedPosition) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.action))
             holder.selected = true
+            holder.initializeOnProgressUpdatedListener()
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.window_background))
         }
-        holder.initializeOnProgressUpdatedListener()
 
     }
 
