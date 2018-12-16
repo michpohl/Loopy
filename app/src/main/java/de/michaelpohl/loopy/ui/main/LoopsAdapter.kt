@@ -75,8 +75,7 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
 
             if (!selected) {
                 Timber.d("not selected, position: %s", positionInList)
-
-                itemView.wave.progress = progress
+                itemView.wave.progress = 0F
                 return
             }
 //             Timber.d("progess update: %s", progress)

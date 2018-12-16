@@ -60,7 +60,7 @@ onPlaybackStopped()    }
     }
 
     fun onItemSelected(fm: FileModel, position: Int) {
-        Timber.d("Item selcted: %s, Position in List: %s", fm.name, position)
+        Timber.d("Item selected: %s, Position in List: %s", fm.name, position)
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
         adapter.selectedPosition = position
         adapter.updateData(adapter.loopsList)
