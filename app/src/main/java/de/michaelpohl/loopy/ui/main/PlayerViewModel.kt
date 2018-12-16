@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.databinding.ObservableField
+import android.os.Handler
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -17,6 +18,16 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     lateinit var loopsList: List<FileModel>
     lateinit var sharedPrefs: SharedPreferences
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
+
+    private var updateHandler = Handler()
+
+    private var updateRunnable = object : Runnable {
+        override fun run() {
+            adapter.updateProgress(looper.getCurrentPosition())
+            updateHandler.postDelayed(this, 40)
+        }
+    }
+
 
     fun getAdapter(): LoopsAdapter {
         return adapter
@@ -55,6 +66,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
         adapter.selectedPosition = position
         adapter.updateData(adapter.loopsList)
+        updateRunnable.run()
         looper.start()
     }
 }

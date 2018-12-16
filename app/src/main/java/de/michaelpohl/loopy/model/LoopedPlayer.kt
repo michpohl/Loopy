@@ -9,7 +9,7 @@ import timber.log.Timber
 import java.io.File
 
 /*
-this thing comes from here: https://stackoverflow.com/questions/26274182/not-able-to-achieve-gapless-audio-looping-so-far-on-android
+the concept with two media players comes from here: https://stackoverflow.com/questions/26274182/not-able-to-achieve-gapless-audio-looping-so-far-on-android
  */
 @DebugLog
 class LoopedPlayer private constructor(context: Context) {
@@ -21,8 +21,8 @@ class LoopedPlayer private constructor(context: Context) {
     private var mCounter = 1
     private var shouldBePlaying = false
 
-    private lateinit var mCurrentPlayer: MediaPlayer
-    private lateinit var mNextPlayer: MediaPlayer
+     lateinit var currentPlayer: MediaPlayer
+    private lateinit var nextPlayer: MediaPlayer
     private lateinit var loopUri: Uri
 
     companion object {
@@ -36,7 +36,7 @@ class LoopedPlayer private constructor(context: Context) {
 
     private val onCompletionListener = MediaPlayer.OnCompletionListener { mediaPlayer ->
         mediaPlayer.release()
-        mCurrentPlayer = mNextPlayer
+        currentPlayer = nextPlayer
 
         createNextMediaPlayer()
 
@@ -47,43 +47,55 @@ class LoopedPlayer private constructor(context: Context) {
         mContext = context
     }
 
-    private fun initPlayer() {
-        mCurrentPlayer = MediaPlayer.create(mContext, loopUri)
-        mCurrentPlayer.setOnPreparedListener {
+    fun getCurrentPosition() : Float {
+        val unit = currentPlayer.duration/100
+        val currentPosition = currentPlayer.currentPosition/unit.toFloat()
+        Timber.d("duration: %s, Unit: %s, Current position: %s", currentPlayer.duration, unit,currentPosition)
+        return currentPosition
+    }
 
-            if (shouldBePlaying) mCurrentPlayer.start()
+    private fun initPlayer() {
+        currentPlayer = createMediaPlayer()
+        currentPlayer.setOnPreparedListener {
+
+            if (shouldBePlaying) currentPlayer.start()
         }
 
         createNextMediaPlayer()
     }
 
     private fun createNextMediaPlayer() {
-        mNextPlayer = MediaPlayer.create(mContext, loopUri)
-        mCurrentPlayer.setNextMediaPlayer(mNextPlayer)
-        mCurrentPlayer.setOnCompletionListener(onCompletionListener)
+        nextPlayer = createMediaPlayer()
+        currentPlayer.setNextMediaPlayer(nextPlayer)
+        currentPlayer.setOnCompletionListener(onCompletionListener)
+    }
+
+    private fun createMediaPlayer(): MediaPlayer {
+        val mediaPlayer = MediaPlayer.create(mContext, loopUri)
+        return mediaPlayer
     }
 
     fun start() {
         //TODO show user if no file is selected yet
         shouldBePlaying = true
         isPaused = false
-        mCurrentPlayer.start()
+        currentPlayer.start()
     }
 
     fun stop() {
         shouldBePlaying = false
-        mCurrentPlayer.stop()
-        mNextPlayer.stop()
+        currentPlayer.stop()
+        nextPlayer.stop()
         initPlayer()
     }
 
     fun pause() {
-        mCurrentPlayer.pause()
+        currentPlayer.pause()
         isPaused = true
     }
 
     fun isPlaying(): Boolean {
-        return mCurrentPlayer.isPlaying
+        return currentPlayer.isPlaying
     }
 
     fun setLoop(context: Context, loop: File) {
