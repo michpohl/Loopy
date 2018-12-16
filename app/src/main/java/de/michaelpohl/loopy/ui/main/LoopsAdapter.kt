@@ -1,15 +1,22 @@
 package de.michaelpohl.loopy.ui.main
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
-import kotlinx.android.synthetic.main.item_file_browser.view.*
+import kotlinx.android.synthetic.main.item_loop.view.*
+import rm.com.audiowave.AudioWaveView
+
 class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
+
+
 
     var loopsList = listOf<FileModel>()
     var onItemClickListener: ((FileModel, Int ) -> Unit)? = null
@@ -42,6 +49,13 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
         View.OnLongClickListener {
 
+        private val progressAnim: ObjectAnimator by lazy {
+            ObjectAnimator.ofFloat(itemView.wave, "progress", 0F, 100F).apply {
+                interpolator = LinearInterpolator()
+                duration = 1000
+            }
+        }
+
         init {
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
@@ -59,7 +73,14 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
 
         fun bindView(position: Int) {
             val fileModel = loopsList[position]
-            itemView.nameTextView.text = fileModel.name
+            val bytes = FileHelper.getSingleFile(fileModel.path).readBytes()
+            itemView.tv_name.text = fileModel.name
+            inflateWave(itemView.wave, bytes)
+
+        }
+
+        private fun inflateWave(view:AudioWaveView, bytes: ByteArray) {
+            view.setRawData(bytes)
         }
     }
 }

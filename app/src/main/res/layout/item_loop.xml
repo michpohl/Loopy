@@ -10,7 +10,7 @@
         android:padding="8dp">
 
     <TextView
-            android:id="@+id/nameTextView"
+            android:id="@+id/tv_name"
             style="@style/MatchWidth"
             android:textAppearance="@style/Text.HeaderLarge"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -18,5 +18,21 @@
             app:layout_constraintTop_toTopOf="parent"
             android:paddingStart="8dp"
             tools:text="item"/>
+
+    <rm.com.audiowave.AudioWaveView
+        android:id="@+id/wave"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        app:animateExpansion="false"
+        app:chunkWidth="1dp"
+        app:chunkHeight="24dp"
+        app:minChunkHeight="2dp"
+        app:chunkSpacing="1dp"
+        app:chunkRadius="0dp"
+        app:touchable="true"
+        app:waveColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        />
 
 </android.support.constraint.ConstraintLayout>
