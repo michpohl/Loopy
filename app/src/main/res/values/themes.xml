@@ -3,6 +3,7 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light">
 
+        <item name="android:actionBarStyle">@style/ActionBar</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="editTextStyle">@style/EditText</item>
@@ -10,6 +11,7 @@
         <item name="drawerArrowStyle">@style/BurgerIcon</item>
         <item name="checkboxStyle">@style/CheckBox</item>
 
+        <item name="android:statusBarColor">@color/action_dark</item>
         <item name="colorAccent">@color/action</item>
         <item name="android:windowBackground">@color/window_background</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

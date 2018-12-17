@@ -41,7 +41,6 @@ class FileBrowserItem(
     }
 
     fun bind(model: FileBrowserItemViewModel) {
-        model.context = context
         binding.model = model
         binding.executePendingBindings()
     }

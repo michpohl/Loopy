@@ -57,9 +57,21 @@
                 android:id="@+id/iv_subfolder_indicator"
                 style="@style/WrapContent"
                 android:tint="@color/window_background"
-                android:src="@{model.subFolderIndicator}"
+                android:src="@drawable/ic_arrow_down"
                 android:paddingEnd="8dp"
                 android:visibility="@{model.subFolderIndicatorVisibility}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+        <ImageView
+                android:id="@+id/iv_subfolder_forbidden"
+                style="@style/WrapContent"
+                android:tint="@color/window_background"
+                android:src="@drawable/ic_forbidden"
+                android:paddingEnd="8dp"
+                android:visibility="@{model.forbiddenSignVisibility}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

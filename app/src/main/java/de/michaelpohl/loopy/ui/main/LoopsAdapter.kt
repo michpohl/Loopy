@@ -7,12 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
-import kotlinx.android.synthetic.main.item_file_browser.view.*
+import hugo.weaving.DebugLog
+import kotlinx.android.synthetic.main.item_loop.view.*
+import rm.com.audiowave.AudioWaveView
+import timber.log.Timber
+
+@DebugLog
 class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
 
+
     var loopsList = listOf<FileModel>()
-    var onItemClickListener: ((FileModel, Int ) -> Unit)? = null
+    var onItemClickListener: ((FileModel, Int) -> Unit)? = null
+    var onProgressUpdatedListener: ((Float) -> Unit)? = null
+
     var selectedPosition = -1
     var context = context
 
@@ -26,12 +35,20 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
 
     override fun onBindViewHolder(holder: LoopsAdapter.ViewHolder, position: Int) {
         holder.bindView(position)
-        if (holder.adapterPosition == selectedPosition) {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.action))
-        } else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.window_background))
 
+        //TODO I guess I gotta roll back the position checking to how it was before.
+        if (holder.positionInList  == selectedPosition) {
+            Timber.d("Selected item! position in List: %s", holder.positionInList)
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.action))
+            holder.selected = true
+            holder.initializeOnProgressUpdatedListener()
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.content_background))
+            Timber.d("Not selected item! position in List: %s", holder.positionInList)
+            holder.selected = false
         }
+        Timber.d("selectedPosition: %s", selectedPosition )
+
     }
 
     fun updateData(loopsList: List<FileModel>) {
@@ -39,16 +56,38 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         notifyDataSetChanged()
     }
 
+    fun updateProgress(position: Float) {
+        onProgressUpdatedListener?.invoke(position)
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
-        View.OnLongClickListener {
+        View.OnLongClickListener{
+
+        var selected = false
+        var positionInList = -1
 
         init {
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
         }
 
+         fun update(progress: Float) {
+
+            if (!selected) {
+                Timber.d("not selected, position: %s", positionInList)
+                itemView.wave.progress = 0F
+                return
+            }
+//             Timber.d("progess update: %s", progress)
+             itemView.wave.progress = progress
+        }
+
+        fun initializeOnProgressUpdatedListener() {
+            onProgressUpdatedListener = { it -> update(it) }
+        }
+
         override fun onClick(v: View?) {
-            onItemClickListener?.invoke(loopsList[adapterPosition], adapterPosition)
+            onItemClickListener?.invoke(loopsList[adapterPosition], positionInList)
         }
 
         override fun onLongClick(v: View?): Boolean {
@@ -59,8 +98,16 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
 
         fun bindView(position: Int) {
             val fileModel = loopsList[position]
-            itemView.nameTextView.text = fileModel.name
+            val bytes = FileHelper.getSingleFile(fileModel.path).readBytes()
+            positionInList = position
+            itemView.tv_name.text = fileModel.name
+            inflateWave(itemView.wave, bytes)
+        }
+
+        private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
+            view.setRawData(bytes)
         }
     }
+
 }
 

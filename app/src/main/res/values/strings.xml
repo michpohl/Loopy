@@ -3,5 +3,15 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="preference_file_key">de.michaelpohl.loopy</string>
     <string name="prefs_loops_key">loops_list</string>
+    <string name="message_empty_folder">This folder contains no playable audio files!</string>
+    <string name="menu_item_title_help">Help</string>
+    <string name="menu_item_title_settings">Settings</string>
 
+
+    <string-array name="spinner_list_item_array">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Urdu</item>
+        <item>Arabic</item>
+    </string-array>
 </resources>

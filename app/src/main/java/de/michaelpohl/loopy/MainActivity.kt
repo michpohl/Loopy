@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -14,6 +16,12 @@ import de.michaelpohl.loopy.ui.main.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
 import timber.log.Timber
+import android.R.array
+import android.widget.ArrayAdapter
+import android.support.v4.view.MenuItemCompat
+import android.widget.Spinner
+
+
 
 class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
@@ -25,6 +33,7 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         super.onCreate(savedInstanceState)
 
         //Timber logging on for Debugging
+        //Timber logging on for Debugging
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             Timber.d("it works")
@@ -35,10 +44,48 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
             resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
         )
         setContentView(R.layout.main_activity)
-        //todo return to this
         if (savedInstanceState == null) {
             addPlayerFragment(loadSavedLoopsList().models)
         }
+        setSupportActionBar(findViewById(R.id.my_toolbar))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_help -> {
+            true
+        }
+
+        R.id.action_gear -> {
+            true
+        }
+
+        R.id.action_browser -> {
+            addFileFragment()
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        val item = menu.findItem(R.id.spinner)
+        val spinner = MenuItemCompat.getActionView(item) as Spinner
+
+        val adapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.spinner_list_item_array, android.R.layout.simple_spinner_item
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinner.adapter = adapter
+        return true
     }
 
     override fun onFolderClicked(fileModel: FileModel) {
@@ -68,7 +115,7 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     }
 
     fun saveLoops(list: FileModelsList) {
-         val jsonString = Gson().toJson(list)
+        val jsonString = Gson().toJson(list)
 
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")

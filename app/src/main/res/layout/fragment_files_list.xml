@@ -30,26 +30,14 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:background="@color/colorAccent"
-                    android:padding="40dp"
-            />
+
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:text="There is nothing here!"/>
+                    style="@style/WrapContent"
+                    android:textAppearance="@style/Text.HeaderLarge"
+                    android:text="@string/message_empty_folder"/>
 
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:text="Empty Folder."/>
+
 
         </LinearLayout>
 
