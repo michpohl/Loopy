@@ -12,15 +12,8 @@ import timber.log.Timber
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
-    var looper: LoopedPlayer = LoopedPlayer.create(application)
     private var adapter = LoopsAdapter(application)
-    lateinit var selectFolderListener: OnSelectFolderClickedListener
-    lateinit var loopsList: List<FileModel>
-    var emptyMessageVisibility = ObservableField(View.VISIBLE)
-
-    //    TODO move this up and make a generic getColor()method
-    var isPlaying = ObservableBoolean(false)
-
+    private var isPlaying = ObservableBoolean(false)
     private var updateHandler = Handler()
 
     private var updateRunnable = object : Runnable {
@@ -29,6 +22,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             updateHandler.postDelayed(this, 40)
         }
     }
+
+    var looper: LoopedPlayer = LoopedPlayer.create(application)
+    var emptyMessageVisibility = ObservableField(View.VISIBLE)
+    lateinit var selectFolderListener: OnSelectFolderClickedListener
+    lateinit var loopsList: List<FileModel>
 
     fun getAdapter(): LoopsAdapter {
         return adapter

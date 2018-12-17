@@ -70,7 +70,7 @@ class LoopedPlayer private constructor(context: Context) {
         nextPlayer = createMediaPlayer()
         currentPlayer.setNextMediaPlayer(nextPlayer)
         loops += 1
-        Timber.v("Loop Audio. Looped %s times", loops)
+        Timber.v("Loop Audio. Looped this file %s times", loops)
         currentPlayer.setOnCompletionListener(onCompletionListener)
     }
 
@@ -83,6 +83,7 @@ class LoopedPlayer private constructor(context: Context) {
         //TODO show user if no file is selected yet
         shouldBePlaying = true
         isPaused = false
+        loops = 0
         currentPlayer.start()
     }
 
