@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.app.Application
-import android.content.SharedPreferences
+import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.os.Handler
 import android.view.View
@@ -17,6 +17,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     lateinit var selectFolderListener: OnSelectFolderClickedListener
     lateinit var loopsList: List<FileModel>
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
+
+    //    TODO move this up and make a generic getColor()method
+    var isPlaying = ObservableBoolean(false)
 
     private var updateHandler = Handler()
 
@@ -37,7 +40,8 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun onStopClicked(view: View) {
         looper.stop()
-onPlaybackStopped()    }
+        onPlaybackStopped()
+    }
 
     fun onPauseClicked(view: View) {
         if (looper.isPlaying()) {
@@ -71,12 +75,13 @@ onPlaybackStopped()    }
     }
 
     private fun startLooper() {
+        isPlaying.set(true)
         updateRunnable.run()
         looper.start()
     }
 
     private fun onPlaybackStopped() {
+        isPlaying.set(false)
         updateHandler.removeCallbacks(updateRunnable)
-
     }
 }

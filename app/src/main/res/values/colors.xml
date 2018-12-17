@@ -37,8 +37,8 @@
 
     <!--COLOR REFERENCES-->
 
-    <color name="window_background">@color/darkest_green</color>
-    <color name="content_background">@color/dark_green</color>
+    <color name="window_background">@color/black</color>
+    <color name="content_background">@color/darkest_green</color>
     <color name="content_background_editable">@color/action</color>
 
     <color name="action_bar_background_color">@color/dark_green</color>
