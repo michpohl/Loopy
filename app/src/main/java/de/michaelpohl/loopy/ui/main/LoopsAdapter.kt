@@ -36,7 +36,6 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
     override fun onBindViewHolder(holder: LoopsAdapter.ViewHolder, position: Int) {
         holder.bindView(position)
 
-        //TODO I guess I gotta roll back the position checking to how it was before.
         if (holder.positionInList  == selectedPosition) {
             Timber.d("Selected item! position in List: %s", holder.positionInList)
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.action))

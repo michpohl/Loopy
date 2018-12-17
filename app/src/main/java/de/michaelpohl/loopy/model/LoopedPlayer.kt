@@ -16,6 +16,7 @@ as of 12/2018 this still seems to be the only working way on android
 class LoopedPlayer private constructor(context: Context) {
 
     var hasLoopFile = false
+   //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
     var isPaused = false
 
     private var mContext: Context? = null

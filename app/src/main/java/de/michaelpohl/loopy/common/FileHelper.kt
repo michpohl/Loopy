@@ -43,7 +43,7 @@ object FileHelper {
     }
 
     //TODO this method is slooow with large file numbers. Do something about it (or limit its use)
-    //TODO also it shouldbe in FileModel, but I couldn't get it to work
+    //TODO also it should be in FileModel, but I couldn't get it to work
     fun containsAudioFilesInAnySubFolders(path: String): Boolean {
         var containsAudio = false
 

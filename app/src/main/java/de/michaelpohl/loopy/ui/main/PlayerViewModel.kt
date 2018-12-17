@@ -13,7 +13,6 @@ import timber.log.Timber
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     private var adapter = LoopsAdapter(application)
-    private var isPlaying = ObservableBoolean(false)
     private var updateHandler = Handler()
 
     private var updateRunnable = object : Runnable {
@@ -24,6 +23,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     var looper: LoopedPlayer = LoopedPlayer.create(application)
+    var isPlaying = ObservableBoolean(false)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     lateinit var selectFolderListener: OnSelectFolderClickedListener
     lateinit var loopsList: List<FileModel>
