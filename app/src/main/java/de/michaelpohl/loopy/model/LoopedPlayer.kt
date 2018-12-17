@@ -9,9 +9,10 @@ import timber.log.Timber
 import java.io.File
 
 /*
-the concept with two media players comes from here: https://stackoverflow.com/questions/26274182/not-able-to-achieve-gapless-audio-looping-so-far-on-android
+the concept with two media players comes from here:
+https://stackoverflow.com/questions/26274182/not-able-to-achieve-gapless-audio-looping-so-far-on-android
+as of 12/2018 this still seems to be the only working way on android
  */
-@DebugLog
 class LoopedPlayer private constructor(context: Context) {
 
     var hasLoopFile = false
@@ -20,6 +21,7 @@ class LoopedPlayer private constructor(context: Context) {
     private var mContext: Context? = null
     private var mCounter = 1
     private var shouldBePlaying = false
+    private var loops = 0
 
     lateinit var currentPlayer: MediaPlayer
     private lateinit var nextPlayer: MediaPlayer
@@ -67,6 +69,8 @@ class LoopedPlayer private constructor(context: Context) {
     private fun createNextMediaPlayer() {
         nextPlayer = createMediaPlayer()
         currentPlayer.setNextMediaPlayer(nextPlayer)
+        loops += 1
+        Timber.v("Loop Audio. Looped %s times", loops)
         currentPlayer.setOnCompletionListener(onCompletionListener)
     }
 
@@ -101,7 +105,6 @@ class LoopedPlayer private constructor(context: Context) {
     fun setLoop(context: Context, loop: File) {
         if (hasLoopFile) stop()
         loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
-        Timber.d("This is my path: %s", loopUri.toString())
         initPlayer()
         hasLoopFile = true
     }
