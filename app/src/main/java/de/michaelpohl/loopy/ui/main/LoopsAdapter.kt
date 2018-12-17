@@ -43,7 +43,7 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
             holder.selected = true
             holder.initializeOnProgressUpdatedListener()
         } else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.window_background))
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.content_background))
             Timber.d("Not selected item! position in List: %s", holder.positionInList)
             holder.selected = false
         }
