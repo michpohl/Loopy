@@ -59,6 +59,10 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         onProgressUpdatedListener?.invoke(position)
     }
 
+    fun resetProgress() {
+        onProgressUpdatedListener?.invoke(0F)
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
         View.OnLongClickListener{
 
@@ -77,7 +81,6 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
                 itemView.wave.progress = 0F
                 return
             }
-//             Timber.d("progess update: %s", progress)
              itemView.wave.progress = progress
         }
 

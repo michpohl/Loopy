@@ -4,6 +4,7 @@ import android.app.Application
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -81,5 +82,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     private fun onPlaybackStopped() {
         isPlaying.set(false)
         updateHandler.removeCallbacks(updateRunnable)
+        adapter.resetProgress()
     }
 }
