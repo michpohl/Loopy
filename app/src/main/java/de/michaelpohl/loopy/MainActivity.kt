@@ -75,16 +75,6 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        val item = menu.findItem(R.id.spinner)
-        val spinner = MenuItemCompat.getActionView(item) as Spinner
-
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.spinner_list_item_array, android.R.layout.simple_spinner_item
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinner.adapter = adapter
         return true
     }
 
