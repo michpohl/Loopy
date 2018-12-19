@@ -12,10 +12,10 @@ import hugo.weaving.DebugLog
 @DebugLog
 class FileBrowserAdapter : RecyclerView.Adapter<FileBrowserItem>() {
 
-    var onItemClickListener: ((FileModel) -> Unit)? = null
-
-    var onItemSelectedListener: ((FileModel) -> Unit)? = null
     private var filesList = listOf<FileModel>()
+    var onItemClickListener: ((FileModel) -> Unit)? = null
+    var onItemSelectedListener: ((FileModel) -> Unit)? = null
+    var allSelected = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileBrowserItem {
 

@@ -27,6 +27,12 @@
         <item name="spinBars">true</item>
     </style>
 
+    <style name="Button.Borderless">
+        <item name="android:elevation">0dp</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textColor">@color/action</item>
+    </style>
+
     <style name="Button.DetailRow">
         <item name="android:backgroundTint">@color/action</item>
         <item name="android:maxLines">1</item>

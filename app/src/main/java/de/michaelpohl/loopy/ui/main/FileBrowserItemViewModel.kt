@@ -2,7 +2,9 @@ package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModel
 import android.content.Context
+import android.databinding.Bindable
 import android.databinding.ObservableField
+import android.view.View
 import android.view.View.*
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
@@ -17,6 +19,8 @@ class FileBrowserItemViewModel : ViewModel() {
     val subFolderIndicatorVisibility = ObservableField(INVISIBLE)
     val forbiddenSignVisibility = ObservableField(INVISIBLE)
     val pickFolderButtonVisibility = ObservableField(INVISIBLE)
+    val checkBoxVisibility = ObservableField(INVISIBLE)
+    val selected = ObservableField(false)
 
     var fileModel = FileModel("", FileType.FILE, "", 0.0)
     var name = ObservableField("name")
@@ -38,6 +42,7 @@ class FileBrowserItemViewModel : ViewModel() {
         } else {
 
             folderLabelVisibility.set(INVISIBLE)
+            checkBoxVisibility.set(VISIBLE)
             sizeLabelVisibility.set(VISIBLE)
         }
         if (fileModel.hasSubFolders()) {
@@ -61,4 +66,10 @@ class FileBrowserItemViewModel : ViewModel() {
             pickFolderButtonVisibility.set(GONE)
         }
     }
+
+   fun onCheckBoxClicked(view: View) {
+        val currentValue = selected.get()
+       selected.set(currentValue!!.not()) //why this ugly non-null assertion?
+   }
+
 }
