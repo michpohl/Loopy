@@ -9,5 +9,6 @@
     <string name="menu_item_name_file_browser">Browse Files</string>
     <string name="btn_select_all">Select all</string>
     <string name="btn_deselect_all">Deselect</string>
+    <string name="menu_item_accept_files">Open selected files</string>
 
 </resources>

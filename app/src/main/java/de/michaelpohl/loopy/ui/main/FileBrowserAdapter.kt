@@ -12,7 +12,7 @@ import timber.log.Timber
 
 @DebugLog
 class FileBrowserAdapter(
-    private val onSelectedItemsChangedListener: ((Int) -> Unit),
+    private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),
     val onItemClickedListener: ((FileModel) -> Unit)
 ) : RecyclerView.Adapter<FileBrowserItem>() {
 
@@ -82,6 +82,6 @@ class FileBrowserAdapter(
             Timber.d("Did nothing")
         }
 
-        onSelectedItemsChangedListener.invoke(selectedItems.size)
+        onSelectedItemsChangedListener.invoke(selectedItems)
     }
 }

@@ -9,9 +9,10 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import timber.log.Timber
+import java.io.File
 
 class FileBrowserViewModel(application: Application) : BaseViewModel(application) {
-    private var adapter = FileBrowserAdapter(this::onAllSelectedChanged, this::onItemClicked)
+    private var adapter = FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
     lateinit var listener: OnItemClickListener
 
     lateinit var path: String
@@ -46,12 +47,12 @@ class FileBrowserViewModel(application: Application) : BaseViewModel(application
         }
     }
 
-    fun onAllSelectedChanged(numberOfSelectedItems : Int) {
-        Timber.d("how many are selected? %s", numberOfSelectedItems)
-        if (numberOfSelectedItems > 0) {
+    fun onSelectedItemsChanged(selectedItems : List<FileModel>) {
+        Timber.d("how many are selected? %s", selectedItems.size)
+        if (selectedItems.size > 0) {
             selectButtonText.set(getString(R.string.btn_deselect_all))
         } else
-            selectButtonText.set(getString(R.string.btn_select_all))
+          listener.onFileSelectionUpdated(selectedItems)
     }
 
     fun onItemClicked(fileModel: FileModel) {
@@ -60,6 +61,6 @@ class FileBrowserViewModel(application: Application) : BaseViewModel(application
 
     interface OnItemClickListener {
         fun onFolderClicked(fileModel: FileModel)
-        fun onFolderSelected(fileModel: FileModel)
+        fun onFileSelectionUpdated(selectedFiles : List<FileModel>)
     }
 }

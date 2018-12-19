@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".MainActivity">
+    <!--<item-->
+    <!--android:id="@+id/action_settings"-->
+    <!--android:orderInCategory="100"-->
+    <!--android:title="fdfds"-->
+    <!--app:showAsAction="never" />-->
+
+
+    <item
+            android:id="@+id/action_submit"
+            android:orderInCategory="300"
+            android:title="@string/menu_item_accept_files"
+            android:icon="@drawable/ic_check"
+            app:showAsAction="ifRoom"/>
+
+
+
+</menu>

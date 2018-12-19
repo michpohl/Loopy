@@ -63,7 +63,9 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-
+        if (changeActionBarLayoutCallBack != null) {
+            changeActionBarLayout(R.menu.menu_main)
+        }
         //TODO find a nicer way for this
         try {
             viewModel.selectFolderListener = context as PlayerViewModel.OnSelectFolderClickedListener

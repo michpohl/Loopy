@@ -13,20 +13,18 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.ui.main.FileBrowserFragment
+import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
 import timber.log.Timber
-import android.R.array
-import android.widget.ArrayAdapter
-import android.support.v4.view.MenuItemCompat
-import android.widget.Spinner
-import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
 
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private lateinit var sharedPrefs: SharedPreferences
+    private var menuResourceID = R.menu.menu_main
+    private lateinit var selectedFileModels : List<FileModel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +61,12 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             true
         }
 
+        R.id.action_submit -> {
+            clearBackStack()
+            addPlayerFragment(selectedFileModels)
+            true
+        }
+
         else -> {
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
@@ -71,9 +75,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-
+        menuInflater.inflate(menuResourceID, menu)
         return true
     }
 
@@ -83,12 +85,8 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
     }
 
-    override fun onFolderSelected(fileModel: FileModel) {
-        if (fileModel.fileType == FileType.FOLDER) {
-            if (fileModel.containsAudioFiles()) {
-                addPlayerFragment(FileHelper.getFileModelsFromFiles(fileModel.getSubFiles()))
-            }
-        }
+    override fun onFileSelectionUpdated(selectedFileModels : List<FileModel>) {
+        this.selectedFileModels = selectedFileModels
     }
 
     override fun onSelectFolderClicked() {
@@ -138,8 +136,10 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             saveLoops(FileModelsList(loops))
         }
         clearBackStack()
+        val playerFragment = PlayerFragment.newInstance(loops)
+        playerFragment.changeActionBarLayoutCallBack = {it -> changeActionBar(it)}
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, PlayerFragment.newInstance(loops), "player")
+            .replace(R.id.container, playerFragment, "player")
             .commit()
     }
 
@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         fragmentTransaction.replace(R.id.container, filesListFragment)
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
+        changeActionBar(R.menu.menu_browser)
     }
 
     private fun clearBackStack() {
@@ -157,4 +158,10 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             supportFragmentManager.popBackStackImmediate()
         }
     }
+
+    fun changeActionBar(resourceID: Int) {
+        menuResourceID = resourceID
+        invalidateOptionsMenu()
+    }
+
 }
