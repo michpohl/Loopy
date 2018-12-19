@@ -19,51 +19,65 @@
             android:foreground="?selectableItemBackground"
             android:padding="8dp">
 
+        <View
+                style="@style/MatchConstraints"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cb_select"
+                android:layout_marginEnd="16dp"
+                android:elevation="2dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:onClick="@{model::onItemClicked}"
+                />
+
         <TextView
-                android:id="@+id/nameTextView"
+                android:id="@+id/tv_name"
                 style="@style/MatchWidth"
                 android:layout_width="0dp"
                 android:text="@{model.name}"
+                android:layout_marginEnd="8dp"
                 android:textAppearance="@style/Text.HeaderLarge"
                 app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cb_select"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Pictuers"
                 />
 
         <TextView
-                android:id="@+id/folderTextView"
+                android:id="@+id/tv_folder"
                 style="@style/MatchWidth"
                 android:layout_width="0dp"
                 android:text="@{model.subFolders}"
                 android:textAppearance="@style/Text.HeaderSmall"
                 android:visibility="@{model.folderLabelVisibility}"
                 app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nameTextView"/>
+                app:layout_constraintEnd_toEndOf="@id/tv_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
 
         <TextView
-                android:id="@+id/totalSizeTextView"
+                android:id="@+id/tv_file_size"
                 style="@style/MatchWidth"
                 android:text="@{model.fileSize}"
                 android:layout_width="0dp"
                 android:visibility="@{model.sizeLabelVisibility}"
                 android:textAppearance="@style/Text.Standard"
                 app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/folderTextView"/>
+                app:layout_constraintEnd_toEndOf="@id/tv_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_folder"/>
 
         <ImageView
-                android:id="@+id/iv_subfolder_indicator"
-                style="@style/WrapContent"
-                android:tint="@color/window_background"
-                android:src="@drawable/ic_arrow_down"
-                android:paddingEnd="8dp"
-                android:visibility="@{model.subFolderIndicatorVisibility}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+            android:id="@+id/iv_subfolder_indicator"
+            style="@style/WrapContent"
+            android:tint="@color/window_background"
+            android:src="@drawable/ic_arrow_down"
+            android:paddingEnd="8dp"
+            android:visibility="@{model.subFolderIndicatorVisibility}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
         <ImageView
                 android:id="@+id/iv_subfolder_forbidden"
@@ -79,6 +93,7 @@
 
         <CheckBox
                 style="@style/WrapContent"
+                android:id="@+id/cb_select"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -87,29 +102,7 @@
                 android:checked="@{model.selected}"
                 android:layout_marginEnd="8dp"/>
 
-        <ImageButton
-                android:id="@+id/btn_pick_folder"
-                style="@style/Button.SmallIcon"
-                android:padding="4dp"
-                android:src="@drawable/ic_check"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@id/tv_pick_folder_label"
-                app:layout_constraintEnd_toEndOf="@id/tv_pick_folder_label"
-                app:layout_constraintTop_toTopOf="parent"
-                />
 
-
-        <TextView
-                android:id="@+id/tv_pick_folder_label"
-                style="@style/WrapContent"
-                android:text="Pick folder"
-                android:textColor="@color/action"
-                android:visibility="gone"
-                android:textAppearance="@style/Text.Standard"
-                app:layout_constraintTop_toBottomOf="@id/btn_pick_folder"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

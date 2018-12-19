@@ -8,6 +8,6 @@
     <string name="menu_item_name_settings">Settings</string>
     <string name="menu_item_name_file_browser">Browse Files</string>
     <string name="btn_select_all">Select all</string>
-    <string name="btn_deselect_all">Deselect all</string>
+    <string name="btn_deselect_all">Deselect</string>
 
 </resources>

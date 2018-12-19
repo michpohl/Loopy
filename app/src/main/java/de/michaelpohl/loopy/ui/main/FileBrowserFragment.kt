@@ -5,9 +5,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
@@ -20,7 +18,6 @@ class FileBrowserFragment : BaseFragment() {
     private lateinit var viewModel: FileBrowserViewModel
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
-    private lateinit var listener: OnItemClickListener
 
 
     companion object {
@@ -36,27 +33,27 @@ class FileBrowserFragment : BaseFragment() {
 
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
-        try {
-            listener = context as OnItemClickListener
-        } catch (e: Exception) {
-            throw Exception("${context} should implement FileBrowserFragment.OnItemCLickListener")
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         if (arguments != null) {
-            path = arguments!!.getString("path");
+            path = arguments!!.getString("path")
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(FileBrowserViewModel::class.java)
+        try {
+            viewModel.listener = context as FileBrowserViewModel.OnItemClickListener
+        } catch (e: Exception) {
+            throw Exception("${context} should implement FileBrowserFragment.OnItemCLickListener")
+        }
         binding.model = viewModel
         initViews()
 
@@ -78,21 +75,9 @@ class FileBrowserFragment : BaseFragment() {
         rv_files.adapter = viewModel.getAdapter()
         viewModel.path = path
         viewModel.updateData()
-
-        viewModel.getAdapter().onItemClickListener = {
-            listener.onFolderClicked(it)
-        }
-
-        viewModel.getAdapter().onItemSelectedListener = {
-            listener.onFolderSelected(it)
-        }
     }
 
-    interface OnItemClickListener {
-        fun onFolderClicked(fileModel: FileModel)
 
-        fun onFolderSelected(fileModel: FileModel)
-    }
 
 
 }

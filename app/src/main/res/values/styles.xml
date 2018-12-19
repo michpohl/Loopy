@@ -31,6 +31,7 @@
         <item name="android:elevation">0dp</item>
         <item name="android:background">@color/transparent</item>
         <item name="android:textColor">@color/action</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="Button.DetailRow">

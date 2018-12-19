@@ -1,8 +1,6 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.arch.lifecycle.ViewModel
-import android.content.Context
-import android.databinding.Bindable
 import android.databinding.ObservableField
 import android.view.View
 import android.view.View.*
@@ -12,7 +10,12 @@ import de.michaelpohl.loopy.common.FileType
 import hugo.weaving.DebugLog
 
 @DebugLog
-class FileBrowserItemViewModel : ViewModel() {
+class FileBrowserItemViewModel(
+    private val position: Int,
+    private val fileModel: FileModel,
+    private val selectedListener: ((Boolean, Int) -> Unit),
+    private val onItemClickedListener: ((FileModel) -> Unit)
+) : ViewModel() {
 
     val folderLabelVisibility = ObservableField(INVISIBLE)
     val sizeLabelVisibility = ObservableField(INVISIBLE)
@@ -22,7 +25,6 @@ class FileBrowserItemViewModel : ViewModel() {
     val checkBoxVisibility = ObservableField(INVISIBLE)
     val selected = ObservableField(false)
 
-    var fileModel = FileModel("", FileType.FILE, "", 0.0)
     var name = ObservableField("name")
     var subFolders = ObservableField("folders")
     var fileSize = ObservableField("filesize")
@@ -50,10 +52,9 @@ class FileBrowserItemViewModel : ViewModel() {
             if (FileHelper.isExcludedFolderName(fileModel.path)) {
                 subFolderIndicatorVisibility.set(INVISIBLE)
                 forbiddenSignVisibility.set(VISIBLE)
-                } else {
+            } else {
                 subFolderIndicatorVisibility.set(VISIBLE)
                 forbiddenSignVisibility.set(INVISIBLE)
-
             }
         } else {
         }
@@ -65,11 +66,15 @@ class FileBrowserItemViewModel : ViewModel() {
 
             pickFolderButtonVisibility.set(GONE)
         }
+        selectedListener.invoke(selected.get()!!, position)
     }
 
-   fun onCheckBoxClicked(view: View) {
-        val currentValue = selected.get()
-       selected.set(currentValue!!.not()) //why this ugly non-null assertion?
-   }
+    fun onItemClicked(view: View) {
+        onItemClickedListener.invoke(fileModel)
+    }
 
+    fun onCheckBoxClicked(view: View) {
+        selected.set(selected.get()?.not()) //why this ugly non-null assertion?
+        selectedListener.invoke(selected.get()!!, position)
+    }
 }

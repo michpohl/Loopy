@@ -20,10 +20,9 @@ import android.R.array
 import android.widget.ArrayAdapter
 import android.support.v4.view.MenuItemCompat
 import android.widget.Spinner
+import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
 
-
-
-class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListener,
+class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -79,7 +78,6 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
     }
 
     override fun onFolderClicked(fileModel: FileModel) {
-
         if (fileModel.fileType == FileType.FOLDER) {
             addFileFragment(fileModel.path)
         }
