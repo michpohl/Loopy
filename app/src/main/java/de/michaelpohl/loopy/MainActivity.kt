@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.google.gson.Gson
-import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.common.FileType
@@ -16,20 +15,22 @@ import de.michaelpohl.loopy.ui.main.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
+import hugo.weaving.DebugLog
 import timber.log.Timber
 
+@DebugLog
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.OnSelectFolderClickedListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private lateinit var sharedPrefs: SharedPreferences
     private var menuResourceID = R.menu.menu_main
-    private lateinit var selectedFileModels : List<FileModel>
+    private val currentSelectedFileModels = mutableListOf<FileModel>()
+    private val newSelectedFileModels = mutableListOf<FileModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Timber logging on for Debugging
         //Timber logging on for Debugging
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -40,9 +41,10 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         sharedPrefs = getSharedPreferences(
             resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
         )
+        currentSelectedFileModels.addAll(loadSavedLoopsList().models)
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
-            addPlayerFragment(loadSavedLoopsList().models)
+            addPlayerFragment(currentSelectedFileModels)
         }
         setSupportActionBar(findViewById(R.id.my_toolbar))
     }
@@ -63,7 +65,8 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
         R.id.action_submit -> {
             clearBackStack()
-            addPlayerFragment(selectedFileModels)
+            updateAndSaveFileSelection()
+            addPlayerFragment(currentSelectedFileModels)
             true
         }
 
@@ -85,8 +88,11 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
     }
 
-    override fun onFileSelectionUpdated(selectedFileModels : List<FileModel>) {
-        this.selectedFileModels = selectedFileModels
+    override fun onFileSelectionUpdated(newSelection: List<FileModel>) {
+        //clear list to prevent adding doubles or unwanted items (since this gets updated with every click)
+        newSelectedFileModels.clear()
+        //only add the ones that are not already selected
+        newSelectedFileModels.addAll(newSelection.filter { it -> !currentSelectedFileModels.contains(it) })
     }
 
     override fun onSelectFolderClicked() {
@@ -137,7 +143,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
         clearBackStack()
         val playerFragment = PlayerFragment.newInstance(loops)
-        playerFragment.changeActionBarLayoutCallBack = {it -> changeActionBar(it)}
+        playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, playerFragment, "player")
             .commit()
@@ -159,9 +165,13 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
     }
 
-    fun changeActionBar(resourceID: Int) {
+    private fun changeActionBar(resourceID: Int) {
         menuResourceID = resourceID
         invalidateOptionsMenu()
     }
 
+    private fun updateAndSaveFileSelection() {
+        currentSelectedFileModels.addAll(newSelectedFileModels)
+        saveLoops(FileModelsList(currentSelectedFileModels))
+    }
 }

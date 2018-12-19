@@ -63,13 +63,13 @@ class FileBrowserAdapter(
         notifyDataSetChanged()
     }
 
-    fun onItemClicked(fileModel: FileModel) {
+    private fun onItemClicked(fileModel: FileModel) {
         Timber.d("Clicked on an item")
         onItemClickedListener.invoke(fileModel)
 
     }
 
-    fun onItemSelectedChanged(isSelected: Boolean, position: Int) {
+    private fun onItemSelectedChanged(isSelected: Boolean, position: Int) {
         val fileModel = filesList[position]
         if (isSelected && !selectedItems.contains(filesList[position])) {
             Timber.d("Added file %s to the selected list", fileModel.name)
@@ -81,7 +81,7 @@ class FileBrowserAdapter(
             //do nothing
             Timber.d("Did nothing")
         }
-
+        Timber.d("Invoking with: %s", selectedItems)
         onSelectedItemsChangedListener.invoke(selectedItems)
     }
 }

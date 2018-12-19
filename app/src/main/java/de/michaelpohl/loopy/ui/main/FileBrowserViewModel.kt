@@ -9,7 +9,6 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import timber.log.Timber
-import java.io.File
 
 class FileBrowserViewModel(application: Application) : BaseViewModel(application) {
     private var adapter = FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
@@ -51,7 +50,9 @@ class FileBrowserViewModel(application: Application) : BaseViewModel(application
         Timber.d("how many are selected? %s", selectedItems.size)
         if (selectedItems.size > 0) {
             selectButtonText.set(getString(R.string.btn_deselect_all))
-        } else
+        } else {
+            selectButtonText.set(getString(R.string.btn_select_all))
+        }
           listener.onFileSelectionUpdated(selectedItems)
     }
 

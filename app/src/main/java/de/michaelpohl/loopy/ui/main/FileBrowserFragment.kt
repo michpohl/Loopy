@@ -16,6 +16,12 @@ import kotlinx.android.synthetic.main.fragment_files_list.*
 @DebugLog
 class FileBrowserFragment : BaseFragment() {
 
+    /**
+    TODO The whole browser entity needs a business model of sorts
+    TODO to handle collecting and updating the selections
+    TODO The way it is now is a mess
+     */
+
     private lateinit var viewModel: FileBrowserViewModel
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
