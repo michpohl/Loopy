@@ -78,7 +78,7 @@ class PlayerFragment : BaseFragment() {
         }
         //TODO find a nicer way for this
         try {
-            viewModel.selectFolderListener = context as PlayerViewModel.OnSelectFolderClickedListener
+            viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
         } catch (e: Exception) {
             throw Exception("${context} should implement FileBrowserFragment.OnItemCLickListener")
         }

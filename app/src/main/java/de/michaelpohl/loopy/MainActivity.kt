@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -16,13 +17,11 @@ import de.michaelpohl.loopy.ui.main.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
-import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 
-@DebugLog
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
-    PlayerViewModel.OnSelectFolderClickedListener {
+    PlayerViewModel.PlayerActionsListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private lateinit var sharedPrefs: SharedPreferences
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         //Timber logging on for Debugging
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            Timber.d("it works")
         }
 
 
@@ -53,16 +51,17 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_help -> {
+            //TODO show help fragment
             true
         }
 
         R.id.action_gear -> {
+            //handled in PlayerFragment
             false
         }
 
         R.id.action_browser -> {
-//            addFileFragment()
-//            true
+            //handled in PlayerFragment
             false
         }
 
@@ -73,8 +72,12 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
                 addPlayerFragment(currentSelectedFileModels)
                 true
             } else {
-                val snackbar = Snackbar.make(container, getString(R.string.snackbar_text_no_new_files_selected), Snackbar.LENGTH_LONG)
-                snackbar.view.setBackgroundColor(getColor(R.color.action))
+                val snackbar = Snackbar.make(
+                    container,
+                    getString(R.string.snackbar_text_no_new_files_selected),
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.view.setBackgroundColor(ContextCompat.getColor(this, R.color.action))
                 snackbar.show()
                 false
             }
@@ -105,8 +108,13 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         newSelectedFileModels.addAll(newSelection.filter { it -> !currentSelectedFileModels.contains(it) })
     }
 
-    override fun onSelectFolderClicked() {
+    override fun onOpenFileBrowserClicked() {
         addFileFragment()
+    }
+
+    override fun onLoopsListCleared() {
+        currentSelectedFileModels.clear()
+        saveLoops(FileModelsList(currentSelectedFileModels))
     }
 
     override fun onBackPressed() {
@@ -180,11 +188,11 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         invalidateOptionsMenu()
     }
 
-    private fun updateAndSaveFileSelection():Boolean {
+    private fun updateAndSaveFileSelection(): Boolean {
         if (!newSelectedFileModels.isEmpty()) {
             currentSelectedFileModels.addAll(newSelectedFileModels)
             saveLoops(FileModelsList(currentSelectedFileModels))
-        return true
+            return true
         } else return false
     }
 }

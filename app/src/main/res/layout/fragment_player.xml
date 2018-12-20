@@ -28,13 +28,14 @@
             android:padding="8dp"
             android:background="@color/action_dark"
             >
-            
+
         <Button
                 android:id="@+id/btn_option_one"
                 style="@style/Button.Borderless"
                 android:textColor="@color/white"
                 android:layout_gravity="end"
-                android:text="Options are not implemented yet"/>
+                android:onClick="@{model.onSettingsButtonClicked}"
+                android:text="Settings are not implemented yet"/>
     </LinearLayout>
 
         <LinearLayout
@@ -118,7 +119,7 @@
                 style="@style/Button.SmallIcon"
                 android:src="@drawable/ic_play"
                 android:tint="@{model.isPlaying? @color/action : @color/white}"
-                android:onClick="@{model::onStartClicked}"
+                android:onClick="@{model::onStartPlaybackClicked}"
                 android:elevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_pause"
@@ -129,7 +130,7 @@
                 style="@style/Button.SmallIcon"
                 android:src="@drawable/ic_stop"
                 android:tint="@color/white"
-                android:onClick="@{model::onStopClicked}"
+                android:onClick="@{model::onStopPlaybackClicked}"
                 android:elevation="2dp"
 
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -141,7 +142,7 @@
                 style="@style/Button.SmallIcon"
                 android:src="@drawable/ic_pause"
                 android:tint="@color/white"
-                android:onClick="@{model::onPauseClicked}"
+                android:onClick="@{model::onPausePlaybackClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:elevation="2dp"
 

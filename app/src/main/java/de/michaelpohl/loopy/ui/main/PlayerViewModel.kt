@@ -9,7 +9,6 @@ import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
@@ -33,7 +32,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var looper: LoopedPlayer = LoopedPlayer.create(application)
     var isPlaying = ObservableBoolean(false)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
-    lateinit var selectFolderListener: OnSelectFolderClickedListener
+    lateinit var playerActionsListener: PlayerActionsListener
     lateinit var loopsList: List<FileModel>
 
     fun getAdapter(): LoopsAdapter {
@@ -41,7 +40,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun toggleFilesDropDown() {
-        Timber.d("ToggleFiles")
         // close the other if still open
         if (settingsDropDownDropped) {
             slideUp(settingsDropDown.get() ?: return)
@@ -57,7 +55,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun toggleSettingsDropDown() {
-        Timber.d("ToggleSettings")
         // close the other if still open
         if (filesDropDownDropped) {
             slideUp(fileOptionsDropDown.get() ?: return)
@@ -84,16 +81,18 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         mover.start()
     }
 
-    fun onStartClicked(view: View) {
+    fun onStartPlaybackClicked(view: View) {
         if (looper.hasLoopFile) startLooper()
     }
 
-    fun onStopClicked(view: View) {
+    fun onStopPlaybackClicked(view: View) {
+        if (!looper.hasLoopFile) return
         looper.stop()
         onPlaybackStopped()
     }
 
-    fun onPauseClicked(view: View) {
+    fun onPausePlaybackClicked(view: View) {
+        if (!looper.hasLoopFile) return
         if (looper.isPlaying()) {
             looper.pause()
             onPlaybackStopped()
@@ -102,14 +101,18 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun onClearListClicked(view: View) {
         toggleFilesDropDown()
+        loopsList = emptyList()
+        updateData()
+        playerActionsListener.onLoopsListCleared()
     }
 
     fun onBrowseStorageClicked(view: View) {
         toggleFilesDropDown()
+        playerActionsListener.onOpenFileBrowserClicked()
     }
 
-    interface OnSelectFolderClickedListener {
-        fun onSelectFolderClicked()
+    fun onSettingsButtonClicked(view: View) {
+        toggleSettingsDropDown()
     }
 
     fun updateData() {
@@ -122,11 +125,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onItemSelected(fm: FileModel, position: Int) {
-        Timber.d("Item selected: %s, Position in List: %s", fm.name, position)
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
         val oldPosition = adapter.selectedPosition
         adapter.selectedPosition = position
-//        adapter.updateData(adapter.loopsList)
         adapter.notifyItemChanged(oldPosition)
         adapter.notifyItemChanged(position)
         startLooper()
@@ -142,5 +143,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         isPlaying.set(false)
         updateHandler.removeCallbacks(updateRunnable)
         adapter.resetProgress()
+    }
+
+    interface PlayerActionsListener {
+        fun onOpenFileBrowserClicked()
+        fun onLoopsListCleared()
     }
 }
