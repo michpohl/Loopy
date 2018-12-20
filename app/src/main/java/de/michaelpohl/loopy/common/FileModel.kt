@@ -16,16 +16,20 @@ data class FileModel(
     val subFiles: Int = 0
 ) : Parcelable {
 
+    //TODO beautify this into an Enum or so
+    private var supportedFileTypes = listOf("wav", "mp3", "ogg")
+
     fun getSubFiles(showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         return FileHelper.getFilesFromPath(path, showHiddenFiles, onlyFolders)
     }
 
     fun isValidFileType(): Boolean {
-
-        //filtering only for .wav files for now
-        // in the future there should be an enum "allowedExtensions" or so
         if (fileType == FileType.FILE) {
-            return name.endsWith("wav")
+            var isValid: Boolean = false
+            supportedFileTypes.forEach {
+                if (name.endsWith(it)) isValid = true
+            }
+            return isValid
         }
         // Folders stay in the list
         return true
