@@ -103,7 +103,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         toggleFilesDropDown()
         loopsList = emptyList()
         updateData()
-        if (looper.isPlaying()) looper.stop()
+        if (looper.isPlaying()) {
+            looper.stop()
+            looper.hasLoopFile = false
+        }
         playerActionsListener.onLoopsListCleared()
     }
 
