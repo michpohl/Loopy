@@ -86,13 +86,13 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStopPlaybackClicked(view: View) {
-        if (!looper.hasLoopFile) return
+        if (!looper.isReady) return
         looper.stop()
         onPlaybackStopped()
     }
 
     fun onPausePlaybackClicked(view: View) {
-        if (!looper.hasLoopFile) return
+        if (!looper.isReady) return
         if (looper.isPlaying()) {
             looper.pause()
             onPlaybackStopped()

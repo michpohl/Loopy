@@ -16,8 +16,12 @@ as of 12/2018 this still seems to be the only working way on android
 class LoopedPlayer private constructor(context: Context) {
 
     var hasLoopFile = false
+        private set
+    var isReady = false
+        private set
    //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
     var isPaused = false
+        private set
 
     private var mContext: Context? = null
     private var mCounter = 1
@@ -63,7 +67,7 @@ class LoopedPlayer private constructor(context: Context) {
 
             if (shouldBePlaying) currentPlayer.start()
         }
-
+        isReady = true
         createNextMediaPlayer()
     }
 
