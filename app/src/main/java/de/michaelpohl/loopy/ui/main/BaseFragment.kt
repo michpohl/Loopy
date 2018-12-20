@@ -25,11 +25,22 @@ open class BaseFragment : Fragment() {
         }
     }
 
+    /**
+     *do something when the back button is pressed
+     *Override if interested
+     *Return true to prevent activity from executing its onBackPressed
+     */
+    open fun onBackPressed(): Boolean {
+        return false
+    }
+
     //TODO snackBar maker is WIP
-    fun showSnackbar(view : View, message: String, clickListener: View.OnClickListener? = null){
+    fun showSnackbar(view: View, message: String, clickListener: View.OnClickListener? = null) {
         //Snackbar(view)
-        val snackbar = Snackbar.make(view, message,
-            Snackbar.LENGTH_LONG).setAction("Action", clickListener)
+        val snackbar = Snackbar.make(
+            view, message,
+            Snackbar.LENGTH_LONG
+        ).setAction("Action", clickListener)
         snackbar.setActionTextColor(ContextCompat.getColor(context!!, R.color.darkest_green))
         val snackbarView = snackbar.view
         snackbarView.setBackgroundColor(ContextCompat.getColor(context!!, R.color.action))
@@ -45,6 +56,6 @@ open class BaseFragment : Fragment() {
      */
     override fun onDestroyView() {
         super.onDestroyView()
-       clearFindViewByIdCache()
+        clearFindViewByIdCache()
     }
 }

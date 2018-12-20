@@ -13,10 +13,7 @@ import com.google.gson.Gson
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.ui.main.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
-import de.michaelpohl.loopy.ui.main.PlayerFragment
-import de.michaelpohl.loopy.ui.main.PlayerViewModel
+import de.michaelpohl.loopy.ui.main.*
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 
@@ -28,6 +25,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     private var menuResourceID = R.menu.menu_main
     private val currentSelectedFileModels = mutableListOf<FileModel>()
     private val newSelectedFileModels = mutableListOf<FileModel>()
+    private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +116,10 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        if (!currentFragment.onBackPressed()) {
+            super.onBackPressed()
+        }
+
         if (supportFragmentManager.backStackEntryCount == 0) {
 //            finish()
         }
@@ -161,6 +162,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
         clearBackStack()
         val playerFragment = PlayerFragment.newInstance(loops)
+        currentFragment = playerFragment
         playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, playerFragment, "player")
@@ -170,7 +172,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     private fun addFileFragment(path: String = defaultFilesPath) {
         val filesListFragment = FileBrowserFragment.newInstance(path)
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-
+        currentFragment = filesListFragment
         fragmentTransaction.replace(R.id.container, filesListFragment)
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()

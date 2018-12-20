@@ -75,6 +75,7 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:visibility="@{model.overlayVisibility}"
+                android:onClick="@{model::onOverlayClicked}"
                 android:background="@color/transparent_overlay">
 
         </View>

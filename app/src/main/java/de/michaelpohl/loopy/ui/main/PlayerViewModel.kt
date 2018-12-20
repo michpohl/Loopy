@@ -115,6 +115,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         toggleSettingsDropDown()
     }
 
+    fun onOverlayClicked(view: View) {
+        closeDropDowns()
+    }
+
     fun updateData() {
         adapter.updateData(loopsList)
         if (adapter.itemCount != 0) {
@@ -131,6 +135,22 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         adapter.notifyItemChanged(oldPosition)
         adapter.notifyItemChanged(position)
         startLooper()
+    }
+
+    fun closeDropDowns() : Boolean {
+        var foundOpenDropDowns = false
+        if (settingsDropDownDropped) {
+            slideUp(settingsDropDown.get() ?: return false)
+            settingsDropDownDropped = !settingsDropDownDropped
+            foundOpenDropDowns = true
+        }
+        if (filesDropDownDropped) {
+            slideUp(fileOptionsDropDown.get() ?: return false)
+            filesDropDownDropped = !filesDropDownDropped
+            foundOpenDropDowns = true
+        }
+        return foundOpenDropDowns
+
     }
 
     private fun startLooper() {

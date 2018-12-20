@@ -84,6 +84,10 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
+    override fun onBackPressed() : Boolean {
+        return viewModel.closeDropDowns()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_gear -> {
             Timber.d("settings")
