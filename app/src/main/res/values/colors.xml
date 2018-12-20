@@ -34,6 +34,7 @@
     <color name="grey2">#f0f0f0</color>
     <color name="grey3">#e6e7e8</color>
     <color name="grey4">#d1d3d4</color>
+    <color name="transparent_overlay">#44000000</color>
 
     <!--COLOR REFERENCES-->
 
@@ -51,6 +52,7 @@
 
     <color name="light_red">@color/bright_purple</color>
     <color name="dark_red">#c2434a</color>
+    <color name="darkest_red">#46050d</color>
     <color name="green">@color/base_green</color>
     <color name="yellow">@color/base_yellow</color>
 
@@ -65,6 +67,7 @@
 
     <color name="action">@color/light_red</color>
     <color name="action_dark">@color/dark_red</color>
+    <color name="action_darkest">@color/darkest_red</color>
     <color name="transparent">@null</color>
 
 </resources>

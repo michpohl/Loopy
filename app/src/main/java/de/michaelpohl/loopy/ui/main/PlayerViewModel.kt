@@ -1,20 +1,27 @@
 package de.michaelpohl.loopy.ui.main
 
+import android.animation.ObjectAnimator
 import android.app.Application
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.os.Handler
-import android.os.Looper
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
 import timber.log.Timber
+import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
+    val overlayVisibility = ObservableField(View.GONE)
+
     private var adapter = LoopsAdapter(application)
     private var updateHandler = Handler()
+    private var filesDropDownDropped = false
+    private var settingsDropDownDropped = false
+    lateinit var fileOptionsDropDown: WeakReference<View>
+    lateinit var settingsDropDown: WeakReference<View>
 
     private var updateRunnable = object : Runnable {
         override fun run() {
@@ -33,6 +40,50 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         return adapter
     }
 
+    fun toggleFilesDropDown() {
+        Timber.d("ToggleFiles")
+        // close the other if still open
+        if (settingsDropDownDropped) {
+            slideUp(settingsDropDown.get() ?: return)
+            settingsDropDownDropped = !settingsDropDownDropped
+        }
+
+        if (!filesDropDownDropped) {
+            slideDown(fileOptionsDropDown.get() ?: return)
+        } else {
+            slideUp(fileOptionsDropDown.get() ?: return)
+        }
+        filesDropDownDropped = !filesDropDownDropped
+    }
+
+    fun toggleSettingsDropDown() {
+        Timber.d("ToggleSettings")
+        // close the other if still open
+        if (filesDropDownDropped) {
+            slideUp(fileOptionsDropDown.get() ?: return)
+            filesDropDownDropped = !filesDropDownDropped
+        }
+
+        if (!settingsDropDownDropped) {
+            slideDown(settingsDropDown.get() ?: return)
+        } else {
+            slideUp(settingsDropDown.get() ?: return)
+        }
+        settingsDropDownDropped = !settingsDropDownDropped
+    }
+
+    private fun slideDown(view: View) {
+        overlayVisibility.set(View.VISIBLE)
+        val mover = ObjectAnimator.ofFloat(view, "translationY", (view.height - 1).toFloat())
+        mover.start()
+    }
+
+    private fun slideUp(view: View) {
+        overlayVisibility.set(View.GONE)
+        val mover = ObjectAnimator.ofFloat(view, "translationY", -(view.height - 1).toFloat())
+        mover.start()
+    }
+
     fun onStartClicked(view: View) {
         if (looper.hasLoopFile) startLooper()
     }
@@ -47,6 +98,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             looper.pause()
             onPlaybackStopped()
         } else if (looper.isPaused) startLooper()
+    }
+
+    fun onClearListClicked(view: View) {
+        toggleFilesDropDown()
+    }
+
+    fun onBrowseStorageClicked(view: View) {
+        toggleFilesDropDown()
     }
 
     interface OnSelectFolderClickedListener {

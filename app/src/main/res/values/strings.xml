@@ -10,5 +10,8 @@
     <string name="btn_select_all">Select all</string>
     <string name="btn_deselect_all">Deselect</string>
     <string name="menu_item_accept_files">Open selected files</string>
+    <string name="snackbar_text_no_new_files_selected">You have no audio files selected or your selected files are already in the player!</string>
+    <string name="btn_clear_list">Clear list</string>
+    <string name="btn_browse_storage">Browse device storage</string>
 
 </resources>

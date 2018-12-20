@@ -14,14 +14,14 @@
             android:id="@+id/action_help"
             android:orderInCategory="100"
             android:title="@string/menu_item_name_help"
-            android:icon="@drawable/ic_settings"
+            android:icon="@drawable/ic_help"
             app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/action_gear"
             android:orderInCategory="200"
             android:title="@string/menu_item_name_settings"
-            android:icon="@drawable/ic_help"
+            android:icon="@drawable/ic_settings"
 
             app:showAsAction="ifRoom"/>
     <item

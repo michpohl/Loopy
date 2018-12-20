@@ -95,6 +95,7 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         override fun onLongClick(v: View?): Boolean {
 //            no longClicklistener needed at this point
 //            onItemSelectedListener?.invoke(filesList[adapterPosition])
+            //TODO show file details on long click
             return true
         }
 

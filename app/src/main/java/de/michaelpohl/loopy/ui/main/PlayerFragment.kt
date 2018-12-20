@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
@@ -12,6 +13,8 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import kotlinx.android.synthetic.main.fragment_player.*
+import timber.log.Timber
+import java.lang.ref.WeakReference
 
 class PlayerFragment : BaseFragment() {
 
@@ -34,6 +37,7 @@ class PlayerFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         if (arguments != null) {
             val loops: FileModelsList = arguments!!.getParcelable("loopsList")
             loopsList = loops.models
@@ -53,6 +57,12 @@ class PlayerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         viewModel.loopsList = loopsList
+
+        //handing the dropdown layout to the viewModel  as WeakReferences to avoid context leak
+        //the viewModel handles showing and hiding the dropdowns
+        viewModel.fileOptionsDropDown = WeakReference(ll_files_dropdown)
+        viewModel.settingsDropDown = WeakReference(ll_settings_dropdown)
+
         binding.model = viewModel
     }
 
@@ -71,6 +81,24 @@ class PlayerFragment : BaseFragment() {
             viewModel.selectFolderListener = context as PlayerViewModel.OnSelectFolderClickedListener
         } catch (e: Exception) {
             throw Exception("${context} should implement FileBrowserFragment.OnItemCLickListener")
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_gear -> {
+            Timber.d("settings")
+            viewModel.toggleSettingsDropDown()
+            true
+        }
+
+        R.id.action_browser -> {
+            Timber.d("browser")
+            viewModel.toggleFilesDropDown()
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
         }
     }
 

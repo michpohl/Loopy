@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import de.michaelpohl.loopy.ui.main.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.PlayerFragment
 import de.michaelpohl.loopy.ui.main.PlayerViewModel
 import hugo.weaving.DebugLog
+import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 
 @DebugLog
@@ -55,19 +57,27 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
 
         R.id.action_gear -> {
-            true
+            false
         }
 
         R.id.action_browser -> {
-            addFileFragment()
-            true
+//            addFileFragment()
+//            true
+            false
         }
 
         R.id.action_submit -> {
-            clearBackStack()
-            updateAndSaveFileSelection()
-            addPlayerFragment(currentSelectedFileModels)
-            true
+            val didUpdate = updateAndSaveFileSelection()
+            if (didUpdate) {
+                clearBackStack()
+                addPlayerFragment(currentSelectedFileModels)
+                true
+            } else {
+                val snackbar = Snackbar.make(container, getString(R.string.snackbar_text_no_new_files_selected), Snackbar.LENGTH_LONG)
+                snackbar.view.setBackgroundColor(getColor(R.color.action))
+                snackbar.show()
+                false
+            }
         }
 
         else -> {
@@ -170,8 +180,11 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         invalidateOptionsMenu()
     }
 
-    private fun updateAndSaveFileSelection() {
-        currentSelectedFileModels.addAll(newSelectedFileModels)
-        saveLoops(FileModelsList(currentSelectedFileModels))
+    private fun updateAndSaveFileSelection():Boolean {
+        if (!newSelectedFileModels.isEmpty()) {
+            currentSelectedFileModels.addAll(newSelectedFileModels)
+            saveLoops(FileModelsList(currentSelectedFileModels))
+        return true
+        } else return false
     }
 }
