@@ -6,6 +6,7 @@ import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.os.Handler
 import android.view.View
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
@@ -31,6 +32,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
+    var acceptedFileTypesAsString = ObservableField("What will go here?")
+    var switchBehaviourButtonText = ObservableField(getString(R.string.btn_switching_behaviour_switch_immediately))
+
     var isPlaying = ObservableBoolean(false)
 
     lateinit var settingsDropDown: WeakReference<View>
@@ -102,12 +106,20 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         playerActionsListener.onOpenFileBrowserClicked()
     }
 
-    fun onSettingsButtonClicked(view: View) {
+    fun onOverlayClicked(view: View) {
         toggleSettingsDropDown()
     }
 
-    fun onOverlayClicked(view: View) {
+    fun onChangeAllowedFileTypesClicked(view: View) {
         closeDropDowns()
+    }
+
+    fun onSwitchingBehaviourToggled(view: View) {
+        if (switchBehaviourButtonText.equals(getString(R.string.btn_switching_behaviour_switch_immediately))) {
+            switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_wait_to_finish))
+        } else {
+            switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_switch_immediately))
+        }
     }
 
     fun updateData() {
