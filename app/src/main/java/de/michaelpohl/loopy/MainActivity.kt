@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Timber logging on for Debugging
+        //Timber logging on when Debugging
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
 
         R.id.action_submit -> {
-            // context for this action is the FileBrowserFragment, but we handle it here because we're adding fragments and such
+            // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
             val didUpdate = LoopsRepository.updateAndSaveFileSelection()
             if (didUpdate) {
                 clearBackStack()
@@ -80,8 +80,6 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
 
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
@@ -112,7 +110,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     }
 
     private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
-        if (!loops.isEmpty()) {
+        if (loops.isNotEmpty()) {
             LoopsRepository.saveCurrentSelection(FileModelsList(loops))
         }
         clearBackStack()

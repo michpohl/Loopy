@@ -20,6 +20,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     private var updateHandler = Handler()
     private var filesDropDownDropped = false
     private var settingsDropDownDropped = false
+
     private var updateRunnable = object : Runnable {
         override fun run() {
             adapter.updateProgress(looper.getCurrentPosition())
@@ -29,6 +30,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
+    var clearListButtonVisibility = ObservableField(View.GONE)
     var isPlaying = ObservableBoolean(false)
 
     lateinit var settingsDropDown: WeakReference<View>
@@ -75,9 +77,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStopPlaybackClicked(view: View) {
-        if (!looper.isReady) return
-        looper.stop()
-        onPlaybackStopped()
+        stopLooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
@@ -91,11 +91,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     fun onClearListClicked(view: View) {
         toggleFilesDropDown()
         loopsList = emptyList()
+        stopLooper()
+        looper.hasLoopFile = false
         updateData()
-        if (looper.isPlaying()) {
-            looper.stop()
-            looper.hasLoopFile = false
-        }
         LoopsRepository.onLoopsListCleared()
     }
 
@@ -116,8 +114,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         adapter.updateData(loopsList)
         if (adapter.itemCount != 0) {
             emptyMessageVisibility.set(View.INVISIBLE)
+            clearListButtonVisibility.set(View.VISIBLE)
         } else {
             emptyMessageVisibility.set(View.VISIBLE)
+            clearListButtonVisibility.set(View.GONE)
         }
     }
 
@@ -149,6 +149,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         isPlaying.set(true)
         updateRunnable.run()
         looper.start()
+    }
+
+    private fun stopLooper() {
+        if (!looper.isReady) return
+        if (looper.isPlaying()) {
+            looper.stop()
+        }
+        onPlaybackStopped()
     }
 
     private fun onPlaybackStopped() {

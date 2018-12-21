@@ -28,6 +28,17 @@
             android:padding="8dp"
             android:background="@color/action_dark"
             >
+            <TextView
+                   style="@style/WrapContent"
+                    android:layout_gravity="end"
+                    android:padding="8dp"
+                   android:textColor="@color/white"
+                    android:text="@string/dropdown_header_settings"/>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white"
+                    android:padding="8dp"/>
 
         <Button
                 android:id="@+id/btn_option_one"
@@ -50,14 +61,19 @@
                 android:background="@color/action_dark"
                 >
 
-            <Button
-                    android:id="@+id/btn_clear_list"
-                    style="@style/Button.Borderless"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="1dp"
+            <TextView
+                    style="@style/WrapContent"
                     android:layout_gravity="end"
-                    android:onClick="@{model::onClearListClicked}"
-                    android:text="@string/btn_clear_list"/>
+                    android:padding="8dp"
+                    android:textColor="@color/white"
+                    android:text="@string/dropdown_header_browser"/>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white"
+                    android:padding="8dp"/>
+
+
 
             <Button
                     android:id="@+id/btn_browse_storage"
@@ -66,6 +82,16 @@
                     android:layout_gravity="end"
                     android:onClick="@{model::onBrowseStorageClicked}"
                     android:text="@string/btn_browse_storage"/>
+
+            <Button
+                    android:id="@+id/btn_clear_list"
+                    style="@style/Button.Borderless"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="1dp"
+                    android:layout_gravity="end"
+                    android:onClick="@{model::onClearListClicked}"
+                    android:visibility="@{model.clearListButtonVisibility}"
+                    android:text="@string/btn_clear_list"/>
 
         </LinearLayout>
 
