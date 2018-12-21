@@ -3,44 +3,48 @@ package de.michaelpohl.loopy.model
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileModelsList
+import de.michaelpohl.loopy.common.AppData
+import de.michaelpohl.loopy.common.Settings
 
 object LoopsRepository {
 
     private const val PREFS_LOOPS_KEY = "loops_list"
     lateinit var sharedPrefs: SharedPreferences
+    lateinit var savedAppData: AppData
 
-    val currentSelectedFileModels = mutableListOf<FileModel>()
+    var currentSelectedFileModels = mutableListOf<FileModel>()
     private val newSelectedFileModels = mutableListOf<FileModel>()
+    var settings = Settings()
+        private set
 
-    var wavAllowed = true
-    var mp3Allowed = true
-    var oggAllowed = true
 
     /**
      * initializes the LoopsRepository by fetching the saved state from sharedPreferences
      */
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
-        currentSelectedFileModels.addAll(loadSavedSelection().models)
+        this.savedAppData = loadSavedAppData()
+        currentSelectedFileModels.addAll(savedAppData.models)
+        settings = savedAppData.settings
     }
 
-    fun saveCurrentSelection(list: FileModelsList = FileModelsList(currentSelectedFileModels)) {
-        val jsonString = Gson().toJson(list)
+    fun saveCurrentSelection(selectedLoops: List<FileModel> = currentSelectedFileModels) {
+        val jsonString = Gson().toJson(AppData(selectedLoops, settings))
 
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
-
         with(sharedPrefs.edit()) {
             putString(PREFS_LOOPS_KEY, jsonString)
             commit()
         }
+        currentSelectedFileModels.clear()
+        currentSelectedFileModels.addAll(selectedLoops)
     }
 
     fun updateAndSaveFileSelection(): Boolean {
         return if (!newSelectedFileModels.isEmpty()) {
             currentSelectedFileModels.addAll(newSelectedFileModels)
-            saveCurrentSelection(FileModelsList(currentSelectedFileModels))
+            saveCurrentSelection(currentSelectedFileModels)
             true
         } else false
     }
@@ -61,7 +65,7 @@ object LoopsRepository {
         saveCurrentSelection()
     }
 
-    private fun loadSavedSelection(): FileModelsList {
+    private fun loadSavedAppData(): AppData {
         //warnString is put as the defaultValue and is given if there's nothing to return from sharedPrefs
         //this is not the most sexy way to do it, butI'll go with it for now, need to learn how to first
         //TODO improve this
@@ -71,11 +75,11 @@ object LoopsRepository {
         //TODO take the FileModelList and test its integrity (do the files still exist?)
 
         return if (jsonString != "warning") {
-            fileModelsListFromJson(jsonString)
-        } else FileModelsList(arrayListOf())
+            AppDataFromJson(jsonString)
+        } else AppData(arrayListOf(), Settings())
     }
 
-    private fun fileModelsListFromJson(jsonString: String): FileModelsList {
-        return Gson().fromJson(jsonString, FileModelsList::class.java)
+    private fun AppDataFromJson(jsonString: String): AppData {
+        return Gson().fromJson(jsonString, AppData::class.java)
     }
 }

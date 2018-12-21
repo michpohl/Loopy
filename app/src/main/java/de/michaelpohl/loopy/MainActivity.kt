@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileModelsList
+import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.*
@@ -111,10 +111,10 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
     private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
         if (loops.isNotEmpty()) {
-            LoopsRepository.saveCurrentSelection(FileModelsList(loops))
+            LoopsRepository.saveCurrentSelection(loops)
         }
         clearBackStack()
-        val playerFragment = PlayerFragment.newInstance(loops)
+        val playerFragment = PlayerFragment.newInstance(LoopsRepository.savedAppData)
         currentFragment = playerFragment
         playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
         supportFragmentManager.beginTransaction()

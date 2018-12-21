@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileModelsList
+import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import kotlinx.android.synthetic.main.fragment_player.*
 import timber.log.Timber
@@ -25,11 +25,12 @@ class PlayerFragment : BaseFragment() {
     private lateinit var binding: FragmentPlayerBinding
 
     companion object {
-        fun newInstance(loopFiles: List<FileModel>): PlayerFragment {
+        fun newInstance(appData: AppData): PlayerFragment {
             val fragment = PlayerFragment()
             val args = Bundle()
-            val loops = FileModelsList(loopFiles)
-            args.putParcelable("loopsList", loops)
+            val loops = appData.models
+            var settings =  appData.settings
+            args.putParcelable("loopsList", appData)
             fragment.arguments = args
             return fragment
         }
@@ -39,7 +40,7 @@ class PlayerFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (arguments != null) {
-            val loops: FileModelsList = arguments!!.getParcelable("loopsList")
+            val loops: AppData = arguments!!.getParcelable("loopsList")
             loopsList = loops.models
         }
     }
