@@ -9,6 +9,7 @@ import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
+import de.michaelpohl.loopy.model.LoopsRepository
 import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
@@ -19,9 +20,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     private var updateHandler = Handler()
     private var filesDropDownDropped = false
     private var settingsDropDownDropped = false
-    lateinit var fileOptionsDropDown: WeakReference<View>
-    lateinit var settingsDropDown: WeakReference<View>
-
     private var updateRunnable = object : Runnable {
         override fun run() {
             adapter.updateProgress(looper.getCurrentPosition())
@@ -30,8 +28,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     var looper: LoopedPlayer = LoopedPlayer.create(application)
-    var isPlaying = ObservableBoolean(false)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
+    var isPlaying = ObservableBoolean(false)
+
+    lateinit var settingsDropDown: WeakReference<View>
+    lateinit var fileOptionsDropDown: WeakReference<View>
     lateinit var playerActionsListener: PlayerActionsListener
     lateinit var loopsList: List<FileModel>
 
@@ -69,18 +70,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         settingsDropDownDropped = !settingsDropDownDropped
     }
 
-    private fun slideDown(view: View) {
-        overlayVisibility.set(View.VISIBLE)
-        val mover = ObjectAnimator.ofFloat(view, "translationY", (view.height - 1).toFloat())
-        mover.start()
-    }
-
-    private fun slideUp(view: View) {
-        overlayVisibility.set(View.GONE)
-        val mover = ObjectAnimator.ofFloat(view, "translationY", -(view.height - 1).toFloat())
-        mover.start()
-    }
-
     fun onStartPlaybackClicked(view: View) {
         if (looper.hasLoopFile) startLooper()
     }
@@ -107,7 +96,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             looper.stop()
             looper.hasLoopFile = false
         }
-        playerActionsListener.onLoopsListCleared()
+        LoopsRepository.onLoopsListCleared()
     }
 
     fun onBrowseStorageClicked(view: View) {
@@ -141,7 +130,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         startLooper()
     }
 
-    fun closeDropDowns() : Boolean {
+    fun closeDropDowns(): Boolean {
         var foundOpenDropDowns = false
         if (settingsDropDownDropped) {
             slideUp(settingsDropDown.get() ?: return false)
@@ -154,7 +143,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             foundOpenDropDowns = true
         }
         return foundOpenDropDowns
-
     }
 
     private fun startLooper() {
@@ -169,8 +157,19 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         adapter.resetProgress()
     }
 
+    private fun slideDown(view: View) {
+        overlayVisibility.set(View.VISIBLE)
+        val mover = ObjectAnimator.ofFloat(view, "translationY", (view.height - 1).toFloat())
+        mover.start()
+    }
+
+    private fun slideUp(view: View) {
+        overlayVisibility.set(View.GONE)
+        val mover = ObjectAnimator.ofFloat(view, "translationY", -(view.height - 1).toFloat())
+        mover.start()
+    }
+
     interface PlayerActionsListener {
         fun onOpenFileBrowserClicked()
-        fun onLoopsListCleared()
     }
 }
