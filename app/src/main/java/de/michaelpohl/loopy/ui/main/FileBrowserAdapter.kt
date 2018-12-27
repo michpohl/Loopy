@@ -19,11 +19,9 @@ class FileBrowserAdapter(
 
     private var filesList = listOf<FileModel>()
         set (newList) {
-            val folders: List<FileModel> =
-                newList.filter { it.fileType == FileType.FOLDER }.sortedWith(compareBy { it.name.toLowerCase() })
-            val files: List<FileModel> =
-                newList.filter { it.fileType == FileType.FILE }.sortedWith(compareBy { it.name.toLowerCase() })
-           field = folders + files
+            //first the folders, a-z, then the files, a-z
+            field = newList.filter { it.fileType == FileType.FOLDER }.sortedWith(compareBy { it.name.toLowerCase() }) +
+                    newList.filter { it.fileType == FileType.FILE }.sortedWith(compareBy { it.name.toLowerCase() })
         }
     var onItemSelectedListener: ((FileModel) -> Unit)? = null
 
