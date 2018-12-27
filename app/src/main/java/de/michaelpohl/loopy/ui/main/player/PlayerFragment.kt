@@ -59,6 +59,7 @@ class PlayerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         viewModel.loopsList = loopsList
+        viewModel.pickFileTypesListener = { showPickFileTypesDialog()}
 
         //handing the dropdown layout to the viewModel  as WeakReferences to avoid context leak
         //the viewModel handles showing and hiding the dropdowns
@@ -117,5 +118,10 @@ class PlayerFragment : BaseFragment() {
         viewModel.getAdapter().onItemClickListener = { a: FileModel, b: Int ->
             viewModel.onItemSelected(a, b)
         }
+    }
+
+    private fun showPickFileTypesDialog() {
+        val dialog = PickFileTypeDialogFragment()
+        dialog.show(fragmentManager, "pick-filetypes")
     }
 }

@@ -28,7 +28,7 @@ class FileBrowserViewModel(application: Application) : BaseViewModel(application
         return adapter
     }
 
-    fun updateData() {
+    fun updateAdapter() {
         val files = FileHelper.getFileModelsFromFiles(FileHelper.getFilesFromPath(path))
         if (files.isEmpty()) {
             emptyFolderLayoutVisibility.set(View.VISIBLE)

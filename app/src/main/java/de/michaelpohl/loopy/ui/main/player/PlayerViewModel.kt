@@ -42,6 +42,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     lateinit var fileOptionsDropDown: WeakReference<View>
     lateinit var playerActionsListener: PlayerActionsListener
     lateinit var loopsList: List<FileModel>
+    lateinit var pickFileTypesListener: () -> Unit
 
     fun getAdapter(): LoopsAdapter {
         return adapter
@@ -112,6 +113,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onChangeAllowedFileTypesClicked(view: View) {
+        pickFileTypesListener.invoke()
         closeDropDowns()
     }
 

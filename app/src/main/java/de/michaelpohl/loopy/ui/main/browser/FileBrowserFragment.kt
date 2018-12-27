@@ -76,7 +76,7 @@ class FileBrowserFragment : BaseFragment() {
         rv_files.layoutManager = LinearLayoutManager(context)
         rv_files.adapter = viewModel.getAdapter()
         viewModel.path = path
-        viewModel.updateData()
+        viewModel.updateAdapter()
     }
 
 

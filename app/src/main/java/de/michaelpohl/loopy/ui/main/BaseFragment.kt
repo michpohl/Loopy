@@ -9,6 +9,7 @@ import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
 
 open class BaseFragment : Fragment() {
+
     var changeActionBarLayoutCallBack: ((Int) -> Unit)? = null
 
     /**

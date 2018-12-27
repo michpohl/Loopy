@@ -5,7 +5,23 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Settings (
-    var allowedFileTypes: MutableList<ValidAudioFileType> = arrayListOf(),
+    var allowedFileTypes: Array<ValidAudioFileType> = ValidAudioFileType.values(),
     var switchingLoopsBehaviour: SwitchingLoopsBehaviour = SwitchingLoopsBehaviour.SWITCH
-) : Parcelable
+) : Parcelable {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Settings
+
+        if (!allowedFileTypes.contentEquals(other.allowedFileTypes)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return allowedFileTypes.contentHashCode()
+    }
+}
 

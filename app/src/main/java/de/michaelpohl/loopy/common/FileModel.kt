@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
+import de.michaelpohl.loopy.model.LoopsRepository
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
@@ -25,9 +26,10 @@ data class FileModel(
 
     fun isValidFileType(): Boolean {
         if (fileType == FileType.FILE) {
-            var isValid: Boolean = false
-            supportedFileTypes.forEach {
-                if (name.endsWith(it)) isValid = true
+            var isValid = false
+
+            LoopsRepository.settings.allowedFileTypes.forEach {
+                if (name.endsWith(it.suffix)) isValid = true
             }
             return isValid
         }
