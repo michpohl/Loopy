@@ -62,7 +62,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.Vie
     }
 
     private fun setLoopsList(newList: List<FileModel>) {
-        loopsList =  newList.sortedWith(compareBy { it.name.toLowerCase() })
+        loopsList = newList.sortedWith(compareBy { it.name.toLowerCase() }).filter { it.isValidFileType() }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
@@ -76,7 +76,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.Vie
             itemView.setOnLongClickListener(this)
         }
 
-       private fun update(progress: Float) {
+        private fun update(progress: Float) {
 
             if (!selected) {
                 Timber.d("not selected, position: %s", positionInList)
@@ -112,8 +112,6 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.Vie
         private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
             view.setRawData(bytes)
         }
-
-
     }
 }
 

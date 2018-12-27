@@ -33,7 +33,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
-    var acceptedFileTypesAsString = ObservableField("What will go here?")
+    var acceptedFileTypesAsString = ObservableField(LoopsRepository.getAllowedFileTypeListAsString())
     var switchBehaviourButtonText = ObservableField(getString(R.string.btn_switching_behaviour_switch_immediately))
 
     var isPlaying = ObservableBoolean(false)

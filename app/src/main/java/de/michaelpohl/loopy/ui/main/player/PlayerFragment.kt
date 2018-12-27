@@ -12,6 +12,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
+import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_player.*
 import timber.log.Timber
@@ -122,6 +123,13 @@ class PlayerFragment : BaseFragment() {
 
     private fun showPickFileTypesDialog() {
         val dialog = PickFileTypeDialogFragment()
+        dialog.setCurrentSettings(LoopsRepository.settings)
+        dialog.resultListener = {
+            Timber.d("Invoking...")
+            LoopsRepository.settings = it
+            LoopsRepository.saveCurrentSelection()
+            viewModel.updateData()
+        }
         dialog.show(fragmentManager, "pick-filetypes")
     }
 }

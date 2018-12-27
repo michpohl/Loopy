@@ -19,7 +19,6 @@ object LoopsRepository {
         private set
     private var newSelectedFileModels = listOf<FileModel>()
     var settings = Settings()
-        private set
 
     /**
      * initializes the LoopsRepository by fetching the saved state from sharedPreferences
@@ -31,7 +30,10 @@ object LoopsRepository {
         settings = savedAppData.settings
     }
 
-    fun saveCurrentSelection(selectedLoops: List<FileModel> = currentSelectedFileModels) {
+    fun saveCurrentSelection(selectedLoops: List<FileModel> = currentSelectedFileModels, settings: Settings = this.settings) {
+        Timber.d("Saving settings, allowedFilesTypes: ")
+        settings.allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
+
         val jsonString = Gson().toJson(AppData(selectedLoops, settings))
 
 //        TODO put fitting assertion
@@ -65,7 +67,6 @@ object LoopsRepository {
             !currentSelectedFileModels.contains(it)
         }
         Timber.d("%s", newSelectedFileModels)
-
     }
 
     fun onLoopsListCleared() {
@@ -85,6 +86,18 @@ object LoopsRepository {
         return if (jsonString != "warning") {
             AppDataFromJson(jsonString)
         } else AppData(arrayListOf(), Settings())
+    }
+
+    fun getAllowedFileTypeListAsString(): String {
+        val builder = StringBuilder()
+        val allowedFileTypes = settings.allowedFileTypes
+        allowedFileTypes.forEach {
+            builder.append(it.name)
+            if (allowedFileTypes.indexOf(it) == allowedFileTypes.size - 1) {
+                builder.append(", ")
+            }
+        }
+        return builder.toString()
     }
 
     private fun AppDataFromJson(jsonString: String): AppData {
