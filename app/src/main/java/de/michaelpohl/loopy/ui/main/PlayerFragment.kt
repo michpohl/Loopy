@@ -12,6 +12,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
+import de.michaelpohl.loopy.model.LoopsRepository
 import kotlinx.android.synthetic.main.fragment_player.*
 import timber.log.Timber
 import java.lang.ref.WeakReference
@@ -28,9 +29,7 @@ class PlayerFragment : BaseFragment() {
         fun newInstance(appData: AppData): PlayerFragment {
             val fragment = PlayerFragment()
             val args = Bundle()
-            val loops = appData.models
-            var settings =  appData.settings
-            args.putParcelable("loopsList", appData)
+            args.putParcelable("appData", appData)
             fragment.arguments = args
             return fragment
         }
@@ -40,8 +39,10 @@ class PlayerFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (arguments != null) {
-            val loops: AppData = arguments!!.getParcelable("loopsList")
-            loopsList = loops.models
+            val appData: AppData = arguments!!.getParcelable("appData")
+            loopsList = appData.models
+            for (model in loopsList) Timber.d("in onCreate player: %s", model.name)
+
         }
     }
 

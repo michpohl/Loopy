@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
 import hugo.weaving.DebugLog
 import timber.log.Timber
@@ -16,8 +17,14 @@ class FileBrowserAdapter(
     private val onItemClickedListener: ((FileModel) -> Unit)
 ) : RecyclerView.Adapter<FileBrowserItem>() {
 
-    var filesList = listOf<FileModel>()
-        private set
+    private var filesList = listOf<FileModel>()
+        set (newList) {
+            val folders: List<FileModel> =
+                newList.filter { it.fileType == FileType.FOLDER }.sortedWith(compareBy { it.name.toLowerCase() })
+            val files: List<FileModel> =
+                newList.filter { it.fileType == FileType.FILE }.sortedWith(compareBy { it.name.toLowerCase() })
+           field = folders + files
+        }
     var onItemSelectedListener: ((FileModel) -> Unit)? = null
 
     var selectedItems = mutableListOf<FileModel>()
@@ -66,7 +73,6 @@ class FileBrowserAdapter(
     private fun onItemClicked(fileModel: FileModel) {
         Timber.d("Clicked on an item")
         onItemClickedListener.invoke(fileModel)
-
     }
 
     private fun onItemSelectedChanged(isSelected: Boolean, position: Int) {

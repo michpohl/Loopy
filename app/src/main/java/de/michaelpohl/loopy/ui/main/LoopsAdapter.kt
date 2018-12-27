@@ -15,15 +15,14 @@ import rm.com.audiowave.AudioWaveView
 import timber.log.Timber
 
 @DebugLog
-class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
+class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
 
 
-    var loopsList = listOf<FileModel>()
+    private var loopsList = listOf<FileModel>()
     var onItemClickListener: ((FileModel, Int) -> Unit)? = null
     var onProgressUpdatedListener: ((Float) -> Unit)? = null
 
     var selectedPosition = -1
-    var context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoopsAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loop, parent, false)
@@ -36,7 +35,7 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
     override fun onBindViewHolder(holder: LoopsAdapter.ViewHolder, position: Int) {
         holder.bindView(position)
 
-        if (holder.positionInList  == selectedPosition) {
+        if (holder.positionInList == selectedPosition) {
             Timber.d("Selected item! position in List: %s", holder.positionInList)
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.action))
             holder.selected = true
@@ -46,12 +45,11 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
             Timber.d("Not selected item! position in List: %s", holder.positionInList)
             holder.selected = false
         }
-        Timber.d("selectedPosition: %s", selectedPosition )
-
+        Timber.d("selectedPosition: %s", selectedPosition)
     }
 
-    fun updateData(loopsList: List<FileModel>) {
-        this.loopsList = loopsList
+    fun updateData(newList: List<FileModel>) {
+        setLoopsList(newList)
         notifyDataSetChanged()
     }
 
@@ -63,8 +61,12 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         onProgressUpdatedListener?.invoke(0F)
     }
 
+    private fun setLoopsList(newList: List<FileModel>) {
+        loopsList =  newList.sortedWith(compareBy { it.name.toLowerCase() })
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
-        View.OnLongClickListener{
+        View.OnLongClickListener {
 
         var selected = false
         var positionInList = -1
@@ -74,14 +76,14 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
             itemView.setOnLongClickListener(this)
         }
 
-         fun update(progress: Float) {
+       private fun update(progress: Float) {
 
             if (!selected) {
                 Timber.d("not selected, position: %s", positionInList)
                 itemView.wave.progress = 0F
                 return
             }
-             itemView.wave.progress = progress
+            itemView.wave.progress = progress
         }
 
         fun initializeOnProgressUpdatedListener() {
@@ -110,7 +112,8 @@ class LoopsAdapter(context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHol
         private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
             view.setRawData(bytes)
         }
-    }
 
+
+    }
 }
 

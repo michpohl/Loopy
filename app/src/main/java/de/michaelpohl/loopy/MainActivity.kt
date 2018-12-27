@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             if (didUpdate) {
                 Timber.d("We did update")
                 clearBackStack()
-                addPlayerFragment(LoopsRepository.currentSelectedFileModels)
+                addPlayerFragment(LoopsRepository.currentSelectedFileModels, LoopsRepository.settings)
                 true
             } else {
                 val snackbar = Snackbar.make(
@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     }
 
     private fun addPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
+        for (model in loops) Timber.d("what we get in MainActivity: %s", model.name)
 
         //TODO this method can be better - handling what's in AppData should completely move into LoopsRepository
         val appData = AppData(loops, settings)
