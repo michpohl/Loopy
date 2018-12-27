@@ -8,14 +8,14 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.PlayerViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.player.PlayerViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
             android:id="@+id/main"
             style="@style/MatchParent"
             android:background="@color/window_background"
-            tools:context=".ui.main.PlayerFragment">
+            tools:context=".ui.main.player.PlayerFragment">
 
         <android.support.constraint.ConstraintLayout
                 android:id="@+id/ll_settings_dropdown"

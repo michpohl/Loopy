@@ -1,14 +1,11 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.browser
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
 import hugo.weaving.DebugLog
-import kotlinx.android.synthetic.main.item_file_browser.view.*
 
 @DebugLog
 class FileBrowserItem(

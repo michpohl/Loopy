@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.player
 
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -12,7 +12,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
-import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_player.*
 import timber.log.Timber
 import java.lang.ref.WeakReference

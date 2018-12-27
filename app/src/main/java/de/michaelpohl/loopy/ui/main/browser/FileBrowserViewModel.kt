@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.browser
 
 import android.app.Application
 import android.databinding.ObservableField
@@ -9,11 +9,13 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
 
 class FileBrowserViewModel(application: Application) : BaseViewModel(application) {
 
-    private var adapter = FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
+    private var adapter =
+        FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
 
     var selectButtonText = ObservableField(getString(R.string.btn_select_all))
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE)

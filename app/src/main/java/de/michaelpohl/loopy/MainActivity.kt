@@ -14,6 +14,10 @@ import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.*
+import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
+import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
+import de.michaelpohl.loopy.ui.main.player.PlayerFragment
+import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber

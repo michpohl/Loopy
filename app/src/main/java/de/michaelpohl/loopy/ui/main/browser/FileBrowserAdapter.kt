@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.browser
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
@@ -33,7 +33,13 @@ class FileBrowserAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding: ItemFileBrowserBinding =
             DataBindingUtil.inflate(inflater, R.layout.item_file_browser, parent, false)
-        return FileBrowserItem(parent.context, binding, filesList, onItemClickedListener, onItemSelectedListener)
+        return FileBrowserItem(
+            parent.context,
+            binding,
+            filesList,
+            onItemClickedListener,
+            onItemSelectedListener
+        )
     }
 
     override fun getItemCount() = filesList.size

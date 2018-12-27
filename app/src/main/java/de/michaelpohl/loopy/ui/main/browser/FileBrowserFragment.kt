@@ -1,15 +1,13 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.browser
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
+import de.michaelpohl.loopy.ui.main.BaseFragment
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
 

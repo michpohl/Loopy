@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.player
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
@@ -24,7 +24,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.Vie
 
     var selectedPosition = -1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoopsAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loop, parent, false)
 
         return ViewHolder(view)
@@ -32,7 +32,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.Vie
 
     override fun getItemCount() = loopsList.size
 
-    override fun onBindViewHolder(holder: LoopsAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindView(position)
 
         if (holder.positionInList == selectedPosition) {

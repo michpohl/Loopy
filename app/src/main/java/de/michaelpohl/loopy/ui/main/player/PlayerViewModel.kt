@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.player
 
 import android.animation.ObjectAnimator
 import android.app.Application
@@ -11,6 +11,7 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.ui.main.BaseViewModel
 import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
