@@ -11,11 +11,14 @@ import android.view.MenuItem
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.FileType
+import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.*
+import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 
+@DebugLog
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.PlayerActionsListener {
 
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
             val didUpdate = LoopsRepository.updateAndSaveFileSelection()
             if (didUpdate) {
+                Timber.d("We did update")
                 clearBackStack()
                 addPlayerFragment(LoopsRepository.currentSelectedFileModels)
                 true
@@ -100,7 +104,9 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     }
 
     override fun onBackPressed() {
-        if (!currentFragment.onBackPressed()) {
+
+        //apparently it is possible to come by here with currentFragment not being initialized
+        if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
             super.onBackPressed()
         }
 
@@ -109,12 +115,11 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
     }
 
-    private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
-        if (loops.isNotEmpty()) {
-            LoopsRepository.saveCurrentSelection(loops)
-        }
-        clearBackStack()
-        val playerFragment = PlayerFragment.newInstance(LoopsRepository.savedAppData)
+    private fun addPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
+
+        //TODO this method can be better - handling what's in AppData should completely move into LoopsRepository
+        val appData = AppData(loops, settings)
+        val playerFragment = PlayerFragment.newInstance(appData)
         currentFragment = playerFragment
         playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
         supportFragmentManager.beginTransaction()

@@ -13,7 +13,7 @@ import timber.log.Timber
 @DebugLog
 class FileBrowserAdapter(
     private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),
-    val onItemClickedListener: ((FileModel) -> Unit)
+    private val onItemClickedListener: ((FileModel) -> Unit)
 ) : RecyclerView.Adapter<FileBrowserItem>() {
 
     var filesList = listOf<FileModel>()

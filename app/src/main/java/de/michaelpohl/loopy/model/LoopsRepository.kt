@@ -2,21 +2,24 @@ package de.michaelpohl.loopy.model
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.AppData
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.Settings
+import hugo.weaving.DebugLog
+import timber.log.Timber
 
+@DebugLog
 object LoopsRepository {
 
     private const val PREFS_LOOPS_KEY = "loops_list"
     lateinit var sharedPrefs: SharedPreferences
     lateinit var savedAppData: AppData
 
-    var currentSelectedFileModels = mutableListOf<FileModel>()
-    private val newSelectedFileModels = mutableListOf<FileModel>()
+    var currentSelectedFileModels = listOf<FileModel>()
+        private set
+    private var newSelectedFileModels = listOf<FileModel>()
     var settings = Settings()
         private set
-
 
     /**
      * initializes the LoopsRepository by fetching the saved state from sharedPreferences
@@ -24,7 +27,7 @@ object LoopsRepository {
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
         this.savedAppData = loadSavedAppData()
-        currentSelectedFileModels.addAll(savedAppData.models)
+        currentSelectedFileModels = savedAppData.models
         settings = savedAppData.settings
     }
 
@@ -37,31 +40,36 @@ object LoopsRepository {
             putString(PREFS_LOOPS_KEY, jsonString)
             commit()
         }
-        currentSelectedFileModels.clear()
-        currentSelectedFileModels.addAll(selectedLoops)
     }
 
     fun updateAndSaveFileSelection(): Boolean {
-        return if (!newSelectedFileModels.isEmpty()) {
-            currentSelectedFileModels.addAll(newSelectedFileModels)
-            saveCurrentSelection(currentSelectedFileModels)
+        return if (newSelectedFileModels.isNotEmpty()) {
+            Timber.d("it's not empty!!, it contains:")
+            for (model in newSelectedFileModels) Timber.d("selected: %s", model.name)
+            for (model in currentSelectedFileModels) Timber.d(" current before: %s", model.name)
+
+            currentSelectedFileModels = newSelectedFileModels + currentSelectedFileModels
+            for (model in currentSelectedFileModels) Timber.d("current after: %s", model.name)
+
+            saveCurrentSelection()
             true
         } else false
     }
 
     fun onFileSelectionUpdated(newSelection: List<FileModel>) {
-
+        Timber.d("adding %s selected items", newSelection.size)
         //clear list to prevent adding doubles or unwanted items (since this gets updated with every click)
-        newSelectedFileModels.clear()
-
+        Timber.d("%s", newSelectedFileModels)
         //only add the ones that are not already selected
-        newSelectedFileModels.addAll(newSelection.filter { it ->
+        newSelectedFileModels = newSelection.filter { it ->
             !currentSelectedFileModels.contains(it)
-        })
+        }
+        Timber.d("%s", newSelectedFileModels)
+
     }
 
     fun onLoopsListCleared() {
-        currentSelectedFileModels.clear()
+        currentSelectedFileModels = emptyList()
         saveCurrentSelection()
     }
 
