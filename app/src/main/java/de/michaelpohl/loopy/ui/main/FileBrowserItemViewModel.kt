@@ -60,7 +60,6 @@ class FileBrowserItemViewModel(
         }
 
         if (FileHelper.containsAudioFilesInAnySubFolders(fileModel.path)) {
-
             pickFolderButtonVisibility.set(VISIBLE)
         } else {
 
@@ -70,7 +69,9 @@ class FileBrowserItemViewModel(
     }
 
     fun onItemClicked(view: View) {
-        onItemClickedListener.invoke(fileModel)
+        if (!FileHelper.isExcludedFolderName(fileModel.path)) {
+            onItemClickedListener.invoke(fileModel)
+        }
     }
 
     fun onCheckBoxClicked(view: View) {
