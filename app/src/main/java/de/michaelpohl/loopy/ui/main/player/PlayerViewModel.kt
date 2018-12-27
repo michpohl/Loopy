@@ -171,13 +171,13 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         if (looper.isPlaying()) {
             looper.stop()
         }
+        adapter.resetProgress()
         onPlaybackStopped()
     }
 
     private fun onPlaybackStopped() {
         isPlaying.set(false)
         updateHandler.removeCallbacks(updateRunnable)
-        adapter.resetProgress()
     }
 
     private fun slideDown(view: View) {
