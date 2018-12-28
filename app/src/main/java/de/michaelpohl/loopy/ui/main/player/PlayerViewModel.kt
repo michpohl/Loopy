@@ -157,7 +157,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         val oldPosition = adapter.selectedPosition
         adapter.selectedPosition = position
 
-        // behaviur when looper should wait for the loop to finish first
+        // behaviour when looper should wait for the loop to finish first
         //this behaviour only makes sense when playback is running
         if (looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             looper.onLoopSwitchedListener = {
