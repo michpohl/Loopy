@@ -9,9 +9,11 @@ import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
@@ -118,11 +120,18 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onSwitchingBehaviourToggled(view: View) {
-        if (switchBehaviourButtonText.equals(getString(R.string.btn_switching_behaviour_switch_immediately))) {
+        var behaviour = LoopsRepository.settings.switchingLoopsBehaviour
+        Timber.d("Clicked on switching behaviour. Current behaviour: %s", behaviour)
+        if (behaviour == SwitchingLoopsBehaviour.SWITCH) {
+            behaviour = SwitchingLoopsBehaviour.WAIT
             switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_wait_to_finish))
         } else {
+            behaviour = SwitchingLoopsBehaviour.SWITCH
             switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_switch_immediately))
         }
+        looper.switchingLoopsBehaviour = behaviour
+        LoopsRepository.settings.switchingLoopsBehaviour = behaviour
+        LoopsRepository.saveCurrentState()
     }
 
     fun updateData() {
@@ -139,8 +148,21 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun onItemSelected(fm: FileModel, position: Int) {
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
-        val oldPosition = adapter.selectedPosition
         adapter.selectedPosition = position
+
+        // behaviur when looper should wait for the loop to finish first
+        //this behaviour only makes sense when playback is running
+        if (looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
+            looper.onLoopSwitchedListener = {
+
+                // need to update all items because the asynchronous switching can mess things up
+                adapter.notifyDataSetChanged()
+            }
+            return
+        }
+
+        //standard behaviour. Also nicer view updating style
+        val oldPosition = adapter.selectedPosition
         adapter.notifyItemChanged(oldPosition)
         adapter.notifyItemChanged(position)
         startLooper()

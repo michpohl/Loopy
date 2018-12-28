@@ -61,7 +61,7 @@
                     android:id="@+id/btn_toggle_switching_behavoiour"
                     style="@style/Button.Borderless"
                     android:textColor="@color/white"
-                    android:onClick="@{model.onSwitchingBehaviourToggled}"
+                    android:onClick="@{model::onSwitchingBehaviourToggled}"
                     android:text="@{model.switchBehaviourButtonText}"
                     app:layout_constraintTop_toBottomOf="@id/divider"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -92,7 +92,7 @@
                     android:id="@+id/btn_change_filetypes"
                     style="@style/Button.Borderless"
                     android:textColor="@color/white"
-                    android:onClick="@{model.onChangeAllowedFileTypesClicked}"
+                    android:onClick="@{model::onChangeAllowedFileTypesClicked}"
                     android:text="Change"
                     app:layout_constraintTop_toBottomOf="@id/btn_toggle_switching_behavoiour"
                     app:layout_constraintEnd_toEndOf="parent"/>

@@ -4,7 +4,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import android.support.v4.content.FileProvider
-import hugo.weaving.DebugLog
+import de.michaelpohl.loopy.common.PlayerState
+import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import timber.log.Timber
 import java.io.File
 
@@ -18,9 +19,13 @@ class LoopedPlayer private constructor(context: Context) {
     var hasLoopFile = false
     var isReady = false
         private set
-   //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
+    //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
     var isPaused = false
         private set
+
+    var state = PlayerState.UNKNOWN
+    var switchingLoopsBehaviour = LoopsRepository.settings.switchingLoopsBehaviour
+    lateinit var onLoopSwitchedListener: () -> Unit
 
     private var mContext: Context? = null
     private var mCounter = 1
@@ -89,6 +94,7 @@ class LoopedPlayer private constructor(context: Context) {
         isPaused = false
         loops = 0
         currentPlayer.start()
+        if (::onLoopSwitchedListener.isInitialized) onLoopSwitchedListener.invoke()
     }
 
     fun stop() {
@@ -108,9 +114,19 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun setLoop(context: Context, loop: File) {
-        if (hasLoopFile) stop()
         loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
-        initPlayer()
+
+        if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
+            currentPlayer.setOnCompletionListener {
+                if (hasLoopFile) stop()
+                initPlayer()
+                start()
+            }
+        } else {
+            if (hasLoopFile) stop()
+
+            initPlayer()
+        }
         hasLoopFile = true
     }
 }
