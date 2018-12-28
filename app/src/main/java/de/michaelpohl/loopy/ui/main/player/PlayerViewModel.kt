@@ -36,7 +36,13 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(LoopsRepository.getAllowedFileTypeListAsString())
-    var switchBehaviourButtonText = ObservableField(getString(R.string.btn_switching_behaviour_switch_immediately))
+    var switchBehaviourButtonText = ObservableField(
+        if (LoopsRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT) {
+            getString(R.string.btn_switching_behaviour_wait_to_finish)
+        } else {
+            getString(R.string.btn_switching_behaviour_switch_immediately)
+        }
+    )
 
     var isPlaying = ObservableBoolean(false)
 
@@ -148,6 +154,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun onItemSelected(fm: FileModel, position: Int) {
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
+        val oldPosition = adapter.selectedPosition
         adapter.selectedPosition = position
 
         // behaviur when looper should wait for the loop to finish first
@@ -162,7 +169,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         }
 
         //standard behaviour. Also nicer view updating style
-        val oldPosition = adapter.selectedPosition
         adapter.notifyItemChanged(oldPosition)
         adapter.notifyItemChanged(position)
         startLooper()
