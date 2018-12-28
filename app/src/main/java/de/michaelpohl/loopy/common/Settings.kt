@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Settings (
-    var allowedFileTypes: Array<ValidAudioFileType> = ValidAudioFileType.values(),
+    var allowedFileTypes: Array<ValidAudioFileType> = emptyArray(),
     var switchingLoopsBehaviour: SwitchingLoopsBehaviour = SwitchingLoopsBehaviour.SWITCH
 ) : Parcelable {
 

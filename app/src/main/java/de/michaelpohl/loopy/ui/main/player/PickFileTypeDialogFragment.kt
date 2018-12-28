@@ -13,7 +13,7 @@ import de.michaelpohl.loopy.common.ValidAudioFileType
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.dialog_pick_filetypes.*
 
-@DebugLog
+
 class PickFileTypeDialogFragment : DialogFragment() {
 
     private lateinit var settings: Settings

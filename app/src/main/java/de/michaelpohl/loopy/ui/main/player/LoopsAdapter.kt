@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
 import timber.log.Timber
 
-@DebugLog
+
 class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.ViewHolder>() {
 
 

@@ -8,10 +8,8 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
-import hugo.weaving.DebugLog
 import timber.log.Timber
 
-@DebugLog
 class FileBrowserAdapter(
     private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),
     private val onItemClickedListener: ((FileModel) -> Unit)
@@ -45,11 +43,13 @@ class FileBrowserAdapter(
     override fun getItemCount() = filesList.size
 
     override fun onBindViewHolder(holder: FileBrowserItem, position: Int) {
+
         val fileViewModel = FileBrowserItemViewModel(
             position,
             filesList[position],
             this::onItemSelectedChanged,
             this::onItemClicked
+
         )
         if (selectedItems.contains(filesList[position])) {
             fileViewModel.selected.set(true)

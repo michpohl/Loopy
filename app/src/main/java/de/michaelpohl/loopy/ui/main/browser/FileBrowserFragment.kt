@@ -11,7 +11,7 @@ import de.michaelpohl.loopy.ui.main.BaseFragment
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
-@DebugLog
+
 class FileBrowserFragment : BaseFragment() {
 
     /**

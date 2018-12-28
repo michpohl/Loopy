@@ -22,7 +22,7 @@ import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 
-@DebugLog
+
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.PlayerActionsListener {
 

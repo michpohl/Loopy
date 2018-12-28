@@ -5,10 +5,8 @@ import com.google.gson.Gson
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.Settings
-import hugo.weaving.DebugLog
-import timber.log.Timber
+import de.michaelpohl.loopy.common.ValidAudioFileType
 
-@DebugLog
 object LoopsRepository {
 
     private const val PREFS_LOOPS_KEY = "loops_list"
@@ -39,7 +37,7 @@ object LoopsRepository {
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
         with(sharedPrefs.edit()) {
             putString(PREFS_LOOPS_KEY, jsonString)
-            commit()
+            apply() //writes the data in the background, as opposed to commit()
         }
     }
 
@@ -65,6 +63,11 @@ object LoopsRepository {
         saveCurrentState()
     }
 
+    /**
+     * loads the saved app state from SharedPreferences
+     * If there is no state, an AppData object is created with the standard settings
+     * @return The AppData object from SharedPreferences or a new one, if none exists
+     */
     private fun loadSavedAppData(): AppData {
         //warnString is put as the defaultValue and is given if there's nothing to return from sharedPrefs
         //this is not the most sexy way to do it, butI'll go with it for now, need to learn how to first
@@ -75,8 +78,11 @@ object LoopsRepository {
         //TODO take the FileModelList and test its integrity (do the files still exist?)
 
         return if (jsonString != "warning") {
-            AppDataFromJson(jsonString)
-        } else AppData(arrayListOf(), Settings())
+            appDataFromJson(jsonString)
+        } else {
+            // if we have no saved state, we start up with an empty list of loops and allow all audio file types
+            AppData(arrayListOf(), Settings(allowedFileTypes = ValidAudioFileType.values()))
+        }
     }
 
     fun getAllowedFileTypeListAsString(): String {
@@ -91,7 +97,7 @@ object LoopsRepository {
         return builder.toString()
     }
 
-    private fun AppDataFromJson(jsonString: String): AppData {
+    private fun appDataFromJson(jsonString: String): AppData {
         return Gson().fromJson(jsonString, AppData::class.java)
     }
 }

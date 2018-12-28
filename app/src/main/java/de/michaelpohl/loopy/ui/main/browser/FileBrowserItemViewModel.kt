@@ -4,12 +4,13 @@ import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
 import android.view.View
 import android.view.View.*
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import hugo.weaving.DebugLog
 
-@DebugLog
+
 class FileBrowserItemViewModel(
     private val position: Int,
     private val fileModel: FileModel,
@@ -28,6 +29,7 @@ class FileBrowserItemViewModel(
     var name = ObservableField("name")
     var subFolders = ObservableField("folders")
     var fileSize = ObservableField("filesize")
+
 
     fun update() {
 
@@ -77,5 +79,9 @@ class FileBrowserItemViewModel(
     fun onCheckBoxClicked(view: View) {
         selected.set(selected.get()?.not()) //why this ugly non-null assertion?
         selectedListener.invoke(selected.get()!!, position)
+    }
+
+    fun isFolder() : Boolean {
+        return fileModel.fileType == FileType.FOLDER
     }
 }

@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
 import hugo.weaving.DebugLog
 
-@DebugLog
+
 class FileBrowserItem(
     val context: Context,
     var binding: ItemFileBrowserBinding,
