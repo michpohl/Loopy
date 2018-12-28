@@ -10,9 +10,11 @@ import android.widget.CheckBox
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.ValidAudioFileType
+import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.dialog_pick_filetypes.*
 import timber.log.Timber
 
+@DebugLog
 class PickFileTypeDialogFragment : DialogFragment() {
 
     private lateinit var settings: Settings
@@ -30,11 +32,12 @@ class PickFileTypeDialogFragment : DialogFragment() {
         view.findViewById<CheckBox>(R.id.cb_check_ogg).isChecked =
                 allowedFileTypes.contains(ValidAudioFileType.OGG)
 
-        view.findViewById<CheckBox>(R.id.cb_check_wav).setOnClickListener { onCheckBoxClicked(ValidAudioFileType.WAVE) }
-        view.findViewById<CheckBox>(R.id.cb_check_mp3).setOnClickListener { onCheckBoxClicked(ValidAudioFileType.MP3) }
-        view.findViewById<CheckBox>(R.id.cb_check_ogg).setOnClickListener { onCheckBoxClicked(ValidAudioFileType.OGG) }
+        view.findViewById<CheckBox>(R.id.cb_check_wav).setOnClickListener { onCheckBoxWavClicked() }
+        view.findViewById<CheckBox>(R.id.cb_check_mp3).setOnClickListener { onCheckBoxMp3Clicked() }
+        view.findViewById<CheckBox>(R.id.cb_check_ogg).setOnClickListener { onCheckBoxOggClicked() }
         view.findViewById<Button>(R.id.btn_ok).setOnClickListener { onOkClicked() }
         view.findViewById<Button>(R.id.btn_cancel).setOnClickListener { onCancelClicked() }
+
 
 
         return view
@@ -45,8 +48,30 @@ class PickFileTypeDialogFragment : DialogFragment() {
         this.allowedFileTypes = currentSettings.allowedFileTypes.toMutableList()
     }
 
-    private fun onCheckBoxClicked(fileType: ValidAudioFileType) {
+    //TODO this whole class is spaghetti. Maybe it should have a viewModel to make it nicer. If you feel like it
+
+    private fun onCheckBoxWavClicked() {
+        val fileType = ValidAudioFileType.WAVE
         if (cb_check_wav.isChecked) {
+            allow(fileType)
+        } else {
+            forbid(fileType)
+        }
+    }
+
+    private fun onCheckBoxMp3Clicked() {
+        val fileType = ValidAudioFileType.MP3
+        if (cb_check_mp3.isChecked) {
+            allow(fileType)
+        } else {
+            forbid(fileType)
+        }
+    }
+
+    private fun onCheckBoxOggClicked() {
+        val fileType = ValidAudioFileType.OGG
+
+        if (cb_check_ogg.isChecked) {
             allow(fileType)
         } else {
             forbid(fileType)
@@ -66,13 +91,22 @@ class PickFileTypeDialogFragment : DialogFragment() {
     }
 
     private fun allow(fileType: ValidAudioFileType) {
+        Timber.d("Filetype I try to allow: %s Allowed right now:", fileType.suffix)
+        allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
+
         if (!allowedFileTypes.contains(fileType)) {
+            Timber.d("Allowing: %s", fileType.suffix)
             allowedFileTypes.add(fileType)
         }
     }
 
     private fun forbid(fileType: ValidAudioFileType) {
+        Timber.d("Filetype I try to forbid: %s Allowed right now:", fileType.suffix)
+
+        allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
+
         if (allowedFileTypes.contains(fileType)) {
+            Timber.d("Forbidding: %s", fileType.suffix)
             allowedFileTypes.remove(fileType)
         }
     }

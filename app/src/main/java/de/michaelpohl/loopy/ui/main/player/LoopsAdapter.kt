@@ -63,6 +63,8 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<LoopsAdapter.Vie
 
     private fun setLoopsList(newList: List<FileModel>) {
         loopsList = newList.sortedWith(compareBy { it.name.toLowerCase() }).filter { it.isValidFileType() }
+Timber.d("Adapter updating with these loops: ")
+        loopsList.forEach{ Timber.d("%s", it)}
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,

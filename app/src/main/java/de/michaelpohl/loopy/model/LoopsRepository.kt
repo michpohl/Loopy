@@ -27,10 +27,14 @@ object LoopsRepository {
         this.sharedPrefs = sharedPrefs
         this.savedAppData = loadSavedAppData()
         currentSelectedFileModels = savedAppData.models
-        settings = savedAppData.settings
+        this.settings = savedAppData.settings
+        Timber.d("Loaded these allowed fileTypes:")
+        if (settings.allowedFileTypes.isEmpty()) Timber.d("No allowed types!")
+        settings.allowedFileTypes.forEach { Timber.d("%s", it) }
+
     }
 
-    fun saveCurrentSelection(selectedLoops: List<FileModel> = currentSelectedFileModels, settings: Settings = this.settings) {
+    fun saveCurrentState(selectedLoops: List<FileModel> = this.currentSelectedFileModels, settings: Settings = this.settings) {
         Timber.d("Saving settings, allowedFilesTypes: ")
         settings.allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
 
@@ -53,7 +57,7 @@ object LoopsRepository {
             currentSelectedFileModels = newSelectedFileModels + currentSelectedFileModels
             for (model in currentSelectedFileModels) Timber.d("current after: %s", model.name)
 
-            saveCurrentSelection()
+            saveCurrentState()
             true
         } else false
     }
@@ -71,7 +75,7 @@ object LoopsRepository {
 
     fun onLoopsListCleared() {
         currentSelectedFileModels = emptyList()
-        saveCurrentSelection()
+        saveCurrentState()
     }
 
     private fun loadSavedAppData(): AppData {

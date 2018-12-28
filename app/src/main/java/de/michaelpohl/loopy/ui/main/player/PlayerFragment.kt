@@ -127,7 +127,7 @@ class PlayerFragment : BaseFragment() {
         dialog.resultListener = {
             Timber.d("Invoking...")
             LoopsRepository.settings = it
-            LoopsRepository.saveCurrentSelection()
+            LoopsRepository.saveCurrentState()
             viewModel.updateData()
         }
         dialog.show(fragmentManager, "pick-filetypes")
