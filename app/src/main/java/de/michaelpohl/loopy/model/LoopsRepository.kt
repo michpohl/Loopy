@@ -28,18 +28,13 @@ object LoopsRepository {
         this.savedAppData = loadSavedAppData()
         currentSelectedFileModels = savedAppData.models
         this.settings = savedAppData.settings
-        Timber.d("Loaded these allowed fileTypes:")
-        if (settings.allowedFileTypes.isEmpty()) Timber.d("No allowed types!")
-        settings.allowedFileTypes.forEach { Timber.d("%s", it) }
-
     }
 
-    fun saveCurrentState(selectedLoops: List<FileModel> = this.currentSelectedFileModels, settings: Settings = this.settings) {
-        Timber.d("Saving settings, allowedFilesTypes: ")
-        settings.allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
-
+    fun saveCurrentState(
+        selectedLoops: List<FileModel> = this.currentSelectedFileModels,
+        settings: Settings = this.settings
+    ) {
         val jsonString = Gson().toJson(AppData(selectedLoops, settings))
-
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
         with(sharedPrefs.edit()) {
@@ -50,12 +45,7 @@ object LoopsRepository {
 
     fun updateAndSaveFileSelection(): Boolean {
         return if (newSelectedFileModels.isNotEmpty()) {
-            Timber.d("it's not empty!!, it contains:")
-            for (model in newSelectedFileModels) Timber.d("selected: %s", model.name)
-            for (model in currentSelectedFileModels) Timber.d(" current before: %s", model.name)
-
             currentSelectedFileModels = newSelectedFileModels + currentSelectedFileModels
-            for (model in currentSelectedFileModels) Timber.d("current after: %s", model.name)
 
             saveCurrentState()
             true
@@ -63,14 +53,11 @@ object LoopsRepository {
     }
 
     fun onFileSelectionUpdated(newSelection: List<FileModel>) {
-        Timber.d("adding %s selected items", newSelection.size)
         //clear list to prevent adding doubles or unwanted items (since this gets updated with every click)
-        Timber.d("%s", newSelectedFileModels)
         //only add the ones that are not already selected
         newSelectedFileModels = newSelection.filter { it ->
             !currentSelectedFileModels.contains(it)
         }
-        Timber.d("%s", newSelectedFileModels)
     }
 
     fun onLoopsListCleared() {
@@ -97,7 +84,7 @@ object LoopsRepository {
         val allowedFileTypes = settings.allowedFileTypes
         allowedFileTypes.forEach {
             builder.append(it.name)
-            if (allowedFileTypes.indexOf(it) == allowedFileTypes.size - 1) {
+            if (allowedFileTypes.indexOf(it) != allowedFileTypes.size - 1) {
                 builder.append(", ")
             }
         }

@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
             val didUpdate = LoopsRepository.updateAndSaveFileSelection()
             if (didUpdate) {
-                Timber.d("We did update")
                 clearBackStack()
                 addPlayerFragment(LoopsRepository.currentSelectedFileModels, LoopsRepository.settings)
                 true

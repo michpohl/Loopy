@@ -134,6 +134,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             emptyMessageVisibility.set(View.VISIBLE)
             clearListButtonVisibility.set(View.GONE)
         }
+        acceptedFileTypesAsString.set(LoopsRepository.getAllowedFileTypeListAsString())
     }
 
     fun onItemSelected(fm: FileModel, position: Int) {

@@ -12,7 +12,6 @@ import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.ValidAudioFileType
 import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.dialog_pick_filetypes.*
-import timber.log.Timber
 
 @DebugLog
 class PickFileTypeDialogFragment : DialogFragment() {
@@ -38,8 +37,6 @@ class PickFileTypeDialogFragment : DialogFragment() {
         view.findViewById<Button>(R.id.btn_ok).setOnClickListener { onOkClicked() }
         view.findViewById<Button>(R.id.btn_cancel).setOnClickListener { onCancelClicked() }
 
-
-
         return view
     }
 
@@ -47,8 +44,6 @@ class PickFileTypeDialogFragment : DialogFragment() {
         this.settings = currentSettings
         this.allowedFileTypes = currentSettings.allowedFileTypes.toMutableList()
     }
-
-    //TODO this whole class is spaghetti. Maybe it should have a viewModel to make it nicer. If you feel like it
 
     private fun onCheckBoxWavClicked() {
         val fileType = ValidAudioFileType.WAVE
@@ -79,9 +74,7 @@ class PickFileTypeDialogFragment : DialogFragment() {
     }
 
     private fun onOkClicked() {
-        Timber.d("Clicked on OK. These are my picked allowed types:")
         settings.allowedFileTypes = allowedFileTypes.toTypedArray()
-        settings.allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
         resultListener.invoke(settings)
         dismiss()
     }
@@ -91,22 +84,13 @@ class PickFileTypeDialogFragment : DialogFragment() {
     }
 
     private fun allow(fileType: ValidAudioFileType) {
-        Timber.d("Filetype I try to allow: %s Allowed right now:", fileType.suffix)
-        allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
-
         if (!allowedFileTypes.contains(fileType)) {
-            Timber.d("Allowing: %s", fileType.suffix)
             allowedFileTypes.add(fileType)
         }
     }
 
     private fun forbid(fileType: ValidAudioFileType) {
-        Timber.d("Filetype I try to forbid: %s Allowed right now:", fileType.suffix)
-
-        allowedFileTypes.forEach { Timber.d("%s", it.suffix) }
-
         if (allowedFileTypes.contains(fileType)) {
-            Timber.d("Forbidding: %s", fileType.suffix)
             allowedFileTypes.remove(fileType)
         }
     }
