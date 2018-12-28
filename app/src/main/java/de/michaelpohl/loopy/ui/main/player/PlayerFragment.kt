@@ -116,8 +116,11 @@ class PlayerFragment : BaseFragment() {
         viewModel.loopsList = loopsList
         viewModel.updateData()
 
-        viewModel.getAdapter().onItemClickListener = { a: FileModel, b: Int ->
+        viewModel.getAdapter().onItemSelectedListener = { a: FileModel, b: Int ->
             viewModel.onItemSelected(a, b)
+        }
+        viewModel.getAdapter().onItemPreSelectedListener = { a: FileModel, b: Int ->
+            viewModel.onItemPreSelected(a, b)
         }
     }
 
@@ -130,6 +133,7 @@ class PlayerFragment : BaseFragment() {
             LoopsRepository.saveCurrentState()
             viewModel.updateData()
         }
+
         dialog.show(fragmentManager, "pick-filetypes")
     }
 }

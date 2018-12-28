@@ -20,10 +20,9 @@ class LoopedPlayer private constructor(context: Context) {
     var isReady = false
         private set
     //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
-    var isPaused = false
-        private set
 
     var state = PlayerState.UNKNOWN
+        private set
     var switchingLoopsBehaviour = LoopsRepository.settings.switchingLoopsBehaviour
     lateinit var onLoopSwitchedListener: () -> Unit
 
@@ -58,11 +57,12 @@ class LoopedPlayer private constructor(context: Context) {
         mContext = context
     }
 
+    /**
+    returns the percentage of the current file that's been played already
+     */
     fun getCurrentPosition(): Float {
         val unit = currentPlayer.duration / 100
-        val currentPosition = currentPlayer.currentPosition / unit.toFloat()
-        Timber.d("duration: %s, Unit: %s, Current position: %s", currentPlayer.duration, unit, currentPosition)
-        return currentPosition
+        return currentPlayer.currentPosition / unit.toFloat()
     }
 
     private fun initPlayer() {
@@ -91,23 +91,29 @@ class LoopedPlayer private constructor(context: Context) {
     fun start() {
         //TODO show user if no file is selected yet
         shouldBePlaying = true
-        isPaused = false
         loops = 0
         currentPlayer.start()
-        if (::onLoopSwitchedListener.isInitialized) onLoopSwitchedListener.invoke()
+        if (::onLoopSwitchedListener.isInitialized &&
+            switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
+        ) {
+            onLoopSwitchedListener.invoke()
+        }
+        state = PlayerState.PLAYING
     }
 
     fun stop() {
         shouldBePlaying = false
         currentPlayer.stop()
         nextPlayer.stop()
+        state = PlayerState.STOPPED
         initPlayer()
     }
 
     fun pause() {
         currentPlayer.pause()
-        isPaused = true
+        state = PlayerState.PAUSED
     }
+
 
     fun isPlaying(): Boolean {
         return currentPlayer.isPlaying

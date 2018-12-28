@@ -30,7 +30,7 @@ class FileBrowserItem(
 //        if (v!!.id == R.id.btn_pick_folder) {
 //            onItemSelectedListener?.invoke(selectedFileModel)
 //        } else {
-//            onItemClickListener?.invoke(selectedFileModel)
+//            onItemSelectedListener?.invoke(selectedFileModel)
 //        }
 
 

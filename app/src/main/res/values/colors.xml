@@ -63,6 +63,7 @@
     <color name="enabled">@color/cyan</color>
     <color name="button_active">@color/dark_green</color>
     <color name="button_inactive">@color/grey4</color>
+    <color name="preselected_item">@color/green</color>
 
 
     <color name="action">@color/light_red</color>

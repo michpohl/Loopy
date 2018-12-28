@@ -9,6 +9,7 @@ import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.LoopsRepository
@@ -99,7 +100,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         if (looper.isPlaying()) {
             looper.pause()
             onPlaybackStopped()
-        } else if (looper.isPaused) startLooper()
+        } else if (looper.state == PlayerState.PAUSED) startLooper()
     }
 
     fun onClearListClicked(view: View) {
@@ -152,6 +153,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         acceptedFileTypesAsString.set(LoopsRepository.getAllowedFileTypeListAsString())
     }
 
+    fun onItemPreSelected(fm: FileModel, position: Int) {
+        Timber.d("Preselection!!")
+        adapter.notifyDataSetChanged()
+    }
+
     fun onItemSelected(fm: FileModel, position: Int) {
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
         val oldPosition = adapter.selectedPosition
@@ -197,7 +203,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     private fun stopLooper() {
         if (!looper.isReady) return
-        if (looper.isPlaying()) {
+        if (looper.state == PlayerState.PLAYING || looper.state == PlayerState.PAUSED) {
             looper.stop()
         }
         adapter.resetProgress()

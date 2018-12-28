@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.model.LoopedPlayer
 import timber.log.Timber
 
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
-    protected  val resources = application.resources
+    private val resources = application.resources
 
     protected fun getString(stringID : Int) : String {
         return resources.getString(stringID)
