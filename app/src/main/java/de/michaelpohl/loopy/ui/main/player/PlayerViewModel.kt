@@ -140,6 +140,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         } else {
             behaviour = SwitchingLoopsBehaviour.SWITCH
             switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_switch_immediately))
+            val currentPreSelected = adapter.preSelectedPosition
+            adapter.preSelectedPosition = -1
+            adapter.notifyItemChanged(currentPreSelected)
+            looper.resetPreSelection()
+
         }
         looper.switchingLoopsBehaviour = behaviour
         LoopsRepository.settings.switchingLoopsBehaviour = behaviour
