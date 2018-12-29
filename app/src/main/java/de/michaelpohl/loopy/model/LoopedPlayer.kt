@@ -97,10 +97,11 @@ class LoopedPlayer private constructor(context: Context) {
 
     fun stop() {
         shouldBePlaying = false
+        currentPlayer.setOnCompletionListener { null }
         currentPlayer.stop()
         nextPlayer.stop()
         state = PlayerState.STOPPED
-//        initPlayer()
+        initPlayer()
     }
 
     fun pause() {
@@ -113,11 +114,12 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun setLoop(context: Context, loop: File) {
-        loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
                 Timber.d("Current player completes here!")
+                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+
                 if (hasLoopFile) stop()
                 initPlayer()
                 if (::onLoopSwitchedListener.isInitialized &&
@@ -129,10 +131,16 @@ class LoopedPlayer private constructor(context: Context) {
                 start()
             }
         } else {
-            if (hasLoopFile) stop()
+            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
 
+            if (hasLoopFile) stop()
             initPlayer()
         }
         hasLoopFile = true
+    }
+
+    fun resetPreSelection() {
+        currentPlayer.setOnCompletionListener(onCompletionListener)
+
     }
 }

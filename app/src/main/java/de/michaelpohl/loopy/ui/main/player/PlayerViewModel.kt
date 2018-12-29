@@ -158,7 +158,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         acceptedFileTypesAsString.set(LoopsRepository.getAllowedFileTypeListAsString())
     }
 
-
     //TODO beautify, strip notification into extra method in adapter
     fun onItemSelected(fm: FileModel, position: Int, selectionState: SelectionState) {
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
@@ -178,7 +177,8 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
                 adapter.notifyItemChanged(oldSelected)
                 adapter.notifyItemChanged(adapter.preSelectedPosition)
                 adapter.notifyItemChanged(adapter.selectedPosition)
-                adapter.preSelectedPosition = -1}
+                adapter.preSelectedPosition = -1
+            }
 
 //            }
         } else {
@@ -217,13 +217,19 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         if (looper.state == PlayerState.PLAYING || looper.state == PlayerState.PAUSED) {
             looper.stop()
         }
+
+        val preselectedPosition = adapter.preSelectedPosition
+        adapter.preSelectedPosition = -1
+        adapter.notifyItemChanged(preselectedPosition)
         adapter.resetProgress()
+        looper.resetPreSelection()
         onPlaybackStopped()
     }
 
     private fun onPlaybackStopped() {
         isPlaying.set(false)
         updateHandler.removeCallbacks(updateRunnable)
+
     }
 
     private fun slideDown(view: View) {
