@@ -18,28 +18,13 @@ class PlayerItem(val context: Context,
 ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener,
     View.OnLongClickListener {
 
-    var preSelected = false
     var selected = false
-    var positionInList = -1
 
     init {
         binding.root.setOnClickListener(this)
 //        itemView.setOnLongClickListener(this)
     }
 
-    private fun update(progress: Float) {
-
-        if (!selected) {
-            Timber.d("not selected, position: %s", positionInList)
-            itemView.wave.progress = 0F
-            return
-        }
-        itemView.wave.progress = progress
-    }
-
-//    fun initializeOnProgressUpdatedListener() {
-//        onProgressUpdatedListener = { it -> update(it) }
-//    }
 
     override fun onClick(v: View?) {
     }

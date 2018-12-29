@@ -89,14 +89,18 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStartPlaybackClicked(view: View) {
+        Timber.d("Start")
         if (looper.hasLoopFile) startLooper()
     }
 
     fun onStopPlaybackClicked(view: View) {
+        Timber.d("Stop")
         stopLooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
+        Timber.d("Pause")
+        Timber.d("Is looper ready? %s", looper.isReady)
         if (!looper.isReady) return
         if (looper.isPlaying()) {
             looper.pause()
@@ -154,10 +158,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         acceptedFileTypesAsString.set(LoopsRepository.getAllowedFileTypeListAsString())
     }
 
-    fun onItemPreSelected(fm: FileModel, position: Int) {
-        Timber.d("Preselection!!")
-        adapter.notifyDataSetChanged()
-    }
 
     //TODO beautify, strip notification into extra method in adapter
     fun onItemSelected(fm: FileModel, position: Int, selectionState: SelectionState) {
@@ -172,24 +172,19 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
 
             looper.onLoopSwitchedListener = {
-
+                Timber.d("invoking loopSwitchListener: Player state: %s", looper.state)
                 val oldSelected = adapter.selectedPosition
                 adapter.selectedPosition = adapter.preSelectedPosition
-                adapter.preSelectedPosition = -1
-                adapter.notifyItemChanged(adapter.preSelectedPosition)
                 adapter.notifyItemChanged(oldSelected)
+                adapter.notifyItemChanged(adapter.preSelectedPosition)
                 adapter.notifyItemChanged(adapter.selectedPosition)
-                
-            }
+                adapter.preSelectedPosition = -1}
+
+//            }
         } else {
 
             val oldPosition = adapter.selectedPosition
             adapter.selectedPosition = position
-
-            // behaviour when looper should wait for the loop to finish first
-            //this behaviour only makes sense when playback is running
-
-            //standard behaviour. Also nicer view updating style
             adapter.notifyItemChanged(oldPosition)
             adapter.notifyItemChanged(position)
             startLooper()

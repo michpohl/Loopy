@@ -84,8 +84,7 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     private fun createMediaPlayer(): MediaPlayer {
-        val mediaPlayer = MediaPlayer.create(mContext, loopUri)
-        return mediaPlayer
+        return MediaPlayer.create(mContext, loopUri)
     }
 
     fun start() {
@@ -93,11 +92,6 @@ class LoopedPlayer private constructor(context: Context) {
         shouldBePlaying = true
         loops = 0
         currentPlayer.start()
-        if (::onLoopSwitchedListener.isInitialized &&
-            switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
-        ) {
-            onLoopSwitchedListener.invoke()
-        }
         state = PlayerState.PLAYING
     }
 
@@ -106,14 +100,13 @@ class LoopedPlayer private constructor(context: Context) {
         currentPlayer.stop()
         nextPlayer.stop()
         state = PlayerState.STOPPED
-        initPlayer()
+//        initPlayer()
     }
 
     fun pause() {
         currentPlayer.pause()
         state = PlayerState.PAUSED
     }
-
 
     fun isPlaying(): Boolean {
         return currentPlayer.isPlaying
@@ -124,8 +117,15 @@ class LoopedPlayer private constructor(context: Context) {
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
+                Timber.d("Current player completes here!")
                 if (hasLoopFile) stop()
                 initPlayer()
+                if (::onLoopSwitchedListener.isInitialized &&
+                    switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
+
+                ) {
+                    onLoopSwitchedListener.invoke()
+                }
                 start()
             }
         } else {

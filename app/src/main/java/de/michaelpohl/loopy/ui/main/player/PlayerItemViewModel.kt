@@ -10,7 +10,7 @@ import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
 import timber.log.Timber
 
 class PlayerItemViewModel(
-    val position: Int,
+    private val position: Int,
     val fileModel: FileModel,
     private val onItemClickedListener: (Int, SelectionState) -> Unit
 ) : ViewModel() {

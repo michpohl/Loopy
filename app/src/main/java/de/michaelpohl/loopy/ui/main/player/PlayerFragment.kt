@@ -119,9 +119,7 @@ class PlayerFragment : BaseFragment() {
         viewModel.getAdapter().onItemSelectedListener = { a: FileModel, b: Int, c: PlayerItemViewModel.SelectionState ->
             viewModel.onItemSelected(a, b, c)
         }
-        viewModel.getAdapter().onItemPreSelectedListener = { a: FileModel, b: Int ->
-            viewModel.onItemPreSelected(a, b)
-        }
+
     }
 
     private fun showPickFileTypesDialog() {

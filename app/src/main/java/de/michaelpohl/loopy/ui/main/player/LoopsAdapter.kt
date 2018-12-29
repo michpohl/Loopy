@@ -18,7 +18,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
     private var loopsList = listOf<FileModel>()
     var onItemSelectedListener: ((FileModel, Int, SelectionState) -> Unit)? = null
     var onItemPreSelectedListener: ((FileModel, Int) -> Unit)? = null
-    var onProgressUpdatedListener: ((Float) -> Unit)? = null
+    private var onProgressUpdatedListener: ((Float) -> Unit)? = null
     var selectedPosition = -1
     var preSelectedPosition = -1
 
@@ -35,7 +35,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
     override fun getItemCount() = loopsList.size
 
     override fun onBindViewHolder(holder: PlayerItem, position: Int) {
-
+        Timber.d("OnBindViewHolder, position: %s, selected position: %s , preselected position: %s, name: %s", position, selectedPosition, preSelectedPosition,loopsList[position].name )
         val itemViewModel = PlayerItemViewModel(position, loopsList[position], this::onItemClicked)
 
         //TODO this should be done in the viewmodel, but I don't want to pass the context there. Find a solution
