@@ -9,8 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.AppData
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
@@ -42,8 +42,6 @@ class PlayerFragment : BaseFragment() {
         if (arguments != null) {
             val appData: AppData = arguments!!.getParcelable("appData")
             loopsList = appData.models
-            for (model in loopsList) Timber.d("in onCreate player: %s", model.name)
-
         }
     }
 
@@ -60,7 +58,7 @@ class PlayerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         viewModel.loopsList = loopsList
-        viewModel.pickFileTypesListener = { showPickFileTypesDialog()}
+        viewModel.pickFileTypesListener = { showPickFileTypesDialog() }
 
         //handing the dropdown layout to the viewModel  as WeakReferences to avoid context leak
         //the viewModel handles showing and hiding the dropdowns
@@ -88,7 +86,7 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    override fun onBackPressed() : Boolean {
+    override fun onBackPressed(): Boolean {
         return viewModel.closeDropDowns()
     }
 
@@ -119,7 +117,6 @@ class PlayerFragment : BaseFragment() {
         viewModel.getAdapter().onItemSelectedListener = { a: FileModel, b: Int, c: PlayerItemViewModel.SelectionState ->
             viewModel.onItemSelected(a, b, c)
         }
-
     }
 
     private fun showPickFileTypesDialog() {

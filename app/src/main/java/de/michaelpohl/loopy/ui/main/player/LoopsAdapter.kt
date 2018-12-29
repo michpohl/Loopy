@@ -14,10 +14,8 @@ import timber.log.Timber
 
 class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
 
-
     private var loopsList = listOf<FileModel>()
     var onItemSelectedListener: ((FileModel, Int, SelectionState) -> Unit)? = null
-    var onItemPreSelectedListener: ((FileModel, Int) -> Unit)? = null
     private var onProgressUpdatedListener: ((Float) -> Unit)? = null
     var selectedPosition = -1
     var preSelectedPosition = -1
@@ -35,14 +33,20 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
     override fun getItemCount() = loopsList.size
 
     override fun onBindViewHolder(holder: PlayerItem, position: Int) {
-        Timber.d("OnBindViewHolder, position: %s, selected position: %s , preselected position: %s, name: %s", position, selectedPosition, preSelectedPosition,loopsList[position].name )
+        Timber.d(
+            "OnBindViewHolder, position: %s, selected position: %s , preselected position: %s, name: %s",
+            position,
+            selectedPosition,
+            preSelectedPosition,
+            loopsList[position].name
+        )
         val itemViewModel = PlayerItemViewModel(position, loopsList[position], this::onItemClicked)
 
         //TODO this should be done in the viewmodel, but I don't want to pass the context there. Find a solution
         if (position == selectedPosition) {
             itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.action)
             itemViewModel.selectedState = PlayerItemViewModel.SelectionState.SELECTED
-            onProgressUpdatedListener = {it: Float -> itemViewModel.updateProgress(it)}
+            onProgressUpdatedListener = { it: Float -> itemViewModel.updateProgress(it) }
         } else {
             if (position == preSelectedPosition) {
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.preselected_item)
@@ -69,12 +73,18 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
         updateProgress(0F)
     }
 
-    fun onItemClicked(position: Int, itemState: SelectionState) {
-        onItemSelectedListener?.invoke(loopsList[position], position, itemState)
+    fun resetPreSelection() {
+        val currentPreSelection = preSelectedPosition
+        preSelectedPosition = -1
+        notifyItemChanged(currentPreSelection)
     }
 
-    private fun hasSelection() : Boolean {
-        return selectedPosition != -1
+    fun notifyMultipleItems(positions: Array<Int>) {
+        positions.forEach { notifyItemChanged(it) }
+    }
+
+    private fun onItemClicked(position: Int, itemState: SelectionState) {
+        onItemSelectedListener?.invoke(loopsList[position], position, itemState)
     }
 
     private fun setLoopsList(newList: List<FileModel>) {

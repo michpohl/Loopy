@@ -34,10 +34,12 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
+    var isPlaying = ObservableBoolean(false)
     var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(LoopsRepository.getAllowedFileTypeListAsString())
+
     var switchBehaviourButtonText = ObservableField(
         if (LoopsRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT) {
             getString(R.string.btn_switching_behaviour_wait_to_finish)
@@ -45,8 +47,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             getString(R.string.btn_switching_behaviour_switch_immediately)
         }
     )
-
-    var isPlaying = ObservableBoolean(false)
 
     lateinit var settingsDropDown: WeakReference<View>
     lateinit var fileOptionsDropDown: WeakReference<View>
@@ -58,14 +58,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         return adapter
     }
 
-    fun toggleFilesDropDown() {
+    fun toggleFilesDropDown(onlySlideUp: Boolean = false) {
         // close the other if still open
         if (settingsDropDownDropped) {
             slideUp(settingsDropDown.get() ?: return)
             settingsDropDownDropped = !settingsDropDownDropped
         }
 
-        if (!filesDropDownDropped) {
+        if (!filesDropDownDropped && !onlySlideUp) {
             slideDown(fileOptionsDropDown.get() ?: return)
         } else {
             slideUp(fileOptionsDropDown.get() ?: return)
@@ -73,14 +73,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         filesDropDownDropped = !filesDropDownDropped
     }
 
-    fun toggleSettingsDropDown() {
+    fun toggleSettingsDropDown(onlySlideUp: Boolean = false) {
         // close the other if still open
         if (filesDropDownDropped) {
             slideUp(fileOptionsDropDown.get() ?: return)
             filesDropDownDropped = !filesDropDownDropped
         }
 
-        if (!settingsDropDownDropped) {
+        if (!settingsDropDownDropped && !onlySlideUp) {
             slideDown(settingsDropDown.get() ?: return)
         } else {
             slideUp(settingsDropDown.get() ?: return)
@@ -123,7 +123,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onOverlayClicked(view: View) {
-        toggleSettingsDropDown()
+        closeDropDowns()
     }
 
     fun onChangeAllowedFileTypesClicked(view: View) {
@@ -133,7 +133,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     fun onSwitchingBehaviourToggled(view: View) {
         var behaviour = LoopsRepository.settings.switchingLoopsBehaviour
-        Timber.d("Clicked on switching behaviour. Current behaviour: %s", behaviour)
         if (behaviour == SwitchingLoopsBehaviour.SWITCH) {
             behaviour = SwitchingLoopsBehaviour.WAIT
             switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_wait_to_finish))
@@ -141,8 +140,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             behaviour = SwitchingLoopsBehaviour.SWITCH
             switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_switch_immediately))
 
-           resetPreSelection()
-
+            resetPreSelection()
         }
         looper.switchingLoopsBehaviour = behaviour
         LoopsRepository.settings.switchingLoopsBehaviour = behaviour
@@ -168,18 +166,13 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             val oldPosition = adapter.preSelectedPosition
             adapter.preSelectedPosition = position
-
-            adapter.notifyItemChanged(oldPosition)
-            adapter.notifyItemChanged(position)
-
+            adapter.notifyMultipleItems(arrayOf(oldPosition, position))
 
             looper.onLoopSwitchedListener = {
-                Timber.d("invoking loopSwitchListener: Player state: %s", looper.state)
                 val oldSelected = adapter.selectedPosition
                 adapter.selectedPosition = adapter.preSelectedPosition
-                adapter.notifyItemChanged(oldSelected)
-                adapter.notifyItemChanged(adapter.preSelectedPosition)
-                adapter.notifyItemChanged(adapter.selectedPosition)
+
+                adapter.notifyMultipleItems(arrayOf(oldSelected, adapter.preSelectedPosition, adapter.selectedPosition))
                 adapter.preSelectedPosition = -1
             }
 
@@ -188,8 +181,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
             val oldPosition = adapter.selectedPosition
             adapter.selectedPosition = position
-            adapter.notifyItemChanged(oldPosition)
-            adapter.notifyItemChanged(position)
+            adapter.notifyMultipleItems(arrayOf(oldPosition, position))
             startLooper()
         }
     }
@@ -229,14 +221,13 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun resetPreSelection() {
-       adapter.resetPreSelection()
+        adapter.resetPreSelection()
         looper.resetPreSelection()
     }
 
     private fun onPlaybackStopped() {
         isPlaying.set(false)
         updateHandler.removeCallbacks(updateRunnable)
-
     }
 
     private fun slideDown(view: View) {
