@@ -14,6 +14,7 @@ import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.LoopsRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
@@ -158,26 +159,41 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         adapter.notifyDataSetChanged()
     }
 
-    fun onItemSelected(fm: FileModel, position: Int) {
+    //TODO beautify, strip notification into extra method in adapter
+    fun onItemSelected(fm: FileModel, position: Int, selectionState: SelectionState) {
         looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
-        val oldPosition = adapter.selectedPosition
-        adapter.selectedPosition = position
 
-        // behaviour when looper should wait for the loop to finish first
-        //this behaviour only makes sense when playback is running
-        if (looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
+        if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
+            val oldPosition = adapter.preSelectedPosition
+            adapter.preSelectedPosition = position
+
+            adapter.notifyItemChanged(oldPosition)
+            adapter.notifyItemChanged(position)
+
+
             looper.onLoopSwitchedListener = {
 
-                // need to update all items because the asynchronous switching can mess things up
-                adapter.notifyDataSetChanged()
+                val oldSelected = adapter.selectedPosition
+                adapter.selectedPosition = adapter.preSelectedPosition
+                adapter.preSelectedPosition = -1
+                adapter.notifyItemChanged(adapter.preSelectedPosition)
+                adapter.notifyItemChanged(oldSelected)
+                adapter.notifyItemChanged(adapter.selectedPosition)
+                
             }
-            return
-        }
+        } else {
 
-        //standard behaviour. Also nicer view updating style
-        adapter.notifyItemChanged(oldPosition)
-        adapter.notifyItemChanged(position)
-        startLooper()
+            val oldPosition = adapter.selectedPosition
+            adapter.selectedPosition = position
+
+            // behaviour when looper should wait for the loop to finish first
+            //this behaviour only makes sense when playback is running
+
+            //standard behaviour. Also nicer view updating style
+            adapter.notifyItemChanged(oldPosition)
+            adapter.notifyItemChanged(position)
+            startLooper()
+        }
     }
 
     fun closeDropDowns(): Boolean {

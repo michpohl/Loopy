@@ -15,31 +15,27 @@ class PlayerItemViewModel(
     private val onItemClickedListener: (Int, SelectionState) -> Unit
 ) : ViewModel() {
 
-    var onProgressUpdatedListener: ((Float) -> Unit)? = null
     var backgroundColor : Int = 0
     val progress = ObservableField<Float>(0F)
     val name = fileModel.name
-    var state = NOT_SELECTED
+    var selectedState = NOT_SELECTED
 
     fun onItemClicked(view: View) {
 
         if (isWaitingMode()) {
-            if (state != PRESELECTED) state = PRESELECTED else state = NOT_SELECTED
-
-            Timber.d("Mode: WAIT, position: %s, state %s", position, state)
+            if (selectedState != PRESELECTED) selectedState = PRESELECTED
+            Timber.d("Mode: WAIT, position: %s, selectedState %s", position, selectedState)
         } else {
-            state = SELECTED
-            Timber.d("Mode: SWITCH, position: %s, state: %s", position, state)
-            onItemClickedListener.invoke(position,state)
+            selectedState = SELECTED
+            Timber.d("Mode: SWITCH, position: %s, selectedState: %s", position, selectedState)
         }
-    }
+        onItemClickedListener.invoke(position,selectedState)
 
-    fun update() {
     }
 
     fun updateProgress(progress: Float) {
 
-        if (state == NOT_SELECTED) {
+        if (selectedState == NOT_SELECTED) {
             Timber.d("not selected, position: %s", position)
             this.progress.set(0F)
             return

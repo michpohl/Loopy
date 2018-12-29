@@ -19,7 +19,7 @@ object LoopsRepository {
     var settings = Settings()
 
     /**
-     * initializes the LoopsRepository by fetching the saved state from sharedPreferences
+     * initializes the LoopsRepository by fetching the saved selectedState from sharedPreferences
      */
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
@@ -64,8 +64,8 @@ object LoopsRepository {
     }
 
     /**
-     * loads the saved app state from SharedPreferences
-     * If there is no state, an AppData object is created with the standard settings
+     * loads the saved app selectedState from SharedPreferences
+     * If there is no selectedState, an AppData object is created with the standard settings
      * @return The AppData object from SharedPreferences or a new one, if none exists
      */
     private fun loadSavedAppData(): AppData {
@@ -80,7 +80,7 @@ object LoopsRepository {
         return if (jsonString != "warning") {
             appDataFromJson(jsonString)
         } else {
-            // if we have no saved state, we start up with an empty list of loops and allow all audio file types
+            // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
             AppData(arrayListOf(), Settings(allowedFileTypes = ValidAudioFileType.values()))
         }
     }
