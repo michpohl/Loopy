@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+                name="model"
+                type="de.michaelpohl.loopy.ui.main.help.HelpViewModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+            style="@style/MatchParent"
+            android:background="@color/window_background"
+            tools:context=".ui.main.help.HelpFragment">
+
+<TextView
+        style="@style/WrapContent"
+        android:text="gfkflsafdölkdjfs"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

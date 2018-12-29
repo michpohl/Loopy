@@ -12,7 +12,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.LoopedPlayer
-import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
@@ -38,10 +38,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
-    var acceptedFileTypesAsString = ObservableField(LoopsRepository.getAllowedFileTypeListAsString())
+    var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
 
     var switchBehaviourButtonText = ObservableField(
-        if (LoopsRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT) {
+        if (DataRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT) {
             getString(R.string.btn_switching_behaviour_wait_to_finish)
         } else {
             getString(R.string.btn_switching_behaviour_switch_immediately)
@@ -114,7 +114,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         stopLooper()
         looper.hasLoopFile = false
         updateData()
-        LoopsRepository.onLoopsListCleared()
+        DataRepository.onLoopsListCleared()
     }
 
     fun onBrowseStorageClicked(view: View) {
@@ -132,7 +132,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onSwitchingBehaviourToggled(view: View) {
-        var behaviour = LoopsRepository.settings.switchingLoopsBehaviour
+        var behaviour = DataRepository.settings.switchingLoopsBehaviour
         if (behaviour == SwitchingLoopsBehaviour.SWITCH) {
             behaviour = SwitchingLoopsBehaviour.WAIT
             switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_wait_to_finish))
@@ -143,8 +143,8 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             resetPreSelection()
         }
         looper.switchingLoopsBehaviour = behaviour
-        LoopsRepository.settings.switchingLoopsBehaviour = behaviour
-        LoopsRepository.saveCurrentState()
+        DataRepository.settings.switchingLoopsBehaviour = behaviour
+        DataRepository.saveCurrentState()
     }
 
     fun updateData() {
@@ -156,7 +156,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             emptyMessageVisibility.set(View.VISIBLE)
             clearListButtonVisibility.set(View.GONE)
         }
-        acceptedFileTypesAsString.set(LoopsRepository.getAllowedFileTypeListAsString())
+        acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
     }
 
     //TODO beautify, strip notification into extra method in adapter

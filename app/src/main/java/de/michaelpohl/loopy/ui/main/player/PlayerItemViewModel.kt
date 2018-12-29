@@ -5,9 +5,8 @@ import android.databinding.ObservableField
 import android.view.View
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
-import timber.log.Timber
 
 class PlayerItemViewModel(
     private val position: Int,
@@ -40,7 +39,7 @@ class PlayerItemViewModel(
     }
 
     private fun isWaitingMode(): Boolean {
-        return LoopsRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
+        return DataRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
     }
 
     enum class SelectionState {

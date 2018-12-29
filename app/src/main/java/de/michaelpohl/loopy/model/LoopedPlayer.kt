@@ -23,7 +23,7 @@ class LoopedPlayer private constructor(context: Context) {
 
     var state = PlayerState.UNKNOWN
         private set
-    var switchingLoopsBehaviour = LoopsRepository.settings.switchingLoopsBehaviour
+    var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     lateinit var onLoopSwitchedListener: () -> Unit
 
     private var mContext: Context? = null

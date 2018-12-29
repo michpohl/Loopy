@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.ValidAudioFileType
 
-object LoopsRepository {
+object DataRepository {
 
     private const val PREFS_LOOPS_KEY = "loops_list"
     lateinit var sharedPrefs: SharedPreferences
@@ -19,7 +19,7 @@ object LoopsRepository {
     var settings = Settings()
 
     /**
-     * initializes the LoopsRepository by fetching the saved selectedState from sharedPreferences
+     * initializes the DataRepository by fetching the saved selectedState from sharedPreferences
      */
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
@@ -51,7 +51,6 @@ object LoopsRepository {
     }
 
     fun onFileSelectionUpdated(newSelection: List<FileModel>) {
-        //clear list to prevent adding doubles or unwanted items (since this gets updated with every click)
         //only add the ones that are not already selected
         newSelectedFileModels = newSelection.filter { it ->
             !currentSelectedFileModels.contains(it)
