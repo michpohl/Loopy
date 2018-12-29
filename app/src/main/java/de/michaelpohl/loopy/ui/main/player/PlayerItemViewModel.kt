@@ -15,7 +15,7 @@ class PlayerItemViewModel(
     private val onItemClickedListener: (Int, SelectionState) -> Unit
 ) : ViewModel() {
 
-
+    var onProgressUpdatedListener: ((Float) -> Unit)? = null
     var backgroundColor : Int = 0
     val progress = ObservableField<Float>(0F)
     val name = fileModel.name
@@ -37,7 +37,7 @@ class PlayerItemViewModel(
     fun update() {
     }
 
-    private fun updateProgress(progress: Float) {
+    fun updateProgress(progress: Float) {
 
         if (state == NOT_SELECTED) {
             Timber.d("not selected, position: %s", position)
@@ -48,7 +48,7 @@ class PlayerItemViewModel(
     }
 
 //    fun initializeOnProgressUpdatedListener() {
-//        onProgressUpdatedListener = { it -> update(it) }
+//        onProgressUpdatedListener = { it -> updateProgress(it) }
 //    }
 
     private fun isWaitingMode(): Boolean {

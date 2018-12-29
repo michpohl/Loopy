@@ -41,6 +41,7 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
         if (position == selectedPosition) {
             itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.action)
             itemViewModel.state = PlayerItemViewModel.SelectionState.SELECTED
+            onProgressUpdatedListener = {it: Float -> itemViewModel.updateProgress(it)}
         } else {
             if (position == preSelectedPosition) {
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.preselected_item)
@@ -52,7 +53,6 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
         }
 
         holder.bind(itemViewModel)
-
     }
 
     fun updateData(newList: List<FileModel>) {
@@ -62,10 +62,11 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
 
     fun updateProgress(position: Float) {
         onProgressUpdatedListener?.invoke(position)
+        Timber.d("Progress: %s", position)
     }
 
     fun resetProgress() {
-        onProgressUpdatedListener?.invoke(0F)
+        updateProgress(0F)
     }
 
     fun onItemClicked(position: Int, itemState: PlayerItemViewModel.SelectionState) {
@@ -78,7 +79,5 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
         Timber.d("Adapter updating with these loops: ")
         loopsList.forEach { Timber.d("%s", it) }
     }
-
-
 }
 
