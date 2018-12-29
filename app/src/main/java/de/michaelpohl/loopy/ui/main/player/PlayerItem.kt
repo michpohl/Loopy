@@ -37,30 +37,11 @@ class PlayerItem(val context: Context,
         itemView.wave.progress = progress
     }
 
-    fun initializeOnProgressUpdatedListener() {
-        onProgressUpdatedListener = { it -> update(it) }
-    }
+//    fun initializeOnProgressUpdatedListener() {
+//        onProgressUpdatedListener = { it -> update(it) }
+//    }
 
     override fun onClick(v: View?) {
-
-        Timber.d("This item's position: %s", positionInList)
-        Timber.d("Selected position: %s", selectedPosition)
-        if (positionInList != selectedPosition) hasPreSelection = true
-        // do nothing if it is already the selected item
-
-        // we change the color when in SWITCH mode to signal
-        // this is the one we're waiting for to play next
-        //also we make sure no other view looks preselected at the same time
-        if (LoopsRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && hasPreSelection) {
-//
-            itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.preselected_item))
-            onItemPreSelectedListener?.invoke(loopsList[adapterPosition], positionInList)
-
-            hasPreSelection = false
-
-        } else {
-            onItemSelectedListener?.invoke(loopsList[adapterPosition], positionInList)
-        }
     }
 
     override fun onLongClick(v: View?): Boolean {
@@ -73,16 +54,10 @@ class PlayerItem(val context: Context,
 
     fun bind(model: PlayerItemViewModel) {
         binding.model = model
+        inflateWave(itemView.wave, FileHelper.getSingleFile(model.fileModel.path).readBytes())
         binding.executePendingBindings()
     }
 
-    fun bindView(position: Int) {
-        val fileModel = loopsList[position]
-        val bytes = FileHelper.getSingleFile(fileModel.path).readBytes()
-        positionInList = position
-        itemView.tv_name.text = fileModel.name
-        inflateWave(itemView.wave, bytes)
-    }
 
     private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
         view.setRawData(bytes)
