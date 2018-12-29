@@ -1,167 +1,144 @@
 package de.michaelpohl.loopy
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.google.gson.Gson
-import de.michaelpohl.loopy.common.FileHelper
+import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileModelsList
 import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.ui.main.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.PlayerFragment
-import de.michaelpohl.loopy.ui.main.PlayerViewModel
+import de.michaelpohl.loopy.common.Settings
+import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
+import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
+import de.michaelpohl.loopy.ui.main.player.PlayerFragment
+import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
+import hugo.weaving.DebugLog
+import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
-import android.R.array
-import android.widget.ArrayAdapter
-import android.support.v4.view.MenuItemCompat
-import android.widget.Spinner
 
 
-
-class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListener,
-    PlayerViewModel.OnSelectFolderClickedListener {
+class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
+    PlayerViewModel.PlayerActionsListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
-    private lateinit var sharedPrefs: SharedPreferences
+    private var menuResourceID = R.menu.menu_main
+    private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Timber logging on for Debugging
-        //Timber logging on for Debugging
+        //Timber logging on when Debugging
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            Timber.d("it works")
         }
 
-
-        sharedPrefs = getSharedPreferences(
-            resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+        LoopsRepository.init(
+            getSharedPreferences(
+                resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
         )
+
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
-            addPlayerFragment(loadSavedLoopsList().models)
+            addPlayerFragment(LoopsRepository.currentSelectedFileModels)
         }
         setSupportActionBar(findViewById(R.id.my_toolbar))
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_help -> {
+            //TODO show help fragment
             true
         }
 
         R.id.action_gear -> {
-            true
+            //handled in PlayerFragment
+            false
         }
 
         R.id.action_browser -> {
-            addFileFragment()
-            true
+            //handled in PlayerFragment
+            false
+        }
+
+        R.id.action_submit -> {
+            // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
+            val didUpdate = LoopsRepository.updateAndSaveFileSelection()
+            if (didUpdate) {
+                clearBackStack()
+                addPlayerFragment(LoopsRepository.currentSelectedFileModels, LoopsRepository.settings)
+                true
+            } else {
+                val snackbar = Snackbar.make(
+                    container,
+                    getString(R.string.snackbar_text_no_new_files_selected),
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.view.setBackgroundColor(ContextCompat.getColor(this, R.color.action))
+                snackbar.show()
+                false
+            }
         }
 
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-
-        val item = menu.findItem(R.id.spinner)
-        val spinner = MenuItemCompat.getActionView(item) as Spinner
-
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.spinner_list_item_array, android.R.layout.simple_spinner_item
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        spinner.adapter = adapter
+        menuInflater.inflate(menuResourceID, menu)
         return true
     }
 
     override fun onFolderClicked(fileModel: FileModel) {
-
         if (fileModel.fileType == FileType.FOLDER) {
             addFileFragment(fileModel.path)
         }
     }
 
-    override fun onFolderSelected(fileModel: FileModel) {
-        if (fileModel.fileType == FileType.FOLDER) {
-            if (fileModel.containsAudioFiles()) {
-                addPlayerFragment(FileHelper.getFileModelsFromFiles(fileModel.getSubFiles()))
-            }
-        }
-    }
-
-    override fun onSelectFolderClicked() {
+    override fun onOpenFileBrowserClicked() {
         addFileFragment()
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+
+        //apparently it is possible to come by here with currentFragment not being initialized
+        if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
+            super.onBackPressed()
+        }
+
         if (supportFragmentManager.backStackEntryCount == 0) {
 //            finish()
         }
     }
 
-    fun saveLoops(list: FileModelsList) {
-        val jsonString = Gson().toJson(list)
+    private fun addPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
+        for (model in loops) Timber.d("what we get in MainActivity: %s", model.name)
 
-//        TODO put fitting assertion
-//        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
-
-        with(sharedPrefs.edit()) {
-            putString(resources.getString(de.michaelpohl.loopy.R.string.prefs_loops_key), jsonString)
-            commit()
-        }
-    }
-
-    private fun loadSavedLoopsList(): FileModelsList {
-
-        //warnString is put as the defaultValue and is given if there's nothing to return from sharedPrefs
-        //this is not the most sexy way to do it, butI'll go with it for now
-        //TODO improve this
-        val warnString = "warning"
-        val jsonString = sharedPrefs.getString(getString(R.string.prefs_loops_key), warnString)
-
-        //TODO take the FileModelList and test its integrity (do the files still exist?)
-
-        return if (jsonString != "warning") {
-            fileModelsListFromJson(jsonString)
-        } else FileModelsList(arrayListOf())
-    }
-
-    private fun fileModelsListFromJson(jsonString: String): FileModelsList {
-        return Gson().fromJson(jsonString, FileModelsList::class.java)
-    }
-
-    private fun addPlayerFragment(loops: List<FileModel> = emptyList()) {
-        if (!loops.isEmpty()) {
-            saveLoops(FileModelsList(loops))
-        }
-        clearBackStack()
+        //TODO this method can be better - handling what's in AppData should completely move into LoopsRepository
+        val appData = AppData(loops, settings)
+        val playerFragment = PlayerFragment.newInstance(appData)
+        currentFragment = playerFragment
+        playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, PlayerFragment.newInstance(loops), "player")
+            .replace(R.id.container, playerFragment, "player")
             .commit()
     }
 
     private fun addFileFragment(path: String = defaultFilesPath) {
         val filesListFragment = FileBrowserFragment.newInstance(path)
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-
+        currentFragment = filesListFragment
         fragmentTransaction.replace(R.id.container, filesListFragment)
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
+        changeActionBar(R.menu.menu_browser)
     }
 
     private fun clearBackStack() {
@@ -169,4 +146,10 @@ class MainActivity : AppCompatActivity(), FileBrowserFragment.OnItemClickListene
             supportFragmentManager.popBackStackImmediate()
         }
     }
+
+    private fun changeActionBar(resourceID: Int) {
+        menuResourceID = resourceID
+        invalidateOptionsMenu()
+    }
 }
+

@@ -1,7 +1,9 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
+import de.michaelpohl.loopy.model.LoopsRepository
 import kotlinx.android.parcel.Parcelize
+import timber.log.Timber
 import java.io.File
 
 //remember this smart solution to get a parcelable from any data class!!
@@ -16,16 +18,27 @@ data class FileModel(
     val subFiles: Int = 0
 ) : Parcelable {
 
+    //TODO beautify this into an Enum or so
+    private var supportedFileTypes = listOf("wav", "mp3", "ogg")
+
     fun getSubFiles(showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         return FileHelper.getFilesFromPath(path, showHiddenFiles, onlyFolders)
     }
 
     fun isValidFileType(): Boolean {
-
-        //filtering only for .wav files for now
-        // in the future there should be an enum "allowedExtensions" or so
         if (fileType == FileType.FILE) {
-            return name.endsWith("wav")
+            var isValid = false
+
+            LoopsRepository.settings.allowedFileTypes.forEach {
+                Timber.d("Testing for: %s", it.suffix)
+                if (name.endsWith(it.suffix)) {
+                    isValid = true
+                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
+                } else {
+                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
+                }
+            }
+            return isValid
         }
         // Folders stay in the list
         return true

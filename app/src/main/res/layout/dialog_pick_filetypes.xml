@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              style="@style/MatchWidth"
+              android:orientation="vertical">
+
+    <TextView
+            style="@style/DialogHeader"
+            android:id="@+id/tv_header"
+            android:text="Change Allowed Audio FileTypes"
+            android:textAppearance="@style/Text.HeaderLarge"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <android.support.constraint.ConstraintLayout
+            style="@style/Row">
+
+        <TextView
+                android:id="@+id/tv_label_wav"
+                style="@style/WrapContent"
+                android:text=".wav"
+                android:textAppearance="@style/Text.Standard"
+                app:layout_constraintBaseline_toBaselineOf="@id/cb_check_wav"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        <CheckBox
+                android:id="@+id/cb_check_wav"
+                style="@style/WrapContent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+        <TextView
+                android:id="@+id/tv_label_mp3"
+                style="@style/WrapContent"
+                android:text=".mp3"
+                android:textAppearance="@style/Text.Standard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/cb_check_mp3"/>
+
+        <CheckBox
+                android:id="@+id/cb_check_mp3"
+                style="@style/WrapContent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cb_check_wav"/>
+
+        <TextView
+                android:id="@+id/tv_label_ogg"
+                style="@style/WrapContent"
+                android:text=".ogg"
+                android:textAppearance="@style/Text.Standard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/cb_check_ogg"/>
+
+        <CheckBox
+                android:id="@+id/cb_check_ogg"
+                style="@style/WrapContent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cb_check_mp3"/>
+
+
+        <Button
+                android:id="@+id/btn_ok"
+                android:text="OK"
+                style="@style/Button.Borderless"
+                app:layout_constraintTop_toBottomOf="@id/cb_check_ogg"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+                android:id="@+id/btn_cancel"
+                android:text="Cancel"
+                style="@style/Button.Borderless"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_ok"
+                app:layout_constraintBaseline_toBaselineOf="@id/btn_ok"/>
+
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

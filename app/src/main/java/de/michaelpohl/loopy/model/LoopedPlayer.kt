@@ -4,7 +4,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import android.support.v4.content.FileProvider
-import hugo.weaving.DebugLog
+import de.michaelpohl.loopy.common.PlayerState
+import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import timber.log.Timber
 import java.io.File
 
@@ -16,7 +17,14 @@ as of 12/2018 this still seems to be the only working way on android
 class LoopedPlayer private constructor(context: Context) {
 
     var hasLoopFile = false
-    var isPaused = false
+    var isReady = false
+        private set
+    //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
+
+    var state = PlayerState.UNKNOWN
+        private set
+    var switchingLoopsBehaviour = LoopsRepository.settings.switchingLoopsBehaviour
+    lateinit var onLoopSwitchedListener: () -> Unit
 
     private var mContext: Context? = null
     private var mCounter = 1
@@ -49,11 +57,12 @@ class LoopedPlayer private constructor(context: Context) {
         mContext = context
     }
 
+    /**
+    returns the percentage of the current file that's been played already
+     */
     fun getCurrentPosition(): Float {
         val unit = currentPlayer.duration / 100
-        val currentPosition = currentPlayer.currentPosition / unit.toFloat()
-        Timber.d("duration: %s, Unit: %s, Current position: %s", currentPlayer.duration, unit, currentPosition)
-        return currentPosition
+        return currentPlayer.currentPosition / unit.toFloat()
     }
 
     private fun initPlayer() {
@@ -62,7 +71,7 @@ class LoopedPlayer private constructor(context: Context) {
 
             if (shouldBePlaying) currentPlayer.start()
         }
-
+        isReady = true
         createNextMediaPlayer()
     }
 
@@ -70,32 +79,34 @@ class LoopedPlayer private constructor(context: Context) {
         nextPlayer = createMediaPlayer()
         currentPlayer.setNextMediaPlayer(nextPlayer)
         loops += 1
-        Timber.v("Loop Audio. Looped %s times", loops)
+        Timber.v("Loop Audio. Looped this file %s times", loops)
         currentPlayer.setOnCompletionListener(onCompletionListener)
     }
 
     private fun createMediaPlayer(): MediaPlayer {
-        val mediaPlayer = MediaPlayer.create(mContext, loopUri)
-        return mediaPlayer
+        return MediaPlayer.create(mContext, loopUri)
     }
 
     fun start() {
         //TODO show user if no file is selected yet
         shouldBePlaying = true
-        isPaused = false
+        loops = 0
         currentPlayer.start()
+        state = PlayerState.PLAYING
     }
 
     fun stop() {
         shouldBePlaying = false
+        currentPlayer.setOnCompletionListener { null }
         currentPlayer.stop()
         nextPlayer.stop()
+        state = PlayerState.STOPPED
         initPlayer()
     }
 
     fun pause() {
         currentPlayer.pause()
-        isPaused = true
+        state = PlayerState.PAUSED
     }
 
     fun isPlaying(): Boolean {
@@ -103,9 +114,33 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun setLoop(context: Context, loop: File) {
-        if (hasLoopFile) stop()
-        loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
-        initPlayer()
+
+        if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
+            currentPlayer.setOnCompletionListener {
+                Timber.d("Current player completes here!")
+                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+
+                if (hasLoopFile) stop()
+                initPlayer()
+                if (::onLoopSwitchedListener.isInitialized &&
+                    switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
+
+                ) {
+                    onLoopSwitchedListener.invoke()
+                }
+                start()
+            }
+        } else {
+            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+
+            if (hasLoopFile) stop()
+            initPlayer()
+        }
         hasLoopFile = true
+    }
+
+    fun resetPreSelection() {
+        currentPlayer.setOnCompletionListener(onCompletionListener)
+
     }
 }
