@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -13,15 +12,40 @@
 
     <android.support.constraint.ConstraintLayout
             style="@style/MatchParent"
-            android:background="@color/window_background"
-            tools:context=".ui.main.help.HelpFragment">
+            android:background="@color/content_background"
+            >
 
-<TextView
-        android:id="@+id/tv_content"
-        style="@style/MatchParent"
-        android:text="gfkflsafdölkdjfs"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <ScrollView
+                android:id="@+id/sv_content"
+                style="@style/MatchParent"
+                android:scrollbars="vertical"
+                android:clickable="true"
+                android:onClick="@{model::onAboutClicked}"
+                >
+
+            <TextView
+                    android:id="@+id/tv_content"
+                    style="@style/MatchParent"
+                    android:textColor="@color/white"
+                    android:textAppearance="@style/Text.Standard"
+                    android:layout_margin="8dp"
+                    android:paddingBottom="72dp"
+
+                    />
+
+        </ScrollView>
+
+        <Button
+                android:id="@+id/btn_about"
+                style="@style/Button"
+                android:text="@string/btn_about_app"
+                android:onClick="@{model::onAboutClicked}"
+                android:visibility="@{model.buttonVisibility}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                android:elevation="8dp"
+                android:layout_marginBottom="8dp"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

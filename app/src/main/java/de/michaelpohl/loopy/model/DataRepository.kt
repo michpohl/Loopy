@@ -10,8 +10,8 @@ import de.michaelpohl.loopy.common.ValidAudioFileType
 object DataRepository {
 
     private const val PREFS_LOOPS_KEY = "loops_list"
-    lateinit var sharedPrefs: SharedPreferences
-    lateinit var savedAppData: AppData
+    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var savedAppData: AppData
 
     var currentSelectedFileModels = listOf<FileModel>()
         private set

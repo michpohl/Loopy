@@ -1,18 +1,19 @@
 package de.michaelpohl.loopy.ui.main.help
 
 import android.app.Application
-import android.widget.TextView
-import android.widget.Toast
-import de.michaelpohl.loopy.R
+import android.databinding.ObservableInt
+import android.view.View
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
 
-class HelpViewModel(application: Application) : BaseViewModel(application) {
+class HelpViewModel(application: Application): BaseViewModel(application) {
 
+    lateinit var onAboutClickedListener: () -> Unit
+    val buttonVisibility = ObservableInt(View.VISIBLE)
 
-
-
+    fun onAboutClicked(view: View) {
+        Timber.d("Clicked")
+        onAboutClickedListener.invoke()
+        buttonVisibility.set(View.GONE)
+    }
 }
