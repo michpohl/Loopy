@@ -8,10 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import de.michaelpohl.loopy.common.AppData
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.common.Settings
+import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
@@ -21,7 +18,6 @@ import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
-
 
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.PlayerActionsListener {
@@ -39,11 +35,13 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
 
         DataRepository.init(
-            getSharedPreferences( resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE )
+            getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         )
 
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
+            val permissionHelper = PermissionHelper(this)
+            permissionHelper.checkPermissions()
             showPlayerFragment(DataRepository.currentSelectedFileModels)
         }
         setSupportActionBar(findViewById(R.id.my_toolbar))
@@ -53,7 +51,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         R.id.action_help -> {
             if (currentFragment.tag == "help") {
                 onBackPressed()
-            }else {
+            } else {
                 showHelpFragment()
             }
             true
@@ -160,6 +158,6 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         menuResourceID = resourceID
         invalidateOptionsMenu()
     }
-
 }
+
 
