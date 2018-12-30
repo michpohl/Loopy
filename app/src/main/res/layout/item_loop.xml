@@ -16,6 +16,7 @@
             style="@style/Row"
             android:background="@{model.backgroundColor}"
             android:clickable="true"
+            android:focusable="true"
             android:onClick="@{model::onItemClicked}"
             android:layout_marginTop="4dp"
             android:layout_marginStart="8dp"
@@ -33,7 +34,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:paddingStart="8dp"
-                tools:text="item"/>
+                tools:text="item"
+                tools:ignore="RtlSymmetry"/>
 
         <rm.com.audiowave.AudioWaveView
                 android:id="@+id/wave"
@@ -47,7 +49,7 @@
                 app:minChunkHeight="2dp"
                 app:chunkSpacing="1dp"
                 app:chunkRadius="0dp"
-                app:touchable="false"
+                app:touchable="@{model.canSeekAudio}"
                 app:waveColor="@android:color/white"
                 app:layout_constraintTop_toBottomOf="@id/tv_name"
                 />

@@ -22,7 +22,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
     val overlayVisibility = ObservableField(View.GONE)
 
-    private var adapter = LoopsAdapter(application)
+    private var adapter = LoopsAdapter(application, this::onProgressChangedByUser)
     private var updateHandler = Handler()
     private var filesDropDownDropped = false
     private var settingsDropDownDropped = false
@@ -218,6 +218,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
         adapter.resetProgress()
         onPlaybackStopped()
+    }
+
+    private fun onProgressChangedByUser(newProgress: Float) {
+        Timber.d("New Progress: %s", newProgress)
+        looper.changePlaybackPosition(newProgress)
     }
 
     private fun resetPreSelection() {

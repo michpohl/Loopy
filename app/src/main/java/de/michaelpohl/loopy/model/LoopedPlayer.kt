@@ -141,6 +141,16 @@ class LoopedPlayer private constructor(context: Context) {
 
     fun resetPreSelection() {
         currentPlayer.setOnCompletionListener(onCompletionListener)
+    }
+
+    /**
+     * Since newPosition is basically a percentage value, we can use it to seek to the new position
+     * by multiplying it with 1/100th of the file's duration
+     */
+    fun changePlaybackPosition(newPosition: Float) {
+        val unit = currentPlayer.duration / 100
+        currentPlayer.seekTo((newPosition * unit).toInt())
+
 
     }
 }
