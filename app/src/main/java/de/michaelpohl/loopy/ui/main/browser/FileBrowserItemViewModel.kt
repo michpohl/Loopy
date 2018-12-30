@@ -3,12 +3,11 @@ package de.michaelpohl.loopy.ui.main.browser
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
 import android.view.View
-import android.view.View.*
-import de.michaelpohl.loopy.R
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
-
 
 class FileBrowserItemViewModel(
     private val position: Int,
@@ -21,14 +20,12 @@ class FileBrowserItemViewModel(
     val sizeLabelVisibility = ObservableField(INVISIBLE)
     val subFolderIndicatorVisibility = ObservableField(INVISIBLE)
     val forbiddenSignVisibility = ObservableField(INVISIBLE)
-    val pickFolderButtonVisibility = ObservableField(INVISIBLE)
     val checkBoxVisibility = ObservableField(INVISIBLE)
     val selected = ObservableField(false)
 
     var name = ObservableField("name")
     var subFolders = ObservableField("folders")
     var fileSize = ObservableField("filesize")
-
 
     fun update() {
 
@@ -57,14 +54,6 @@ class FileBrowserItemViewModel(
                 subFolderIndicatorVisibility.set(VISIBLE)
                 forbiddenSignVisibility.set(INVISIBLE)
             }
-        } else {
-        }
-
-        if (FileHelper.containsAudioFilesInAnySubFolders(fileModel.path)) {
-            pickFolderButtonVisibility.set(VISIBLE)
-        } else {
-
-            pickFolderButtonVisibility.set(GONE)
         }
         selectedListener.invoke(selected.get()!!, position)
     }
@@ -80,7 +69,7 @@ class FileBrowserItemViewModel(
         selectedListener.invoke(selected.get()!!, position)
     }
 
-    fun isFolder() : Boolean {
+    fun isFolder(): Boolean {
         return fileModel.fileType == FileType.FOLDER
     }
 }

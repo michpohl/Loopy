@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
-            android:background="@{model.isFolder? @color/action : @color/content_background}"
+            android:background="@{model.isFolder? @color/content_background : @color/preselected_item}"
             android:foreground="?selectableItemBackground"
             android:padding="8dp">
 

@@ -43,10 +43,6 @@
     <color name="content_background_editable">@color/action</color>
 
     <color name="action_bar_background_color">@color/dark_green</color>
-    <!--<color name="action_bar_text_color">@color/eltako_blue_dark</color>-->
-    <!--<color name="action_bar_text_color_primary">@color/eltako_blue_dark</color>-->
-
-    <!--<color name="text_color_1">@color/eltako_blue_dark</color>-->
     <color name="text_color_2">@color/dark_green</color>
     <color name="text_color_3">@color/grey4</color>
 

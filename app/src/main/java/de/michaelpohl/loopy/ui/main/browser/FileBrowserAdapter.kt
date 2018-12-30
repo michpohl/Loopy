@@ -17,11 +17,10 @@ class FileBrowserAdapter(
 
     private var filesList = listOf<FileModel>()
         set (newList) {
-            //first the folders, a-z, then the files, a-z
+            //sort them: first the folders, a-z, then the files, a-z
             field = newList.filter { it.fileType == FileType.FOLDER }.sortedWith(compareBy { it.name.toLowerCase() }) +
                     newList.filter { it.fileType == FileType.FILE }.sortedWith(compareBy { it.name.toLowerCase() })
         }
-    var onItemSelectedListener: ((FileModel) -> Unit)? = null
 
     var selectedItems = mutableListOf<FileModel>()
         private set
@@ -33,10 +32,7 @@ class FileBrowserAdapter(
             DataBindingUtil.inflate(inflater, R.layout.item_file_browser, parent, false)
         return FileBrowserItem(
             parent.context,
-            binding,
-            filesList,
-            onItemClickedListener,
-            onItemSelectedListener
+            binding
         )
     }
 
@@ -75,23 +71,18 @@ class FileBrowserAdapter(
     }
 
     private fun onItemClicked(fileModel: FileModel) {
-        Timber.d("Clicked on an item")
         onItemClickedListener.invoke(fileModel)
     }
 
     private fun onItemSelectedChanged(isSelected: Boolean, position: Int) {
         val fileModel = filesList[position]
         if (isSelected && !selectedItems.contains(filesList[position])) {
-            Timber.d("Added file %s to the selected list", fileModel.name)
             selectedItems.add((fileModel))
         } else if (!isSelected && selectedItems.contains(filesList[position])) {
             selectedItems.remove((fileModel))
-            Timber.d("Removed file %s from the selected list", fileModel.name)
         } else {
             //do nothing
-            Timber.d("Did nothing")
         }
-        Timber.d("Invoking with: %s", selectedItems)
         onSelectedItemsChangedListener.invoke(selectedItems)
     }
 }
