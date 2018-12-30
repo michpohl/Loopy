@@ -4,26 +4,19 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
-
 class FileBrowserFragment : BaseFragment() {
-
-    /**
-    TODO The whole browser entity needs a business model of sorts
-    TODO to handle collecting and updating the selections
-    TODO The way it is now is a mess
-     */
 
     private lateinit var viewModel: FileBrowserViewModel
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
-
 
     companion object {
 
@@ -34,8 +27,6 @@ class FileBrowserFragment : BaseFragment() {
             fragment.arguments = args
             return fragment
         }
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +34,7 @@ class FileBrowserFragment : BaseFragment() {
         if (arguments != null) {
             path = arguments!!.getString("path")
         }
-
     }
-
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -58,7 +46,6 @@ class FileBrowserFragment : BaseFragment() {
         }
         binding.model = viewModel
         initViews()
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -72,14 +59,14 @@ class FileBrowserFragment : BaseFragment() {
         initViews()
     }
 
+    override fun getTitle(): String {
+        return getString(R.string.appbar_title_file_browser)
+    }
+
     private fun initViews() {
         rv_files.layoutManager = LinearLayoutManager(context)
         rv_files.adapter = viewModel.getAdapter()
         viewModel.path = path
         viewModel.updateAdapter()
     }
-
-
-
-
 }

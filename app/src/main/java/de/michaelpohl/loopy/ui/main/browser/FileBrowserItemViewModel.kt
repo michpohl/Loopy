@@ -8,7 +8,6 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
-import hugo.weaving.DebugLog
 
 
 class FileBrowserItemViewModel(

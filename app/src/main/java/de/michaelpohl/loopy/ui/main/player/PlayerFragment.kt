@@ -108,6 +108,8 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
+
+
     private fun initAdapter() {
         rv_loops.layoutManager = LinearLayoutManager(context)
         rv_loops.adapter = viewModel.getAdapter()

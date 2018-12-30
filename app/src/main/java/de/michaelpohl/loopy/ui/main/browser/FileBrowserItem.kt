@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
-import hugo.weaving.DebugLog
 
 
 class FileBrowserItem(

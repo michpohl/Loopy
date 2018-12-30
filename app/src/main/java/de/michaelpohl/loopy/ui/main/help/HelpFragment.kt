@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy.ui.main.help
 
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,7 +23,16 @@ class HelpFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_help, container, false)
-        var myView: View = binding.root
-        return myView
+        return binding.root
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(HelpViewModel::class.java)
+    }
+
+    override fun getTitle(): String {
+        return getString(R.string.appbar_title_help)
     }
 }

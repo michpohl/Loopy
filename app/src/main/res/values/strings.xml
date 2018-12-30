@@ -17,6 +17,8 @@
     <string name="dropdown_header_browser">Find Loops</string>
     <string name="btn_switching_behaviour_switch_immediately">Switch immediately</string>
     <string name="btn_switching_behaviour_wait_to_finish">Wait until finished</string>
-
+    <string name="appbar_title_player">Loopy Audio Player</string>
+    <string name="appbar_title_file_browser">Browse Storage</string>
+    <string name="appbar_title_help">How to use Loopy</string>
 
 </resources>

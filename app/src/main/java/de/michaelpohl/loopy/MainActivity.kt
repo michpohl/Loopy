@@ -116,7 +116,6 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
             super.onBackPressed()
         }
-
         if (supportFragmentManager.backStackEntryCount == 0) {
 //            finish()
         }
@@ -163,5 +162,6 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         menuResourceID = resourceID
         invalidateOptionsMenu()
     }
+
 }
 
