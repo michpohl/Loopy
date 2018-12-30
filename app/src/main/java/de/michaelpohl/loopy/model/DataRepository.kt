@@ -2,14 +2,13 @@ package de.michaelpohl.loopy.model
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import de.michaelpohl.loopy.common.AppData
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.Settings
-import de.michaelpohl.loopy.common.ValidAudioFileType
+import de.michaelpohl.loopy.common.*
+import timber.log.Timber
+import java.io.FileNotFoundException
 
 object DataRepository {
 
-    private const val PREFS_LOOPS_KEY = "loops_list"
+    private const val PREFS_LOOPY_KEY = "loops_list"
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var savedAppData: AppData
 
@@ -36,7 +35,7 @@ object DataRepository {
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
         with(sharedPrefs.edit()) {
-            putString(PREFS_LOOPS_KEY, jsonString)
+            putString(PREFS_LOOPY_KEY, jsonString)
             apply() //writes the data in the background, as opposed to commit()
         }
     }
@@ -68,13 +67,8 @@ object DataRepository {
      * @return The AppData object from SharedPreferences or a new one, if none exists
      */
     private fun loadSavedAppData(): AppData {
-        //warnString is put as the defaultValue and is given if there's nothing to return from sharedPrefs
-        //this is not the most sexy way to do it, butI'll go with it for now, need to learn how to first
-        //TODO improve this
-        val warnString = "warning"
-        val jsonString = sharedPrefs.getString(PREFS_LOOPS_KEY, warnString)
-
-        //TODO take the FileModelList and test its integrity (do the files still exist?)
+        val warnString = "warning" //this can be done better :-)
+        val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
 
         return if (jsonString != "warning") {
             appDataFromJson(jsonString)
@@ -96,7 +90,41 @@ object DataRepository {
         return builder.toString()
     }
 
+    fun testIntegrity(fileModels: List<FileModel>): List<FileModel> {
+        var validModels = mutableListOf<FileModel>()
+        fileModels.forEach {
+            val file = FileHelper.getSingleFile(it.path)
+            if (file.exists()) {
+                Timber.v("File %s exists", file.path)
+                validModels.add(it)
+            } else {
+                Timber.v("File %s doesn't exist, removing", file.path)
+            }
+        }
+        return validModels
+    }
+
     private fun appDataFromJson(jsonString: String): AppData {
-        return Gson().fromJson(jsonString, AppData::class.java)
+        var restoredAppData =
+            Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app data")
+        var validModels = mutableListOf<FileModel>()
+        restoredAppData.models.forEach {
+            try {
+                val file = FileHelper.getSingleFile(it.path)
+                if (file.exists()) {
+                    Timber.v("File %s exists", file.path)
+                    validModels.add(it)
+                }
+            } catch (e: FileNotFoundException) {
+                Timber.d("We are in the catch block")
+                Timber.e(e)
+            }
+        }
+
+        if (restoredAppData.models.size > validModels.size) {
+            Timber.d("Found invalid / nonexisting files - removing")
+            restoredAppData = AppData(validModels, restoredAppData.settings)
+        }
+        return restoredAppData
     }
 }

@@ -54,6 +54,8 @@ class PlayerFragment : BaseFragment() {
         return binding.root
     }
 
+
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
@@ -75,6 +77,9 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+
+        loopsList = DataRepository.testIntegrity(loopsList)
+
         if (changeActionBarLayoutCallBack != null) {
             changeActionBarLayout(R.menu.menu_main)
         }

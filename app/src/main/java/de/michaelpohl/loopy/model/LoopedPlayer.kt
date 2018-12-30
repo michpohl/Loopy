@@ -19,7 +19,6 @@ class LoopedPlayer private constructor(context: Context) {
     var hasLoopFile = false
     var isReady = false
         private set
-    //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
 
     var state = PlayerState.UNKNOWN
         private set
