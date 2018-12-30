@@ -10,7 +10,6 @@ import android.widget.CheckBox
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.ValidAudioFileType
-import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.dialog_pick_filetypes.*
 
 

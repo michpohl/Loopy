@@ -8,7 +8,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
 
@@ -56,7 +56,7 @@ class FileBrowserViewModel(application: Application) : BaseViewModel(application
         } else {
             selectButtonText.set(getString(R.string.btn_select_all))
         }
-        LoopsRepository.onFileSelectionUpdated(selectedItems)
+        DataRepository.onFileSelectionUpdated(selectedItems)
     }
 
     private fun onItemClicked(fileModel: FileModel) {

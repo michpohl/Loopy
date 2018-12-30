@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
-import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.model.DataRepository
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 import java.io.File
@@ -29,7 +29,7 @@ data class FileModel(
         if (fileType == FileType.FILE) {
             var isValid = false
 
-            LoopsRepository.settings.allowedFileTypes.forEach {
+            DataRepository.settings.allowedFileTypes.forEach {
                 Timber.d("Testing for: %s", it.suffix)
                 if (name.endsWith(it.suffix)) {
                     isValid = true

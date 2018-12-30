@@ -8,20 +8,16 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import de.michaelpohl.loopy.common.AppData
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.common.Settings
-import de.michaelpohl.loopy.model.LoopsRepository
+import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
+import de.michaelpohl.loopy.ui.main.help.HelpFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
-import hugo.weaving.DebugLog
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
-
 
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.PlayerActionsListener {
@@ -38,22 +34,26 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             Timber.plant(Timber.DebugTree())
         }
 
-        LoopsRepository.init(
-            getSharedPreferences(
-                resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
-            )
+        DataRepository.init(
+            getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         )
 
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
-            addPlayerFragment(LoopsRepository.currentSelectedFileModels)
+            val permissionHelper = PermissionHelper(this)
+            permissionHelper.checkPermissions()
+            showPlayerFragment(DataRepository.currentSelectedFileModels)
         }
         setSupportActionBar(findViewById(R.id.my_toolbar))
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_help -> {
-            //TODO show help fragment
+            if (currentFragment.tag == "help") {
+                onBackPressed()
+            } else {
+                showHelpFragment()
+            }
             true
         }
 
@@ -69,10 +69,10 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
         R.id.action_submit -> {
             // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
-            val didUpdate = LoopsRepository.updateAndSaveFileSelection()
+            val didUpdate = DataRepository.updateAndSaveFileSelection()
             if (didUpdate) {
                 clearBackStack()
-                addPlayerFragment(LoopsRepository.currentSelectedFileModels, LoopsRepository.settings)
+                showPlayerFragment(DataRepository.currentSelectedFileModels, DataRepository.settings)
                 true
             } else {
                 val snackbar = Snackbar.make(
@@ -98,12 +98,12 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
     override fun onFolderClicked(fileModel: FileModel) {
         if (fileModel.fileType == FileType.FOLDER) {
-            addFileFragment(fileModel.path)
+            showFileBrowserFragment(fileModel.path)
         }
     }
 
     override fun onOpenFileBrowserClicked() {
-        addFileFragment()
+        showFileBrowserFragment()
     }
 
     override fun onBackPressed() {
@@ -112,16 +112,14 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
             super.onBackPressed()
         }
-
         if (supportFragmentManager.backStackEntryCount == 0) {
 //            finish()
         }
     }
 
-    private fun addPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
-        for (model in loops) Timber.d("what we get in MainActivity: %s", model.name)
+    private fun showPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
 
-        //TODO this method can be better - handling what's in AppData should completely move into LoopsRepository
+        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
         val appData = AppData(loops, settings)
         val playerFragment = PlayerFragment.newInstance(appData)
         currentFragment = playerFragment
@@ -131,7 +129,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
             .commit()
     }
 
-    private fun addFileFragment(path: String = defaultFilesPath) {
+    private fun showFileBrowserFragment(path: String = defaultFilesPath) {
         val filesListFragment = FileBrowserFragment.newInstance(path)
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment = filesListFragment
@@ -139,6 +137,15 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
         changeActionBar(R.menu.menu_browser)
+    }
+
+    private fun showHelpFragment() {
+        val helpFragment = HelpFragment.newInstance()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        currentFragment = helpFragment
+        fragmentTransaction.replace(R.id.container, helpFragment, "help")
+        fragmentTransaction.addToBackStack("help")
+        fragmentTransaction.commit()
     }
 
     private fun clearBackStack() {
@@ -152,4 +159,5 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         invalidateOptionsMenu()
     }
 }
+
 

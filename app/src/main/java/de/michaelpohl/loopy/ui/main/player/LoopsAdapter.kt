@@ -12,7 +12,10 @@ import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
 
-class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
+class LoopsAdapter(
+    val context: Context,
+    private val onProgressChangedByUserListener: (Float) -> Unit
+) : RecyclerView.Adapter<PlayerItem>() {
 
     private var loopsList = listOf<FileModel>()
     var onItemSelectedListener: ((FileModel, Int, SelectionState) -> Unit)? = null
@@ -33,19 +36,19 @@ class LoopsAdapter(var context: Context) : RecyclerView.Adapter<PlayerItem>() {
     override fun getItemCount() = loopsList.size
 
     override fun onBindViewHolder(holder: PlayerItem, position: Int) {
-        Timber.d(
-            "OnBindViewHolder, position: %s, selected position: %s , preselected position: %s, name: %s",
+
+        val itemViewModel = PlayerItemViewModel(
             position,
-            selectedPosition,
-            preSelectedPosition,
-            loopsList[position].name
+            loopsList[position],
+            this::onItemClicked,
+            this::onProgressChangedByUserListener.invoke()
         )
-        val itemViewModel = PlayerItemViewModel(position, loopsList[position], this::onItemClicked)
 
         //TODO this should be done in the viewmodel, but I don't want to pass the context there. Find a solution
         if (position == selectedPosition) {
             itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.action)
             itemViewModel.selectedState = PlayerItemViewModel.SelectionState.SELECTED
+            itemViewModel.canSeekAudio.set(true)
             onProgressUpdatedListener = { it: Float -> itemViewModel.updateProgress(it) }
         } else {
             if (position == preSelectedPosition) {

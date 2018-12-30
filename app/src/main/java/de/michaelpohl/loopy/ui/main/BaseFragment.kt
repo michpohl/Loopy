@@ -12,6 +12,12 @@ open class BaseFragment : Fragment() {
 
     var changeActionBarLayoutCallBack: ((Int) -> Unit)? = null
 
+    override fun onResume() {
+        super.onResume()
+        activity?.title = getTitle()
+    }
+
+
     /**
      * Changes the layout resource for the action bar
      * @param resourceID
@@ -33,6 +39,10 @@ open class BaseFragment : Fragment() {
      */
     open fun onBackPressed(): Boolean {
         return false
+    }
+
+    open fun getTitle(): String {
+        return getString(R.string.appbar_title_player)
     }
 
     //TODO snackBar maker is WIP
