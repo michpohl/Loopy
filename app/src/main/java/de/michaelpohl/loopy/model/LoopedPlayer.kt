@@ -139,11 +139,16 @@ class LoopedPlayer private constructor(context: Context) {
         hasLoopFile = true
     }
 
+    /**
+     * Resets a set preSelection by setting the onCompletionListener back to its standard value
+     */
     fun resetPreSelection() {
         currentPlayer.setOnCompletionListener(onCompletionListener)
     }
 
     /**
+     * Moves the players current position to
+     * @param newPosition
      * Since newPosition is basically a percentage value, we can use it to seek to the new position
      * by multiplying it with 1/100th of the file's duration
      */
