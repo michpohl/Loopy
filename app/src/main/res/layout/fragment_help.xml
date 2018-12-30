@@ -17,8 +17,10 @@
             tools:context=".ui.main.help.HelpFragment">
 
 <TextView
-        style="@style/WrapContent"
+        android:id="@+id/tv_content"
+        style="@style/MatchParent"
         android:text="gfkflsafdölkdjfs"
+        android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>

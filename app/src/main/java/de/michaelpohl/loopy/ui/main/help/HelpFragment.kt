@@ -6,9 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentHelpBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import ru.noties.markwon.Markwon
+
+
 
 class HelpFragment : BaseFragment() {
 
@@ -27,9 +31,18 @@ class HelpFragment : BaseFragment() {
 
     }
 
+  fun getHelpText() : String{
+      val file_name = "help.md"
+      return resources.assets.open(file_name).bufferedReader().use {
+          it.readText()
+      }
+  }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(HelpViewModel::class.java)
+        val textView = binding.root.findViewById<TextView>(R.id.tv_content)
+        Markwon.setMarkdown(textView, getHelpText() )
     }
 
     override fun getTitle(): String {
