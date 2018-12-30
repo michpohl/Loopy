@@ -39,9 +39,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
 
         DataRepository.init(
-            getSharedPreferences(
-                resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE
-            )
+            getSharedPreferences( resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE )
         )
 
         setContentView(R.layout.main_activity)
