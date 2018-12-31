@@ -97,13 +97,13 @@ class PlayerFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_gear -> {
-            Timber.d("settings")
+
             viewModel.toggleSettingsDropDown()
             true
         }
 
         R.id.action_browser -> {
-            Timber.d("browser")
+
             viewModel.toggleFilesDropDown()
             true
         }
@@ -130,7 +130,6 @@ class PlayerFragment : BaseFragment() {
         val dialog = PickFileTypeDialogFragment()
         dialog.setCurrentSettings(DataRepository.settings)
         dialog.resultListener = {
-            Timber.d("Invoking...")
             DataRepository.settings = it
             DataRepository.saveCurrentState()
             viewModel.updateData()

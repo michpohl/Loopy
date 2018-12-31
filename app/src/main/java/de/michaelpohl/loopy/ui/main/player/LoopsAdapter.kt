@@ -92,7 +92,6 @@ class LoopsAdapter(
 
     private fun setLoopsList(newList: List<FileModel>) {
         loopsList = newList.sortedWith(compareBy { it.name.toLowerCase() }).filter { it.isValidFileType() }
-        loopsList.forEach { Timber.d("%s", it) }
     }
 }
 

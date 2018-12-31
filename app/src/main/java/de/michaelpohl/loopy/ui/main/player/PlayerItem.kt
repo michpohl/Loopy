@@ -43,18 +43,15 @@ class PlayerItem(
     private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
         view.setRawData(bytes)
         view.onStopTracking = {
-            Timber.d( "Stop tracking: %s", it)
            viewModel.onProgressChangedByUserTouch(it)
             viewModel.blockUpdatesFromPlayer.set(false)
         }
 
         view.onStartTracking = {
-            Timber.d("Started tracking from: %s", it)
             viewModel.blockUpdatesFromPlayer.set(true)
         }
 
         view.onProgressChanged = {progress, byUser ->
-            Timber.d("Progress set: %s, and it's that user did this", progress)
         }
     }
 }

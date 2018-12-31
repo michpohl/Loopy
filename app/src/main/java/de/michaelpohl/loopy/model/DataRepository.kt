@@ -122,7 +122,7 @@ object DataRepository {
         }
 
         if (restoredAppData.models.size > validModels.size) {
-            Timber.d("Found invalid / nonexisting files - removing")
+            Timber.w("Found invalid / nonexisting files - removing")
             restoredAppData = AppData(validModels, restoredAppData.settings)
         }
         return restoredAppData

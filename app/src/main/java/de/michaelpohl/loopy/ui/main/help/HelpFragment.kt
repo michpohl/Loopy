@@ -38,7 +38,6 @@ class HelpFragment : BaseFragment() {
     }
 
     fun getAboutText(): String {
-        Timber.d("Getting about text")
         val file = "about.md"
         return resources.assets.open(file).bufferedReader().use {
             it.readText()
@@ -49,7 +48,6 @@ class HelpFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(HelpViewModel::class.java)
         viewModel.onAboutClickedListener = {
-            Timber.d("Invoked")
             setContentText(getAboutText()) }
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(getHelpText())

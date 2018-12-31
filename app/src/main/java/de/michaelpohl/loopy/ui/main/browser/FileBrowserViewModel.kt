@@ -50,7 +50,6 @@ class FileBrowserViewModel(application: Application) : BaseViewModel(application
     }
 
     private fun onSelectedItemsChanged(selectedItems: List<FileModel>) {
-        Timber.d("how many are selected? %s", selectedItems.size)
         if (selectedItems.isNotEmpty()) {
             selectButtonText.set(getString(R.string.btn_deselect_all))
         } else {

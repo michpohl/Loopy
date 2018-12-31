@@ -89,18 +89,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStartPlaybackClicked(view: View) {
-        Timber.d("Start")
         if (looper.hasLoopFile) startLooper()
     }
 
     fun onStopPlaybackClicked(view: View) {
-        Timber.d("Stop")
         stopLooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
-        Timber.d("Pause")
-        Timber.d("Is looper ready? %s", looper.isReady)
         if (!looper.isReady) return
         if (looper.isPlaying()) {
             looper.pause()
@@ -221,7 +217,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun onProgressChangedByUser(newProgress: Float) {
-        Timber.d("New Progress: %s", newProgress)
         looper.changePlaybackPosition(newProgress)
     }
 

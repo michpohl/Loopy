@@ -19,7 +19,6 @@ class PermissionHelper(private val activity: Activity) {
         val permissionsNotGranted = mutableListOf<String>()
 
         permissions.forEach { if (!checkSinglePermission(it)) permissionsNotGranted.add(it) }
-        Timber.d("Not granted: %s", permissionsNotGranted)
         if (permissionsNotGranted.isNotEmpty()) requestPermission(permissionsNotGranted.toTypedArray())
     }
 

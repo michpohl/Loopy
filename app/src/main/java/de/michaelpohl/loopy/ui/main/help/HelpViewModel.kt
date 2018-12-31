@@ -12,7 +12,6 @@ class HelpViewModel(application: Application): BaseViewModel(application) {
     val buttonVisibility = ObservableInt(View.VISIBLE)
 
     fun onAboutClicked(view: View) {
-        Timber.d("Clicked")
         onAboutClickedListener.invoke()
         buttonVisibility.set(View.GONE)
     }

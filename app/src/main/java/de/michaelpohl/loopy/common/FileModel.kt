@@ -30,12 +30,12 @@ data class FileModel(
             var isValid = false
 
             DataRepository.settings.allowedFileTypes.forEach {
-                Timber.d("Testing for: %s", it.suffix)
+//                Timber.d("Testing for: %s", it.suffix)
                 if (name.endsWith(it.suffix)) {
                     isValid = true
-                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
+//                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
                 } else {
-                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
+//                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
                 }
             }
             return isValid

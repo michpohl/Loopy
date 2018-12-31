@@ -116,7 +116,6 @@ class LoopedPlayer private constructor(context: Context) {
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
-                Timber.d("Current player completes here!")
                 loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
 
                 if (hasLoopFile) stop()
