@@ -141,7 +141,11 @@ class LoopedPlayer private constructor(context: Context) {
      * Resets a set preSelection by setting the onCompletionListener back to its standard value
      */
     fun resetPreSelection() {
-        currentPlayer.setOnCompletionListener(onCompletionListener)
+
+        //no need to do anything if currentPlayer is not initialized yet
+        if (::currentPlayer.isInitialized) {
+            currentPlayer.setOnCompletionListener(onCompletionListener)
+        }
     }
 
     /**
@@ -153,7 +157,5 @@ class LoopedPlayer private constructor(context: Context) {
     fun changePlaybackPosition(newPosition: Float) {
         val unit = currentPlayer.duration / 100
         currentPlayer.seekTo((newPosition * unit).toInt())
-
-
     }
 }

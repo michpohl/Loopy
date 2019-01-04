@@ -59,7 +59,9 @@ class FileBrowserItemViewModel(
     }
 
     fun onItemClicked(view: View) {
-        if (!FileHelper.isExcludedFolderName(fileModel.path)) {
+        if (fileModel.fileType == FileType.FILE) {
+            onCheckBoxClicked(view)
+        } else if (!FileHelper.isExcludedFolderName(fileModel.path)) {
             onItemClickedListener.invoke(fileModel)
         }
     }
