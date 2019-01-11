@@ -1,6 +1,9 @@
 # Loopy
-Android app in Kotlin to manage and play audio loops
+Android app written in Kotlin to manage and play audio loops
+It's only purpose is to privode a solution to those who just want to play audio files in loop, like DJs, artists, musicians, who can use this for easy training sessions, to provide gapless background atmosphere or play neverending beat loops. 
 
-This is a work in progress right now.
+NOTE: There is no in-app editing or anything linke that, so if you need exact loop files, you should prepare them elsewhere! Loopy can only handlethe playback.
 
-Usage is simple: Browse your phone's folders and pick one that contains audio files (currently only .wav). Then play them from the player view and they'll loop seamlessly.
+This is a work in progress right now, but it can be used already. Just pull the repository and build it to your phone using Android Studio or your preferred method. 
+
+Usage is simple: Browse your phone's folders and pick audio files. Then play them from the player view and they'll loop seamlessly. It's capable of playing back .wav, .mp3 and .ogg files so far. 
