@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.*
 import timber.log.Timber
+import java.io.File
 import java.io.FileNotFoundException
 
 object DataRepository {
@@ -102,6 +103,14 @@ object DataRepository {
             }
         }
         return validModels
+    }
+
+    fun handleFileFromIntent(file: File) {
+        onFileSelectionUpdated(FileHelper.getFileModelsFromFiles(listOf(file)))
+    }
+
+    fun getMediaStoreEntries() {
+        
     }
 
     private fun appDataFromJson(jsonString: String): AppData {

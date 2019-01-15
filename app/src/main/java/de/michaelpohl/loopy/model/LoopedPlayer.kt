@@ -149,7 +149,7 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     /**
-     * Moves the players current position to
+     * Moves the player's current position to
      * @param newPosition
      * Since newPosition is basically a percentage value, we can use it to seek to the new position
      * by multiplying it with 1/100th of the file's duration

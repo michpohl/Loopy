@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.Snackbar
@@ -18,6 +19,8 @@ import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
     PlayerViewModel.PlayerActionsListener {
@@ -39,6 +42,11 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         )
 
         setContentView(R.layout.main_activity)
+        if (Intent.ACTION_VIEW == intent.action) {
+            Timber.d("Intent")
+            handleIntent()
+        }
+
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
@@ -69,21 +77,8 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
         R.id.action_submit -> {
             // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
-            val didUpdate = DataRepository.updateAndSaveFileSelection()
-            if (didUpdate) {
-                clearBackStack()
-                showPlayerFragment(DataRepository.currentSelectedFileModels, DataRepository.settings)
-                true
-            } else {
-                val snackbar = Snackbar.make(
-                    container,
-                    getString(R.string.snackbar_text_no_new_files_selected),
-                    Snackbar.LENGTH_LONG
-                )
-                snackbar.view.setBackgroundColor(ContextCompat.getColor(this, R.color.action))
-                snackbar.show()
-                false
-            }
+            showPlayerFragmentWithFreshSelection()
+            false
         }
 
         else -> {
@@ -106,6 +101,11 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         showFileBrowserFragment()
     }
 
+    override fun onBrowseMediaStoreClicked() {
+        Timber.d("Browsing media store...")
+        DataRepository.getMediaStoreEntries()
+    }
+
     override fun onBackPressed() {
 
         //apparently it is possible to come by here with currentFragment not being initialized
@@ -115,6 +115,21 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         if (supportFragmentManager.backStackEntryCount == 0) {
 //            finish()
         }
+    }
+
+    private fun handleIntent() {
+
+        val uri = intent.data
+        val inputStream = contentResolver.openInputStream(uri)
+        val outputFile = File(this.cacheDir, "output.wav")
+        val outputStream = FileOutputStream(outputFile)
+        inputStream.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
+        DataRepository.handleFileFromIntent(outputFile)
+        showPlayerFragmentWithFreshSelection()
     }
 
     private fun showPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
@@ -127,6 +142,23 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, playerFragment, "player")
             .commit()
+    }
+
+    private fun showPlayerFragmentWithFreshSelection() {
+        val didUpdate = DataRepository.updateAndSaveFileSelection()
+        if (didUpdate) {
+            clearBackStack()
+            showPlayerFragment(DataRepository.currentSelectedFileModels, DataRepository.settings)
+            true
+        } else {
+            val snackbar = Snackbar.make(
+                container,
+                getString(R.string.snackbar_text_no_new_files_selected),
+                Snackbar.LENGTH_LONG
+            )
+            snackbar.view.setBackgroundColor(ContextCompat.getColor(this, R.color.action))
+            snackbar.show()
+        }
     }
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {

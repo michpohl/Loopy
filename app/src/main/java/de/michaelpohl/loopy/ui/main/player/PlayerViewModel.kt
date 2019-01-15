@@ -11,11 +11,10 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
@@ -116,6 +115,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     fun onBrowseStorageClicked(view: View) {
         toggleFilesDropDown()
         playerActionsListener.onOpenFileBrowserClicked()
+    }
+
+    fun onBrowseMediaStoreClicked(view: View) {
+        toggleFilesDropDown()
+        playerActionsListener.onBrowseMediaStoreClicked()
     }
 
     fun onOverlayClicked(view: View) {
@@ -243,6 +247,8 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     interface PlayerActionsListener {
+
         fun onOpenFileBrowserClicked()
+        fun onBrowseMediaStoreClicked()
     }
 }

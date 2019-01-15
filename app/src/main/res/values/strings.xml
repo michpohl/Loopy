@@ -21,5 +21,6 @@
     <string name="appbar_title_file_browser">Browse Storage</string>
     <string name="appbar_title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
+    <string name="btn_browse_mediastore">Browse media files</string>
 
 </resources>
