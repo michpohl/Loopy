@@ -104,12 +104,13 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
     override fun onBrowseMediaStoreClicked() {
         Timber.d("Browsing media store...")
         val mediaStoreItems = DataRepository.getMediaStoreEntries(this)
-        mediaStoreItems.forEach {it-> Timber.d("Item: %s",it.title )}
+        mediaStoreItems.forEach {it-> Timber.d("Item: %s",it.name )}
     }
 
     override fun onBackPressed() {
 
         //apparently it is possible to come by here with currentFragment not being initialized
+        //TODO: investigate
         if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
             super.onBackPressed()
         }

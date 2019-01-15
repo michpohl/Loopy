@@ -113,10 +113,8 @@ object DataRepository {
         onFileSelectionUpdated(FileHelper.getFileModelsFromFiles(listOf(file)))
     }
 
-    fun getMediaStoreEntries(context: Context): MutableList<MediaStoreItem> {
-
-        // Initialize an empty mutable list of music
-        val list: MutableList<MediaStoreItem> = mutableListOf()
+    fun getMediaStoreEntries(context: Context): MutableList<AudioModel> {
+        val list: MutableList<AudioModel> = mutableListOf()
 
         // Get the external storage media store audio uri
         val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -131,34 +129,30 @@ object DataRepository {
 
         // Query the external storage for music files
         val cursor: Cursor = context.contentResolver.query(
-            uri, // Uri
-            null, // Projection
-            selection, // Selection
-            null, // Selection arguments
-            sortOrder // Sort order
+            uri, 
+            null,
+            selection, 
+            null, 
+            sortOrder 
         )
 
         // If query result is not empty
         if (cursor != null && cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+            val x = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
+            val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
 
-            // Now loop through the music files
             do {
                 val audioId: Long = cursor.getLong(id)
                 val audioTitle: String = cursor.getString(title)
 
-                // Add the current music to the list
-                list.add(MediaStoreItem(audioId, audioTitle))
+                list.add(AudioModel(audioTitle, audioId, data))
             } while (cursor.moveToNext())
         }
 
-        // Finally, return the music files list
         return list
     }
-
-    //TODO refactor
-    data class MediaStoreItem(val id: Long, val title: String)
 
     private fun appDataFromJson(jsonString: String): AppData {
         var restoredAppData =
