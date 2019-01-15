@@ -1,6 +1,10 @@
 package de.michaelpohl.loopy.model
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.database.Cursor
+import android.net.Uri
+import android.provider.MediaStore
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.*
 import timber.log.Timber
@@ -109,9 +113,52 @@ object DataRepository {
         onFileSelectionUpdated(FileHelper.getFileModelsFromFiles(listOf(file)))
     }
 
-    fun getMediaStoreEntries() {
-        
+    fun getMediaStoreEntries(context: Context): MutableList<MediaStoreItem> {
+
+        // Initialize an empty mutable list of music
+        val list: MutableList<MediaStoreItem> = mutableListOf()
+
+        // Get the external storage media store audio uri
+        val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        //val uri: Uri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI
+
+        // IS_MUSIC : Non-zero if the audio file is music
+        val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
+
+        // Sort the musics
+        val sortOrder = MediaStore.Audio.Media.TITLE + " ASC"
+        //val sortOrder = MediaStore.Audio.Media.TITLE + " DESC"
+
+        // Query the external storage for music files
+        val cursor: Cursor = context.contentResolver.query(
+            uri, // Uri
+            null, // Projection
+            selection, // Selection
+            null, // Selection arguments
+            sortOrder // Sort order
+        )
+
+        // If query result is not empty
+        if (cursor != null && cursor.moveToFirst()) {
+            val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+            val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+
+            // Now loop through the music files
+            do {
+                val audioId: Long = cursor.getLong(id)
+                val audioTitle: String = cursor.getString(title)
+
+                // Add the current music to the list
+                list.add(MediaStoreItem(audioId, audioTitle))
+            } while (cursor.moveToNext())
+        }
+
+        // Finally, return the music files list
+        return list
     }
+
+    //TODO refactor
+    data class MediaStoreItem(val id: Long, val title: String)
 
     private fun appDataFromJson(jsonString: String): AppData {
         var restoredAppData =

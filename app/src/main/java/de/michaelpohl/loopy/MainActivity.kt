@@ -103,7 +103,8 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
 
     override fun onBrowseMediaStoreClicked() {
         Timber.d("Browsing media store...")
-        DataRepository.getMediaStoreEntries()
+        val mediaStoreItems = DataRepository.getMediaStoreEntries(this)
+        mediaStoreItems.forEach {it-> Timber.d("Item: %s",it.title )}
     }
 
     override fun onBackPressed() {
