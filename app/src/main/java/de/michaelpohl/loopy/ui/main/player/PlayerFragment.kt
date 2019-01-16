@@ -87,7 +87,7 @@ class PlayerFragment : BaseFragment() {
         try {
             viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
         } catch (e: Exception) {
-            throw Exception("${context} should implement MediaBrowserFragment.OnItemCLickListener")
+            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }
     }
 

@@ -12,7 +12,9 @@ import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
 
-class MediaBrowserViewModel(application: Application) : BaseViewModel(application) {
+
+//TODO rebuild for audioModels!
+class MusicBrowserViewModel(application: Application) : BaseViewModel(application) {
 
     private var adapter =
         FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
