@@ -10,6 +10,7 @@ import java.io.File
 data class AudioModel(
     val name: String,
     val id: Long,
+    val album: String,
     val data: Int,
     val extension: String = "" //TODO how to get the filetype, since that is what it essential is
 ) : Parcelable

@@ -12,7 +12,7 @@ import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
-class FileBrowserFragment : BaseFragment() {
+class MediaBrowserFragment : BaseFragment() {
 
     private lateinit var viewModel: MediaBrowserViewModel
     private lateinit var binding: FragmentFilesListBinding

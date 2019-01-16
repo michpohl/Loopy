@@ -136,21 +136,22 @@ object DataRepository {
             sortOrder 
         )
 
-        // If query result is not empty
-        if (cursor != null && cursor.moveToFirst()) {
+        //TODO total renaming for niceness
+        if (cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
             val x = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
             val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-
+            val album2 = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
             do {
                 val audioId: Long = cursor.getLong(id)
                 val audioTitle: String = cursor.getString(title)
+                val albumName: String = cursor.getString(album2)
+                Timber.d("Music file: %s, %s, %s", audioId, audioTitle, albumName)
 
-                list.add(AudioModel(audioTitle, audioId, data))
+                list.add(AudioModel(audioTitle, audioId, albumName, data))
             } while (cursor.moveToNext())
         }
-
         return list
     }
 

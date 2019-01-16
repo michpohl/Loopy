@@ -12,8 +12,7 @@ import android.view.MenuItem
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
+import de.michaelpohl.loopy.ui.main.browser.MediaBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.HelpFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
@@ -22,7 +21,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
-class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListener,
+class MainActivity : AppCompatActivity(), MediaBrowserViewModel.OnItemClickListener,
     PlayerViewModel.PlayerActionsListener {
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -76,7 +75,7 @@ class MainActivity : AppCompatActivity(), FileBrowserViewModel.OnItemClickListen
         }
 
         R.id.action_submit -> {
-            // context for this action is the FileBrowserFragment, but we handle it here because we need activity methods
+            // context for this action is the MediaBrowserFragment, but we handle it here because we need activity methods
             showPlayerFragmentWithFreshSelection()
             false
         }
