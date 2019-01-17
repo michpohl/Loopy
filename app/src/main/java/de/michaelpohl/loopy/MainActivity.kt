@@ -12,6 +12,9 @@ import android.view.MenuItem
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserFragment
+import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserViewModel
+import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.browser.MusicBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.HelpFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
@@ -22,7 +25,8 @@ import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListener,
-    PlayerViewModel.PlayerActionsListener {
+    PlayerViewModel.PlayerActionsListener, AlbumBrowserViewModel.OnItemClickListener {
+
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
@@ -103,7 +107,12 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
     override fun onBrowseMediaStoreClicked() {
         Timber.d("Browsing media store...")
         val mediaStoreItems = DataRepository.getMediaStoreEntries(this)
-        mediaStoreItems.forEach {it-> Timber.d("Item: %s",it.name )}
+        mediaStoreItems.forEach { it -> Timber.d("Item: %s", it.name) }
+        showAlbumBrowserFragment()
+    }
+
+    override fun onAlbumClicked(albumTitle: String) {
+        Timber.d("Clicked on this one: %s", albumTitle)
     }
 
     override fun onBackPressed() {
@@ -169,7 +178,16 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
         fragmentTransaction.replace(R.id.container, filesListFragment)
         fragmentTransaction.addToBackStack(path)
         fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_browser)
+        changeActionBar(R.menu.menu_file_browser)
+    }
+
+    private fun showAlbumBrowserFragment() {
+        val fragment = AlbumBrowserFragment.newInstance()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        currentFragment = fragment
+        fragmentTransaction.replace(R.id.container, fragment)
+        fragmentTransaction.commit()
+        changeActionBar(R.menu.menu_file_browser)
     }
 
     private fun showHelpFragment() {

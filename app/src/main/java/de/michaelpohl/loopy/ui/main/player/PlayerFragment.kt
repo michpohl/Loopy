@@ -15,7 +15,6 @@ import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_player.*
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class PlayerFragment : BaseFragment() {

@@ -6,11 +6,11 @@ import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
 
 class MusicBrowserItem(
     val context: Context,
-    var binding: ItemFileBrowserBinding
+    var binding: ItemMusicBrowserBinding
 
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(model: FileBrowserItemViewModel) {
+    fun bind(model: MusicBrowserItemViewModel) {
         binding.model = model
         binding.executePendingBindings()
     }

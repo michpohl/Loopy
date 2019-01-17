@@ -4,7 +4,6 @@ import android.app.Application
 import android.databinding.ObservableInt
 import android.view.View
 import de.michaelpohl.loopy.ui.main.BaseViewModel
-import timber.log.Timber
 
 class HelpViewModel(application: Application): BaseViewModel(application) {
 

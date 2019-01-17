@@ -7,7 +7,6 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
-import timber.log.Timber
 
 class PlayerItem(
     val context: Context,

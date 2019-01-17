@@ -57,7 +57,7 @@ class AlbumBrowserFragment : BaseFragment() {
     }
 
     override fun getTitle(): String {
-        return getString(R.string.x)
+        return getString(R.string.appbar_title_album_browser)
     }
 
     private fun initViews() {

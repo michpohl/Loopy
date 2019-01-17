@@ -1,15 +1,5 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
-import android.databinding.DataBindingUtil
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
-import timber.log.Timber
-
 //TODO rebuild for audioModels!
 
 class MusicBrowserAdapter(){

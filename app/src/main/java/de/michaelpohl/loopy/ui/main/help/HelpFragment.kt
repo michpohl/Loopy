@@ -11,7 +11,6 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentHelpBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import ru.noties.markwon.Markwon
-import timber.log.Timber
 
 class HelpFragment : BaseFragment() {
 

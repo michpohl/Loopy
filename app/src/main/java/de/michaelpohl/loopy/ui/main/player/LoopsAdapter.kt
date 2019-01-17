@@ -10,7 +10,6 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
-import timber.log.Timber
 
 class LoopsAdapter(
     val context: Context,

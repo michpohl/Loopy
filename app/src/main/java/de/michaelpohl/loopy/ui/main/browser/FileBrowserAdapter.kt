@@ -8,7 +8,6 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
-import timber.log.Timber
 
 class FileBrowserAdapter(
     private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),

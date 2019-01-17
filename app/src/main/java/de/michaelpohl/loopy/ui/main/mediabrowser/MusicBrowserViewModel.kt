@@ -10,8 +10,6 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
-import timber.log.Timber
-
 
 //TODO rebuild for audioModels!
 class MusicBrowserViewModel(application: Application) : BaseViewModel(application) {
