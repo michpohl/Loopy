@@ -10,10 +10,6 @@ import de.michaelpohl.loopy.common.*
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
-import android.provider.MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS
-import android.provider.MediaStore.Audio.AlbumColumns.ALBUM_ART
-
-
 
 object DataRepository {
 
@@ -117,7 +113,9 @@ object DataRepository {
         onFileSelectionUpdated(FileHelper.getFileModelsFromFiles(listOf(file)))
     }
 
-    fun getAlbumTitles(context: Context) {
+    fun getAlbumTitles(context: Context): MutableList<String> {
+        val list: MutableList<String> = mutableListOf()
+
         val projection =
             arrayOf(
                 MediaStore.Audio.Albums._ID,
@@ -136,6 +134,14 @@ object DataRepository {
             selection,
             selectionArgs,
             sortOrder)
+
+        if (cursor.moveToFirst()) {
+            val albumTitle = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
+            do {
+                list.add(cursor.getString(albumTitle))
+            } while (cursor.moveToNext())
+        }
+        return list
     }
     
     fun getMediaStoreEntries(context: Context): MutableList<AudioModel> {
