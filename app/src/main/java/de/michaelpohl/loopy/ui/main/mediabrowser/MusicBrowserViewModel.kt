@@ -1,44 +1,43 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.app.Application
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
 import android.view.View
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHelper
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserAdapter
 
 //TODO rebuild for audioModels!
 class MusicBrowserViewModel(application: Application) : BaseViewModel(application) {
 
     private var adapter =
-        FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
+        MusicBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
 
     var selectButtonText = ObservableField(getString(R.string.btn_select_all))
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE)
     var bottomBarVisibility = ObservableInt(View.INVISIBLE)
 
     lateinit var listener: OnItemClickListener
-    lateinit var path: String
+    lateinit var audioModels: List<AudioModel>
 
-    fun getAdapter(): FileBrowserAdapter {
+    fun getAdapter(): MusicBrowserAdapter {
         return adapter
     }
 
     fun updateAdapter() {
-        val files = FileHelper.getFileModelsFromFiles(FileHelper.getFilesFromPath(path))
-        if (files.isEmpty()) {
+        if (audioModels.isEmpty()) {
             emptyFolderLayoutVisibility.set(View.VISIBLE)
         } else {
             emptyFolderLayoutVisibility.set(View.INVISIBLE)
         }
-        if (FileHelper.containsAudioFiles(path)) {
+        if (audioModels.size > 1) {
             bottomBarVisibility.set(View.VISIBLE)
         } else bottomBarVisibility.set(View.INVISIBLE)
-        adapter.updateData(files)
+        adapter.updateData(audioModels)
     }
 
     fun onSelectButtonClicked(view: View) {
@@ -49,7 +48,7 @@ class MusicBrowserViewModel(application: Application) : BaseViewModel(applicatio
         }
     }
 
-    private fun onSelectedItemsChanged(selectedItems: List<FileModel>) {
+    private fun onSelectedItemsChanged(selectedItems: List<AudioModel>) {
         if (selectedItems.isNotEmpty()) {
             selectButtonText.set(getString(R.string.btn_deselect_all))
         } else {
@@ -58,8 +57,8 @@ class MusicBrowserViewModel(application: Application) : BaseViewModel(applicatio
         DataRepository.onFileSelectionUpdated(selectedItems)
     }
 
-    private fun onItemClicked(fileModel: FileModel) {
-        if (fileModel.fileType == FileType.FOLDER) listener.onFolderClicked(fileModel)
+    private fun onItemClicked(audioModel: AudioModel) {
+        //TODO do something
     }
 
     interface OnItemClickListener {

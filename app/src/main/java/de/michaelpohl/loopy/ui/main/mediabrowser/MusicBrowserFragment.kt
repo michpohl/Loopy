@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -8,7 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
+import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
@@ -17,15 +18,15 @@ import kotlinx.android.synthetic.main.fragment_files_list.*
 class MusicBrowserFragment : BaseFragment() {
 
     private lateinit var viewModel: MusicBrowserViewModel
-    private lateinit var binding: FragmentFilesListBinding
-    private lateinit var path: String
+    private lateinit var binding: FragmentMusicBrowserBinding
+    private lateinit var album: String
 
     companion object {
 
-        fun newInstance(path: String): MusicBrowserFragment {
+        fun newInstance(album: String): MusicBrowserFragment {
             val fragment = MusicBrowserFragment()
             val args = Bundle()
-            args.putString("path", path)
+            args.putString("path", album)
             fragment.arguments = args
             return fragment
         }
@@ -34,7 +35,7 @@ class MusicBrowserFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            path = arguments!!.getString("path")
+            album = arguments!!.getString("path")
         }
     }
 
@@ -42,7 +43,7 @@ class MusicBrowserFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MusicBrowserViewModel::class.java)
         try {
-            viewModel.listener = context as MusicBrowserViewModel.OnItemClickListener
+            viewModel.listener = context as de.michaelpohl.loopy.ui.main.browser.MusicBrowserViewModel.FileBrowserViewModel.OnItemClickListener
         } catch (e: Exception) {
             throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }
@@ -68,7 +69,9 @@ class MusicBrowserFragment : BaseFragment() {
     private fun initViews() {
         rv_files.layoutManager = LinearLayoutManager(context)
         rv_files.adapter = viewModel.getAdapter()
-        viewModel.path = path
+        viewModel.audioModels = DataRepository.getMediaStoreEntries(context!!).filter {
+true            //TODO filter them by album name
+        }
         viewModel.updateAdapter()
     }
 }

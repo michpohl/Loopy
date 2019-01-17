@@ -14,14 +14,14 @@ import kotlinx.android.synthetic.main.fragment_files_list.*
 
 class FileBrowserFragment : BaseFragment() {
 
-    private lateinit var viewModel: MusicBrowserViewModel
+    private lateinit var viewModel: FileBrowserViewModel
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
 
     companion object {
 
-        fun newInstance(path: String): MusicBrowserFragment {
-            val fragment = MusicBrowserFragment()
+        fun newInstance(path: String): FileBrowserFragment {
+            val fragment = FileBrowserFragment()
             val args = Bundle()
             args.putString("path", path)
             fragment.arguments = args
@@ -38,9 +38,9 @@ class FileBrowserFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MusicBrowserViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(FileBrowserViewModel::class.java)
         try {
-            viewModel.listener = context as MusicBrowserViewModel.OnItemClickListener
+            viewModel.listener = context as FileBrowserViewModel.OnItemClickListener
         } catch (e: Exception) {
             throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }
