@@ -63,7 +63,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:visibility="@{model.checkBoxVisibility}"
                 android:onClick="@{model::onCheckBoxClicked}"
                 android:checked="@{model.selected}"
                 android:layout_marginEnd="8dp"/>

@@ -29,10 +29,8 @@
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/action"
                 android:textAppearance="@style/Text.HeaderLarge"
-app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 />
-
-
 
     </android.support.constraint.ConstraintLayout>
 </layout>
