@@ -183,7 +183,7 @@ object DataRepository {
         if (cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-//            val x = cursor.getColumnIndex(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
+//            val fileUri = cursor.getColumnIndex.(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
             val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
             val data2 = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
 
@@ -192,9 +192,10 @@ object DataRepository {
                 val audioId: Long = cursor.getLong(id)
                 val audioTitle: String = cursor.getString(title)
                 val albumName: String = cursor.getString(album2)
-                Timber.d("Music file: %s, %s, %s, %s", audioId, uri, audioTitle, albumName)
+                val albumData = cursor.getString(data)
+                Timber.d("Music file: %s, %s, %s", audioId, audioTitle, albumName)
 
-                list.add(AudioModel(audioTitle, audioId, uri, albumName, data))
+                list.add(AudioModel(audioTitle, audioId, albumName, albumData))
             } while (cursor.moveToNext())
         }
         return list
@@ -210,8 +211,8 @@ object DataRepository {
 //                val file = FileHelper.getSingleFile(it.path)
 //                if (file.exists()) {
 //                    Timber.v("File %s exists", file.path)
-                    validModels.add(it)
-                }
+            validModels.add(it)
+        }
 //            } catch (e: FileNotFoundException) {
 //                Timber.d("We are in the catch block")
 //                Timber.e(e)
@@ -222,7 +223,8 @@ object DataRepository {
             Timber.w("Found invalid / nonexisting files - removing")
             restoredAppData = AppData(
                 audioModels = validModels,
-                settings = restoredAppData.settings)
+                settings = restoredAppData.settings
+            )
         }
         return restoredAppData
     }

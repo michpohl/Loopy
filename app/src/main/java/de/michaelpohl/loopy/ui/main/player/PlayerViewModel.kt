@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.app.Application
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
+import android.net.Uri
 import android.os.Handler
 import android.view.View
 import de.michaelpohl.loopy.R
@@ -14,6 +15,7 @@ import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
@@ -161,7 +163,8 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     //TODO beautify, strip notification into extra method in adapter
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
 //        looper.setLoop(getApplication(), FileHelper.getSingleFile(audioModel.path))
-        looper.setLoop(getApplication(), audioModel.uri)
+        Timber.d("My uri: %s", Uri.parse(audioModel.data))
+        looper.setLoop(getApplication(), Uri.parse(audioModel.data))
 
         if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             val oldPosition = adapter.preSelectedPosition

@@ -117,6 +117,7 @@ class LoopedPlayer private constructor(context: Context) {
                 //                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
                 this.loopUri = loopUri
                 if (hasLoopFile) stop()
+                it.release() //TODO keep an eye on this one
                 initPlayer()
                 if (::onLoopSwitchedListener.isInitialized &&
                     switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
