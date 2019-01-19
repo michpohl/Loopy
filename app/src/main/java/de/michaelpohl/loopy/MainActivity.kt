@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
 
         R.id.action_submit -> {
-            // context for this action is the MusicBrowserFragment, but we handle it here because we need activity methods
+            // context for this action is one of the BrowserFragments, but we handle it here because we need activity methods
             showPlayerFragmentWithFreshSelection()
             false
         }
@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             snackbar.show()
         }
     }
+//    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
         val filesListFragment = FileBrowserFragment.newInstance(path)
@@ -187,6 +188,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment = fragment
         fragmentTransaction.replace(R.id.container, fragment)
+        fragmentTransaction.addToBackStack("album_browser")
         fragmentTransaction.commit()
         changeActionBar(R.menu.menu_file_browser)
     }
@@ -196,6 +198,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment = fragment
         fragmentTransaction.replace(R.id.container, fragment)
+        fragmentTransaction.addToBackStack("music_browser")
         fragmentTransaction.commit()
         changeActionBar(R.menu.menu_file_browser)
     }

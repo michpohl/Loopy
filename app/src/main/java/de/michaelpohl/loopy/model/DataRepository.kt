@@ -60,20 +60,37 @@ object DataRepository {
 
     fun onFileModelSelectionUpdated(newFileModelSelection: List<FileModel>) {
         val audioModels = mutableListOf<AudioModel>()
-        newFileModelSelection.forEach{it -> audioModels.add(FileHelper.fileModelToAudioModel(it))}
-
+        newFileModelSelection.forEach { it -> audioModels.add(FileHelper.fileModelToAudioModel(it)) }
+        onAudioFileSelectionUpdated(audioModels)
     }
 
     fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {
         //only add the ones that are not already selected
-        newSelectedAudioModels = newSelection.filter { it ->
-            !currentSelectedAudioModels.contains(it)
-        }
+        newSelectedAudioModels = newSelection
+            .filter { model -> !currentSelectedAudioModels.contains(model) }
+            .filter { model -> !isSuspectedDuplicate(model) }
     }
 
     fun onLoopsListCleared() {
         currentSelectedAudioModels = emptyList()
         saveCurrentState()
+    }
+
+    /**
+     * Returns true if a submitted AudioModel has the same name and album as one already in the selection
+     * This is not a perfect check for duplicates of course, but it should be good enough for what we do
+     */
+    private fun isSuspectedDuplicate(newModel: AudioModel): Boolean {
+        var isSuspect = false
+        currentSelectedAudioModels.forEach { selectedModel ->
+            Timber.d("New model name: %s, album: %s", newModel.name, newModel.album)
+            Timber.d("Selected model name: %s, album: %s", selectedModel.name, selectedModel.album)
+
+            if (selectedModel.name == newModel.name && selectedModel.album == newModel.album) {
+                isSuspect = true
+            }
+        }
+        return isSuspect
     }
 
     /**

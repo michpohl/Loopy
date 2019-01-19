@@ -121,10 +121,20 @@ object FileHelper {
     }
 
     fun fileModelToAudioModel(fileModel: FileModel) : AudioModel {
+
+        // this just takes the last containing folder and assues it is the album name
+        // this might be wrong if there is metainformation stored in the file. We'll see
+        val albumNameFromFolder: () -> String = {
+            val pathPieces = fileModel.path.split("/")
+            val length = pathPieces.size
+            pathPieces[length - 2]
+        }
+
         return AudioModel(
-            name = fileModel.name,
-            album = fileModel.path, //TODO this might not be right
+            name = fileModel.name.split(".")[0], //throw away file extension from name
+            album = albumNameFromFolder(),
             path = fileModel.path,
+            fileExtension = fileModel.extension,
             isMediaStoreItem = false
         );
     }
