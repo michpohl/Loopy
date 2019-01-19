@@ -45,7 +45,7 @@ object DataRepository {
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
         with(sharedPrefs.edit()) {
             putString(PREFS_LOOPY_KEY, jsonString)
-            apply() //writes the data in the background, as opposed to commit()
+            apply() //writes the path in the background, as opposed to commit()
         }
     }
 
@@ -59,7 +59,9 @@ object DataRepository {
     }
 
     fun onFileModelSelectionUpdated(newFileModelSelection: List<FileModel>) {
-        //TODO do something right now FileBrowser is detached!!
+        val audioModels = mutableListOf<AudioModel>()
+        newFileModelSelection.forEach{it -> audioModels.add(FileHelper.fileModelToAudioModel(it))}
+
     }
 
     fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {
@@ -203,7 +205,7 @@ object DataRepository {
 
     private fun appDataFromJson(jsonString: String): AppData {
         var restoredAppData =
-            Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app data")
+            Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app path")
         var validModels = mutableListOf<AudioModel>()
         restoredAppData.audioModels.forEach {
             //TODO this is the same as in the validate method! Not necessary

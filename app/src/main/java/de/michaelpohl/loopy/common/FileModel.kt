@@ -5,7 +5,7 @@ import de.michaelpohl.loopy.model.DataRepository
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
-//remember this smart solution to get a parcelable from any data class!!
+//remember this smart solution to get a parcelable from any path class!!
 // annotate in the front and implement in the back
 @Parcelize
 data class FileModel(

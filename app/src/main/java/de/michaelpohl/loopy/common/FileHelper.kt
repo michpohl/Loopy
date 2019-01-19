@@ -120,11 +120,12 @@ object FileHelper {
         return filePath
     }
 
-//    fun FileModelToAudioModel(fileModel: FileModel) : AudioModel {
-////        val audioModel = AudioModel()
-//
-//       TODO finish of figure out what to do
-//
-////        return audioModel;
-//    }
+    fun fileModelToAudioModel(fileModel: FileModel) : AudioModel {
+        return AudioModel(
+            name = fileModel.name,
+            album = fileModel.path, //TODO this might not be right
+            path = fileModel.path,
+            isMediaStoreItem = false
+        );
+    }
 }

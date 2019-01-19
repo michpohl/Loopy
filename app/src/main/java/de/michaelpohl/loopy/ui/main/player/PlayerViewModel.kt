@@ -160,11 +160,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
     }
 
-    //TODO beautify, strip notification into extra method in adapter
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
-//        looper.setLoop(getApplication(), FileHelper.getSingleFile(audioModel.path))
-        Timber.d("My uri: %s", Uri.parse(audioModel.data))
-        looper.setLoop(getApplication(), Uri.parse(audioModel.data))
+        Timber.d("Selected item's uri: %s", Uri.parse(audioModel.path))
+        looper.setLoopUri(Uri.parse(audioModel.path))
 
         if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             val oldPosition = adapter.preSelectedPosition
@@ -178,8 +176,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
                 adapter.notifyMultipleItems(arrayOf(oldSelected, adapter.preSelectedPosition, adapter.selectedPosition))
                 adapter.preSelectedPosition = -1
             }
-
-//            }
         } else {
 
             val oldPosition = adapter.selectedPosition

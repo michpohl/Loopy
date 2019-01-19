@@ -110,11 +110,10 @@ class LoopedPlayer private constructor(context: Context) {
         return currentPlayer.isPlaying
     }
 
-    fun setLoop(context: Context, loopUri: Uri) {
+    fun setLoopUri(loopUri: Uri) {
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
-                //                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
                 this.loopUri = loopUri
                 if (hasLoopFile) stop()
                 it.release() //TODO keep an eye on this one
@@ -128,7 +127,6 @@ class LoopedPlayer private constructor(context: Context) {
                 start()
             }
         } else {
-//            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
             this.loopUri = loopUri
 
 
