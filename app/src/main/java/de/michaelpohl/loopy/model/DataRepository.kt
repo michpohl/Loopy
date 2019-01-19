@@ -9,7 +9,6 @@ import com.google.gson.Gson
 import de.michaelpohl.loopy.common.*
 import timber.log.Timber
 import java.io.File
-import java.io.FileNotFoundException
 
 object DataRepository {
 
@@ -17,9 +16,9 @@ object DataRepository {
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var savedAppData: AppData
 
-    var currentSelectedFileModels = listOf<FileModel>()
+    var currentSelectedAudioModels = listOf<AudioModel>()
         private set
-    private var newSelectedFileModels = listOf<FileModel>()
+    private var newSelectedAudioModels = listOf<AudioModel>()
     var settings = Settings()
 
     /**
@@ -28,15 +27,20 @@ object DataRepository {
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
         this.savedAppData = loadSavedAppData()
-        currentSelectedFileModels = savedAppData.models
+        currentSelectedAudioModels = savedAppData.audioModels
         this.settings = savedAppData.settings
     }
 
     fun saveCurrentState(
-        selectedLoops: List<FileModel> = this.currentSelectedFileModels,
+        selectedLoops: List<AudioModel> = this.currentSelectedAudioModels,
         settings: Settings = this.settings
     ) {
-        val jsonString = Gson().toJson(AppData(selectedLoops, settings))
+        val jsonString = Gson().toJson(
+            AppData(
+                audioModels = selectedLoops,
+                settings = settings
+            )
+        )
 //        TODO put fitting assertion
 //        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
         with(sharedPrefs.edit()) {
@@ -46,23 +50,27 @@ object DataRepository {
     }
 
     fun updateAndSaveFileSelection(): Boolean {
-        return if (newSelectedFileModels.isNotEmpty()) {
-            currentSelectedFileModels = newSelectedFileModels + currentSelectedFileModels
+        return if (newSelectedAudioModels.isNotEmpty()) {
+            currentSelectedAudioModels = newSelectedAudioModels + currentSelectedAudioModels
 
             saveCurrentState()
             true
         } else false
     }
 
-    fun onFileSelectionUpdated(newSelection: List<FileModel>) {
+    fun onFileModelSelectionUpdated(newFileModelSelection: List<FileModel>) {
+        //TODO do something right now FileBrowser is detached!!
+    }
+
+    fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {
         //only add the ones that are not already selected
-        newSelectedFileModels = newSelection.filter { it ->
-            !currentSelectedFileModels.contains(it)
+        newSelectedAudioModels = newSelection.filter { it ->
+            !currentSelectedAudioModels.contains(it)
         }
     }
 
     fun onLoopsListCleared() {
-        currentSelectedFileModels = emptyList()
+        currentSelectedAudioModels = emptyList()
         saveCurrentState()
     }
 
@@ -79,7 +87,7 @@ object DataRepository {
             appDataFromJson(jsonString)
         } else {
             // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
-            AppData(arrayListOf(), Settings(allowedFileTypes = ValidAudioFileType.values()))
+            AppData(settings = Settings(allowedFileTypes = ValidAudioFileType.values()))
         }
     }
 
@@ -95,22 +103,24 @@ object DataRepository {
         return builder.toString()
     }
 
-    fun testIntegrity(fileModels: List<FileModel>): List<FileModel> {
-        var validModels = mutableListOf<FileModel>()
-        fileModels.forEach {
-            val file = FileHelper.getSingleFile(it.path)
-            if (file.exists()) {
-                Timber.v("File %s exists", file.path)
-                validModels.add(it)
-            } else {
-                Timber.v("File %s doesn't exist, removing", file.path)
-            }
+    fun testIntegrity(audioModels: List<AudioModel>): List<AudioModel> {
+        var validModels = mutableListOf<AudioModel>()
+        audioModels.forEach {
+            //TODO revisit this, how to validate??
+//            val file = FileHelper.getSingleFile(it.path)
+//            if (file.exists()) {
+//                Timber.v("File %s exists", file.path)
+            validModels.add(it)
+//            } else {
+//                Timber.v("File %s doesn't exist, removing", file.path)
+//            }
         }
         return validModels
     }
 
     fun handleFileFromIntent(file: File) {
-        onFileSelectionUpdated(FileHelper.getFileModelsFromFiles(listOf(file)))
+        //TODO repair
+//        onAudioFileSelectionUpdated(FileHelper.getAudioModelsFromFiles(listOf(file)))
     }
 
     fun getAlbumTitles(context: Context): MutableList<String> {
@@ -122,7 +132,8 @@ object DataRepository {
                 MediaStore.Audio.Albums.ALBUM,
                 MediaStore.Audio.Albums.ARTIST,
                 MediaStore.Audio.Albums.ALBUM_ART,
-                MediaStore.Audio.Albums.NUMBER_OF_SONGS)
+                MediaStore.Audio.Albums.NUMBER_OF_SONGS
+            )
 
         val selection: String? = null
         val selectionArgs: Array<String>? = null
@@ -133,7 +144,8 @@ object DataRepository {
             projection,
             selection,
             selectionArgs,
-            sortOrder)
+            sortOrder
+        )
 
         if (cursor.moveToFirst()) {
             val albumTitle = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
@@ -143,7 +155,7 @@ object DataRepository {
         }
         return list
     }
-    
+
     fun getMediaStoreEntries(context: Context): MutableList<AudioModel> {
         val list: MutableList<AudioModel> = mutableListOf()
 
@@ -160,27 +172,29 @@ object DataRepository {
 
         // Query the external storage for music files
         val cursor: Cursor = context.contentResolver.query(
-            uri, 
+            uri,
             null,
-            selection, 
-            null, 
-            sortOrder 
+            selection,
+            null,
+            sortOrder
         )
 
         //TODO total renaming for niceness
         if (cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-            val x = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
+//            val x = cursor.getColumnIndex(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
             val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+            val data2 = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+
             val album2 = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
             do {
                 val audioId: Long = cursor.getLong(id)
                 val audioTitle: String = cursor.getString(title)
                 val albumName: String = cursor.getString(album2)
-                Timber.d("Music file: %s, %s, %s", audioId, audioTitle, albumName)
+                Timber.d("Music file: %s, %s, %s, %s", audioId, uri, audioTitle, albumName)
 
-                list.add(AudioModel(audioTitle, audioId, albumName, data))
+                list.add(AudioModel(audioTitle, audioId, uri, albumName, data))
             } while (cursor.moveToNext())
         }
         return list
@@ -189,23 +203,26 @@ object DataRepository {
     private fun appDataFromJson(jsonString: String): AppData {
         var restoredAppData =
             Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app data")
-        var validModels = mutableListOf<FileModel>()
-        restoredAppData.models.forEach {
-            try {
-                val file = FileHelper.getSingleFile(it.path)
-                if (file.exists()) {
-                    Timber.v("File %s exists", file.path)
+        var validModels = mutableListOf<AudioModel>()
+        restoredAppData.audioModels.forEach {
+            //TODO this is the same as in the validate method! Not necessary
+//            try {
+//                val file = FileHelper.getSingleFile(it.path)
+//                if (file.exists()) {
+//                    Timber.v("File %s exists", file.path)
                     validModels.add(it)
                 }
-            } catch (e: FileNotFoundException) {
-                Timber.d("We are in the catch block")
-                Timber.e(e)
-            }
-        }
+//            } catch (e: FileNotFoundException) {
+//                Timber.d("We are in the catch block")
+//                Timber.e(e)
+//            }
+//        }
 
-        if (restoredAppData.models.size > validModels.size) {
+        if (restoredAppData.fileModels.size > validModels.size) {
             Timber.w("Found invalid / nonexisting files - removing")
-            restoredAppData = AppData(validModels, restoredAppData.settings)
+            restoredAppData = AppData(
+                audioModels = validModels,
+                settings = restoredAppData.settings)
         }
         return restoredAppData
     }

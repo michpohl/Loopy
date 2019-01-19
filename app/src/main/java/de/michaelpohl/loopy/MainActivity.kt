@@ -15,8 +15,9 @@ import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserFragment
 import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserViewModel
 import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.browser.MusicBrowserViewModel
+import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.HelpFragment
+import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import kotlinx.android.synthetic.main.main_activity.*
@@ -24,8 +25,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
-class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListener,
-    PlayerViewModel.PlayerActionsListener, AlbumBrowserViewModel.OnItemClickListener {
+class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener, AlbumBrowserViewModel.OnItemClickListener, FileBrowserViewModel.OnItemClickListener {
 
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
-            showPlayerFragment(DataRepository.currentSelectedFileModels)
+            showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
         setSupportActionBar(findViewById(R.id.my_toolbar))
     }
@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
 
     override fun onAlbumClicked(albumTitle: String) {
         Timber.d("Clicked on this one: %s", albumTitle)
+        showMusicBrowserFragment(albumTitle)
     }
 
     override fun onBackPressed() {
@@ -142,10 +143,10 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
         showPlayerFragmentWithFreshSelection()
     }
 
-    private fun showPlayerFragment(loops: List<FileModel> = emptyList(), settings: Settings = Settings()) {
+    private fun showPlayerFragment(loops: List<AudioModel> = emptyList(), settings: Settings = Settings()) {
 
         //TODO this method can be better - handling what's in AppData should completely move into DataRepository
-        val appData = AppData(loops, settings)
+        val appData = AppData(audioModels = loops, settings = settings)
         val playerFragment = PlayerFragment.newInstance(appData)
         currentFragment = playerFragment
         playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
@@ -158,7 +159,7 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
         val didUpdate = DataRepository.updateAndSaveFileSelection()
         if (didUpdate) {
             clearBackStack()
-            showPlayerFragment(DataRepository.currentSelectedFileModels, DataRepository.settings)
+            showPlayerFragment(DataRepository.currentSelectedAudioModels, DataRepository.settings)
             true
         } else {
             val snackbar = Snackbar.make(
@@ -183,6 +184,15 @@ class MainActivity : AppCompatActivity(), MusicBrowserViewModel.OnItemClickListe
 
     private fun showAlbumBrowserFragment() {
         val fragment = AlbumBrowserFragment.newInstance()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        currentFragment = fragment
+        fragmentTransaction.replace(R.id.container, fragment)
+        fragmentTransaction.commit()
+        changeActionBar(R.menu.menu_file_browser)
+    }
+
+    private fun showMusicBrowserFragment(albumTitle: String) {
+        val fragment = MusicBrowserFragment.newInstance(albumTitle)
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment = fragment
         fragmentTransaction.replace(R.id.container, fragment)

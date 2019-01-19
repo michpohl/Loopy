@@ -1,27 +1,19 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.app.Application
-import android.databinding.ObservableField
-import android.databinding.ObservableInt
 import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.ui.main.BaseViewModel
-import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserAdapter
+import de.michaelpohl.loopy.ui.main.browser.BrowserViewModel
 
-//TODO rebuild for audioModels!
-class MusicBrowserViewModel(application: Application) : BaseViewModel(application) {
+class MusicBrowserViewModel(application: Application) : BrowserViewModel(application) {
 
     private var adapter =
         MusicBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
 
-    var selectButtonText = ObservableField(getString(R.string.btn_select_all))
-    var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE)
-    var bottomBarVisibility = ObservableInt(View.INVISIBLE)
 
-    lateinit var listener: OnItemClickListener
+//    lateinit var listener: OnItemClickListener
     lateinit var audioModels: List<AudioModel>
 
     fun getAdapter(): MusicBrowserAdapter {
@@ -40,7 +32,7 @@ class MusicBrowserViewModel(application: Application) : BaseViewModel(applicatio
         adapter.updateData(audioModels)
     }
 
-    fun onSelectButtonClicked(view: View) {
+    override fun onSelectButtonClicked(view: View) {
         if (adapter.selectedItems.size > 0) {
             adapter.deselectAll()
         } else {
@@ -54,14 +46,11 @@ class MusicBrowserViewModel(application: Application) : BaseViewModel(applicatio
         } else {
             selectButtonText.set(getString(R.string.btn_select_all))
         }
-        DataRepository.onFileSelectionUpdated(selectedItems)
+        DataRepository.onAudioFileSelectionUpdated(selectedItems)
     }
 
     private fun onItemClicked(audioModel: AudioModel) {
         //TODO do something
     }
 
-    interface OnItemClickListener {
-        fun onFolderClicked(fileModel: FileModel)
-    }
 }

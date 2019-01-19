@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_files_list.*
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_files_list.*
 class MusicBrowserFragment : BaseFragment() {
 
     private lateinit var viewModel: MusicBrowserViewModel
-    private lateinit var binding: FragmentMusicBrowserBinding
+    private lateinit var binding: FragmentFilesListBinding //TODO Why not MusicBrowserBinding?
     private lateinit var album: String
 
     companion object {
@@ -42,11 +42,13 @@ class MusicBrowserFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MusicBrowserViewModel::class.java)
-        try {
-            viewModel.listener = context as de.michaelpohl.loopy.ui.main.browser.MusicBrowserViewModel.FileBrowserViewModel.OnItemClickListener
-        } catch (e: Exception) {
-            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
-        }
+
+// I can probably throw this away, MusicBrowser has only the checkbox functionality
+//        try {
+//            viewModel.listener = context as MusicBrowserViewModel.OnItemClickListener
+//        } catch (e: Exception) {
+//            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
+//        }
         binding.model = viewModel
         initViews()
     }

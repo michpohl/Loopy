@@ -3,11 +3,9 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import android.support.v4.content.FileProvider
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import timber.log.Timber
-import java.io.File
 
 /*
 the concept with two media players comes from here:
@@ -112,12 +110,12 @@ class LoopedPlayer private constructor(context: Context) {
         return currentPlayer.isPlaying
     }
 
-    fun setLoop(context: Context, loop: File) {
+    fun setLoop(context: Context, loopUri: Uri) {
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
-                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
-
+                //                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+                this.loopUri = loopUri
                 if (hasLoopFile) stop()
                 initPlayer()
                 if (::onLoopSwitchedListener.isInitialized &&
@@ -129,7 +127,9 @@ class LoopedPlayer private constructor(context: Context) {
                 start()
             }
         } else {
-            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+//            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+            this.loopUri = loopUri
+
 
             if (hasLoopFile) stop()
             initPlayer()

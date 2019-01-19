@@ -3,9 +3,7 @@ package de.michaelpohl.loopy.ui.main.player
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
-import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
 
 class PlayerItem(
@@ -35,7 +33,8 @@ class PlayerItem(
     fun bind(model: PlayerItemViewModel) {
         viewModel = model
         binding.model = viewModel
-        inflateWave(itemView.wave, FileHelper.getSingleFile(model.fileModel.path).readBytes())
+//        TODO inflate wave from audio model
+//        inflateWave(itemView.wave, FileHelper.getSingleFile(model.fileModel.path).readBytes())
         binding.executePendingBindings()
     }
 

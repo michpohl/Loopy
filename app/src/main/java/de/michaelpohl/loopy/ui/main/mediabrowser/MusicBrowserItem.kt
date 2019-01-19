@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
+import de.michaelpohl.loopy.databinding.ItemMusicBrowserBinding
 
 class MusicBrowserItem(
     val context: Context,

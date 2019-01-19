@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.databinding.FragmentAlbumBrowserBinding
+import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_files_list.*
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_files_list.*
 class AlbumBrowserFragment : BaseFragment() {
 
     private lateinit var viewModel: AlbumBrowserViewModel
-    private lateinit var binding: FragmentAlbumBrowserBinding
+    private lateinit var binding: FragmentFilesListBinding
     private lateinit var albums: List<String>
 
     companion object {
@@ -47,7 +47,7 @@ class AlbumBrowserFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_album_browser, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_files_list, container, false)
         return binding.root
     }
 

@@ -4,14 +4,14 @@ import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import android.view.View
-import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
 
 class PlayerItemViewModel(
     private val position: Int,
-    val fileModel: FileModel,
+    val audioModel: AudioModel,
     private val onItemClickedListener: (Int, SelectionState) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit
 ) : ViewModel() {
@@ -19,7 +19,7 @@ class PlayerItemViewModel(
     val blockUpdatesFromPlayer = ObservableBoolean(false)
     var backgroundColor : Int = 0
     val progress = ObservableField<Float>(0F)
-    val name = fileModel.name
+    val name = audioModel.name
     var selectedState = NOT_SELECTED
     val canSeekAudio = ObservableBoolean(false)
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.databinding.ItemMusicBrowserBinding
 
 //TODO rebuild for audioModels!
 
@@ -26,7 +27,7 @@ class MusicBrowserAdapter(
 
         val inflater = LayoutInflater.from(parent.context)
         val binding: ItemMusicBrowserBinding =
-            DataBindingUtil.inflate(inflater, R.layout.item_file_browser, parent, false)
+            DataBindingUtil.inflate(inflater, R.layout.item_music_browser, parent, false)
         return MusicBrowserItem(
             parent.context,
             binding
@@ -40,9 +41,7 @@ class MusicBrowserAdapter(
         val itemViewModel = MusicBrowserItemViewModel(
             position,
             audioFilesList[position],
-            this::onItemSelectedChanged,
-            this::onItemClicked
-
+            this::onItemSelectedChanged
         )
         if (selectedItems.contains(audioFilesList[position])) {
             itemViewModel.selected.set(true)
@@ -65,10 +64,6 @@ class MusicBrowserAdapter(
     fun deselectAll() {
         selectedItems.clear()
         notifyDataSetChanged()
-    }
-
-    private fun onItemClicked(audioModel: AudioModel) {
-        onItemClickedListener.invoke(audioModel)
     }
 
     private fun onItemSelectedChanged(isSelected: Boolean, position: Int) {

@@ -7,8 +7,7 @@ import android.databinding.ObservableField
 import android.os.Handler
 import android.view.View
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHelper
-import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
@@ -50,7 +49,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     lateinit var settingsDropDown: WeakReference<View>
     lateinit var fileOptionsDropDown: WeakReference<View>
     lateinit var playerActionsListener: PlayerActionsListener
-    lateinit var loopsList: List<FileModel>
+    lateinit var loopsList: List<AudioModel>
     lateinit var pickFileTypesListener: () -> Unit
 
     fun getAdapter(): LoopsAdapter {
@@ -160,8 +159,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     //TODO beautify, strip notification into extra method in adapter
-    fun onItemSelected(fm: FileModel, position: Int, selectionState: SelectionState) {
-        looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
+    fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
+//        looper.setLoop(getApplication(), FileHelper.getSingleFile(audioModel.path))
+        looper.setLoop(getApplication(), audioModel.uri)
 
         if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             val oldPosition = adapter.preSelectedPosition
