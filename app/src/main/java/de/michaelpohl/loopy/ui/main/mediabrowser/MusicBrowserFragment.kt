@@ -26,7 +26,7 @@ class MusicBrowserFragment : BaseFragment() {
         fun newInstance(album: String): MusicBrowserFragment {
             val fragment = MusicBrowserFragment()
             val args = Bundle()
-            args.putString("path", album)
+            args.putString("album", album)
             fragment.arguments = args
             return fragment
         }
@@ -35,7 +35,7 @@ class MusicBrowserFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            album = arguments!!.getString("path")
+            album = arguments!!.getString("album")
         }
     }
 
@@ -71,9 +71,9 @@ class MusicBrowserFragment : BaseFragment() {
     private fun initViews() {
         rv_files.layoutManager = LinearLayoutManager(context)
         rv_files.adapter = viewModel.getAdapter()
-        viewModel.audioModels = DataRepository.getMediaStoreEntries(context!!).filter {
-true            //TODO filter them by album name
-        }
+        viewModel.audioModels = DataRepository
+            .getMediaStoreEntries(context!!)
+            .filter { it.album == album }
         viewModel.updateAdapter()
     }
 }
