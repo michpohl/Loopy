@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.storage_browser
 
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -57,7 +57,7 @@ class AlbumBrowserFragment : BaseFragment() {
     }
 
     override fun getTitle(): String {
-        return getString(R.string.appbar_title_album_browser)
+        return getString(R.string.appbar_title_browse_music_library)
     }
 
     private fun initViews() {

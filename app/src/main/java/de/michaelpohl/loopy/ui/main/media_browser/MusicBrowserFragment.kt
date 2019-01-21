@@ -11,7 +11,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.browser.BrowserViewModel
+import de.michaelpohl.loopy.ui.main.storage_browser.BrowserViewModel
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
 //TODO rebuild for audioModels!
@@ -65,7 +65,7 @@ class MusicBrowserFragment : BaseFragment() {
     }
 
     override fun getTitle(): String {
-        return getString(R.string.appbar_title_file_browser)
+        return getString(R.string.appbar_title_browse_music_library)
     }
 
     private fun initViews() {

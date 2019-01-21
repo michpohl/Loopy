@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.storage_browser
 
 import android.app.Application
 import de.michaelpohl.loopy.ui.main.mediabrowser.AlbumBrowserAdapter
