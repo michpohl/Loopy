@@ -27,7 +27,8 @@
     <string name="drawer_subtitle">The easy audio looper</string>
     <string name="nav_btn_browse_music_library">Browse music library</string>
     <string name="nav_btn_browse_phone_storage">Browse phone storage</string>
-    <string name="nav_category_settings">Settings</string>
+    <string name="nav_category_settings">General Settings</string>
     <string name="nav_btn_change_accepted_file_types">Change accepted file types</string>
+    <string name="nav_category_player_settings">Player settings</string>
 
 </resources>

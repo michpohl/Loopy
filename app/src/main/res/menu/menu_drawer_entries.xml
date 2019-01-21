@@ -15,16 +15,22 @@
 
     </group>
 
+    <item android:title="@string/nav_category_player_settings">
+        <menu>
+            <item
+                    android:id="@+id/nav_set_switch_mode"
+                    android:icon="@drawable/ic_menu_send"
+                    android:title="Send"/>
+        </menu>
+    </item>
+
     <item android:title="@string/nav_category_settings">
         <menu>
             <item
                     android:id="@+id/nav_set_filetypes"
                     android:icon="@drawable/ic_menu_share"
                     android:title="@string/nav_btn_change_accepted_file_types"/>
-            <item
-                    android:id="@+id/nav_set_switch_mode"
-                    android:icon="@drawable/ic_menu_send"
-                    android:title="Send"/>
+
         </menu>
     </item>
 

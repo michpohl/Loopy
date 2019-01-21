@@ -28,6 +28,12 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
         <item name="colorAccent">@color/action</item>
+    </style>
+
+    <style name="DrawerTheme">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorControlHighlight">@color/action</item>
+        <item name="colorControlNormal">@color/content_background</item>
 
     </style>
 
