@@ -16,8 +16,8 @@ import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserFragment
 import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserViewModel
+import de.michaelpohl.loopy.ui.main.browser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.HelpFragment
 import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PickFileTypeDialogFragment
@@ -31,7 +31,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
-    AlbumBrowserViewModel.OnItemClickListener, FileBrowserViewModel.OnItemClickListener,
+    BrowserViewModel.OnBrowserActionListener,
     NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -162,6 +162,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         drawer_layout.closeDrawers()
         return true
+    }
+
+    override fun acceptSubmittedSelection() {
+        showPlayerFragmentWithFreshSelection()
     }
 
     private fun handleIntent() {

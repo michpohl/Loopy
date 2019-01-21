@@ -40,7 +40,7 @@ class FileBrowserFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(FileBrowserViewModel::class.java)
         try {
-            viewModel.listener = context as FileBrowserViewModel.OnItemClickListener
+            viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
         } catch (e: Exception) {
             throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }

@@ -11,6 +11,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.browser.BrowserViewModel
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
 //TODO rebuild for audioModels!
@@ -43,12 +44,11 @@ class MusicBrowserFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MusicBrowserViewModel::class.java)
 
-// I can probably throw this away, MusicBrowser has only the checkbox functionality
-//        try {
-//            viewModel.listener = context as MusicBrowserViewModel.OnItemClickListener
-//        } catch (e: Exception) {
-//            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
-//        }
+        try {
+            viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
+        } catch (e: Exception) {
+            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
+        }
         binding.model = viewModel
         initViews()
     }

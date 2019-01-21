@@ -13,7 +13,6 @@ class FileBrowserViewModel(application: Application) : BrowserViewModel(applicat
     private var adapter =
         FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
 
-    lateinit var listener: OnItemClickListener
     lateinit var path: String
 
     fun getAdapter(): FileBrowserAdapter {
@@ -52,9 +51,5 @@ class FileBrowserViewModel(application: Application) : BrowserViewModel(applicat
 
     private fun onItemClicked(fileModel: FileModel) {
         if (fileModel.fileType == FileType.FOLDER) listener.onFolderClicked(fileModel)
-    }
-
-    interface OnItemClickListener {
-        fun onFolderClicked(fileModel: FileModel)
     }
 }

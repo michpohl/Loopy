@@ -8,7 +8,6 @@ class AlbumBrowserViewModel(application: Application) : BrowserViewModel(applica
     private var adapter =
         AlbumBrowserAdapter(this::onItemClicked)
 
-    lateinit var listener: OnItemClickListener
     lateinit var albums: List<String>
 
     fun getAdapter(): AlbumBrowserAdapter {
@@ -24,7 +23,4 @@ class AlbumBrowserViewModel(application: Application) : BrowserViewModel(applica
         listener.onAlbumClicked(albumTitle)
     }
 
-    interface OnItemClickListener {
-        fun onAlbumClicked(albumTitle: String)
-    }
 }

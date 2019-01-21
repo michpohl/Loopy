@@ -38,7 +38,7 @@ class AlbumBrowserFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(AlbumBrowserViewModel::class.java)
         try {
-            viewModel.listener = context as AlbumBrowserViewModel.OnItemClickListener
+            viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
         } catch (e: Exception) {
             throw Exception("${context} should implement AlbumBrowserFragment.OnItemCLickListener")
         }

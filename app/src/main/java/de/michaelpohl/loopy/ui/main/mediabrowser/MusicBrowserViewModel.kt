@@ -12,8 +12,6 @@ class MusicBrowserViewModel(application: Application) : BrowserViewModel(applica
     private var adapter =
         MusicBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
 
-
-//    lateinit var listener: OnItemClickListener
     lateinit var audioModels: List<AudioModel>
 
     fun getAdapter(): MusicBrowserAdapter {
@@ -52,5 +50,4 @@ class MusicBrowserViewModel(application: Application) : BrowserViewModel(applica
     private fun onItemClicked(audioModel: AudioModel) {
         //TODO do something
     }
-
 }
