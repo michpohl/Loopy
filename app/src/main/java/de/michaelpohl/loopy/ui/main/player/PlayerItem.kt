@@ -7,7 +7,6 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
-import timber.log.Timber
 
 class PlayerItem(
     val context: Context,
@@ -36,7 +35,8 @@ class PlayerItem(
     fun bind(model: PlayerItemViewModel) {
         viewModel = model
         binding.model = viewModel
-        inflateWave(itemView.wave, FileHelper.getSingleFile(model.fileModel.path).readBytes())
+//        TODO inflate wave from audio model
+        inflateWave(itemView.wave, FileHelper.getSingleFile(model.audioModel.path).readBytes())
         binding.executePendingBindings()
     }
 

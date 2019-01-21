@@ -18,8 +18,10 @@
     <string name="btn_switching_behaviour_switch_immediately">Switch immediately</string>
     <string name="btn_switching_behaviour_wait_to_finish">Wait until finished</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
+    <string name="appbar_title_album_browser">Browse Albums</string>
     <string name="appbar_title_file_browser">Browse Storage</string>
     <string name="appbar_title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
+    <string name="btn_browse_mediastore">Browse media files</string>
 
 </resources>

@@ -22,6 +22,7 @@
     </style>
 
     <style name="BurgerIcon" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/white</item>
         <item name="spinBars">true</item>
     </style>
 

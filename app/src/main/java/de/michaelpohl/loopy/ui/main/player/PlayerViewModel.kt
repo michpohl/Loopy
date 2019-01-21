@@ -4,15 +4,15 @@ import android.animation.ObjectAnimator
 import android.app.Application
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
+import android.net.Uri
 import android.os.Handler
 import android.view.View
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHelper
-import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
@@ -51,7 +51,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     lateinit var settingsDropDown: WeakReference<View>
     lateinit var fileOptionsDropDown: WeakReference<View>
     lateinit var playerActionsListener: PlayerActionsListener
-    lateinit var loopsList: List<FileModel>
+    lateinit var loopsList: List<AudioModel>
     lateinit var pickFileTypesListener: () -> Unit
 
     fun getAdapter(): LoopsAdapter {
@@ -118,6 +118,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         playerActionsListener.onOpenFileBrowserClicked()
     }
 
+    fun onBrowseMediaStoreClicked(view: View) {
+        toggleFilesDropDown()
+        playerActionsListener.onBrowseMediaStoreClicked()
+    }
+
     fun onOverlayClicked(view: View) {
         closeDropDowns()
     }
@@ -155,9 +160,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
     }
 
-    //TODO beautify, strip notification into extra method in adapter
-    fun onItemSelected(fm: FileModel, position: Int, selectionState: SelectionState) {
-        looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
+    fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
+        Timber.d("Selected item's uri: %s", Uri.parse(audioModel.path))
+        looper.setLoopUri(Uri.parse(audioModel.path))
 
         if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             val oldPosition = adapter.preSelectedPosition
@@ -171,8 +176,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
                 adapter.notifyMultipleItems(arrayOf(oldSelected, adapter.preSelectedPosition, adapter.selectedPosition))
                 adapter.preSelectedPosition = -1
             }
-
-//            }
         } else {
 
             val oldPosition = adapter.selectedPosition
@@ -243,6 +246,8 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     interface PlayerActionsListener {
+
         fun onOpenFileBrowserClicked()
+        fun onBrowseMediaStoreClicked()
     }
 }

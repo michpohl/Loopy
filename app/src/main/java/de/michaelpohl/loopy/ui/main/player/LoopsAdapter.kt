@@ -7,18 +7,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
-import timber.log.Timber
 
 class LoopsAdapter(
     val context: Context,
     private val onProgressChangedByUserListener: (Float) -> Unit
 ) : RecyclerView.Adapter<PlayerItem>() {
 
-    private var loopsList = listOf<FileModel>()
-    var onItemSelectedListener: ((FileModel, Int, SelectionState) -> Unit)? = null
+    private var loopsList = listOf<AudioModel>()
+    var onItemSelectedListener: ((AudioModel, Int, SelectionState) -> Unit)? = null
     private var onProgressUpdatedListener: ((Float) -> Unit)? = null
     var selectedPosition = -1
     var preSelectedPosition = -1
@@ -63,7 +62,7 @@ class LoopsAdapter(
         holder.bind(itemViewModel)
     }
 
-    fun updateData(newList: List<FileModel>) {
+    fun updateData(newList: List<AudioModel>) {
         setLoopsList(newList)
         notifyDataSetChanged()
     }
@@ -90,8 +89,10 @@ class LoopsAdapter(
         onItemSelectedListener?.invoke(loopsList[position], position, itemState)
     }
 
-    private fun setLoopsList(newList: List<FileModel>) {
-        loopsList = newList.sortedWith(compareBy { it.name.toLowerCase() }).filter { it.isValidFileType() }
+    private fun setLoopsList(newList: List<AudioModel>) {
+        loopsList = newList.sortedWith(compareBy { it.name.toLowerCase() })
+        //TODO rebuild filtering with audioModels
+//            .filter { it.isValidFileType() }
     }
 }
 

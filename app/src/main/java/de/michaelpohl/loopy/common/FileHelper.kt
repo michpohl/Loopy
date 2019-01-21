@@ -1,5 +1,8 @@
 package de.michaelpohl.loopy.common
 
+import android.content.Context
+import android.net.Uri
+import timber.log.Timber
 import java.io.File
 
 object FileHelper {
@@ -96,5 +99,43 @@ object FileHelper {
             if (path.endsWith(it)) result = true
         }
         return result
+    }
+
+    fun getPath(context: Context, uri: Uri): String? {
+
+        var filePath: String? = null
+        Timber.d("URI = %s", uri)
+        if (uri != null && "content" == uri.scheme) {
+            val cursor = context.contentResolver
+                .query(uri, arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA), null, null, null)
+            cursor.moveToFirst()
+            filePath = cursor.getString(0)
+            cursor.close()
+        } else {
+            filePath = uri!!.getPath()
+        }
+        Timber.d(
+            "Chosen path = %s", filePath!!
+        )
+        return filePath
+    }
+
+    fun fileModelToAudioModel(fileModel: FileModel) : AudioModel {
+
+        // this just takes the last containing folder and assues it is the album name
+        // this might be wrong if there is metainformation stored in the file. We'll see
+        val albumNameFromFolder: () -> String = {
+            val pathPieces = fileModel.path.split("/")
+            val length = pathPieces.size
+            pathPieces[length - 2]
+        }
+
+        return AudioModel(
+            name = fileModel.name.split(".")[0], //throw away file extension from name
+            album = albumNameFromFolder(),
+            path = fileModel.path,
+            fileExtension = fileModel.extension,
+            isMediaStoreItem = false
+        );
     }
 }

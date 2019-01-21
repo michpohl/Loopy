@@ -132,6 +132,14 @@
                     android:text="@string/btn_browse_storage"/>
 
             <Button
+                    android:id="@+id/btn_browse_mediastore"
+                    style="@style/Button.Borderless"
+                    android:textColor="@color/white"
+                    android:layout_gravity="end"
+                    android:onClick="@{model::onBrowseMediaStoreClicked}"
+                    android:text="@string/btn_browse_mediastore"/>
+
+            <Button
                     android:id="@+id/btn_clear_list"
                     style="@style/Button.Borderless"
                     android:textColor="@color/white"

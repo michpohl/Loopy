@@ -3,11 +3,9 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import android.support.v4.content.FileProvider
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import timber.log.Timber
-import java.io.File
 
 /*
 the concept with two media players comes from here:
@@ -112,13 +110,13 @@ class LoopedPlayer private constructor(context: Context) {
         return currentPlayer.isPlaying
     }
 
-    fun setLoop(context: Context, loop: File) {
+    fun setLoopUri(loopUri: Uri) {
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
-                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
-
+                this.loopUri = loopUri
                 if (hasLoopFile) stop()
+                it.release() //TODO keep an eye on this one
                 initPlayer()
                 if (::onLoopSwitchedListener.isInitialized &&
                     switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
@@ -129,7 +127,8 @@ class LoopedPlayer private constructor(context: Context) {
                 start()
             }
         } else {
-            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+            this.loopUri = loopUri
+
 
             if (hasLoopFile) stop()
             initPlayer()
@@ -149,7 +148,7 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     /**
-     * Moves the players current position to
+     * Moves the player's current position to
      * @param newPosition
      * Since newPosition is basically a percentage value, we can use it to seek to the new position
      * by multiplying it with 1/100th of the file's duration
