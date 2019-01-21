@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
@@ -94,23 +93,7 @@ class PlayerFragment : BaseFragment() {
         return viewModel.closeDropDowns()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_gear -> {
 
-            viewModel.toggleSettingsDropDown()
-            true
-        }
-
-        R.id.action_browser -> {
-
-            viewModel.toggleFilesDropDown()
-            true
-        }
-
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
 
 
 

@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".MainActivity">
-    <!--<item-->
-        <!--android:id="@+id/action_settings"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="fdfds"-->
-        <!--app:showAsAction="never" />-->
 
-    <menu
-            android:orderInCategory="100"
-            app:showAsAction="always"/>
-    <item
-            android:id="@+id/action_help"
-            android:orderInCategory="101"
-            android:title="@string/menu_item_name_help"
-            android:icon="@drawable/ic_help"
-            app:showAsAction="ifRoom"/>
-
-    <item
-            android:id="@+id/action_gear"
-            android:orderInCategory="200"
-            android:title="@string/menu_item_name_settings"
-            android:icon="@drawable/ic_settings"
-
-            app:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/action_browser"
-            android:orderInCategory="300"
-            android:title="@string/menu_item_name_file_browser"
-            android:icon="@drawable/ic_folder"
-            app:showAsAction="ifRoom"/>
-
-    
 </menu>
