@@ -32,5 +32,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 />
 
+        <CheckBox
+                style="@style/WrapContent"
+                android:id="@+id/cb_select"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="invisible"
+                android:clickable="false"
+                android:layout_marginEnd="8dp"/>
+
     </android.support.constraint.ConstraintLayout>
 </layout>

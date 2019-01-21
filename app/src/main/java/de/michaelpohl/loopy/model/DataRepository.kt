@@ -8,7 +8,6 @@ import android.provider.MediaStore
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.*
 import timber.log.Timber
-import java.io.File
 
 object DataRepository {
 
@@ -66,6 +65,7 @@ object DataRepository {
 
     fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {
         //only add the ones that are not already selected
+        newSelection.forEach {it ->  Timber.d("Trying to add AudioModel %s", it.name) }
         newSelectedAudioModels = newSelection
             .filter { model -> !currentSelectedAudioModels.contains(model) }
             .filter { model -> !isSuspectedDuplicate(model) }
@@ -137,7 +137,15 @@ object DataRepository {
         return validModels
     }
 
-    fun handleFileFromIntent(file: File) {
+    fun handleFileFromIntent(uri: Uri) {
+        /*
+            * Get the file's content URI from the incoming Intent,
+            * then query the server app to get the file's display name
+            * and size.
+            */
+
+
+
         //TODO repair
 //        onAudioFileSelectionUpdated(FileHelper.getAudioModelsFromFiles(listOf(file)))
     }

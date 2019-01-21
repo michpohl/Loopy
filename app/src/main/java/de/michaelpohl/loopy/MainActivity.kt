@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -20,12 +22,15 @@ import de.michaelpohl.loopy.ui.main.help.HelpFragment
 import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
-class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener, AlbumBrowserViewModel.OnItemClickListener, FileBrowserViewModel.OnItemClickListener {
+class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
+    AlbumBrowserViewModel.OnItemClickListener, FileBrowserViewModel.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -49,13 +54,23 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             Timber.d("Intent")
             handleIntent()
         }
+        setSupportActionBar(toolbar)
+
+
+        //drawer
+        val toggle = ActionBarDrawerToggle(
+            this, drawer_layout, toolbar, R.string.app_name, R.string.app_name
+        )
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        nav_view.setNavigationItemSelectedListener(this)
 
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
             showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
-        setSupportActionBar(findViewById(R.id.my_toolbar))
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
@@ -90,7 +105,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(menuResourceID, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
@@ -128,9 +143,17 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun handleIntent() {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
+    private fun handleIntent() {
+        Timber.d("Handling intent, maybe...")
         val uri = intent.data
+                Timber.d("My intent's Uri: %s", uri)
+        Timber.d("My intent's path: %s", uri.path)
+
+
         val inputStream = contentResolver.openInputStream(uri)
         val outputFile = File(this.cacheDir, "output.wav")
         val outputStream = FileOutputStream(outputFile)
@@ -139,9 +162,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 input.copyTo(output)
             }
         }
-        DataRepository.handleFileFromIntent(outputFile)
+        DataRepository.onAudioFileSelectionUpdated(
+            DataRepository.getMediaStoreEntries(this).filter { it.path == uri.path })
+
         showPlayerFragmentWithFreshSelection()
     }
+
 
     private fun showPlayerFragment(loops: List<AudioModel> = emptyList(), settings: Settings = Settings()) {
 
