@@ -1,11 +1,10 @@
-package de.michaelpohl.loopy.ui.main.mediabrowser
+package de.michaelpohl.loopy.ui.main.media_browser
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.databinding.ItemAlbumBrowserBinding
 
 class AlbumBrowserAdapter(
@@ -17,9 +16,6 @@ class AlbumBrowserAdapter(
             //sort them a-z
             field = newList.sortedWith(compareBy { it })
         }
-
-    var selectedItems = mutableListOf<FileModel>()
-        private set
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumBrowserItem {
 
@@ -50,7 +46,6 @@ class AlbumBrowserAdapter(
         this.albums = albums
         notifyDataSetChanged()
     }
-
 
     private fun onItemClicked(album: String) {
         onItemClickedListener.invoke(album)

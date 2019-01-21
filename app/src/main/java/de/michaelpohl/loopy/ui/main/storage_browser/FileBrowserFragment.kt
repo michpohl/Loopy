@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.storage_browser
 
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil

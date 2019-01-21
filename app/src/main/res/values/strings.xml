@@ -18,7 +18,7 @@
     <string name="btn_switching_behaviour_switch_immediately">Switch immediately</string>
     <string name="btn_switching_behaviour_wait_to_finish">Wait until finished</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
-    <string name="appbar_title_album_browser">Browse Albums</string>
+    <string name="appbar_title_browse_music_library">Browse Music Library</string>
     <string name="appbar_title_file_browser">Browse Storage</string>
     <string name="appbar_title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
@@ -27,9 +27,12 @@
     <string name="drawer_subtitle">The easy audio looper</string>
     <string name="nav_btn_browse_music_library">Browse music library</string>
     <string name="nav_btn_browse_phone_storage">Browse phone storage</string>
-    <string name="nav_category_settings">General Settings</string>
-    <string name="nav_btn_change_accepted_file_types">Change accepted file types</string>
+    <string name="nav_btn_open_settings">Change app settings</string>
+    <string name="nav_btn_how_to">How to use Loopy</string>
+    <string name="nav_category_settings">Settings</string>
     <string name="nav_category_player_settings">Player settings</string>
-    <string name="btn_open_selection">Open Selection</string>
+    <string name="btn_open_selection">Open selection</string>
+    <string name="nav_category_information">Information</string>
+    <string name="nav_category_find_audio_files">Find audio files</string>
 
 </resources>

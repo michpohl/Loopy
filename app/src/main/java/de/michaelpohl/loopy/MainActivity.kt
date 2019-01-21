@@ -14,15 +14,14 @@ import android.view.MenuItem
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserFragment
-import de.michaelpohl.loopy.ui.main.browser.AlbumBrowserViewModel
-import de.michaelpohl.loopy.ui.main.browser.BrowserViewModel
-import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.help.HelpFragment
-import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
+import de.michaelpohl.loopy.ui.main.media_browser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PickFileTypeDialogFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
+import de.michaelpohl.loopy.ui.main.storage_browser.AlbumBrowserFragment
+import de.michaelpohl.loopy.ui.main.storage_browser.BrowserViewModel
+import de.michaelpohl.loopy.ui.main.storage_browser.FileBrowserFragment
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
@@ -154,14 +153,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 clearBackStack()
                 showFileBrowserFragment()
             }
-            R.id.nav_set_filetypes -> showPickFileTypesDialog()
-            R.id.nav_set_switch_mode -> {
-            }
+            R.id.nav_open_settings -> showPickFileTypesDialog()
+            R.id.nav_help -> showHelpFragment()
+            R.id.nav_about -> showAboutFragment()
             else -> {
             } // do nothing
         }
         drawer_layout.closeDrawers()
-        return true
+        // returning false suppresses the checking of items. We don't need it so we return false
+        return false
     }
 
     override fun acceptSubmittedSelection() {
@@ -249,6 +249,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun showHelpFragment() {
+        val helpFragment = HelpFragment.newInstance()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        currentFragment = helpFragment
+        fragmentTransaction.replace(R.id.container, helpFragment, "help")
+        fragmentTransaction.addToBackStack("help")
+        fragmentTransaction.commit()
+    }
+
+    private fun showAboutFragment() {
         val helpFragment = HelpFragment.newInstance()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment = helpFragment

@@ -22,6 +22,7 @@ open class BaseFragment : Fragment() {
      * Changes the layout resource for the action bar
      * @param resourceID
      */
+    @Deprecated("Probably won't need multiple action bars anymore")
     fun changeActionBarLayout(resourceID: Int) {
 
         // I have to do it this way because apparently this field is not necessarily initialized at onResume()

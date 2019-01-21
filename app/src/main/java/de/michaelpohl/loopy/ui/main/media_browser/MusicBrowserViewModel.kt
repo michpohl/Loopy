@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.mediabrowser
+package de.michaelpohl.loopy.ui.main.media_browser
 
 import android.app.Application
 import android.view.View

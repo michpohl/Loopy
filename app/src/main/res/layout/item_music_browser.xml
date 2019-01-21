@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserItemViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.media_browser.MusicBrowserItemViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

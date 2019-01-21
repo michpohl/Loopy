@@ -4,32 +4,40 @@
       tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-                android:id="@+id/nav_browse_media"
-                android:icon="@drawable/ic_audio"
-                android:title="@string/nav_btn_browse_music_library"/>
-        <item
-                android:id="@+id/nav_browse_storage"
-                android:icon="@drawable/ic_folder"
-                android:title="@string/nav_btn_browse_phone_storage"/>
-
-    </group>
-
-    <item android:title="@string/nav_category_player_settings">
+        <item android:title="@string/nav_category_find_audio_files">
         <menu>
             <item
-                    android:id="@+id/nav_set_switch_mode"
-                    android:icon="@drawable/ic_menu_send"
-                    android:title="Send"/>
+                    android:id="@+id/nav_browse_media"
+                    android:icon="@drawable/ic_audio"
+                    android:title="@string/nav_btn_browse_music_library"/>
+            <item
+                    android:id="@+id/nav_browse_storage"
+                    android:icon="@drawable/ic_folder"
+                    android:title="@string/nav_btn_browse_phone_storage"/>
         </menu>
-    </item>
+        </item>
+    </group>
 
     <item android:title="@string/nav_category_settings">
         <menu>
             <item
-                    android:id="@+id/nav_set_filetypes"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="@string/nav_btn_change_accepted_file_types"/>
+                    android:id="@+id/nav_open_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="sett"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_category_information">
+        <menu>
+            <item
+                    android:id="@+id/nav_help"
+                    android:icon="@drawable/ic_help"
+                    android:title="@string/nav_btn_how_to"/>
+
+            <item
+                    android:id="@+id/nav_about"
+                    android:icon="@drawable/ic_info"
+                    android:title="@string/nav_btn_how_to"/>
 
         </menu>
     </item>

@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.storage_browser
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

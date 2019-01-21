@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.browser.FileBrowserItemViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.storage_browser.FileBrowserItemViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

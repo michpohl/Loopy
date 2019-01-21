@@ -31,8 +31,8 @@
     </style>
 
     <style name="DrawerTheme">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorControlHighlight">@color/action</item>
+        <item name="colorPrimary">@color/content_background</item>
+        <item name="android:colorControlHighlight">@color/white</item>
         <item name="colorControlNormal">@color/content_background</item>
 
     </style>
