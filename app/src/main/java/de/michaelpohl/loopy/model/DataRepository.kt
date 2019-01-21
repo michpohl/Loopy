@@ -28,12 +28,18 @@ object DataRepository {
         this.savedAppData = loadSavedAppData()
         currentSelectedAudioModels = savedAppData.audioModels
         this.settings = savedAppData.settings
+
+        currentSelectedAudioModels.forEach { Timber.d("Loading: %s", it.name) }
     }
 
     fun saveCurrentState(
+
         selectedLoops: List<AudioModel> = this.currentSelectedAudioModels,
         settings: Settings = this.settings
     ) {
+        Timber.d("Current selected Models when saving:")
+        selectedLoops.forEach { Timber.d("%s", it.name) }
+
         val jsonString = Gson().toJson(
             AppData(
                 audioModels = selectedLoops,
@@ -71,7 +77,7 @@ object DataRepository {
             .filter { model -> !isSuspectedDuplicate(model) }
     }
 
-    fun onLoopsListCleared() {
+    fun clearLoopsList() {
         currentSelectedAudioModels = emptyList()
         saveCurrentState()
     }

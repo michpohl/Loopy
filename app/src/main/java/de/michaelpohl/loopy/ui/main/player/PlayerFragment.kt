@@ -14,7 +14,7 @@ import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_player.*
-import java.lang.ref.WeakReference
+import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
@@ -40,6 +40,7 @@ class PlayerFragment : BaseFragment() {
         if (arguments != null) {
             val appData: AppData = arguments!!.getParcelable("appData")
             loopsList = appData.audioModels
+            Timber.d("Loops when starting player: %s", loopsList)
         }
     }
 
@@ -52,19 +53,9 @@ class PlayerFragment : BaseFragment() {
         return binding.root
     }
 
-
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
-        viewModel.loopsList = loopsList
-        viewModel.pickFileTypesListener = { showPickFileTypesDialog() }
-
-        //handing the dropdown layout to the viewModel  as WeakReferences to avoid context leak
-        //the viewModel handles showing and hiding the dropdowns
-        viewModel.fileOptionsDropDown = WeakReference(ll_files_dropdown)
-        viewModel.settingsDropDown = WeakReference(ll_settings_dropdown)
-
         binding.model = viewModel
     }
 
@@ -75,13 +66,7 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-
         loopsList = DataRepository.testIntegrity(loopsList)
-
-        if (changeActionBarLayoutCallBack != null) {
-            changeActionBarLayout(R.menu.menu_main)
-        }
-        //TODO find a nicer way for this
         try {
             viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
         } catch (e: Exception) {
@@ -89,34 +74,20 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    override fun onBackPressed(): Boolean {
-        return viewModel.closeDropDowns()
+    fun updateViewModel() {
+        viewModel.loopsList = DataRepository.currentSelectedAudioModels
+        viewModel.updateData()
     }
-
-
-
-
 
     private fun initAdapter() {
         rv_loops.layoutManager = LinearLayoutManager(context)
-        rv_loops.adapter = viewModel.getAdapter()
         viewModel.loopsList = loopsList
+        rv_loops.adapter = viewModel.getAdapter()
         viewModel.updateData()
 
-        viewModel.getAdapter().onItemSelectedListener = { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
-            viewModel.onItemSelected(a, b, c)
-        }
-    }
-
-    private fun showPickFileTypesDialog() {
-        val dialog = SettingsDialogFragment()
-        dialog.setCurrentSettings(DataRepository.settings)
-        dialog.resultListener = {
-            DataRepository.settings = it
-            DataRepository.saveCurrentState()
-            viewModel.updateData()
-        }
-
-        dialog.show(fragmentManager, "pick-filetypes")
+        viewModel.getAdapter().onItemSelectedListener =
+                { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
+                    viewModel.onItemSelected(a, b, c)
+                }
     }
 }

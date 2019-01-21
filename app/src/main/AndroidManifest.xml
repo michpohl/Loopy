@@ -28,7 +28,7 @@
             <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
 
-            //handles opening the app from file browser
+            <!--handles opening the app from file browser-->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

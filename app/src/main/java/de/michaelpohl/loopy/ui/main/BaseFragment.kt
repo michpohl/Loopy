@@ -10,27 +10,10 @@ import kotlinx.android.synthetic.*
 
 open class BaseFragment : Fragment() {
 
-    var changeActionBarLayoutCallBack: ((Int) -> Unit)? = null
 
     override fun onResume() {
         super.onResume()
         activity?.title = getTitle()
-    }
-
-
-    /**
-     * Changes the layout resource for the action bar
-     * @param resourceID
-     */
-    @Deprecated("Probably won't need multiple action bars anymore")
-    fun changeActionBarLayout(resourceID: Int) {
-
-        // I have to do it this way because apparently this field is not necessarily initialized at onResume()
-        //This is all I can think of right now to solve this
-        // I am sure there's a smarter solution
-        if (changeActionBarLayoutCallBack != null) {
-            changeActionBarLayoutCallBack!!.invoke(resourceID)
-        }
     }
 
     /**

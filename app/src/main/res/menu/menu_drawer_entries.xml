@@ -24,6 +24,11 @@
                     android:id="@+id/nav_open_settings"
                     android:icon="@drawable/ic_settings"
                     android:title="@string/nav_btn_open_settings"/>
+
+            <item
+                    android:id="@+id/nav_clear_player"
+                    android:icon="@drawable/ic_trash"
+                    android:title="@string/nav_btn_clear_current_file_selection"/>
         </menu>
     </item>
 

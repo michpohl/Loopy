@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.storage_browser
+package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -11,36 +11,43 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
-class AlbumBrowserFragment : BaseFragment() {
+//TODO rebuild for audioModels!
 
-    private lateinit var viewModel: AlbumBrowserViewModel
-    private lateinit var binding: FragmentFilesListBinding
-    private lateinit var albums: List<String>
+class MusicBrowserFragment : BaseFragment() {
+
+    private lateinit var viewModel: MusicBrowserViewModel
+    private lateinit var binding: FragmentFilesListBinding //TODO Why not MusicBrowserBinding?
+    private lateinit var album: String
 
     companion object {
 
-        fun newInstance(): AlbumBrowserFragment {
-            return AlbumBrowserFragment()
-
+        fun newInstance(album: String): MusicBrowserFragment {
+            val fragment = MusicBrowserFragment()
+            val args = Bundle()
+            args.putString("album", album)
+            fragment.arguments = args
+            return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO examine non-null assertion!
-        this.albums = DataRepository.getAlbumTitles(context!!)
-
+        if (arguments != null) {
+            album = arguments!!.getString("album")
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(AlbumBrowserViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MusicBrowserViewModel::class.java)
+
         try {
             viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
         } catch (e: Exception) {
-            throw Exception("${context} should implement AlbumBrowserFragment.OnItemCLickListener")
+            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }
         binding.model = viewModel
         initViews()
@@ -48,7 +55,8 @@ class AlbumBrowserFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_files_list, container, false)
-        return binding.root
+        var myView: View = binding.root
+        return myView
     }
 
     override fun onStart() {
@@ -63,7 +71,9 @@ class AlbumBrowserFragment : BaseFragment() {
     private fun initViews() {
         rv_files.layoutManager = LinearLayoutManager(context)
         rv_files.adapter = viewModel.getAdapter()
-        viewModel.albums = albums
+        viewModel.audioModels = DataRepository
+            .getMediaStoreEntries(context!!)
+            .filter { it.album == album }
         viewModel.updateAdapter()
     }
 }

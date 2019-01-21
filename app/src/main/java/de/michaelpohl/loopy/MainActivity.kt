@@ -14,14 +14,14 @@ import android.view.MenuItem
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserFragment
+import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
+import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment
-import de.michaelpohl.loopy.ui.main.media_browser.MusicBrowserFragment
-import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
+import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
-import de.michaelpohl.loopy.ui.main.storage_browser.AlbumBrowserFragment
-import de.michaelpohl.loopy.ui.main.storage_browser.BrowserViewModel
-import de.michaelpohl.loopy.ui.main.storage_browser.FileBrowserFragment
+import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
@@ -122,7 +122,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 clearBackStack()
                 showFileBrowserFragment()
             }
-            R.id.nav_open_settings -> showPickFileTypesDialog()
+            R.id.nav_open_settings -> showSettingsDialog()
+            R.id.nav_clear_player -> clearLoopsList()
             R.id.nav_help -> showMarkupViewerFragment("help.md")
             R.id.nav_about -> showMarkupViewerFragment("about.md")
             else -> {
@@ -164,7 +165,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         val appData = AppData(audioModels = loops, settings = settings)
         val playerFragment = PlayerFragment.newInstance(appData)
         currentFragment = playerFragment
-        playerFragment.changeActionBarLayoutCallBack = { it -> changeActionBar(it) }
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, playerFragment, "player")
             .commit()
@@ -227,15 +227,30 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         fragmentTransaction.commit()
     }
 
-    private fun showPickFileTypesDialog() {
+    private fun showSettingsDialog() {
         val dialog = SettingsDialogFragment()
         dialog.setCurrentSettings(DataRepository.settings)
         dialog.resultListener = {
+            Timber.d("Resultlistener was invoked")
             DataRepository.settings = it
             DataRepository.saveCurrentState()
-//            viewModel.updateData()
+
+            // if we're currently in the player we need to update
+            // immediately for the settings to take effect
+            updatePlayerIfCurrentlyShowing()
         }
-        dialog.show(supportFragmentManager, "pick-filetypes")
+        dialog.show(supportFragmentManager, "settings-dialog")
+    }
+
+    private fun clearLoopsList() {
+        DataRepository.clearLoopsList()
+        updatePlayerIfCurrentlyShowing()
+    }
+
+    private fun updatePlayerIfCurrentlyShowing() {
+        if (currentFragment is PlayerFragment) {
+            (currentFragment as PlayerFragment).updateViewModel()
+        }
     }
 
     private fun clearBackStack() {

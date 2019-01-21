@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.storage_browser
+package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.app.Application
 import android.view.View

@@ -1,11 +1,11 @@
-package de.michaelpohl.loopy.ui.main.media_browser
+package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.app.Application
 import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.ui.main.storage_browser.BrowserViewModel
+import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 
 class MusicBrowserViewModel(application: Application) : BrowserViewModel(application) {
 

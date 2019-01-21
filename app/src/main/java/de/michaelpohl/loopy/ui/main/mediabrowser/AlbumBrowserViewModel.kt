@@ -1,7 +1,7 @@
-package de.michaelpohl.loopy.ui.main.storage_browser
+package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.app.Application
-import de.michaelpohl.loopy.ui.main.media_browser.AlbumBrowserAdapter
+import de.michaelpohl.loopy.ui.main.mediabrowser.AlbumBrowserAdapter
 
 class AlbumBrowserViewModel(application: Application) : BrowserViewModel(application) {
 

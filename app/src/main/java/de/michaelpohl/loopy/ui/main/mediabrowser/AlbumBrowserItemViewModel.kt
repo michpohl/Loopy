@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.media_browser
+package de.michaelpohl.loopy.ui.main.mediabrowser
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
