@@ -15,6 +15,7 @@
         <item name="colorAccent">@color/action</item>
         <item name="android:windowBackground">@color/window_background</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:listDivider">@color/action</item>
     </style>
 
     <style name="FullScreenDialog">

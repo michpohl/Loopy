@@ -23,7 +23,7 @@
             <item
                     android:id="@+id/nav_open_settings"
                     android:icon="@drawable/ic_settings"
-                    android:title="sett"/>
+                    android:title="@string/nav_btn_open_settings"/>
         </menu>
     </item>
 
@@ -37,7 +37,7 @@
             <item
                     android:id="@+id/nav_about"
                     android:icon="@drawable/ic_info"
-                    android:title="@string/nav_btn_how_to"/>
+                    android:title="@string/nav_btn_about"/>
 
         </menu>
     </item>

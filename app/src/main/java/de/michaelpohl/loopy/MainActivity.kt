@@ -14,9 +14,9 @@ import android.view.MenuItem
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.help.HelpFragment
+import de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment
 import de.michaelpohl.loopy.ui.main.media_browser.MusicBrowserFragment
-import de.michaelpohl.loopy.ui.main.player.PickFileTypeDialogFragment
+import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.storage_browser.AlbumBrowserFragment
@@ -73,37 +73,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_help -> {
-            if (currentFragment.tag == "help") {
-                onBackPressed()
-            } else {
-                showHelpFragment()
-            }
-            true
-        }
-
-        R.id.action_gear -> {
-            //handled in PlayerFragment
-            false
-        }
-
-        R.id.action_browser -> {
-            //handled in PlayerFragment
-            false
-        }
-
-        R.id.action_submit -> {
-            // context for this action is one of the BrowserFragments, but we handle it here because we need activity methods
-            showPlayerFragmentWithFreshSelection()
-            false
-        }
-
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -154,13 +123,14 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 showFileBrowserFragment()
             }
             R.id.nav_open_settings -> showPickFileTypesDialog()
-            R.id.nav_help -> showHelpFragment()
-            R.id.nav_about -> showAboutFragment()
+            R.id.nav_help -> showMarkupViewerFragment("help.md")
+            R.id.nav_about -> showMarkupViewerFragment("about.md")
             else -> {
             } // do nothing
         }
         drawer_layout.closeDrawers()
-        // returning false suppresses the checking of items. We don't need it so we return false
+
+        // returning false suppresses the visual checking of clicked items. We don't need it so we return false
         return false
     }
 
@@ -248,26 +218,17 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         changeActionBar(R.menu.menu_file_browser)
     }
 
-    private fun showHelpFragment() {
-        val helpFragment = HelpFragment.newInstance()
+    private fun showMarkupViewerFragment(markupFileName: String) {
+        val helpFragment = MarkupViewerFragment.newInstance(markupFileName)
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         currentFragment = helpFragment
-        fragmentTransaction.replace(R.id.container, helpFragment, "help")
-        fragmentTransaction.addToBackStack("help")
-        fragmentTransaction.commit()
-    }
-
-    private fun showAboutFragment() {
-        val helpFragment = HelpFragment.newInstance()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = helpFragment
-        fragmentTransaction.replace(R.id.container, helpFragment, "help")
-        fragmentTransaction.addToBackStack("help")
+        fragmentTransaction.replace(R.id.container, helpFragment, "markup")
+        fragmentTransaction.addToBackStack("markup")
         fragmentTransaction.commit()
     }
 
     private fun showPickFileTypesDialog() {
-        val dialog = PickFileTypeDialogFragment()
+        val dialog = SettingsDialogFragment()
         dialog.setCurrentSettings(DataRepository.settings)
         dialog.resultListener = {
             DataRepository.settings = it

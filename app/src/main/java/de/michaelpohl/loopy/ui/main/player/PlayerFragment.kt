@@ -126,7 +126,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun showPickFileTypesDialog() {
-        val dialog = PickFileTypeDialogFragment()
+        val dialog = SettingsDialogFragment()
         dialog.setCurrentSettings(DataRepository.settings)
         dialog.resultListener = {
             DataRepository.settings = it
