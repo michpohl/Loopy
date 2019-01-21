@@ -20,6 +20,7 @@ import de.michaelpohl.loopy.ui.main.browser.FileBrowserFragment
 import de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.HelpFragment
 import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
+import de.michaelpohl.loopy.ui.main.player.PickFileTypeDialogFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -30,7 +31,8 @@ import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
-    AlbumBrowserViewModel.OnItemClickListener, FileBrowserViewModel.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+    AlbumBrowserViewModel.OnItemClickListener, FileBrowserViewModel.OnItemClickListener,
+    NavigationView.OnNavigationItemSelectedListener {
 
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -55,7 +57,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             handleIntent()
         }
         setSupportActionBar(toolbar)
-
 
         //drawer
         val toggle = ActionBarDrawerToggle(
@@ -144,15 +145,30 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        when (item.itemId) {
+            R.id.nav_browse_media -> {
+                clearBackStack()
+                showAlbumBrowserFragment()
+            }
+            R.id.nav_browse_storage -> {
+                clearBackStack()
+                showFileBrowserFragment()
+            }
+            R.id.nav_set_filetypes -> showPickFileTypesDialog()
+            R.id.nav_set_switch_mode -> {
+            }
+            else -> {
+            } // do nothing
+        }
+        drawer_layout.closeDrawers()
+        return true
     }
 
     private fun handleIntent() {
         Timber.d("Handling intent, maybe...")
         val uri = intent.data
-                Timber.d("My intent's Uri: %s", uri)
+        Timber.d("My intent's Uri: %s", uri)
         Timber.d("My intent's path: %s", uri.path)
-
 
         val inputStream = contentResolver.openInputStream(uri)
         val outputFile = File(this.cacheDir, "output.wav")
@@ -167,7 +183,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
         showPlayerFragmentWithFreshSelection()
     }
-
 
     private fun showPlayerFragment(loops: List<AudioModel> = emptyList(), settings: Settings = Settings()) {
 
@@ -236,6 +251,17 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         fragmentTransaction.replace(R.id.container, helpFragment, "help")
         fragmentTransaction.addToBackStack("help")
         fragmentTransaction.commit()
+    }
+
+    private fun showPickFileTypesDialog() {
+        val dialog = PickFileTypeDialogFragment()
+        dialog.setCurrentSettings(DataRepository.settings)
+        dialog.resultListener = {
+            DataRepository.settings = it
+            DataRepository.saveCurrentState()
+//            viewModel.updateData()
+        }
+        dialog.show(supportFragmentManager, "pick-filetypes")
     }
 
     private fun clearBackStack() {
