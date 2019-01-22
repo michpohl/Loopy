@@ -51,6 +51,7 @@ class SettingsDialogFragment : DialogFragment() {
         return view
     }
 
+    //TODO whe don't need local variables here we can just use the settings object and avoid some confusion
     fun setCurrentSettings(currentSettings: Settings) {
         this.settings = currentSettings
         this.allowedFileTypes = currentSettings.allowedFileTypes.toMutableList()
@@ -98,12 +99,14 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onToggleShowLoopCountCLicked() {
-        showLoopCount != showLoopCount
+        showLoopCount = !showLoopCount
+
         view?.cb_check_show_loop_count?.isChecked = showLoopCount //does this need error handling?
     }
 
     private fun onOkClicked() {
         settings.allowedFileTypes = allowedFileTypes.toTypedArray()
+        settings.showLoopCount = showLoopCount
         resultListener.invoke(settings)
         dismiss()
     }

@@ -37,6 +37,36 @@
                 tools:text="item"
                 tools:ignore="RtlSymmetry"/>
 
+        <TextView
+                android:id="@+id/tv_loop_count_prefix"
+                style="@style/WrapContent"
+                android:text="@string/loop_count_prefix"
+                android:visibility="@{model.loopsCountVisibility}"
+                android:textAppearance="@style/Text.Standard"
+                android:paddingStart="8dp"
+                android:paddingEnd="4dp"
+                app:layout_constraintStart_toStartOf="@id/tv_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
+
+        <TextView
+                android:id="@+id/tv_loop_count"
+                style="@style/WrapContent"
+                android:textAppearance="@style/Text.Standard"
+                android:text="@{model.loopsCount}"
+                android:visibility="@{model.loopsCountVisibility}"
+                app:layout_constraintStart_toEndOf="@id/tv_loop_count_prefix"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_loop_count_prefix"/>
+
+        <TextView
+                android:id="@+id/tv_loop_count_postfix"
+                style="@style/WrapContent"
+                android:text="@string/loop_count_postfix"
+                android:visibility="@{model.loopsCountVisibility}"
+                android:textAppearance="@style/Text.Standard"
+                android:paddingStart="4dp"
+                app:layout_constraintStart_toEndOf="@id/tv_loop_count"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
+
         <rm.com.audiowave.AudioWaveView
                 android:id="@+id/wave"
                 android:layout_width="match_parent"

@@ -46,5 +46,7 @@
     <string name="settings_label_other_settings">Other settings</string>
     <string name="settings_item_show_loop_count">Show loop count</string>
     <string name="nav_btn_clear_current_file_selection">Clear current file selection</string>
+    <string name="loop_count_prefix">Looped:</string>
+    <string name="loop_count_postfix">times</string>
 
 </resources>

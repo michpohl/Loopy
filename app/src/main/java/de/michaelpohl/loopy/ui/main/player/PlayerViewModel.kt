@@ -71,6 +71,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             looper.hasLoopFile = false
         }
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
+        looper.onLoopedListener = {it -> adapter.onLoopsElapsedChanged(it)}
     }
 
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {

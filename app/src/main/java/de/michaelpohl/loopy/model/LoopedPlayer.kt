@@ -22,11 +22,12 @@ class LoopedPlayer private constructor(context: Context) {
         private set
     var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     lateinit var onLoopSwitchedListener: () -> Unit
+    lateinit var onLoopedListener: (Int) -> Unit
 
     private var mContext: Context? = null
     private var mCounter = 1
     private var shouldBePlaying = false
-    private var loops = 0
+    private var loopsElapsed = 0
 
     lateinit var currentPlayer: MediaPlayer
     private lateinit var nextPlayer: MediaPlayer
@@ -75,8 +76,9 @@ class LoopedPlayer private constructor(context: Context) {
     private fun createNextMediaPlayer() {
         nextPlayer = createMediaPlayer()
         currentPlayer.setNextMediaPlayer(nextPlayer)
-        loops += 1
-        Timber.v("Loop Audio. Looped this file %s times", loops)
+        loopsElapsed += 1
+        Timber.v("Loop Audio. Looped this file %s times", loopsElapsed)
+        if (::onLoopedListener.isInitialized) onLoopedListener.invoke(loopsElapsed) //only do this if we have one. Is this smart?
         currentPlayer.setOnCompletionListener(onCompletionListener)
     }
 
@@ -87,7 +89,7 @@ class LoopedPlayer private constructor(context: Context) {
     fun start() {
         //TODO show user if no file is selected yet
         shouldBePlaying = true
-        loops = 0
+        loopsElapsed = 0
         currentPlayer.start()
         state = PlayerState.PLAYING
     }

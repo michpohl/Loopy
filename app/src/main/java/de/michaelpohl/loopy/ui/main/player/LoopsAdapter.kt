@@ -5,10 +5,12 @@ import android.databinding.DataBindingUtil
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
+import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 
 class LoopsAdapter(
@@ -19,6 +21,7 @@ class LoopsAdapter(
     private var loopsList = listOf<AudioModel>()
     var onItemSelectedListener: ((AudioModel, Int, SelectionState) -> Unit)? = null
     private var onProgressUpdatedListener: ((Float) -> Unit)? = null
+    private var onLoopsElapsedChangedListener: ((Int) -> Unit)? = null
     var selectedPosition = -1
     var preSelectedPosition = -1
 
@@ -43,12 +46,19 @@ class LoopsAdapter(
             this::onProgressChangedByUserListener.invoke()
         )
 
-        //TODO this should be done in the viewmodel, but I don't want to pass the context there. Find a solution
+        //TODO this should be done in the viewmodel, but I don't want to pass the context there. need to find a solution
         if (position == selectedPosition) {
             itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.action)
             itemViewModel.selectedState = PlayerItemViewModel.SelectionState.SELECTED
+
+            //TODO again: DataRepository should have methods for this to make it nicer
+            if (DataRepository.settings.showLoopCount) {
+                itemViewModel.loopsCountVisibility.set(View.VISIBLE)
+            }
+
             itemViewModel.canSeekAudio.set(true)
             onProgressUpdatedListener = { it: Float -> itemViewModel.updateProgress(it) }
+            onLoopsElapsedChangedListener = { it -> itemViewModel.updateLoopsCount(it) }
         } else {
             if (position == preSelectedPosition) {
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.preselected_item)
@@ -65,6 +75,10 @@ class LoopsAdapter(
     fun updateData(newList: List<AudioModel>) {
         setLoopsList(newList)
         notifyDataSetChanged()
+    }
+
+    fun onLoopsElapsedChanged(loopsElapsed: Int) {
+        onLoopsElapsedChangedListener?.invoke(loopsElapsed)
     }
 
     fun updateProgress(position: Float) {
