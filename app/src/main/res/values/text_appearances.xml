@@ -29,6 +29,10 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="Text.HeaderLarge.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Text.SubHeaderLarge">
         <item name="android:textSize">14sp</item>
         <item name="android:textAlignment">viewStart</item>

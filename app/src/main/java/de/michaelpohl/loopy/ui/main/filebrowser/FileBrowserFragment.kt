@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -40,9 +40,9 @@ class FileBrowserFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(FileBrowserViewModel::class.java)
         try {
-            viewModel.listener = context as FileBrowserViewModel.OnItemClickListener
+            viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
         } catch (e: Exception) {
-            throw Exception("${context} should implement FileBrowserFragment.OnItemCLickListener")
+            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }
         binding.model = viewModel
         initViews()

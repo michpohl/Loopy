@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.browser.FileBrowserItemViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserItemViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
-            android:background="@{model.isFolder? @color/content_background : @color/preselected_item}"
+            android:background="@color/content_background"
             android:foreground="?selectableItemBackground"
             android:padding="8dp">
 
@@ -38,6 +38,7 @@
                 android:layout_width="0dp"
                 android:text="@{model.name}"
                 android:layout_marginEnd="8dp"
+                android:textColor="@{model.isFolder? @color/white : @color/action}"
                 android:textAppearance="@style/Text.HeaderLarge"
                 app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
                 app:layout_constraintEnd_toStartOf="@id/cb_select"
@@ -65,12 +66,12 @@
                 android:textAppearance="@style/Text.Standard"
                 app:layout_constraintStart_toEndOf="@id/iv_subfolder_indicator"
                 app:layout_constraintEnd_toEndOf="@id/tv_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_folder"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
 
         <ImageView
             android:id="@+id/iv_subfolder_indicator"
             style="@style/WrapContent"
-            android:tint="@color/window_background"
+            android:tint="@color/action"
             android:src="@drawable/ic_arrow_down"
             android:paddingEnd="8dp"
             android:visibility="@{model.subFolderIndicatorVisibility}"
@@ -82,7 +83,7 @@
         <ImageView
                 android:id="@+id/iv_subfolder_forbidden"
                 style="@style/WrapContent"
-                android:tint="@color/window_background"
+                android:tint="@color/action"
                 android:src="@drawable/ic_forbidden"
                 android:paddingEnd="8dp"
                 android:visibility="@{model.forbiddenSignVisibility}"

@@ -1,31 +1,26 @@
 package de.michaelpohl.loopy.ui.main.player
 
-import android.animation.ObjectAnimator
 import android.app.Application
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
+import android.net.Uri
 import android.os.Handler
 import android.view.View
-import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHelper
-import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.model.LoopedPlayer
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
-import java.lang.ref.WeakReference
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
-    val overlayVisibility = ObservableField(View.GONE)
 
     private var adapter = LoopsAdapter(application, this::onProgressChangedByUser)
     private var updateHandler = Handler()
-    private var filesDropDownDropped = false
-    private var settingsDropDownDropped = false
+
 
     private var updateRunnable = object : Runnable {
         override fun run() {
@@ -40,111 +35,28 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
 
-    var switchBehaviourButtonText = ObservableField(
-        if (DataRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT) {
-            getString(R.string.btn_switching_behaviour_wait_to_finish)
-        } else {
-            getString(R.string.btn_switching_behaviour_switch_immediately)
-        }
-    )
 
-    lateinit var settingsDropDown: WeakReference<View>
-    lateinit var fileOptionsDropDown: WeakReference<View>
     lateinit var playerActionsListener: PlayerActionsListener
-    lateinit var loopsList: List<FileModel>
-    lateinit var pickFileTypesListener: () -> Unit
+    lateinit var loopsList: List<AudioModel>
 
     fun getAdapter(): LoopsAdapter {
         return adapter
     }
 
-    fun toggleFilesDropDown(onlySlideUp: Boolean = false) {
-        // close the other if still open
-        if (settingsDropDownDropped) {
-            slideUp(settingsDropDown.get() ?: return)
-            settingsDropDownDropped = !settingsDropDownDropped
-        }
-
-        if (!filesDropDownDropped && !onlySlideUp) {
-            slideDown(fileOptionsDropDown.get() ?: return)
-        } else {
-            slideUp(fileOptionsDropDown.get() ?: return)
-        }
-        filesDropDownDropped = !filesDropDownDropped
-    }
-
-    fun toggleSettingsDropDown(onlySlideUp: Boolean = false) {
-        // close the other if still open
-        if (filesDropDownDropped) {
-            slideUp(fileOptionsDropDown.get() ?: return)
-            filesDropDownDropped = !filesDropDownDropped
-        }
-
-        if (!settingsDropDownDropped && !onlySlideUp) {
-            slideDown(settingsDropDown.get() ?: return)
-        } else {
-            slideUp(settingsDropDown.get() ?: return)
-        }
-        settingsDropDownDropped = !settingsDropDownDropped
-    }
-
     fun onStartPlaybackClicked(view: View) {
-        Timber.d("Start")
         if (looper.hasLoopFile) startLooper()
     }
 
     fun onStopPlaybackClicked(view: View) {
-        Timber.d("Stop")
         stopLooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
-        Timber.d("Pause")
-        Timber.d("Is looper ready? %s", looper.isReady)
         if (!looper.isReady) return
         if (looper.isPlaying()) {
             looper.pause()
             onPlaybackStopped()
         } else if (looper.state == PlayerState.PAUSED) startLooper()
-    }
-
-    fun onClearListClicked(view: View) {
-        toggleFilesDropDown()
-        loopsList = emptyList()
-        stopLooper()
-        looper.hasLoopFile = false
-        updateData()
-        DataRepository.onLoopsListCleared()
-    }
-
-    fun onBrowseStorageClicked(view: View) {
-        toggleFilesDropDown()
-        playerActionsListener.onOpenFileBrowserClicked()
-    }
-
-    fun onOverlayClicked(view: View) {
-        closeDropDowns()
-    }
-
-    fun onChangeAllowedFileTypesClicked(view: View) {
-        pickFileTypesListener.invoke()
-        closeDropDowns()
-    }
-
-    fun onSwitchingBehaviourToggled(view: View) {
-        var behaviour = DataRepository.settings.switchingLoopsBehaviour
-        if (behaviour == SwitchingLoopsBehaviour.SWITCH) {
-            behaviour = SwitchingLoopsBehaviour.WAIT
-            switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_wait_to_finish))
-        } else {
-            behaviour = SwitchingLoopsBehaviour.SWITCH
-            switchBehaviourButtonText.set(getString(R.string.btn_switching_behaviour_switch_immediately))
-
-            resetPreSelection()
-        }
-        looper.switchingLoopsBehaviour = behaviour
-        DataRepository.settings.switchingLoopsBehaviour = behaviour
-        DataRepository.saveCurrentState()
     }
 
     fun updateData() {
@@ -155,13 +67,16 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         } else {
             emptyMessageVisibility.set(View.VISIBLE)
             clearListButtonVisibility.set(View.GONE)
+            stopLooper()
+            looper.hasLoopFile = false
         }
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
+        looper.onLoopedListener = {it -> adapter.onLoopsElapsedChanged(it)}
     }
 
-    //TODO beautify, strip notification into extra method in adapter
-    fun onItemSelected(fm: FileModel, position: Int, selectionState: SelectionState) {
-        looper.setLoop(getApplication(), FileHelper.getSingleFile(fm.path))
+    fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
+        Timber.d("Selected item's uri: %s", Uri.parse(audioModel.path))
+        looper.setLoopUri(Uri.parse(audioModel.path))
 
         if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
             val oldPosition = adapter.preSelectedPosition
@@ -175,8 +90,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
                 adapter.notifyMultipleItems(arrayOf(oldSelected, adapter.preSelectedPosition, adapter.selectedPosition))
                 adapter.preSelectedPosition = -1
             }
-
-//            }
         } else {
 
             val oldPosition = adapter.selectedPosition
@@ -184,21 +97,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             adapter.notifyMultipleItems(arrayOf(oldPosition, position))
             startLooper()
         }
-    }
-
-    fun closeDropDowns(): Boolean {
-        var foundOpenDropDowns = false
-        if (settingsDropDownDropped) {
-            slideUp(settingsDropDown.get() ?: return false)
-            settingsDropDownDropped = !settingsDropDownDropped
-            foundOpenDropDowns = true
-        }
-        if (filesDropDownDropped) {
-            slideUp(fileOptionsDropDown.get() ?: return false)
-            filesDropDownDropped = !filesDropDownDropped
-            foundOpenDropDowns = true
-        }
-        return foundOpenDropDowns
     }
 
     private fun startLooper() {
@@ -221,7 +119,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun onProgressChangedByUser(newProgress: Float) {
-        Timber.d("New Progress: %s", newProgress)
         looper.changePlaybackPosition(newProgress)
     }
 
@@ -235,19 +132,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         updateHandler.removeCallbacks(updateRunnable)
     }
 
-    private fun slideDown(view: View) {
-        overlayVisibility.set(View.VISIBLE)
-        val mover = ObjectAnimator.ofFloat(view, "translationY", (view.height - 1).toFloat())
-        mover.start()
-    }
-
-    private fun slideUp(view: View) {
-        overlayVisibility.set(View.GONE)
-        val mover = ObjectAnimator.ofFloat(view, "translationY", -(view.height - 1).toFloat())
-        mover.start()
-    }
-
     interface PlayerActionsListener {
+
         fun onOpenFileBrowserClicked()
+        fun onBrowseMediaStoreClicked()
     }
 }

@@ -1,7 +1,10 @@
 *.iml
 .gradle
 /local.properties
+/.idea/*
 /.idea/caches/build_file_checksums.ser
+.idea/codeStyles/Project.xml
+.idea/misc.xml
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
@@ -10,3 +13,5 @@
 /captures
 .externalNativeBuild
 .idea/workspace.xml___jb_tmp___
+.idea/misc.xml
+.idea/assetWizardSettings.xml

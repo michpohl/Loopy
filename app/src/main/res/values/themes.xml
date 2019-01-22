@@ -15,6 +15,7 @@
         <item name="colorAccent">@color/action</item>
         <item name="android:windowBackground">@color/window_background</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:listDivider">@color/action</item>
     </style>
 
     <style name="FullScreenDialog">
@@ -28,6 +29,12 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
         <item name="colorAccent">@color/action</item>
+    </style>
+
+    <style name="DrawerTheme">
+        <item name="colorPrimary">@color/content_background</item>
+        <item name="android:colorControlHighlight">@color/white</item>
+        <item name="colorControlNormal">@color/content_background</item>
 
     </style>
 

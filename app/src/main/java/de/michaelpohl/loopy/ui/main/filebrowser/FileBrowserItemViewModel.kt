@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
@@ -59,7 +59,9 @@ class FileBrowserItemViewModel(
     }
 
     fun onItemClicked(view: View) {
-        if (!FileHelper.isExcludedFolderName(fileModel.path)) {
+        if (fileModel.fileType == FileType.FILE) {
+            onCheckBoxClicked(view)
+        } else if (!FileHelper.isExcludedFolderName(fileModel.path)) {
             onItemClickedListener.invoke(fileModel)
         }
     }

@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.browser
+package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
@@ -8,7 +8,6 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
-import timber.log.Timber
 
 class FileBrowserAdapter(
     private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),

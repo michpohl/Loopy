@@ -3,11 +3,9 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import android.support.v4.content.FileProvider
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import timber.log.Timber
-import java.io.File
 
 /*
 the concept with two media players comes from here:
@@ -19,17 +17,17 @@ class LoopedPlayer private constructor(context: Context) {
     var hasLoopFile = false
     var isReady = false
         private set
-    //TODO change playing, paused into status enum: PAYING,PAUSED,,STOPPED,UNKNOWN
 
     var state = PlayerState.UNKNOWN
         private set
     var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     lateinit var onLoopSwitchedListener: () -> Unit
+    lateinit var onLoopedListener: (Int) -> Unit
 
     private var mContext: Context? = null
     private var mCounter = 1
     private var shouldBePlaying = false
-    private var loops = 0
+    private var loopsElapsed = 0
 
     lateinit var currentPlayer: MediaPlayer
     private lateinit var nextPlayer: MediaPlayer
@@ -78,8 +76,9 @@ class LoopedPlayer private constructor(context: Context) {
     private fun createNextMediaPlayer() {
         nextPlayer = createMediaPlayer()
         currentPlayer.setNextMediaPlayer(nextPlayer)
-        loops += 1
-        Timber.v("Loop Audio. Looped this file %s times", loops)
+        loopsElapsed += 1
+        Timber.v("Loop Audio. Looped this file %s times", loopsElapsed)
+        if (::onLoopedListener.isInitialized) onLoopedListener.invoke(loopsElapsed) //only do this if we have one. Is this smart?
         currentPlayer.setOnCompletionListener(onCompletionListener)
     }
 
@@ -90,7 +89,7 @@ class LoopedPlayer private constructor(context: Context) {
     fun start() {
         //TODO show user if no file is selected yet
         shouldBePlaying = true
-        loops = 0
+        loopsElapsed = 0
         currentPlayer.start()
         state = PlayerState.PLAYING
     }
@@ -113,14 +112,13 @@ class LoopedPlayer private constructor(context: Context) {
         return currentPlayer.isPlaying
     }
 
-    fun setLoop(context: Context, loop: File) {
+    fun setLoopUri(loopUri: Uri) {
 
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
-                Timber.d("Current player completes here!")
-                loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
-
+                this.loopUri = loopUri
                 if (hasLoopFile) stop()
+                it.release() //TODO keep an eye on this one
                 initPlayer()
                 if (::onLoopSwitchedListener.isInitialized &&
                     switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
@@ -131,7 +129,8 @@ class LoopedPlayer private constructor(context: Context) {
                 start()
             }
         } else {
-            loopUri = FileProvider.getUriForFile(context, "com.de.michaelpohl.loopy", loop)
+            this.loopUri = loopUri
+
 
             if (hasLoopFile) stop()
             initPlayer()
@@ -139,18 +138,25 @@ class LoopedPlayer private constructor(context: Context) {
         hasLoopFile = true
     }
 
+    /**
+     * Resets a set preSelection by setting the onCompletionListener back to its standard value
+     */
     fun resetPreSelection() {
-        currentPlayer.setOnCompletionListener(onCompletionListener)
+
+        //no need to do anything if currentPlayer is not initialized yet
+        if (::currentPlayer.isInitialized) {
+            currentPlayer.setOnCompletionListener(onCompletionListener)
+        }
     }
 
     /**
+     * Moves the player's current position to
+     * @param newPosition
      * Since newPosition is basically a percentage value, we can use it to seek to the new position
      * by multiplying it with 1/100th of the file's duration
      */
     fun changePlaybackPosition(newPosition: Float) {
         val unit = currentPlayer.duration / 100
         currentPlayer.seekTo((newPosition * unit).toInt())
-
-
     }
 }

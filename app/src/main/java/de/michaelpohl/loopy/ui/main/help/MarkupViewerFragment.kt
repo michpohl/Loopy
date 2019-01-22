@@ -11,17 +11,29 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentHelpBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import ru.noties.markwon.Markwon
-import timber.log.Timber
 
-class HelpFragment : BaseFragment() {
+class MarkupViewerFragment : BaseFragment() {
 
-    private lateinit var viewModel: HelpViewModel
+    private lateinit var viewModel: MarkupViewerViewModel
     private lateinit var binding: FragmentHelpBinding
+    private lateinit var markupString: String
     private lateinit var textView: TextView
 
     companion object {
-        fun newInstance(): HelpFragment {
-            return HelpFragment()
+        fun newInstance(markupFileName: String): MarkupViewerFragment {
+            val fragment = MarkupViewerFragment()
+            val args = Bundle()
+            args.putString("fileName", markupFileName)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (arguments != null) {
+            val markupFileName = arguments!!.getString("fileName")
+            markupString = getMarkup(markupFileName)
         }
     }
 
@@ -30,35 +42,22 @@ class HelpFragment : BaseFragment() {
         return binding.root
     }
 
-    fun getHelpText(): String {
-        val file = "help.md"
-        return resources.assets.open(file).bufferedReader().use {
-            it.readText()
-        }
-    }
-
-    fun getAboutText(): String {
-        Timber.d("Getting about text")
-        val file = "about.md"
-        return resources.assets.open(file).bufferedReader().use {
+    fun getMarkup(sourceFileName: String): String {
+        return resources.assets.open(sourceFileName).bufferedReader().use {
             it.readText()
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(HelpViewModel::class.java)
-        viewModel.onAboutClickedListener = {
-            Timber.d("Invoked")
-            setContentText(getAboutText()) }
+        viewModel = ViewModelProviders.of(this).get(MarkupViewerViewModel::class.java)
         textView = binding.root.findViewById(R.id.tv_content)
-        setContentText(getHelpText())
+        setContentText(markupString)
         binding.model = viewModel
-
     }
 
     override fun getTitle(): String {
-        return getString(R.string.appbar_title_help)
+        return getString(R.string.appbar_title_player)
     }
 
     private fun setContentText(textContent: String) {

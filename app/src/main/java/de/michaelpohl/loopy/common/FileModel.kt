@@ -3,10 +3,9 @@ package de.michaelpohl.loopy.common
 import android.os.Parcelable
 import de.michaelpohl.loopy.model.DataRepository
 import kotlinx.android.parcel.Parcelize
-import timber.log.Timber
 import java.io.File
 
-//remember this smart solution to get a parcelable from any data class!!
+//remember this smart solution to get a parcelable from any path class!!
 // annotate in the front and implement in the back
 @Parcelize
 data class FileModel(
@@ -30,12 +29,12 @@ data class FileModel(
             var isValid = false
 
             DataRepository.settings.allowedFileTypes.forEach {
-                Timber.d("Testing for: %s", it.suffix)
+//                Timber.d("Testing for: %s", it.suffix)
                 if (name.endsWith(it.suffix)) {
                     isValid = true
-                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
+//                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
                 } else {
-                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
+//                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
                 }
             }
             return isValid

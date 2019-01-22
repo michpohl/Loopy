@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item android:title="@string/nav_category_find_audio_files">
+        <menu>
+            <item
+                    android:id="@+id/nav_browse_media"
+                    android:icon="@drawable/ic_audio"
+                    android:title="@string/nav_btn_browse_music_library"/>
+            <item
+                    android:id="@+id/nav_browse_storage"
+                    android:icon="@drawable/ic_folder"
+                    android:title="@string/nav_btn_browse_phone_storage"/>
+        </menu>
+        </item>
+    </group>
+
+    <item android:title="@string/nav_category_settings">
+        <menu>
+            <item
+                    android:id="@+id/nav_open_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="@string/nav_btn_open_settings"/>
+
+            <item
+                    android:id="@+id/nav_clear_player"
+                    android:icon="@drawable/ic_trash"
+                    android:title="@string/nav_btn_clear_current_file_selection"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_category_information">
+        <menu>
+            <item
+                    android:id="@+id/nav_help"
+                    android:icon="@drawable/ic_help"
+                    android:title="@string/nav_btn_how_to"/>
+
+            <item
+                    android:id="@+id/nav_about"
+                    android:icon="@drawable/ic_info"
+                    android:title="@string/nav_btn_about"/>
+
+        </menu>
+    </item>
+
+</menu>

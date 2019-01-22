@@ -18,8 +18,35 @@
     <string name="btn_switching_behaviour_switch_immediately">Switch immediately</string>
     <string name="btn_switching_behaviour_wait_to_finish">Wait until finished</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
+    <string name="appbar_title_browse_music_library">Browse Music Library</string>
     <string name="appbar_title_file_browser">Browse Storage</string>
     <string name="appbar_title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
+    <string name="btn_browse_mediastore">Browse media files</string>
+    <string name="drawer_header">Loopy Player</string>
+    <string name="drawer_subtitle">Easy audio looping</string>
+    <string name="nav_btn_browse_music_library">Browse music library</string>
+    <string name="nav_btn_browse_phone_storage">Browse phone storage</string>
+    <string name="nav_btn_open_settings">Change app settings</string>
+    <string name="nav_btn_how_to">How to use Loopy</string>
+    <string name="nav_category_settings">Settings</string>
+    <string name="nav_category_player_settings">Player settings</string>
+    <string name="btn_open_selection">Open selection</string>
+    <string name="nav_category_information">Information</string>
+    <string name="nav_category_find_audio_files">Find audio files</string>
+    <string name="nav_btn_about">About this app</string>
+    <string name="dialog_settings_header">Settings</string>
+    <string name="settings_label_loop_switching_behaviour">Loop switching behaviour</string>
+    <string name="settings_item_switch_immediately">Switch immediately</string>
+    <string name="settings_item_wait_until_finished">Wait until finished</string>
+    <string name="settings_label_accepted_file_types">Accepted file types</string>
+    <string name="settings_item_allow_wav">Allow .wav</string>
+    <string name="settings_item_allow_mp3">Allow .mp3</string>
+    <string name="settings_item_allow_ogg">Allow .ogg</string>
+    <string name="settings_label_other_settings">Other settings</string>
+    <string name="settings_item_show_loop_count">Show loop count</string>
+    <string name="nav_btn_clear_current_file_selection">Clear current file selection</string>
+    <string name="loop_count_prefix">Looped:</string>
+    <string name="loop_count_postfix">times</string>
 
 </resources>

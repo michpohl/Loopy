@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.help.HelpViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -19,8 +19,6 @@
                 android:id="@+id/sv_content"
                 style="@style/MatchParent"
                 android:scrollbars="vertical"
-                android:clickable="true"
-                android:onClick="@{model::onAboutClicked}"
                 >
 
             <TextView
@@ -34,18 +32,6 @@
                     />
 
         </ScrollView>
-
-        <Button
-                android:id="@+id/btn_about"
-                style="@style/Button"
-                android:text="@string/btn_about_app"
-                android:onClick="@{model::onAboutClicked}"
-                android:visibility="@{model.buttonVisibility}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"
-                android:elevation="8dp"
-                android:layout_marginBottom="8dp"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

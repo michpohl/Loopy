@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.browser.FileBrowserViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -56,6 +56,16 @@
                 style="@style/Button.Borderless"
                 android:text="@{model.selectButtonText}"
                 android:onClick="@{model.onSelectButtonClicked}"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="@{model.bottomBarVisibility}"
+                app:layout_constraintEnd_toStartOf="@id/btn_submit"/>
+
+        <Button
+                android:id="@+id/btn_submit"
+                style="@style/Button.Borderless"
+                android:text="@string/btn_open_selection"
+                android:onClick="@{model.onSubmitButtonClicked}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:visibility="@{model.bottomBarVisibility}"
                 app:layout_constraintEnd_toEndOf="parent"/>

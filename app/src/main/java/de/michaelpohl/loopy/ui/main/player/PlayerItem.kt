@@ -7,7 +7,6 @@ import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
-import timber.log.Timber
 
 class PlayerItem(
     val context: Context,
@@ -36,25 +35,23 @@ class PlayerItem(
     fun bind(model: PlayerItemViewModel) {
         viewModel = model
         binding.model = viewModel
-        inflateWave(itemView.wave, FileHelper.getSingleFile(model.fileModel.path).readBytes())
+//        TODO inflate wave from audio model
+        inflateWave(itemView.wave, FileHelper.getSingleFile(model.audioModel.path).readBytes())
         binding.executePendingBindings()
     }
 
     private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
         view.setRawData(bytes)
         view.onStopTracking = {
-            Timber.d( "Stop tracking: %s", it)
            viewModel.onProgressChangedByUserTouch(it)
             viewModel.blockUpdatesFromPlayer.set(false)
         }
 
         view.onStartTracking = {
-            Timber.d("Started tracking from: %s", it)
             viewModel.blockUpdatesFromPlayer.set(true)
         }
 
         view.onProgressChanged = {progress, byUser ->
-            Timber.d("Progress set: %s, and it's that user did this", progress)
         }
     }
 }
