@@ -14,12 +14,10 @@ import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import kotlinx.android.synthetic.main.fragment_files_list.*
 
-//TODO rebuild for audioModels!
-
 class MusicBrowserFragment : BaseFragment() {
 
     private lateinit var viewModel: MusicBrowserViewModel
-    private lateinit var binding: FragmentFilesListBinding //TODO Why not MusicBrowserBinding?
+    private lateinit var binding: FragmentFilesListBinding
     private lateinit var album: String
 
     companion object {

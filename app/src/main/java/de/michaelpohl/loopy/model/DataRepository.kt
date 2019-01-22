@@ -71,7 +71,7 @@ object DataRepository {
 
     fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {
         //only add the ones that are not already selected
-        newSelection.forEach {it ->  Timber.d("Trying to add AudioModel %s", it.name) }
+        newSelection.forEach { it -> Timber.d("Trying to add AudioModel %s", it.name) }
         newSelectedAudioModels = newSelection
             .filter { model -> !currentSelectedAudioModels.contains(model) }
             .filter { model -> !isSuspectedDuplicate(model) }
@@ -116,6 +116,10 @@ object DataRepository {
         }
     }
 
+    fun getAllowedFileTypes(): Array<ValidAudioFileType> {
+        return settings.allowedFileTypes
+    }
+
     fun getAllowedFileTypeListAsString(): String {
         val builder = StringBuilder()
         val allowedFileTypes = settings.allowedFileTypes
@@ -149,8 +153,6 @@ object DataRepository {
             * then query the server app to get the file's display name
             * and size.
             */
-
-
 
         //TODO repair
 //        onAudioFileSelectionUpdated(FileHelper.getAudioModelsFromFiles(listOf(file)))
@@ -216,7 +218,7 @@ object DataRepository {
         if (cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-//            val fileUri = cursor.getColumnIndex.(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)
+//            val extension = cursor.getColumnIndex(MediaStore.Audio.Media.)
             val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
             val data2 = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
 
