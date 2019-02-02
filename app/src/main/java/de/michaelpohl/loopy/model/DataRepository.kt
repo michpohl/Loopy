@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 import com.google.gson.Gson
 import de.michaelpohl.loopy.common.*
 import timber.log.Timber
@@ -218,19 +219,18 @@ object DataRepository {
         if (cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-//            val extension = cursor.getColumnIndex(MediaStore.Audio.Media.)
             val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-            val data2 = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-
-            val album2 = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+            val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
             do {
                 val audioId: Long = cursor.getLong(id)
                 val audioTitle: String = cursor.getString(title)
-                val albumName: String = cursor.getString(album2)
+                val albumName: String = cursor.getString(album)
                 val albumData = cursor.getString(data)
                 Timber.d("Music file: %s, %s, %s", audioId, audioTitle, albumName)
-
-                list.add(AudioModel(audioTitle, audioId, albumName, albumData))
+                val c = context.contentResolver
+                val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
+                Timber.d("My file extension is: %s", extension)
+                list.add(AudioModel(audioTitle, audioId, albumName, albumData, extension?: "Lalala"))
             } while (cursor.moveToNext())
         }
         return list
