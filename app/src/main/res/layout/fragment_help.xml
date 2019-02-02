@@ -25,7 +25,8 @@
                     android:id="@+id/tv_content"
                     style="@style/MatchParent"
                     android:textColor="@color/white"
-                    android:textAppearance="@style/Text.Standard"
+                    android:textAppearance="@style/Text.HeaderLarge"
+                    android:text="test"
                     android:layout_margin="8dp"
                     android:paddingBottom="72dp"
 
