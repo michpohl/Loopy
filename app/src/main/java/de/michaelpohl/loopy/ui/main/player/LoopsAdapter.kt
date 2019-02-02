@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
@@ -24,6 +25,8 @@ class LoopsAdapter(
     private var onLoopsElapsedChangedListener: ((Int) -> Unit)? = null
     var selectedPosition = -1
     var preSelectedPosition = -1
+
+    lateinit var dialogHelper: DialogHelper
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerItem {
         val inflater = LayoutInflater.from(parent.context)
@@ -104,9 +107,13 @@ class LoopsAdapter(
         onItemSelectedListener?.invoke(loopsList[position], position, itemState)
     }
 
-    private fun onRemoveItemClicked(position:Int) {
+    private fun onRemoveItemClicked( position: Int) {
+        dialogHelper.requestConfirmation(context.getString(R.string.dialog_remove_loop_header),context.getString(R.string.dialog_remove_loop_content)) { removeItemFromLoopsList(position) }
+    }
+
+    fun removeItemFromLoopsList(itemPosition: Int) {
         val currentLoops = loopsList.toMutableList()
-        currentLoops.removeAt(position)
+        currentLoops.removeAt(itemPosition)
         loopsList = currentLoops
         notifyDataSetChanged()
     }

@@ -54,4 +54,6 @@ class PlayerItem(
         view.onProgressChanged = {progress, byUser ->
         }
     }
+
+
 }

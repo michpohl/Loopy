@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
@@ -82,9 +83,11 @@ class PlayerFragment : BaseFragment() {
     private fun initAdapter() {
         rv_loops.layoutManager = LinearLayoutManager(context)
         viewModel.loopsList = loopsList
-        rv_loops.adapter = viewModel.getAdapter()
-        viewModel.updateData()
+        val adapter = viewModel.getAdapter()
+        adapter.dialogHelper = DialogHelper(activity!!)  //TODO investigate assertion
 
+        rv_loops.adapter = adapter
+        viewModel.updateData()
         viewModel.getAdapter().onItemSelectedListener =
                 { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
                     viewModel.onItemSelected(a, b, c)

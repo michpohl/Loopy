@@ -48,5 +48,9 @@
     <string name="nav_btn_clear_current_file_selection">Clear current file selection</string>
     <string name="loop_count_prefix">Looped:</string>
     <string name="loop_count_postfix">times</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_remove_loop_header">Remove Loop</string>
+    <string name="dialog_remove_loop_content">Dou you want to remove this loop from the selection?</string>
 
 </resources>

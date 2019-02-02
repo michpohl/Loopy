@@ -15,7 +15,7 @@ class PlayerItemViewModel(
     val audioModel: AudioModel,
     private val onItemClickedListener: (Int, SelectionState) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
-    private val onRemoveItemClickedListener: (Int) -> Unit
+    private val onRemoveItemClickedListener: ( Int) -> Unit
 ) : ViewModel() {
 
     val blockUpdatesFromPlayer = ObservableBoolean(false)
@@ -24,6 +24,7 @@ class PlayerItemViewModel(
     val loopsCount = ObservableField<String>("0")
     val loopsCountVisibility = ObservableInt(View.VISIBLE)
     val name = audioModel.name
+
 
     var selectedState = NOT_SELECTED
         set (state) {
