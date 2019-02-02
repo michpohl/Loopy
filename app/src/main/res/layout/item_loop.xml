@@ -84,5 +84,16 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_name"
                 />
 
+        <ImageButton
+                android:id="@+id/btn_remove"
+               style="@style/Button.SmallIcon.NoPadding"
+                android:src="@drawable/ic_delete"
+                android:tint="@color/action"
+                android:paddingLeft="16dp"
+                android:onClick="@{model::onRemoveItemClicked}"
+                android:visibility="@{model.removeButtonVisibility}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_name"/>
+
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -43,7 +43,8 @@ class LoopsAdapter(
             position,
             loopsList[position],
             this::onItemClicked,
-            this::onProgressChangedByUserListener.invoke()
+            this::onProgressChangedByUserListener.invoke(),
+            this::onRemoveItemClicked
         )
 
         //TODO this should be done in the viewmodel, but I don't want to pass the context there. need to find a solution
@@ -101,6 +102,13 @@ class LoopsAdapter(
 
     private fun onItemClicked(position: Int, itemState: SelectionState) {
         onItemSelectedListener?.invoke(loopsList[position], position, itemState)
+    }
+
+    private fun onRemoveItemClicked(position:Int) {
+        val currentLoops = loopsList.toMutableList()
+        currentLoops.removeAt(position)
+        loopsList = currentLoops
+        notifyDataSetChanged()
     }
 
     private fun setLoopsList(newList: List<AudioModel>) {
