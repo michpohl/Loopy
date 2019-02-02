@@ -113,7 +113,7 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun setLoopUri(loopUri: Uri) {
-
+            refreshSwitchingLoopsBehaviour()
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized) {
             currentPlayer.setOnCompletionListener {
                 this.loopUri = loopUri
@@ -158,5 +158,10 @@ class LoopedPlayer private constructor(context: Context) {
     fun changePlaybackPosition(newPosition: Float) {
         val unit = currentPlayer.duration / 100
         currentPlayer.seekTo((newPosition * unit).toInt())
+    }
+
+    //this method is necessary so the user can change the behaviour on the fly
+    private fun refreshSwitchingLoopsBehaviour() {
+        this.switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     }
 }
