@@ -230,7 +230,7 @@ object DataRepository {
                 val c = context.contentResolver
                 val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
                 Timber.d("My file extension is: %s", extension)
-                list.add(AudioModel(audioTitle, audioId, albumName, albumData, extension?: "Lalala"))
+                list.add(AudioModel(audioTitle, audioId, albumName, albumData, extension ?: ""))
             } while (cursor.moveToNext())
         }
         return list
@@ -241,18 +241,9 @@ object DataRepository {
             Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app path")
         var validModels = mutableListOf<AudioModel>()
         restoredAppData.audioModels.forEach {
-            //TODO this is the same as in the validate method! Not necessary
-//            try {
-//                val file = FileHelper.getSingleFile(it.path)
-//                if (file.exists()) {
-//                    Timber.v("File %s exists", file.path)
+
             validModels.add(it)
         }
-//            } catch (e: FileNotFoundException) {
-//                Timber.d("We are in the catch block")
-//                Timber.e(e)
-//            }
-//        }
 
         if (restoredAppData.fileModels.size > validModels.size) {
             Timber.w("Found invalid / nonexisting files - removing")

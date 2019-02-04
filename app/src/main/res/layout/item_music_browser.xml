@@ -32,6 +32,19 @@
                 android:onClick="@{model::onItemClicked}"
                 />
 
+
+
+        <ImageView
+                android:id="@+id/iv_song_icon"
+                style="@style/WrapContent"
+                android:tint="@color/action"
+                android:src="@drawable/ic_audio"
+                android:paddingEnd="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
         <TextView
                 android:id="@+id/tv_name"
                 style="@style/MatchWidth"
@@ -40,7 +53,7 @@
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/white"
                 android:textAppearance="@style/Text.HeaderLarge"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_song_icon"
                 app:layout_constraintEnd_toStartOf="@id/cb_select"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="name"

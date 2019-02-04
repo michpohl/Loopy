@@ -21,6 +21,17 @@
             android:onClick="@{model::onItemClicked}"
             android:padding="8dp">
 
+        <ImageView
+                android:id="@+id/iv_album_icon"
+                style="@style/WrapContent"
+                android:tint="@color/action"
+                android:src="@drawable/ic_album"
+                android:paddingEnd="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
         <TextView
                 android:id="@+id/tv_name"
                 style="@style/MatchWidth"
@@ -29,8 +40,18 @@
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/action"
                 android:textAppearance="@style/Text.HeaderLarge"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+                app:layout_constraintStart_toEndOf="@id/iv_album_icon"/>
+
+        <TextView
+                android:id="@+id/tv_type"
+                style="@style/MatchWidth"
+                android:layout_width="0dp"
+                android:text="Album"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/action"
+                android:textAppearance="@style/Text.Standard"
+                app:layout_constraintStart_toStartOf="@id/tv_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
 
         <CheckBox
                 style="@style/WrapContent"
