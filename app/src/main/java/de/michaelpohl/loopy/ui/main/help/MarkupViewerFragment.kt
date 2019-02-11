@@ -8,14 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.databinding.FragmentHelpBinding
+import de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import kotlinx.android.synthetic.main.fragment_markup_viewer.*
 import ru.noties.markwon.Markwon
 
 class MarkupViewerFragment : BaseFragment() {
 
     private lateinit var viewModel: MarkupViewerViewModel
-    private lateinit var binding: FragmentHelpBinding
+    private lateinit var binding: FragmentMarkupViewerBinding
     private lateinit var markupString: String
     private lateinit var textView: TextView
 
@@ -38,7 +39,7 @@ class MarkupViewerFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_help, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_markup_viewer, container, false)
         return binding.root
     }
 
@@ -54,6 +55,8 @@ class MarkupViewerFragment : BaseFragment() {
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel
+        btn_show_licenses.setOnClickListener{onShowLicensesClicked()}
+
     }
 
     override fun getTitle(): String {
@@ -62,5 +65,22 @@ class MarkupViewerFragment : BaseFragment() {
 
     private fun setContentText(textContent: String) {
         Markwon.setMarkdown(textView, textContent)
+    }
+
+     fun onShowLicensesClicked(){
+//        val attributionPresenter = AttributionPresenter.Builder(context)
+//            .addAttributions(
+//                Attribution.Builder("AttributionPresenter")
+//                    .addCopyrightNotice("Copyright 2017 Francisco José Montiel Navarro")
+//                    .addLicense(License.APACHE)
+//                    .setWebsite("https://github.com/franmontiel/AttributionPresenter")
+//                    .build()
+//            )
+//            .addAttributions(
+//                Library.GSON,
+//               LoopyLibrary.BUTTER_KNIFE
+//            )
+//            .build()
+//            attributionPresenter.showDialog("")
     }
 }
