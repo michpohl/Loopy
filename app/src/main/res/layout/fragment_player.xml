@@ -30,7 +30,7 @@
         <TextView
                 android:id="@+id/tv_empty_message"
                 style="@style/MatchWidth"
-                android:text="You have no loops selected. Click on &quot;Find Loops&quot; to browse your phone's storage"
+                android:text="@string/player_empty_message"
                 android:gravity="center"
 
                 android:visibility="@{model.emptyMessageVisibility}"

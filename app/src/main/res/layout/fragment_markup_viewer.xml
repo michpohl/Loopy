@@ -40,7 +40,7 @@
         <Button
                 android:id="@+id/btn_show_licenses"
                style="@style/Button"
-                android:text="Show licenses"
+                android:text="@string/btn_show_licenses"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
