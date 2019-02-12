@@ -47,4 +47,6 @@
     <string name="btn_deselect_all">Auswahl zurücksetzen</string>
     <string name="btn_show_licenses">Lizenzen zeigen</string>
     <string name="album">Album</string>
+    <string name="dialog_clear_list_header">Liste leeren</string>
+    <string name="dialog_clear_list_content">Möchtest du wirklich die Liste der Loops im Plyer leeren?</string>
 </resources>

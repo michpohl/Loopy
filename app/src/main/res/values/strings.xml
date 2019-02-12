@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Loopy Audio Looper</string>
-    <string name="title_activity_splash" translatable="false">SplashActivity</string>
     <string name="preference_file_key" translatable="false">de.michaelpohl.loopy</string>
     <string name="prefs_loops_key" translatable="false">loops_list</string>
     <string name="message_empty_folder">This folder contains no playable audio files!</string>
@@ -50,5 +49,7 @@
     <string name="btn_show_licenses">Show licenses</string>
     <string name="player_empty_message">You have no loops selected. Click on \"Find Loops\" to browse your phone\'s storage</string>
     <string name="album">Album</string>
+    <string name="dialog_clear_list_header">Clear List</string>
+    <string name="dialog_clear_list_content">Do you really want to clear the player\'s loops list?</string>
 
 </resources>

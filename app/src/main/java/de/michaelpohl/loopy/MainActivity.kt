@@ -243,8 +243,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun clearLoopsList() {
-        DataRepository.clearLoopsList()
-        updatePlayerIfCurrentlyShowing()
+
+        val dialogHelper = DialogHelper(this)
+        dialogHelper.requestConfirmation(
+            getString(R.string.dialog_clear_list_header),
+            getString(R.string.dialog_clear_list_content)
+        ) {
+            DataRepository.clearLoopsList()
+            updatePlayerIfCurrentlyShowing()
+        }
     }
 
     private fun updatePlayerIfCurrentlyShowing() {
