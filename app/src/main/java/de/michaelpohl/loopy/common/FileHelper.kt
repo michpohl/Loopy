@@ -112,7 +112,7 @@ object FileHelper {
             filePath = cursor.getString(0)
             cursor.close()
         } else {
-            filePath = uri!!.getPath()
+            filePath = uri.path
         }
         Timber.d(
             "Chosen path = %s", filePath!!
@@ -136,6 +136,6 @@ object FileHelper {
             path = fileModel.path,
             fileExtension = fileModel.extension,
             isMediaStoreItem = false
-        );
+        )
     }
 }

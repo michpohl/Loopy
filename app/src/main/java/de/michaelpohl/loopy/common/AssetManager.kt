@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.common
 
 import java.util.*
 
-class AssetManager() {
+class AssetManager {
 
 
     val ABOUT_FILE_NAME = "about_"
