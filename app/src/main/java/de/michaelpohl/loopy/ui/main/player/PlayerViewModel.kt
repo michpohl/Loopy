@@ -105,7 +105,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         looper.start()
     }
 
-    private fun stopLooper() {
+    fun stopLooper() {
         if (!looper.isReady) return
         if (looper.state == PlayerState.PLAYING || looper.state == PlayerState.PAUSED) {
             looper.stop()

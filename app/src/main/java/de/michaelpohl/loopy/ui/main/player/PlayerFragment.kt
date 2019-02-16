@@ -81,10 +81,16 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        DataRepository.saveCurrentState(viewModel.loopsList)
-//    }
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopLooper()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        DataRepository.saveCurrentState(viewModel.loopsList)
+    }
 
     fun updateViewModel() {
         loopsList = DataRepository.currentSelectedAudioModels
