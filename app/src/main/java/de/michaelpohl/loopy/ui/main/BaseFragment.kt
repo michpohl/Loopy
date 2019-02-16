@@ -1,10 +1,6 @@
 package de.michaelpohl.loopy.ui.main
 
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.view.View
-import android.widget.TextView
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
 
@@ -27,23 +23,6 @@ open class BaseFragment : Fragment() {
 
     open fun getTitle(): String {
         return getString(R.string.appbar_title_player)
-    }
-
-    //TODO snackBar maker is WIP
-    fun showSnackbar(view: View, message: String, clickListener: View.OnClickListener? = null) {
-        //Snackbar(view)
-        val snackbar = Snackbar.make(
-            view, message,
-            Snackbar.LENGTH_LONG
-        ).setAction("Action", clickListener)
-        snackbar.setActionTextColor(ContextCompat.getColor(context!!, R.color.darkest_green))
-        val snackbarView = snackbar.view
-        snackbarView.setBackgroundColor(ContextCompat.getColor(context!!, R.color.action))
-        val textView =
-            snackbarView.findViewById(android.support.design.R.id.snackbar_text) as TextView
-        textView.setTextColor(ContextCompat.getColor(context!!, R.color.white))
-        textView.textSize = 28f
-        snackbar.show()
     }
 
     /**

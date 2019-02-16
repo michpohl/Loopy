@@ -24,9 +24,12 @@ class PlayerFragment : BaseFragment() {
     private lateinit var loopsList: List<AudioModel>
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
+    lateinit var onResumeListener: (PlayerFragment) -> Unit
 
     companion object {
-        fun newInstance(appData: AppData): PlayerFragment {
+        fun newInstance(
+            appData: AppData
+        ): PlayerFragment {
             val fragment = PlayerFragment()
             val args = Bundle()
             args.putParcelable("appData", appData)
@@ -67,6 +70,8 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        //can be not initialized when rotating. We'll just live with it for now
+        if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
         loopsList = DataRepository.testIntegrity(loopsList)
         try {
             viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
@@ -75,7 +80,13 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        DataRepository.saveCurrentState(viewModel.loopsList)
+//    }
+
     fun updateViewModel() {
+        loopsList = DataRepository.currentSelectedAudioModels
         viewModel.loopsList = DataRepository.currentSelectedAudioModels
         viewModel.updateData()
     }
@@ -89,8 +100,8 @@ class PlayerFragment : BaseFragment() {
         rv_loops.adapter = adapter
         viewModel.updateData()
         viewModel.getAdapter().onItemSelectedListener =
-                { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
-                    viewModel.onItemSelected(a, b, c)
-                }
+            { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
+                viewModel.onItemSelected(a, b, c)
+            }
     }
 }

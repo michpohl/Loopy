@@ -215,7 +215,6 @@ object DataRepository {
             sortOrder
         )
 
-        //TODO total renaming for niceness
         if (cursor.moveToFirst()) {
             val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
             val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)

@@ -14,7 +14,7 @@ class PlayerItem(
 ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener,
     View.OnLongClickListener {
 
-    lateinit var  viewModel: PlayerItemViewModel
+    lateinit var viewModel: PlayerItemViewModel
     var selected = false
 
     init {
@@ -36,14 +36,17 @@ class PlayerItem(
         viewModel = model
         binding.model = viewModel
 //        TODO inflate wave from audio model
-        inflateWave(itemView.wave, FileHelper.getSingleFile(model.audioModel.path).readBytes())
+        //prevent directorys from tring to get rendered should they show up here.
+        if (!FileHelper.getSingleFile(model.audioModel.path).isDirectory) {
+            inflateWave(itemView.wave, FileHelper.getSingleFile(model.audioModel.path).readBytes())
+        }
         binding.executePendingBindings()
     }
 
     private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
         view.setRawData(bytes)
         view.onStopTracking = {
-           viewModel.onProgressChangedByUserTouch(it)
+            viewModel.onProgressChangedByUserTouch(it)
             viewModel.blockUpdatesFromPlayer.set(false)
         }
 
@@ -51,9 +54,7 @@ class PlayerItem(
             viewModel.blockUpdatesFromPlayer.set(true)
         }
 
-        view.onProgressChanged = {progress, byUser ->
+        view.onProgressChanged = { progress, byUser ->
         }
     }
-
-
 }

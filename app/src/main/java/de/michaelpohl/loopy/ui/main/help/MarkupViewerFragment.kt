@@ -91,8 +91,7 @@ class MarkupViewerFragment : BaseFragment() {
             .addAttributions(
                 Library.AUDIOGRAM.attribution,
                 Library.GSON.attribution,
-                Library.MARKWON.attribution,
-                Library.TIMBER.attribution
+                Library.MARKWON.attribution
             )
             .addAttributions(
                 Attribution.Builder("AttributionPresenter")

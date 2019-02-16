@@ -60,7 +60,9 @@ class FileBrowserAdapter(
     }
 
     fun selectAll() {
-        selectedItems.addAll(filesList)
+
+        //filtering folders out because this adds everything that is displayed which is wrong
+        selectedItems.addAll(filesList.filter {it.fileType == FileType.FILE})
         notifyDataSetChanged()
     }
 

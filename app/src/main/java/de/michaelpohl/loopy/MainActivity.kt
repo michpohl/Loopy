@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
@@ -107,6 +108,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
             super.onBackPressed()
         }
+        supportFragmentManager.popBackStack()
         if (supportFragmentManager.backStackEntryCount == 0) {
 //            finish()
         }
@@ -145,6 +147,30 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         showPlayerFragmentWithFreshSelection()
     }
 
+    fun showSnackbar(
+        view: View,
+        messageResource: Int,
+        lenght: Int = Snackbar.LENGTH_SHORT,
+        backgroundColorResource: Int? = R.color.action
+
+    ) {
+        val snackbar = Snackbar.make(
+            view,
+            getString(messageResource),
+            lenght
+        )
+        snackbar.view.setBackgroundColor(ContextCompat.getColor(this, backgroundColorResource!!))
+        snackbar.show()
+    }
+
+    /**
+     * this gets called in PlayerFragment's onResume() to make sure it always is the currentFragment
+     * when it is open. That is necessary for some functionality and this way is a convenient shortcut
+     */
+    fun updateCurrentFragment(fragment: PlayerFragment) {
+        currentFragment = fragment
+    }
+
     private fun handleIntent() {
         Timber.d("Handling intent, maybe...")
         val uri = intent.data
@@ -171,6 +197,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         val appData = AppData(audioModels = loops, settings = settings)
         val playerFragment = PlayerFragment.newInstance(appData)
         currentFragment = playerFragment
+        playerFragment.onResumeListener = this::updateCurrentFragment
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, playerFragment, "player")
             .commit()
@@ -183,13 +210,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             showPlayerFragment(DataRepository.currentSelectedAudioModels, DataRepository.settings)
             true
         } else {
-            val snackbar = Snackbar.make(
-                container,
-                getString(R.string.snackbar_text_no_new_files_selected),
-                Snackbar.LENGTH_LONG
-            )
-            snackbar.view.setBackgroundColor(ContextCompat.getColor(this, R.color.action))
-            snackbar.show()
+            showSnackbar(container, R.string.snackbar_text_no_new_files_selected)
         }
     }
 //    TODO refactor all the show() methods into something generic
@@ -249,14 +270,19 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun clearLoopsList() {
+        if (currentFragment is PlayerFragment) {
 
-        val dialogHelper = DialogHelper(this)
-        dialogHelper.requestConfirmation(
-            getString(R.string.dialog_clear_list_header),
-            getString(R.string.dialog_clear_list_content)
-        ) {
-            DataRepository.clearLoopsList()
-            updatePlayerIfCurrentlyShowing()
+            val dialogHelper = DialogHelper(this)
+            dialogHelper.requestConfirmation(
+                getString(R.string.dialog_clear_list_header),
+                getString(R.string.dialog_clear_list_content)
+            ) {
+                DataRepository.clearLoopsList()
+                updatePlayerIfCurrentlyShowing()
+            }
+        } else {
+
+            showSnackbar(container, R.string.snackbar_cant_clear_loops)
         }
     }
 
