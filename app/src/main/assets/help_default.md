@@ -24,7 +24,7 @@ If you click on *Change app settings* in the drawer menu you find a number of op
 
 #### Loop switching behaviour
 
-The standard mode *Switch immediately* lets you switch between loops just by clicking on them. If you use *Wait until finished* the player will preselect the loop you want to switch you, but wait until the current one is completely played before starting the next one.
+The standard mode *Switch immediately* lets you switch between loops just by clicking on them. If you use *Wait until finished* the player will preselect the loop you want to switch to, but wait until the current one is completely played before starting the next one.
 
 #### Accepted file types
 

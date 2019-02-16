@@ -1,38 +1,37 @@
 ## Loopy verwenden
 
-Loopy is a simple audio player that lets you loop any audio files you have on your phone. You can search your media library, but it also comes with a file browser, in case you want to search your device's storage.
+Loopy ist ein einfacher Audiplayer, mit dem Du Audiodateien loopen kannst, die du auf deinem Gerät hast. Du kannst die Medienbibliothek durchsuchen, oder Loopys eingebauten Dateibrowser verwenden.
 
-### Getting started
+### Einstieg
 
-At this point, Loopy does not come with any sound files, so if you open the pp for the first time you will be greeted by an empty player window. Click the menu icon in the top left corner and choose either *Browse music library* or *Browse phone storage*, depending on where you want to look for audio files. 
+Zur Zeit hat Loopy keine vorinstallierten Audiodateien, das heisst, beim ersten Öffnen findest Du ein leeres Player-Fenster vor. Klicke auf das Menü-Icon oben links und suche entweder in der Medienbibliothek oder dem Gerätespeicher nach Audiodateien.
 
-### Selecting audio files
+### Audiodateien auswählen
+Audiodateien, die Loopy abspielen kann, haben eine Checkbox am rechten Rand. Wähle alle aus, die Du laden möchtest (oder klicke auf "Alle auswählen" um alle zu laden) und klicke auf "Auswahl öffnen".
 
-Inside albums/folders, audio tracks Loopy can play will have a little checkbox to the right. Mark the ones you like (or click *Select all* to mark everything) and click *Open selecetion* to add them to your player selection.
+### Loops abspielen
 
-### Playing loops
+Klicke auf den Loop den Du abspielen möchtest. Dieser wird ausgewählt und der Player startet. Mit den Buttons am unteren Rand kannst Du das Abspielen pausieren (hält an der aktuellen Position) oder stoppen (Hält sn und setzt die Position zurück auf Anfang). Es ist auch möglich, zu einer bestimmten Position zu springen, indem Du die Position auf der Waveform zur gewünschten Stelle schiebst.
 
-Click on the loop you want to play. It will be highlighted and immediately start to play. You can use the controls at the bottom to pause (Halting playback at the current position in the track) or stop (Complete stop and reset to the beginning) the playback. It is also possible scan to a certain position by just swiping inside the selected loop's waveform to your desired position.
+### Loops aus dem Player entfernen
 
-### Removing loops from the player
+Du kannst Loops auf dener Auswahl entfernen, indem Du das "X" auf der rechten Seite drückst. Im Menü findest Du ausserdem die Option "Aktuelle Auswahl entfernen", um das Player-Fenster zu leeren.
 
-In the drawer menu you will find the option *Clear current file selection*. Click this to clean up your player window. 
+### Einstellungen
 
-### Settings
+Klicke auf "App-Einstellungen ändern", um die Einstellungen zu öffnen:
 
-If you click on *Change app settings* in the drawer menu you find a number of options to customize Loopy to your needs:
+#### Verhalten beim Wechseln
 
-#### Loop switching behaviour
+Der Standardmodus "Sofot wechseln" schaltet sofort zum nächsten Loop, wenn man darauf klickt. Wenn Du "Bis zum Ende spielen" verwendest, wird der Player den nächsten Loop vorauswählen, aber erst starten, wenn der aktuelle zu Ende gelaufen ist.
 
-The standard mode *Switch immediately* lets you switch between loops just by clicking on them. If you use *Wait until finished* the player will preselect the loop you want to switch you, but wait until the current one is completely played before starting the next one.
+#### Akzeptierte Dateitypen
 
-#### Accepted file types
+Dieses Feature funktioniert akltuell nur, wenn der Dateibrowser verwendet wird. Wenn Du nur Audiodateien eines bestimmten Typs angezeigt bekommen möchtest, kannst Du das hier einstellen.
 
-This feature currently only works when browsing the phone's storage. If you want to only pick audio files of a certain type, you can uncheck the unwanted ones here, so the file browser won't show them to you.
+#### Loop-Zähler anzeigen
 
-#### Show loop count
-
-If you activate this option, a counter will show you how often the loop currently playing has already been repeated. If you switch to another loop, the counter will be reset.
+Ist diese Option aktiviert, wird ein Zähler eingeblendet, der anzeigt, wie oft der aktuelle Loop bereits gespielt wurde. Beim Umschalten auf einen anderen Loop wird der Zähler zurückgesetzt.
 
 
 
