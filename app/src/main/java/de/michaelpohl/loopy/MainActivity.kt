@@ -124,8 +124,14 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             }
             R.id.nav_open_settings -> showSettingsDialog()
             R.id.nav_clear_player -> clearLoopsList()
-            R.id.nav_help -> showMarkupViewerFragment("help.md")
-            R.id.nav_about -> showMarkupViewerFragment("about.md")
+            R.id.nav_help -> {
+                val am = AssetManager()
+                showMarkupViewerFragment(am.getHelpTextResource())
+            }
+            R.id.nav_about -> {
+                val am = AssetManager()
+                showMarkupViewerFragment(am.getAboutTextResource())
+            }
             else -> {
             } // do nothing
         }
