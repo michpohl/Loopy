@@ -107,14 +107,22 @@ class LoopsAdapter(
         onItemSelectedListener?.invoke(loopsList[position], position, itemState)
     }
 
-    private fun onRemoveItemClicked( position: Int) {
-        dialogHelper.requestConfirmation(context.getString(R.string.dialog_remove_loop_header),context.getString(R.string.dialog_remove_loop_content)) { removeItemFromLoopsList(position) }
+    private fun onRemoveItemClicked(position: Int) {
+        dialogHelper.requestConfirmation(
+            context.getString(R.string.dialog_remove_loop_header),
+            context.getString(R.string.dialog_remove_loop_content)
+        ) { removeItemFromLoopsList(position) }
     }
 
     fun removeItemFromLoopsList(itemPosition: Int) {
         val currentLoops = loopsList.toMutableList()
         currentLoops.removeAt(itemPosition)
         loopsList = currentLoops
+
+        // if we delete an item that is higher up in the list we have to move the selected/ preselected
+        // items up to make up for the missing item. otherwise the player gets confused.
+        if (itemPosition < selectedPosition) selectedPosition -= 1
+        if (itemPosition < preSelectedPosition) preSelectedPosition -= 1
         notifyDataSetChanged()
     }
 
