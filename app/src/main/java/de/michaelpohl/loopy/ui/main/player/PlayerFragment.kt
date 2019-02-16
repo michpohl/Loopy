@@ -70,7 +70,8 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        //can be not initialized when rotating. We'll just live with it for now
+        //TODO can be not initialized when rotating. We'll just live with it for now
+        //TODO we'll have to deal with that though!
         if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
         loopsList = DataRepository.testIntegrity(loopsList)
         try {
