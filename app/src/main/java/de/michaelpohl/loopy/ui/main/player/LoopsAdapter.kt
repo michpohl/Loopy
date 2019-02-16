@@ -58,6 +58,9 @@ class LoopsAdapter(
             //TODO again: DataRepository should have methods for this to make it nicer
             if (DataRepository.settings.showLoopCount) {
                 itemViewModel.loopsCountVisibility.set(View.VISIBLE)
+            } else {
+                itemViewModel.loopsCountVisibility.set(View.GONE)
+
             }
 
             itemViewModel.canSeekAudio.set(true)
@@ -68,6 +71,7 @@ class LoopsAdapter(
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.preselected_item)
                 itemViewModel.selectedState = SelectionState.PRESELECTED
             } else {
+                itemViewModel.loopsCountVisibility.set(View.GONE)
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.content_background)
                 itemViewModel.selectedState = PlayerItemViewModel.SelectionState.NOT_SELECTED
             }
