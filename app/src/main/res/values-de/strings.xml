@@ -10,7 +10,7 @@
     <string name="settings_item_allow_wav">.wav erlauben</string>
     <string name="settings_item_allow_ogg">.ogg erlauben</string>
     <string name="settings_item_allow_mp3">.mp3 erlauben</string>
-    <string name="player_empty_message">Du hast keine Loops ausgewählt. Klicke auf Loops finden, um Dein Gerät zu durchsuchen.</string>
+    <string name="player_empty_message">Du hast keine Loops ausgewählt. Öffne das Menü und wähle einen der Wege, Dein Gerät zu durchsuchen.</string>
     <string name="ok">OK</string>
     <string name="nav_category_settings">Einstellungen</string>
     <string name="nav_category_player_settings">Player-Einstellungen</string>
@@ -45,8 +45,11 @@
     <string name="btn_select_all">Alles auswählen</string>
     <string name="btn_open_selection">Auswahl öffnen</string>
     <string name="btn_deselect_all">Auswahl zurücksetzen</string>
-    <string name="btn_show_licenses">Lizenzen zeigen</string>
+    <string name="btn_show_libraries_info">Bibliotheken anzeigen</string>
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Liste leeren</string>
     <string name="dialog_clear_list_content">Möchtest du wirklich die Liste der Loops im Plyer leeren?</string>
+    <string name="dialog_licenses_title">Verwendete Bibliotheken</string>
+    <string name="dialog_loopy_license_title">App-Informationen</string>
+    <string name="btn_show_app_info">App-Infos anzeigen</string>
 </resources>

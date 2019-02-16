@@ -46,10 +46,13 @@
     <string name="cancel">Cancel</string>
     <string name="dialog_remove_loop_header">Remove Loop</string>
     <string name="dialog_remove_loop_content">Dou you want to remove this loop from the selection?</string>
-    <string name="btn_show_licenses">Show licenses</string>
-    <string name="player_empty_message">You have no loops selected. Click on \"Find Loops\" to browse your phone\'s storage</string>
+    <string name="btn_show_libraries_info">Show Libraries</string>
+    <string name="player_empty_message">You have no loops selected. Open the menu and select one of the options to browse your phone\\\'s storage</string>
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Clear List</string>
     <string name="dialog_clear_list_content">Do you really want to clear the player\'s loops list?</string>
+    <string name="dialog_licenses_title">Libraries used in this app</string>
+    <string name="dialog_loopy_license_title">App Information</string>
+    <string name="btn_show_app_info">Show App Info</string>
 
 </resources>

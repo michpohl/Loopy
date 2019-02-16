@@ -59,7 +59,8 @@ class MarkupViewerFragment : BaseFragment() {
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel
-        btn_show_licenses.setOnClickListener{onShowLicensesClicked()}
+        btn_show_app_license.setOnClickListener{onShowAppInfoClicked()}
+        btn_show_licenses.setOnClickListener{onShowDependencyLicensesClicked()}
 
     }
 
@@ -71,8 +72,28 @@ class MarkupViewerFragment : BaseFragment() {
         Markwon.setMarkdown(textView, textContent)
     }
 
-     fun onShowLicensesClicked(){
+    fun onShowAppInfoClicked(){
         val attributionPresenter = Builder(context)
+
+            .addAttributions(
+                Attribution.Builder("Loopy Audio Looper")
+                    .addCopyrightNotice("Copyright 2019 Michael Pohl")
+                    .addLicense(License.APACHE)
+                    .setWebsite("https://github.com/michpohl/loopy")
+                    .build()
+            )
+            .build()
+        attributionPresenter.showDialog(getString(R.string.dialog_loopy_license_title))
+    }
+
+     fun onShowDependencyLicensesClicked(){
+        val attributionPresenter = Builder(context)
+            .addAttributions(
+                Library.AUDIOGRAM.attribution,
+                Library.GSON.attribution,
+                Library.MARKWON.attribution,
+                Library.TIMBER.attribution
+            )
             .addAttributions(
                 Attribution.Builder("AttributionPresenter")
                     .addCopyrightNotice("Copyright 2017 Francisco José Montiel Navarro")
@@ -80,10 +101,7 @@ class MarkupViewerFragment : BaseFragment() {
                     .setWebsite("https://github.com/franmontiel/AttributionPresenter")
                     .build()
             )
-            .addAttributions(
-                Library.GSON.attribution
-            )
             .build()
-            attributionPresenter.showDialog("")
+            attributionPresenter.showDialog(getString(R.string.dialog_licenses_title))
     }
 }
