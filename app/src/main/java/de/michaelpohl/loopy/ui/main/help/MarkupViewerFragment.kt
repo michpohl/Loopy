@@ -7,7 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.franmontiel.attributionpresenter.AttributionPresenter.Builder
+import com.franmontiel.attributionpresenter.entities.Attribution
+import com.franmontiel.attributionpresenter.entities.License
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.Library
 import de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_markup_viewer.*
@@ -68,19 +72,18 @@ class MarkupViewerFragment : BaseFragment() {
     }
 
      fun onShowLicensesClicked(){
-//        val attributionPresenter = AttributionPresenter.Builder(context)
-//            .addAttributions(
-//                Attribution.Builder("AttributionPresenter")
-//                    .addCopyrightNotice("Copyright 2017 Francisco José Montiel Navarro")
-//                    .addLicense(License.APACHE)
-//                    .setWebsite("https://github.com/franmontiel/AttributionPresenter")
-//                    .build()
-//            )
-//            .addAttributions(
-//                Library.GSON,
-//               LoopyLibrary.BUTTER_KNIFE
-//            )
-//            .build()
-//            attributionPresenter.showDialog("")
+        val attributionPresenter = Builder(context)
+            .addAttributions(
+                Attribution.Builder("AttributionPresenter")
+                    .addCopyrightNotice("Copyright 2017 Francisco José Montiel Navarro")
+                    .addLicense(License.APACHE)
+                    .setWebsite("https://github.com/franmontiel/AttributionPresenter")
+                    .build()
+            )
+            .addAttributions(
+                Library.GSON.attribution
+            )
+            .build()
+            attributionPresenter.showDialog("")
     }
 }
