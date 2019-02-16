@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.d("onCreate")
         super.onCreate(savedInstanceState)
 
         //Timber logging on when Debugging
@@ -71,6 +72,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
             showPlayerFragment(DataRepository.currentSelectedAudioModels)
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume in activity")
+        if (!::currentFragment.isInitialized) {
+            currentFragment = StateHelper.currentFragment?: BaseFragment() //why this?
         }
     }
 
@@ -168,6 +176,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
      * when it is open. That is necessary for some functionality and this way is a convenient shortcut
      */
     fun updateCurrentFragment(fragment: PlayerFragment) {
+        Timber.d("Putting Playerfragment back into place")
         currentFragment = fragment
     }
 
@@ -196,7 +205,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         //TODO this method can be better - handling what's in AppData should completely move into DataRepository
         val appData = AppData(audioModels = loops, settings = settings)
         val playerFragment = PlayerFragment.newInstance(appData)
+        Timber.d("currentFragment should get assigned")
         currentFragment = playerFragment
+        StateHelper.currentFragment = currentFragment
         playerFragment.onResumeListener = this::updateCurrentFragment
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, playerFragment, "player")
@@ -270,8 +281,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun clearLoopsList() {
+        if (!::currentFragment.isInitialized) {
+           showSnackbar(container, R.string.snackbar_error_message)
+            return
+        }
         if (currentFragment is PlayerFragment) {
-
+            Timber.d("We say it's initialized")
             val dialogHelper = DialogHelper(this)
             dialogHelper.requestConfirmation(
                 getString(R.string.dialog_clear_list_header),

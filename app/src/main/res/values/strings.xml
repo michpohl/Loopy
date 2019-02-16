@@ -55,5 +55,6 @@
     <string name="dialog_loopy_license_title">App Information</string>
     <string name="btn_show_app_info">Show App Info</string>
     <string name="snackbar_cant_clear_loops">Can\'t clear loops while not in the player!</string>
+    <string name="snackbar_error_message">An error occured. Really sorry! Please let the developer know so he can fix it for you!</string>
 
 </resources>
