@@ -8,6 +8,6 @@ Loopy is not an audio editor, so the loops you want to use should already be pre
 
 If you use Loopy's "Wait until finished" you can use Loopy as a very simple live composition tool. It allows you to pre-select what loop to switch to after the current one finishes, so with a prepared set of loops you can put them together on-the-fly.
 
-Loopy is written with joy in Kotlin. 
+Loopy is written with joy in Kotlin. The min SDK version is 21.
 
 Find the app in the Google Play Store or just check out this repository and compile it yourself using Android studio or whichever way you like.
