@@ -48,7 +48,7 @@
     <string name="btn_show_libraries_info">Bibliotheken anzeigen</string>
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Liste leeren</string>
-    <string name="dialog_clear_list_content">Möchtest du wirklich die Liste der Loops im Plyer leeren?</string>
+    <string name="dialog_clear_list_content">Möchtest du wirklich die Liste der Loops im Player leeren?</string>
     <string name="dialog_licenses_title">Verwendete Bibliotheken</string>
     <string name="dialog_loopy_license_title">App-Informationen</string>
     <string name="btn_show_app_info">App-Infos anzeigen</string>
