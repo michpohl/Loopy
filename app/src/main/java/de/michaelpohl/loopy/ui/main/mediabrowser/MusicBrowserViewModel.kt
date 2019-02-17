@@ -24,7 +24,7 @@ class MusicBrowserViewModel(application: Application) : BrowserViewModel(applica
         } else {
             emptyFolderLayoutVisibility.set(View.INVISIBLE)
         }
-        if (audioModels.size > 1) {
+        if (audioModels.size > 0) {
             bottomBarVisibility.set(View.VISIBLE)
         } else bottomBarVisibility.set(View.INVISIBLE)
         adapter.updateData(audioModels)
