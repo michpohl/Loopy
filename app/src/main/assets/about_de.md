@@ -5,3 +5,11 @@ Loopy kann Audiodateien nicht bearbeiten, das heisst wenn Du exakte Ergebnisse b
 Wenn Du Loopys "Bis zum Ende spielen"-Option verwendest, kannst du es als sehr einfaches Live-Kompositionstool verwenden. Sie erlaubt dir, vorauszuwählen, welcher Loop nach dem Ende des aktuellen abgespielt wird. Mit einem vorbereiteten Set von Loops kannst du diese dann "on the fly" zusammensetzen.
 
 Loopy ist freie Open-Source Software und wird unter der Apache 2.0 Lizenz veröffentlicht. Wenn du die Lizenz lesen oder den Quellcode anschauen möchtest, klicke bitte auf "App-Infos anzeigen", und dann entweder auf die Lizenz oder den App-Title, um den jeweiligen Link im Browser zu öffnen. Klicke auf "Bibliotheken anzeigen", um zu sehen, welche anderen Bibliotheken diese App verwendet.
+
+### Über den Entwickler
+
+Loopy wurde entwickelt von Michael Pohl, Künstler und Softwareentwickler aus Berlin. Hier kannst du mich erreichen: contact@michaelpohl.de
+
+### Datenschutzerklärung
+
+Diese App erhebt, speichert oder überträgt keinerlei personenbezogenen Daten.
