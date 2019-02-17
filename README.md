@@ -1,9 +1,13 @@
-# Loopy
-### Android app written in Kotlin to manage and play audio loops
-It's only purpose is to provide a solution to those who just want to play audio files in loop, like DJs, artists, musicians, who can use this for easy training sessions, to provide gapless background atmosphere or play neverending beat loops. It is not the only app capable of this, but it is the one I made :-)
+# Loopy Audio Looper
 
-NOTE: There is no in-app editing or anything like that, so if you need exact loop files, you should prepare them elsewhere! It's not an audio editor. Loopy can only handle the playback.
+Copyright 2019 Michael Pohl
 
-This is a work in progress right now, but it can be used already. Just pull the repository and build it to your phone using Android Studio or your preferred method. 
+Loopy is an audio player dedicated to seamlessly looping audio files. It can basically loop every audio file you have in your media library.
 
-Usage is simple: Browse your phone's folders and pick audio files. Then play them from the player view and they'll loop seamlessly. It's capable of playing back .wav, .mp3 and .ogg files so far. 
+Loopy is not an audio editor, so the loops you want to use should already be prepared and edited properly, if you need exact results. It's purpose is to provide a solution to those who just want to play audio files in loop, like DJs, artists, musicians, who can use this for easy training sessions, to provide gapless background atmosphere or play neverending beat loops. I am sure it is not the only app capable of this, but it is the one I made :-)
+
+If you use Loopy's "Wait until finished" you can use Loopy as a very simple live composition tool. It allows you to pre-select what loop to switch to after the current one finishes, so with a prepared set of loops you can put them together on-the-fly.
+
+Loopy is written with joy in Kotlin. 
+
+Find the app in the Google Play Store or just check out this repository and compile it yourself using Android studio or whichever way you like.
