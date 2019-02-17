@@ -2,7 +2,7 @@
 
 Copyright 2019 Michael Pohl
 
-Loopy is an audio player dedicated to seamlessly looping audio files. It can basically loop every audio file you have in your media library.
+Loopy is an audio player for Android devices dedicated to seamlessly looping audio files. It can basically loop every audio file you have in your media library.
 
 Loopy is not an audio editor, so the loops you want to use should already be prepared and edited properly, if you need exact results. It's purpose is to provide a solution to those who just want to play audio files in loop, like DJs, artists, musicians, who can use this for easy training sessions, to provide gapless background atmosphere or play neverending beat loops. I am sure it is not the only app capable of this, but it is the one I made :-)
 
