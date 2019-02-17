@@ -7,3 +7,11 @@ If you use Loopy's "Wait until finished" you can use Loopy as a very simple live
 
 Loopy is free and open source. It is released under the Apache 2.0 License. 
 If you want to read the license or check out the source code please click "Show App Info", and then either on the license or the app title to open the link in your browser. Click on "Show Libraries" to see which other Libraries are used by this app.
+
+### About the developer
+
+Loopy is developed by Michael Pohl, artist and software developer living in Berlin. If you want to reach me: contact@michaelpohl.de
+
+### Privacy Policy
+
+This app does not collect, store or transfer any personal data at all.

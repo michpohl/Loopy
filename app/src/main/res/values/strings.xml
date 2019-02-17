@@ -17,8 +17,8 @@
     <string name="appbar_title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
     <string name="btn_browse_mediastore">Browse media files</string>
-    <string name="drawer_header">Loopy Player</string>
-    <string name="drawer_subtitle">Easy audio looping</string>
+    <string name="drawer_header">Loopy Audio Looper</string>
+    <string name="drawer_subtitle">"Version: "</string>
     <string name="nav_btn_browse_music_library">Browse music library</string>
     <string name="nav_btn_browse_phone_storage">Browse device storage</string>
     <string name="nav_btn_open_settings">Change app settings</string>
