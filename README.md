@@ -11,3 +11,12 @@ If you use Loopy's "Wait until finished" you can use Loopy as a very simple live
 Loopy is written with joy in Kotlin. The min SDK version is 21.
 
 Find the app in the Google Play Store or just check out this repository and compile it yourself using Android studio or whichever way you like.
+
+### License
+Copyright 2019 Michael Pohl
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
