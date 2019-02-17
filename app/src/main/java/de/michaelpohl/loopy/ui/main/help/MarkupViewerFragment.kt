@@ -19,6 +19,7 @@ import ru.noties.markwon.Markwon
 
 class MarkupViewerFragment : BaseFragment() {
 
+    private var showButtons = false
     private lateinit var viewModel: MarkupViewerViewModel
     private lateinit var binding: FragmentMarkupViewerBinding
     private lateinit var markupString: String
@@ -38,6 +39,7 @@ class MarkupViewerFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             val markupFileName = arguments!!.getString("fileName")
+            showButtons = markupFileName.contains("about")
             markupString = getMarkup(markupFileName)
         }
     }
@@ -59,8 +61,15 @@ class MarkupViewerFragment : BaseFragment() {
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel
+        if (showButtons) {
+
         btn_show_app_license.setOnClickListener{onShowAppInfoClicked()}
         btn_show_licenses.setOnClickListener{onShowDependencyLicensesClicked()}
+
+        } else {
+            btn_show_app_license.visibility = View.GONE
+            btn_show_licenses.visibility = View.GONE
+        }
 
     }
 
