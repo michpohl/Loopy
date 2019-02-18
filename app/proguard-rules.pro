@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#-keep class de.michaelpohl.loopy.common.AppData{ <fields>; }
+#-keep class de.michaelpohl.loopy.common.Settings{ <fields>; }
+#-keep class de.michaelpohl.loopy.common.AudioModel{ <fields>; }
+#-keep class de.michaelpohl.loopy.common.FileModel{ <fields>; }
+-dontobfuscate
+#-keep class kotlin.Metadata { *; }

@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class AppData(
-    val fileModels: List<FileModel> = listOf(),
-    val audioModels: List<AudioModel> = listOf(),
-    val settings: Settings
+    @JvmField val fileModels: List<FileModel> = listOf(),
+    @JvmField val audioModels: List<AudioModel> = listOf(),
+    @JvmField val settings: Settings
 ) : Parcelable

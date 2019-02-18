@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         super.onCreate(savedInstanceState)
 
         //Timber logging on when Debugging
-        if (BuildConfig.DEBUG) {
+//        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }
+//        }
 
         DataRepository.init(
             getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
