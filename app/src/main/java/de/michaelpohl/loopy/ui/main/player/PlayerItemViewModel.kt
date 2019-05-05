@@ -57,7 +57,7 @@ class PlayerItemViewModel(
     fun updateProgress(newProgress: Float) {
         var safeProgress = newProgress
 //        since we only want values in between 0 and 100, we're safeguarding the value here
-        Timber.d("Updating Progress: $newProgress")
+        Timber.d("gress: $newProgress")
         when (newProgress) {
             in Float.MIN_VALUE..0F -> safeProgress = 0F
             in 100F..Float.MAX_VALUE -> safeProgress = 100F

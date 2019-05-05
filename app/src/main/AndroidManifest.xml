@@ -55,6 +55,7 @@
                     android:resource="@xml/provider_paths"/>
         </provider>
 
+        <service android:name=".model.PlayerService" />
     </application>
 
 </manifest>
