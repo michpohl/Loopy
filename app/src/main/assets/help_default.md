@@ -35,4 +35,12 @@ This feature currently only works when browsing the phone's storage. If you want
 If you activate this option, a counter will show you how often the loop currently playing has already been repeated. If you switch to another loop, the counter will be reset.
 
 
+#### Keep Screen on
+
+This option keeps the screen on while Loopy is being used.
+
+#### Play in Background
+
+Use this option to define whether or not Loopy should keep playing while in background or when the screen turns off.
+
 

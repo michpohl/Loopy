@@ -33,5 +33,12 @@ Dieses Feature funktioniert akltuell nur, wenn der Dateibrowser verwendet wird. 
 
 Ist diese Option aktiviert, wird ein Zähler eingeblendet, der anzeigt, wie oft der aktuelle Loop bereits gespielt wurde. Beim Umschalten auf einen anderen Loop wird der Zähler zurückgesetzt.
 
+#### Bildschirm nicht ausschalten
+
+Ist diese Option aktiviert, bleibt der Bildschirm an, während Loopy benutzt wird.
+
+#### Im Hintergrund spielen
+
+Mit dieser Option spielt Loopy weiter, wenn die App im Hintergrund oder der Bildschirm ausgeschaltet ist.
 
 
