@@ -19,6 +19,7 @@ class SettingsDialogFragment : DialogFragment() {
     private lateinit var settings: Settings
     private lateinit var allowedFileTypes: MutableList<ValidAudioFileType>
     private var showLoopCount: Boolean = false
+
     lateinit var resultListener: (Settings) -> Unit
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,6 +35,8 @@ class SettingsDialogFragment : DialogFragment() {
         view.cb_check_ogg.isChecked = allowedFileTypes.contains(ValidAudioFileType.OGG)
 
         view.cb_check_show_loop_count.isChecked = showLoopCount
+        view.cb_check_keep_screen_on.isChecked = settings.keepScreenOn
+        view.cb_check_play_in_background.isChecked = settings.playInBackground
 
         view.rb_switch_immediately.setOnClickListener { onSwitchImmediatelyClicked() }
         view.rb_wait_until_finished.setOnClickListener { onWaitUntilFinishedClicked() }
@@ -43,10 +46,11 @@ class SettingsDialogFragment : DialogFragment() {
         view.cb_check_ogg.setOnClickListener { onCheckBoxOggClicked() }
 
         view.cb_check_show_loop_count.setOnClickListener { onToggleShowLoopCountCLicked() }
+        view.cb_check_keep_screen_on.setOnClickListener { onToggleKeepScreenOnClicked() }
+        view.cb_check_play_in_background.setOnClickListener { onTogglePlayInBackgroundClicked() }
 
         view.btn_ok.setOnClickListener { onOkClicked() }
         view.btn_cancel.setOnClickListener { onCancelClicked() }
-
 
         return view
     }
@@ -102,6 +106,14 @@ class SettingsDialogFragment : DialogFragment() {
         showLoopCount = !showLoopCount
 
         view?.cb_check_show_loop_count?.isChecked = showLoopCount //does this need error handling?
+    }
+
+    private fun onToggleKeepScreenOnClicked() {
+        settings.keepScreenOn = !settings.keepScreenOn
+    }
+
+    private fun onTogglePlayInBackgroundClicked() {
+        settings.playInBackground = ! settings.playInBackground
     }
 
     private fun onOkClicked() {

@@ -104,7 +104,9 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun pause() {
-        currentPlayer.pause()
+        if (::currentPlayer.isInitialized) {
+            currentPlayer.pause()
+        }
         state = PlayerState.PAUSED
     }
 
@@ -113,7 +115,7 @@ class LoopedPlayer private constructor(context: Context) {
     }
 
     fun setLoopUri(loopUri: Uri) {
-            refreshSwitchingLoopsBehaviour()
+        refreshSwitchingLoopsBehaviour()
         if (switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && ::currentPlayer.isInitialized && isPlaying()) {
             currentPlayer.setOnCompletionListener {
                 this.loopUri = loopUri

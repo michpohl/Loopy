@@ -52,7 +52,7 @@
                 android:text="@{model.name}"
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/white"
-                android:textAppearance="@style/Text.HeaderLarge"
+                android:textAppearance="@style/Text.SubHeaderLarge"
                 app:layout_constraintStart_toEndOf="@id/iv_song_icon"
                 app:layout_constraintEnd_toStartOf="@id/cb_select"
                 app:layout_constraintTop_toTopOf="parent"

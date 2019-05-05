@@ -106,7 +106,7 @@ object DataRepository {
      * @return The AppData object from SharedPreferences or a new one, if none exists
      */
     private fun loadSavedAppData(): AppData {
-        val warnString = "warning" //this can be done better :-)
+        val warnString = "warning" //TODO this can be done better :-)
         val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
 
         return if (jsonString != "warning") {
@@ -146,17 +146,6 @@ object DataRepository {
 //            }
         }
         return validModels
-    }
-
-    fun handleFileFromIntent(uri: Uri) {
-        /*
-            * Get the file's content URI from the incoming Intent,
-            * then query the server app to get the file's display name
-            * and size.
-            */
-
-        //TODO repair
-//        onAudioFileSelectionUpdated(FileHelper.getAudioModelsFromFiles(listOf(file)))
     }
 
     fun getAlbumTitles(context: Context): MutableList<String> {
@@ -251,6 +240,7 @@ object DataRepository {
                 settings = restoredAppData.settings
             )
         }
+        Timber.d("restoredAppData-Settings: ${restoredAppData.settings}")
         return restoredAppData
     }
 }

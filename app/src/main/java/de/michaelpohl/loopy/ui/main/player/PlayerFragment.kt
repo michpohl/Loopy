@@ -113,6 +113,9 @@ class PlayerFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
+        if (!DataRepository.settings.playInBackground) {
+            pausePlayback()
+        }
     }
 
     override fun onDestroy() {
@@ -125,6 +128,10 @@ class PlayerFragment : BaseFragment() {
         loopsList = DataRepository.currentSelectedAudioModels
         viewModel.loopsList = DataRepository.currentSelectedAudioModels
         viewModel.updateData()
+    }
+
+    fun pausePlayback() {
+        playerServiceBinder?.pause()
     }
 
     private fun initAdapter() {
@@ -147,11 +154,14 @@ class PlayerFragment : BaseFragment() {
         if (playerServiceBinder == null) {
             val intent = Intent(activity, PlayerService::class.java)
             // Below code will invoke serviceConnection's onServiceConnected method.
+            activity!!.startService(
+               intent
+            )
             activity!!.bindService(
                 intent,
                 serviceConnection,
                 BIND_AUTO_CREATE
-            ) //TODO check if activity is always there
+            )
             viewModel.looper = playerServiceBinder
             Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
         }
