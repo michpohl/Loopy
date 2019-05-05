@@ -10,29 +10,32 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.model.LoopedPlayer
+import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
+import timber.log.Timber
 
 class PlayerViewModel(application: Application) : BaseViewModel(application) {
-
 
     private var adapter = LoopsAdapter(application, this::onProgressChangedByUser)
     private var updateHandler = Handler()
 
     private var updateRunnable = object : Runnable {
         override fun run() {
-            adapter.updateProgress(looper.getCurrentPosition())
+            looper?.getCurrentPosition()?.let {
+                adapter.updateProgress(it)
+            }
             updateHandler.postDelayed(this, 40)
         }
     }
 
     var isPlaying = ObservableBoolean(false)
-    var looper: LoopedPlayer = LoopedPlayer.create(application)
+    //    var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
 
+    var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
     lateinit var loopsList: List<AudioModel>
 
@@ -41,7 +44,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStartPlaybackClicked(view: View) {
-        if (looper.hasLoopFile) startLooper()
+        looper?.let {
+            if (it.getHasLoopFile()) startLooper()
+        }
     }
 
     fun onStopPlaybackClicked(view: View) {
@@ -49,11 +54,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onPausePlaybackClicked(view: View) {
-        if (!looper.isReady) return
-        if (looper.isPlaying()) {
-            looper.pause()
-            onPlaybackStopped()
-        } else if (looper.state == PlayerState.PAUSED) startLooper()
+        looper?.let {
+
+            if (!it.isReady()) return
+            if (it.isPlaying()) {
+                it.pause()
+                onPlaybackStopped()
+            } else if (it.getState() == PlayerState.PAUSED) startLooper()
+        }
     }
 
     fun updateData() {
@@ -65,66 +73,81 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
             emptyMessageVisibility.set(View.VISIBLE)
             clearListButtonVisibility.set(View.GONE)
             stopLooper()
-            looper.hasLoopFile = false
+            looper?.setHasLoopFile(false)
         }
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
-        looper.onLoopedListener = { it -> adapter.onLoopsElapsedChanged(it) }
+        looper?.setOnLoopedListener { elapsed -> adapter.onLoopsElapsedChanged(elapsed) }
     }
 
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
-        looper.setLoopUri(Uri.parse(audioModel.path))
+        Timber.d("onItemSelected. Selectionstate: $selectionState, position: $position")
+        looper?.let {
+            Timber.d("I seem to have a looper")
+            it.setLoopUri(Uri.parse(audioModel.path))
+            Timber.d("Setting uri to: ${audioModel.path}")
+            // when just looping the looper sets a new listener to repeat the loop automatically
+            // in WAIT mode (and only while playing) we replace the onLoopSwitchedListener with a different one to switch to the preselected loop
+            if (selectionState == SelectionState.PRESELECTED && it.getSwitchingLoopsBehaviour() == SwitchingLoopsBehaviour.WAIT && it.isPlaying()) {
+                val oldPosition = adapter.preSelectedPosition
+                adapter.preSelectedPosition = position
+                adapter.notifyMultipleItems(arrayOf(oldPosition, position))
 
-        // when just looping the looper sets a new listener to repeat the loop automatically
-        // in WAIT mode (and only while playing) we replace the onLoopSwitchedListener with a different one to switch to the preselected loop
-        if (selectionState == SelectionState.PRESELECTED && looper.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT && looper.isPlaying()) {
-            val oldPosition = adapter.preSelectedPosition
-            adapter.preSelectedPosition = position
-            adapter.notifyMultipleItems(arrayOf(oldPosition, position))
+                it.setOnLoopSwitchedListener {
+                    val oldSelected = adapter.selectedPosition
+                    adapter.selectedPosition = adapter.preSelectedPosition
 
-            looper.onLoopSwitchedListener = {
-                val oldSelected = adapter.selectedPosition
-                adapter.selectedPosition = adapter.preSelectedPosition
+                    adapter.notifyMultipleItems(
+                        arrayOf(
+                            oldSelected,
+                            adapter.preSelectedPosition,
+                            adapter.selectedPosition
+                        )
+                    )
+                    adapter.preSelectedPosition = -1
+                }
 
-                adapter.notifyMultipleItems(arrayOf(oldSelected, adapter.preSelectedPosition, adapter.selectedPosition))
-                adapter.preSelectedPosition = -1
+                // in all other situations this standard behaviour is sufficient
+            } else {
+
+                val oldPosition = adapter.selectedPosition
+                adapter.selectedPosition = position
+                Timber.d("old: $oldPosition, new: $position")
+                adapter.notifyMultipleItems(arrayOf(oldPosition, position))
+                if (!it.isPaused()) {
+
+                    startLooper()
+                }
             }
-
-            // in all other situations this standard behaviour is sufficient
-        } else {
-
-            val oldPosition = adapter.selectedPosition
-            adapter.selectedPosition = position
-            adapter.notifyMultipleItems(arrayOf(oldPosition, position))
-            startLooper()
-        }
+        } ?: Timber.d("onItemSelected with no looper")
     }
 
     private fun startLooper() {
         isPlaying.set(true)
         updateRunnable.run()
-        looper.start()
+        looper?.start()
     }
 
     fun stopLooper() {
-        if (!looper.isReady) return
-        if (looper.state == PlayerState.PLAYING || looper.state == PlayerState.PAUSED) {
-            looper.stop()
+        looper?.let {
+
+            if (!it.isReady()) return
+            if (it.getState() == PlayerState.PLAYING || it.getState() == PlayerState.PAUSED) {
+                it.stop()
+            }
         }
-
         resetPreSelection()
-
 
         adapter.resetProgress()
         onPlaybackStopped()
     }
 
     private fun onProgressChangedByUser(newProgress: Float) {
-        looper.changePlaybackPosition(newProgress)
+        looper?.changePlaybackPosition(newProgress)
     }
 
     private fun resetPreSelection() {
         adapter.resetPreSelection()
-        looper.resetPreSelection()
+        looper?.resetPreSelection()
     }
 
     private fun onPlaybackStopped() {

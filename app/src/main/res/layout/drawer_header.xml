@@ -40,7 +40,7 @@
     <TextView
             android:id="@+id/tv_version_number"
             style="@style/WrapContent"
-            android:text="0.7"
+            android:text="0.9"
             android:textAppearance="@style/Text.SubHeaderLarge"
             app:layout_constraintStart_toEndOf="@id/tv_version_label"
             app:layout_constraintBottom_toBottomOf="parent"/>

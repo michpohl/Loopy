@@ -52,4 +52,9 @@
     <string name="dialog_licenses_title">Verwendete Bibliotheken</string>
     <string name="dialog_loopy_license_title">App-Informationen</string>
     <string name="btn_show_app_info">App-Infos anzeigen</string>
+    <string name="save">Speichern</string>
+    <string name="settings_item_keep_screen_on">Bildschirm nicht ausschalten</string>
+    <string name="settings_item_play_in_background">Im Hintergrund spielen</string>
+    <string name="snackbar_cant_clear_loops">Dies geht von hier aus nicht.</string>
+    <string name="snackbar_error_message">Ein Fehler ist aufgetreten. Großes Sorry!!</string>
 </resources>

@@ -39,7 +39,7 @@
                 android:text="@{model.name}"
                 android:layout_marginEnd="8dp"
                 android:textColor="@{model.isFolder? @color/white : @color/action}"
-                android:textAppearance="@style/Text.HeaderLarge"
+                android:textAppearance="@style/Text.SubHeaderLarge"
                 app:layout_constraintStart_toEndOf="@id/iv_album_icon"
                 app:layout_constraintEnd_toStartOf="@id/cb_select"
                 app:layout_constraintTop_toTopOf="parent"

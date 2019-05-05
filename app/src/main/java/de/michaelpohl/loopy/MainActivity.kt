@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             permissionHelper.checkPermissions()
             showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
+        keepScreenOnIfDesired()
     }
     override fun onResume() {
         super.onResume()
@@ -272,6 +274,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             Timber.d("Resultlistener was invoked")
             DataRepository.settings = it
             DataRepository.saveCurrentState()
+            keepScreenOnIfDesired()
 
             // if we're currently in the player we need to update
             // immediately for the settings to take effect
@@ -308,6 +311,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun clearBackStack() {
+        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -317,6 +321,19 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         menuResourceID = resourceID
         invalidateOptionsMenu()
     }
+
+    private fun keepScreenOnIfDesired() {
+        if (DataRepository.settings.keepScreenOn) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
+
+    private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
+        playerFragment.pausePlayback()
+    }
+
 }
 
 
