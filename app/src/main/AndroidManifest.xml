@@ -22,13 +22,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN"/>-->
-            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
 
-            <!--handles opening the app from file browser-->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
