@@ -30,15 +30,15 @@ class PlayerFragment : BaseFragment() {
     private lateinit var loopsList: List<AudioModel>
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
-    private lateinit var playerService : PlayerService
+    private lateinit var playerService: PlayerService
     lateinit var onResumeListener: (PlayerFragment) -> Unit
 
     ////
     private var playerServiceBinder: PlayerServiceBinder? = null
-    set(value) {
-        field = value
-        viewModel.looper = value
-    }
+        set(value) {
+            field = value
+            viewModel.looper = value
+        }
 
     // This service connection object is the bridge between activity and background service.
     private val serviceConnection = object : ServiceConnection {
@@ -73,7 +73,6 @@ class PlayerFragment : BaseFragment() {
             loopsList = appData.audioModels
             Timber.d("Loops when starting player: %s", loopsList)
         }
-
     }
 
     override fun onCreateView(
@@ -101,8 +100,8 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        //TODO can be not initialized when rotating. We'll just live with it for now
-        //TODO we'll have to deal with that though!
+        Timber.d("onResume in fragment")
+
         if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
         loopsList = DataRepository.testIntegrity(loopsList)
         try {
@@ -148,11 +147,14 @@ class PlayerFragment : BaseFragment() {
         if (playerServiceBinder == null) {
             val intent = Intent(activity, PlayerService::class.java)
             // Below code will invoke serviceConnection's onServiceConnected method.
-            activity!!.bindService(intent, serviceConnection, BIND_AUTO_CREATE) //TODO check if activity is always there
+            activity!!.bindService(
+                intent,
+                serviceConnection,
+                BIND_AUTO_CREATE
+            ) //TODO check if activity is always there
             viewModel.looper = playerServiceBinder
             Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
         }
-
     }
 
     private fun unBindAudioService() {

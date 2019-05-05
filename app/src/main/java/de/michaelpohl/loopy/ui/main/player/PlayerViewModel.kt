@@ -10,7 +10,7 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.model.ILooper
+import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
@@ -35,7 +35,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
 
-    var looper: ILooper? = null
+    var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
     lateinit var loopsList: List<AudioModel>
 
@@ -44,7 +44,9 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStartPlaybackClicked(view: View) {
-//        if (looper.setHasLoopFile) startLooper()
+        looper?.let {
+            if (it.getHasLoopFile()) startLooper()
+        }
     }
 
     fun onStopPlaybackClicked(view: View) {
@@ -78,11 +80,11 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
-        Timber.d("onItemSelected")
+        Timber.d("onItemSelected. Selectionstate: $selectionState, position: $position")
         looper?.let {
             Timber.d("I seem to have a looper")
             it.setLoopUri(Uri.parse(audioModel.path))
-
+            Timber.d("Setting uri to: ${audioModel.path}")
             // when just looping the looper sets a new listener to repeat the loop automatically
             // in WAIT mode (and only while playing) we replace the onLoopSwitchedListener with a different one to switch to the preselected loop
             if (selectionState == SelectionState.PRESELECTED && it.getSwitchingLoopsBehaviour() == SwitchingLoopsBehaviour.WAIT && it.isPlaying()) {
@@ -109,10 +111,14 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
 
                 val oldPosition = adapter.selectedPosition
                 adapter.selectedPosition = position
+                Timber.d("old: $oldPosition, new: $position")
                 adapter.notifyMultipleItems(arrayOf(oldPosition, position))
-                startLooper()
+                if (!it.isPaused()) {
+
+                    startLooper()
+                }
             }
-        }
+        } ?: Timber.d("onItemSelected with no looper")
     }
 
     private fun startLooper() {
