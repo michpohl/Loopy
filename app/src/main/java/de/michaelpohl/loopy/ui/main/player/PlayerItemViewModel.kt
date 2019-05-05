@@ -62,6 +62,11 @@ class PlayerItemViewModel(
         if (!blockUpdatesFromPlayer.get()) {
             this.progress.set(progress)
         }
+        //TODO test this bugfix for AudioWaveView progress access thoroughly
+        when (this.progress.get()!!.toFloat()) {
+            in Float.MIN_VALUE..0F -> this.progress.set(0F)
+                in 100F..Float.MAX_VALUE -> this.progress.set(100F)
+        }
     }
 
     fun updateLoopsCount(count: Int) {
