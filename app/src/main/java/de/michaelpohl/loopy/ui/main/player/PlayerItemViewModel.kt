@@ -9,13 +9,14 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
+import timber.log.Timber
 
 class PlayerItemViewModel(
     private val position: Int,
     val audioModel: AudioModel,
     private val onItemClickedListener: (Int, SelectionState) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
-    private val onRemoveItemClickedListener: ( Int) -> Unit
+    private val onRemoveItemClickedListener: (Int) -> Unit
 ) : ViewModel() {
 
     val blockUpdatesFromPlayer = ObservableBoolean(false)
@@ -24,7 +25,6 @@ class PlayerItemViewModel(
     val loopsCount = ObservableField<String>("0")
     val loopsCountVisibility = ObservableInt(View.VISIBLE)
     val name = audioModel.name
-
 
     var selectedState = NOT_SELECTED
         set (state) {
@@ -54,18 +54,21 @@ class PlayerItemViewModel(
         onRemoveItemClickedListener.invoke(position)
     }
 
-    fun updateProgress(progress: Float) {
+    fun updateProgress(newProgress: Float) {
+        var safeProgress = newProgress
+//        since we only want values in between 0 and 100, we're safeguarding the value here
+        Timber.d("Updating Progress: $newProgress")
+        when (newProgress) {
+            in Float.MIN_VALUE..0F -> safeProgress = 0F
+            in 100F..Float.MAX_VALUE -> safeProgress = 100F
+        }
+
         if (selectedState == NOT_SELECTED) {
             this.progress.set(0F)
             return
         }
         if (!blockUpdatesFromPlayer.get()) {
-            this.progress.set(progress)
-        }
-        //TODO test this bugfix for AudioWaveView progress access thoroughly
-        when (this.progress.get()!!.toFloat()) {
-            in Float.MIN_VALUE..0F -> this.progress.set(0F)
-                in 100F..Float.MAX_VALUE -> this.progress.set(100F)
+            this.progress.set(safeProgress)
         }
     }
 
