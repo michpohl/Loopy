@@ -94,11 +94,27 @@ class LoopedPlayer private constructor(context: Context) {
         state = PlayerState.PLAYING
     }
 
+    // stopping the players is wrapped in try/catch because of a suspected crash possibility when the app tries to stop a
+    //    player which isn't there'
     fun stop() {
         shouldBePlaying = false
-        currentPlayer.setOnCompletionListener { null }
-        currentPlayer.stop()
-        nextPlayer.stop()
+        try {
+            currentPlayer.apply {
+                setOnCompletionListener { null }
+                stop()
+                release()
+            }
+        } catch (e: IllegalStateException) {
+            Timber.e("Swallowed exception in Mediaplayer: ${e.printStackTrace()}")
+        }
+        try {
+            nextPlayer.apply {
+                stop()
+                release()
+            }
+        } catch (e: IllegalStateException) {
+            Timber.e("Swallowed exception in Mediaplayer: ${e.printStackTrace()}")
+        }
         state = PlayerState.STOPPED
         initPlayer()
     }

@@ -19,8 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/bottom_background"
-                />
+app:layout_constraintBottom_toBottomOf="parent"                />
 
         <LinearLayout
                 android:id="@+id/emptyFolderLayout"
@@ -41,15 +40,15 @@
 
         </LinearLayout>
 
-        <View
-                android:id="@+id/bottom_background"
-                style="@style/MatchConstraints"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btn_select_all"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="@{model.bottomBarVisibility}"
-                android:background="@color/darkest_green"/>
+        <!--<View-->
+                <!--android:id="@+id/bottom_background"-->
+                <!--style="@style/MatchConstraints"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="@id/btn_select_all"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--android:visibility="@{model.bottomBarVisibility}"-->
+                <!--android:background="@color/darkest_green"/>-->
 
     </android.support.constraint.ConstraintLayout>
 
