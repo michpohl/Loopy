@@ -8,7 +8,7 @@ Loopy ist freie Open-Source Software und wird unter der Apache 2.0 Lizenz veröf
 
 ### Über den Entwickler
 
-Loopy wurde entwickelt von Michael Pohl, Künstler und Softwareentwickler aus Berlin. Hier kannst du mich erreichen: contact@michaelpohl.de
+Loopy wurde entwickelt von Michael Pohl. Ich arbeite als  Künstler und Softwareentwickler in Berlin. Hier kannst du mich erreichen: contact@michaelpohl.de
 
 ### Datenschutzerklärung
 

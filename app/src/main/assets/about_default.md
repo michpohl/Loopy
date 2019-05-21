@@ -10,7 +10,7 @@ If you want to read the license or check out the source code please click "Show 
 
 ### About the developer
 
-Loopy is developed by Michael Pohl, artist and software developer living in Berlin. If you want to reach me: contact@michaelpohl.de
+Loopy is developed by Michael Pohl. I am an artist and software developer living in Berlin. If you want to reach me send me an email: contact@michaelpohl.de
 
 ### Privacy Policy
 

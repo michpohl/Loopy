@@ -39,7 +39,7 @@
                 android:text="@{model.name}"
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/action"
-                android:textAppearance="@style/Text.HeaderLarge"
+                android:textAppearance="@style/Text.SubHeaderLarge"
                 app:layout_constraintStart_toEndOf="@id/iv_album_icon"/>
 
         <TextView

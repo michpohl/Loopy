@@ -9,7 +9,7 @@
             style="@style/DialogHeader"
             android:id="@+id/tv_header"
             android:text="@string/dialog_settings_header"
-            android:textAppearance="@style/Text.HeaderLarge"
+            android:textAppearance="@style/Text.SubHeaderLarge"
             app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.constraint.ConstraintLayout
@@ -142,12 +142,40 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_header_other_settings"/>
 
+        <TextView
+        android:id="@+id/tv_label_keep_screen_on"
+        style="@style/WrapContent"
+        android:text="@string/settings_item_keep_screen_on"
+        android:textAppearance="@style/Text.Standard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/cb_check_keep_screen_on"/>
+
+        <CheckBox
+            android:id="@+id/cb_check_keep_screen_on"
+            style="@style/WrapContent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_show_loop_count"/>
+
+        <TextView
+            android:id="@+id/tv_label_play_in_background"
+            style="@style/WrapContent"
+            android:text="@string/settings_item_play_in_background"
+            android:textAppearance="@style/Text.Standard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/cb_check_play_in_background"/>
+
+        <CheckBox
+            android:id="@+id/cb_check_play_in_background"
+            style="@style/WrapContent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_keep_screen_on"/>
+
         <Button
         android:id="@+id/btn_ok"
-        android:text="@string/ok"
+        android:text="@string/save"
         android:layout_marginTop="16dp"
         style="@style/Button.Borderless"
-        app:layout_constraintTop_toBottomOf="@id/cb_check_show_loop_count"
+        app:layout_constraintTop_toBottomOf="@id/cb_check_play_in_background"
         app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button

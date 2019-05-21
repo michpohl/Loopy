@@ -36,6 +36,8 @@
 
             <TextView
                     style="@style/WrapContent"
+                android:padding="24dp"
+                android:textAlignment="center"
                     android:textAppearance="@style/Text.HeaderLarge"
                     android:text="@string/message_empty_folder"/>
 

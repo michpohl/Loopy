@@ -29,7 +29,7 @@
                 android:id="@+id/tv_name"
                 style="@style/MatchWidth"
                 android:text="@{model.name}"
-                android:textAppearance="@style/Text.HeaderLarge"
+                android:textAppearance="@style/Text.SubHeaderLarge"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
