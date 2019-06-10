@@ -1,7 +1,9 @@
 package de.michaelpohl.loopy
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.NavigationView
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
         //Timber logging on when Debugging
 //        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+        Timber.plant(Timber.DebugTree())
 //        }
 
         DataRepository.init(
@@ -76,11 +78,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         keepScreenOnIfDesired()
     }
+
     override fun onResume() {
         super.onResume()
         Timber.d("onResume in activity")
         if (!::currentFragment.isInitialized) {
-            currentFragment = StateHelper.currentFragment?: BaseFragment() //why this?
+            currentFragment = StateHelper.currentFragment ?: BaseFragment() //why this?
         }
     }
 
@@ -128,11 +131,11 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         when (item.itemId) {
             R.id.nav_browse_media -> {
                 clearBackStack()
-                showAlbumBrowserFragment()
+                if (isPermitted()) showAlbumBrowserFragment() else PermissionHelper(this).checkPermissions()
             }
             R.id.nav_browse_storage -> {
                 clearBackStack()
-                showFileBrowserFragment()
+                if (isPermitted()) showFileBrowserFragment() else PermissionHelper(this).checkPermissions()
             }
             R.id.nav_open_settings -> showSettingsDialog()
             R.id.nav_clear_player -> clearLoopsList()
@@ -285,7 +288,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun clearLoopsList() {
         if (!::currentFragment.isInitialized) {
-           showSnackbar(container, R.string.snackbar_error_message)
+            showSnackbar(container, R.string.snackbar_error_message)
             return
         }
         if (currentFragment is PlayerFragment) {
@@ -324,9 +327,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun keepScreenOnIfDesired() {
         if (DataRepository.settings.keepScreenOn) {
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         } else {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 
@@ -334,6 +337,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         playerFragment.pausePlayback()
     }
 
+    private fun isPermitted(): Boolean {
+        return (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED)
+    }
 }
 
 
