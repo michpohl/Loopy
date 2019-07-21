@@ -3,34 +3,22 @@ cmake_minimum_required(VERSION 3.4.1)
 include_directories(src/main/cpp/)
 
 add_library(native-lib
+
         SHARED
 
         src/main/cpp/native-lib.cpp
-
         src/main/cpp/AudioEngine.cpp
-
         src/main/cpp/DataSource.h
-
         src/main/cpp/AAssetDataSource.cpp
-
         src/main/cpp/LockFreeQueue.h
-
         src/main/cpp/logging.h
-
         src/main/cpp/NDKExtractor.cpp
-
         src/main/cpp/Constants.h
-
         src/main/cpp/OpenGLFunctions.cpp
-
         src/main/cpp/Player.cpp
-
         src/main/cpp/Mixer.h
-
         src/main/cpp/IRenderableAudio.h
-
         src/main/cpp/UtilityFunctions.cpp
-
         )
 
 set (TARGET_LIBS log android oboe GLESv2)
