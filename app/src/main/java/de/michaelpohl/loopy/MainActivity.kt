@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserFragment
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             permissionHelper.checkPermissions()
             showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
+        JniBridge.assets = assets
         keepScreenOnIfDesired()
     }
 
