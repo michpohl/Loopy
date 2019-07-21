@@ -28,29 +28,35 @@ enum class GameState {
 class AudioEngine : public AudioStreamCallback {
 
 public:
-    explicit AudioEngine(AAssetManager&);
+    explicit AudioEngine(AAssetManager &);
+
+    void prepare(std::string fileName);
     void start();
 
     // Inherited from oboe::AudioStreamCallback
     DataCallbackResult
     onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override;
+
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
 
 private:
     AAssetManager &mAssetManager;
     AudioStream *mAudioStream{nullptr};
+    std::string fileToPlay;
     std::unique_ptr<Player> loop;
     Mixer mMixer;
-    std::unique_ptr<float[]> mConversionBuffer { nullptr }; // For float->int16 conversion
-    std::atomic<int64_t> mCurrentFrame { 0 };
-    std::atomic<int64_t> mSongPositionMs { 0 };
-    std::atomic<int64_t> mLastUpdateTime { 0 };
-    std::atomic<GameState> mGameState { GameState::Loading };
+    std::unique_ptr<float[]> mConversionBuffer{nullptr}; // For float->int16 conversion
+    std::atomic<int64_t> mCurrentFrame{0};
+    std::atomic<int64_t> mSongPositionMs{0};
+    std::atomic<int64_t> mLastUpdateTime{0};
+    std::atomic<GameState> mGameState{GameState::Loading};
     std::future<void> mLoadingResult;
 
 
     void load();
+
     bool openStream();
+
     bool setupSource();
 
 };

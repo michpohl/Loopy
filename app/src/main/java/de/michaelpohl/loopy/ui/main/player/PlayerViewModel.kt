@@ -9,6 +9,7 @@ import android.view.View
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
+import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
@@ -44,9 +45,10 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onStartPlaybackClicked(view: View) {
-        looper?.let {
-            if (it.getHasLoopFile()) startLooper()
-        }
+//        looper?.let {
+//            if (it.getHasLoopFile()) startLooper()
+//        }
+        JniBridge.play("testing.mp3")
     }
 
     fun onStopPlaybackClicked(view: View) {

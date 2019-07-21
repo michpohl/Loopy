@@ -15,6 +15,7 @@
  */
 
 #include <chrono>
+#include <jni.h>
 #include "OpenGLFunctions.h"
 #include "Constants.h"
 #include "UtilityFunctions.h"

@@ -9,10 +9,16 @@
 #include "AudioEngine.h"
 #include "logging.h"
 
-AudioEngine::AudioEngine(AAssetManager &assetManager): mAssetManager(assetManager) {
+AudioEngine::AudioEngine(AAssetManager &assetManager) : mAssetManager(assetManager) {
+}
+
+void AudioEngine::prepare(std::string fileName) {
+    fileToPlay = fileName;
+    LOGD("received this filename: %s", fileToPlay.c_str());
 }
 
 void AudioEngine::start() {
+
     // async returns a future, we must store this future to avoid blocking. It's not sufficient
     // to store this in a local variable as its destructor will block until Game::load completes.
     mLoadingResult = std::async(&AudioEngine::load, this);
@@ -32,7 +38,7 @@ void AudioEngine::load() {
     }
 
     Result result = mAudioStream->requestStart();
-    if (result != Result::OK){
+    if (result != Result::OK) {
         LOGE("Failed to start stream. Error: %s", convertToText(result));
         mGameState = GameState::FailedToLoad;
         return;
@@ -42,6 +48,7 @@ void AudioEngine::load() {
 }
 
 bool AudioEngine::setupSource() {
+    LOGD("Loop source: %s", fileToPlay.c_str());
 
     //  Set the properties of our audio source(s) to match that of our audio stream
     AudioProperties targetProperties{
@@ -51,9 +58,11 @@ bool AudioEngine::setupSource() {
 
 
     // Create a data source and player
+    const char *x = fileToPlay.c_str();
     std::shared_ptr<AAssetDataSource> loopSource{
-            AAssetDataSource::newFromCompressedAsset(mAssetManager, loopFileName, targetProperties)
+            AAssetDataSource::newFromCompressedAsset(mAssetManager, x, targetProperties)
     };
+
     if (loopSource == nullptr) {
         LOGE("Could not load source data for backing track");
         return false;
@@ -77,21 +86,22 @@ bool AudioEngine::openStream() {
     builder.setSharingMode(SharingMode::Exclusive);
 
     Result result = builder.openStream(&mAudioStream);
-    if (result != Result::OK){
+    if (result != Result::OK) {
         LOGE("Failed to open stream. Error: %s", convertToText(result));
         return false;
     }
 
-    if (mAudioStream->getFormat() == AudioFormat::I16){
+    if (mAudioStream->getFormat() == AudioFormat::I16) {
         mConversionBuffer = std::make_unique<float[]>(
-                (size_t)mAudioStream->getBufferCapacityInFrames() *
+                (size_t) mAudioStream->getBufferCapacityInFrames() *
                 mAudioStream->getChannelCount());
     }
 //
 //    // Reduce stream latency by setting the buffer size to a multiple of the burst size
     auto setBufferSizeResult = mAudioStream->setBufferSizeInFrames(
-            mAudioStream->getFramesPerBurst() * 2); // Use 2 bursts as the buffer size (double buffer)
-    if (setBufferSizeResult != Result::OK){
+            mAudioStream->getFramesPerBurst() *
+            2); // Use 2 bursts as the buffer size (double buffer)
+    if (setBufferSizeResult != Result::OK) {
         LOGW("Failed to set buffer size. Error: %s", convertToText(setBufferSizeResult.error()));
     }
 
@@ -113,13 +123,13 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
                 mCurrentFrame,
                 mAudioStream->getSampleRate());
 
-        mMixer.renderAudio(outputBuffer+(oboeStream->getChannelCount()*i), 1);
+        mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
         mCurrentFrame++;
     }
 
-    if (is16Bit){
+    if (is16Bit) {
         oboe::convertFloatToPcm16(outputBuffer,
-                                  static_cast<int16_t*>(audioData),
+                                  static_cast<int16_t *>(audioData),
                                   numFrames * oboeStream->getChannelCount());
     }
 

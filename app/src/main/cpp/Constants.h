@@ -12,7 +12,7 @@ struct AudioProperties {
     int32_t sampleRate;
 };
 
-constexpr char loopFileName[] { "FUNKY_HOUSE.mp3" };
+constexpr char loopFileName[] { "testing.mp3" };
 
 constexpr int kBufferSizeInBursts = 2; // Use 2 bursts as the buffer size (double buffer)
 constexpr int kMaxQueueItems = 4; // Must be power of 2
@@ -34,7 +34,7 @@ constexpr int kWindowCenterOffsetMs = 100;
 constexpr char kClapFilename[] { "CLAP.mp3" };
 
 // Filename for the backing track asset (in assets folder)
-constexpr char kBackingTrackFilename[] { "FUNKY_HOUSE.mp3" };
+constexpr char kBackingTrackFilename[] { "testing.mp3" };
 
 // The game will first demonstrate the pattern which the user should copy. It does this by
 // "clapping" (playing a clap sound) at certain times during the song. We can specify these times

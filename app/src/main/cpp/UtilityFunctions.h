@@ -18,6 +18,7 @@
 #define OBOE_TEST_UTILITYFUNCTIONS_H
 
 #include <stdint.h>
+#include <string>
 
 constexpr int64_t kMillisecondsInSecond = 1000;
 constexpr int64_t kNanosecondsInMillisecond = 1000000;
