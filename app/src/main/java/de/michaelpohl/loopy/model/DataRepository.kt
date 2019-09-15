@@ -6,8 +6,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
-import com.google.gson.Gson
 import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.model.DataRepository.settings
 import timber.log.Timber
 
 object DataRepository {
@@ -38,30 +38,31 @@ object DataRepository {
         selectedLoops: List<AudioModel> = this.currentSelectedAudioModels,
         settings: Settings = this.settings
     ) {
-        Timber.d("Current selected Models when saving:")
-        selectedLoops.forEach { Timber.d("%s", it.name) }
-
-        val jsonString = Gson().toJson(
-            AppData(
-                audioModels = selectedLoops,
-                settings = settings
-            )
-        )
-//        TODO put fitting assertion
-//        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
-        with(sharedPrefs.edit()) {
-            putString(PREFS_LOOPY_KEY, jsonString)
-            apply() //writes the path in the background, as opposed to commit()
-        }
+//        Timber.d("Current selected Models when saving:")
+//        selectedLoops.forEach { Timber.d("%s", it.name) }
+//
+//        val jsonString = Gson().toJson(
+//            AppData(
+//                audioModels = selectedLoops,
+//                settings = settings
+//            )
+//        )
+////        TODO put fitting assertion
+////        Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
+//        with(sharedPrefs.edit()) {
+//            putString(PREFS_LOOPY_KEY, jsonString)
+//            apply() //writes the path in the background, as opposed to commit()
+//        }
     }
 
     fun updateAndSaveFileSelection(): Boolean {
-        return if (newSelectedAudioModels.isNotEmpty()) {
-            currentSelectedAudioModels = newSelectedAudioModels + currentSelectedAudioModels
-
-            saveCurrentState()
-            true
-        } else false
+//        return if (newSelectedAudioModels.isNotEmpty()) {
+//            currentSelectedAudioModels = newSelectedAudioModels + currentSelectedAudioModels
+//
+//            saveCurrentState()
+//            true
+//        } else false
+        return false
     }
 
     fun onFileModelSelectionUpdated(newFileModelSelection: List<FileModel>) {
@@ -71,16 +72,16 @@ object DataRepository {
     }
 
     fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {
-        //only add the ones that are not already selected
-        newSelection.forEach { it -> Timber.d("Trying to add AudioModel %s", it.name) }
-        newSelectedAudioModels = newSelection
-            .filter { model -> !currentSelectedAudioModels.contains(model) }
-            .filter { model -> !isSuspectedDuplicate(model) }
+//        //only add the ones that are not already selected
+//        newSelection.forEach { Timber.d("Trying to add AudioModel %s", it.name) }
+//        newSelectedAudioModels = newSelection
+//            .filter { model -> !currentSelectedAudioModels.contains(model) }
+//            .filter { model -> !isSuspectedDuplicate(model) }
     }
 
     fun clearLoopsList() {
-        currentSelectedAudioModels = emptyList()
-        saveCurrentState()
+//        currentSelectedAudioModels = emptyList()
+//        saveCurrentState()
     }
 
     /**
@@ -89,14 +90,14 @@ object DataRepository {
      */
     private fun isSuspectedDuplicate(newModel: AudioModel): Boolean {
         var isSuspect = false
-        currentSelectedAudioModels.forEach { selectedModel ->
-            Timber.d("New model name: %s, album: %s", newModel.name, newModel.album)
-            Timber.d("Selected model name: %s, album: %s", selectedModel.name, selectedModel.album)
-
-            if (selectedModel.name == newModel.name && selectedModel.album == newModel.album) {
-                isSuspect = true
-            }
-        }
+//        currentSelectedAudioModels.forEach { selectedModel ->
+//            Timber.d("New model name: %s, album: %s", newModel.name, newModel.album)
+//            Timber.d("Selected model name: %s, album: %s", selectedModel.name, selectedModel.album)
+//
+//            if (selectedModel.name == newModel.name && selectedModel.album == newModel.album) {
+//                isSuspect = true
+//            }
+//        }
         return isSuspect
     }
 
@@ -106,15 +107,16 @@ object DataRepository {
      * @return The AppData object from SharedPreferences or a new one, if none exists
      */
     private fun loadSavedAppData(): AppData {
-        val warnString = "warning" //TODO this can be done better :-)
-        val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
+//        val warnString = "warning" //TODO this can be done better :-)
+//        val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
+//
 
-        return if (jsonString != "warning") {
-            appDataFromJson(jsonString)
-        } else {
-            // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
-            AppData(settings = Settings(allowedFileTypes = ValidAudioFileType.values()))
-        }
+//        return if (jsonString != "warning") {
+//            appDataFromJson(jsonString)
+//        } else {
+//            // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
+        return AppData(settings = Settings(allowedFileTypes = ValidAudioFileType.values()))
+//        }
     }
 
     fun getAllowedFileTypes(): Array<ValidAudioFileType> {
@@ -122,6 +124,7 @@ object DataRepository {
     }
 
     fun getAllowedFileTypeListAsString(): String {
+
         val builder = StringBuilder()
         val allowedFileTypes = settings.allowedFileTypes
         allowedFileTypes.forEach {
@@ -131,8 +134,7 @@ object DataRepository {
             }
         }
         return builder.toString()
-    }
-
+}
     fun testIntegrity(audioModels: List<AudioModel>): List<AudioModel> {
         var validModels = mutableListOf<AudioModel>()
         audioModels.forEach {
@@ -224,23 +226,23 @@ object DataRepository {
         return list
     }
 
-    private fun appDataFromJson(jsonString: String): AppData {
-        var restoredAppData =
-            Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app path")
-        var validModels = mutableListOf<AudioModel>()
-        restoredAppData.audioModels.forEach {
-
-            validModels.add(it)
-        }
-
-        if (restoredAppData.fileModels.size > validModels.size) {
-            Timber.w("Found invalid / nonexisting files - removing")
-            restoredAppData = AppData(
-                audioModels = validModels,
-                settings = restoredAppData.settings
-            )
-        }
-        Timber.d("restoredAppData-Settings: ${restoredAppData.settings}")
-        return restoredAppData
-    }
+//    private fun appDataFromJson(jsonString: String): AppData {
+//        var restoredAppData =
+//            Gson().fromJson(jsonString, AppData::class.java) ?: throw Exception("Error parsing saved app path")
+//        var validModels = mutableListOf<AudioModel>()
+//        restoredAppData.audioModels.forEach {
+//
+//            validModels.add(it)
+//        }
+//
+//        if (restoredAppData.fileModels.size > validModels.size) {
+//            Timber.w("Found invalid / nonexisting files - removing")
+//            restoredAppData = AppData(
+//                audioModels = validModels,
+//                settings = restoredAppData.settings
+//            )
+//        }
+//        Timber.d("restoredAppData-Settings: ${restoredAppData.settings}")
+//        return restoredAppData
+//    }
 }

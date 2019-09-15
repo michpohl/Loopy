@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.ui.main.player
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding

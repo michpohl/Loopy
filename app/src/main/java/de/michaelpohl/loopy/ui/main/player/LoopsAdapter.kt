@@ -1,18 +1,18 @@
 package de.michaelpohl.loopy.ui.main.player
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 
 class LoopsAdapter(
     val context: Context,
@@ -20,7 +20,7 @@ class LoopsAdapter(
 ) : RecyclerView.Adapter<PlayerItem>() {
 
     private var loopsList = listOf<AudioModel>()
-    var onItemSelectedListener: ((AudioModel, Int, SelectionState) -> Unit)? = null
+    var onItemSelectedListener: ((AudioModel, Int, PlayerItemViewModel.SelectionState) -> Unit)? = null
     private var onProgressUpdatedListener: ((Float) -> Unit)? = null
     private var onLoopsElapsedChangedListener: ((Int) -> Unit)? = null
     var selectedPosition = -1
@@ -69,7 +69,7 @@ class LoopsAdapter(
         } else {
             if (position == preSelectedPosition) {
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.preselected_item)
-                itemViewModel.selectedState = SelectionState.PRESELECTED
+                itemViewModel.selectedState = PlayerItemViewModel.SelectionState.PRESELECTED
             } else {
                 itemViewModel.loopsCountVisibility.set(View.GONE)
                 itemViewModel.backgroundColor = ContextCompat.getColor(context, R.color.content_background)
@@ -107,7 +107,7 @@ class LoopsAdapter(
         positions.forEach { notifyItemChanged(it) }
     }
 
-    private fun onItemClicked(position: Int, itemState: SelectionState) {
+    private fun onItemClicked(position: Int, itemState: PlayerItemViewModel.SelectionState) {
         onItemSelectedListener?.invoke(loopsList[position], position, itemState)
     }
 

@@ -6,27 +6,24 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
-import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment
-import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
-import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
@@ -41,16 +38,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
+    private lateinit var drawer: DrawerLayout
+
     private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("onCreate")
         super.onCreate(savedInstanceState)
 
-        //Timber logging on when Debugging
-//        if (BuildConfig.DEBUG) {
-        Timber.plant(Timber.DebugTree())
-//        }
+        setupTimber()
 
         DataRepository.init(
             getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
@@ -61,24 +57,40 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             Timber.d("Intent")
             handleIntent()
         }
-        setSupportActionBar(toolbar)
+        setupActionBar()
 
         //drawer
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar, R.string.app_name, R.string.app_name
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        nav_view.setNavigationItemSelectedListener(this)
+        setupDrawer()
 
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
-            showPlayerFragment(DataRepository.currentSelectedAudioModels)
+//            showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
+    }
+
+    private fun setupDrawer() {
+        drawer = drawer_layout as DrawerLayout
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    private fun setupActionBar() {
+        val toolBar = toolbar as Toolbar
+        setSupportActionBar(toolBar)
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_settings)
+        }
+    }
+
+    private fun setupTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
     override fun onResume() {
@@ -152,7 +164,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             else -> {
             } // do nothing
         }
-        drawer_layout.closeDrawers()
+        drawer.closeDrawers()
 
         // returning false suppresses the visual checking of clicked items. We don't need it so we return false
         return false
@@ -209,16 +221,16 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun showPlayerFragment(loops: List<AudioModel> = emptyList(), settings: Settings = Settings()) {
 
-        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
-        val appData = AppData(audioModels = loops, settings = settings)
-        val playerFragment = PlayerFragment.newInstance(appData)
-        Timber.d("currentFragment should get assigned")
-        currentFragment = playerFragment
-        StateHelper.currentFragment = currentFragment
-        playerFragment.onResumeListener = this::updateCurrentFragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, playerFragment, "player")
-            .commit()
+//        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
+//        val appData = AppData(audioModels = loops, settings = settings)
+//        val playerFragment = PlayerFragment.newInstance(appData)
+//        Timber.d("currentFragment should get assigned")
+//        currentFragment = playerFragment
+//        StateHelper.currentFragment = currentFragment
+//        playerFragment.onResumeListener = this::updateCurrentFragment
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.container, playerFragment, "player")
+//            .commit()
     }
 
     private fun showPlayerFragmentWithFreshSelection() {
@@ -234,58 +246,58 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 //    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
-        val filesListFragment = FileBrowserFragment.newInstance(path)
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = filesListFragment
-        fragmentTransaction.replace(R.id.container, filesListFragment)
-        fragmentTransaction.addToBackStack(path)
-        fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_file_browser)
+//        val filesListFragment = FileBrowserFragment.newInstance(path)
+//        val fragmentTransaction = supportFragmentManager.beginTransaction()
+//        currentFragment = filesListFragment
+//        fragmentTransaction.replace(R.id.container, filesListFragment)
+//        fragmentTransaction.addToBackStack(path)
+//        fragmentTransaction.commit()
+//        changeActionBar(R.menu.menu_file_browser)
     }
 
     private fun showAlbumBrowserFragment() {
-        val fragment = AlbumBrowserFragment.newInstance()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = fragment
-        fragmentTransaction.replace(R.id.container, fragment)
-        fragmentTransaction.addToBackStack("album_browser")
-        fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_file_browser)
+//        val fragment = AlbumBrowserFragment.newInstance()
+//        val fragmentTransaction = supportFragmentManager.beginTransaction()
+//        currentFragment = fragment
+//        fragmentTransaction.replace(R.id.container, fragment)
+//        fragmentTransaction.addToBackStack("album_browser")
+//        fragmentTransaction.commit()
+//        changeActionBar(R.menu.menu_file_browser)
     }
 
     private fun showMusicBrowserFragment(albumTitle: String) {
-        val fragment = MusicBrowserFragment.newInstance(albumTitle)
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = fragment
-        fragmentTransaction.replace(R.id.container, fragment)
-        fragmentTransaction.addToBackStack("music_browser")
-        fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_file_browser)
+//        val fragment = MusicBrowserFragment.newInstance(albumTitle)
+//        val fragmentTransaction = supportFragmentManager.beginTransaction()
+//        currentFragment = fragment
+//        fragmentTransaction.replace(R.id.container, fragment)
+//        fragmentTransaction.addToBackStack("music_browser")
+//        fragmentTransaction.commit()
+//        changeActionBar(R.menu.menu_file_browser)
     }
 
     private fun showMarkupViewerFragment(markupFileName: String) {
-        val helpFragment = MarkupViewerFragment.newInstance(markupFileName)
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = helpFragment
-        fragmentTransaction.replace(R.id.container, helpFragment, "markup")
-        fragmentTransaction.addToBackStack("markup")
-        fragmentTransaction.commit()
+//        val helpFragment = MarkupViewerFragment.newInstance(markupFileName)
+//        val fragmentTransaction = supportFragmentManager.beginTransaction()
+//        currentFragment = helpFragment
+//        fragmentTransaction.replace(R.id.container, helpFragment, "markup")
+//        fragmentTransaction.addToBackStack("markup")
+//        fragmentTransaction.commit()
     }
 
     private fun showSettingsDialog() {
-        val dialog = SettingsDialogFragment()
-        dialog.setCurrentSettings(DataRepository.settings)
-        dialog.resultListener = {
-            Timber.d("Resultlistener was invoked")
-            DataRepository.settings = it
-            DataRepository.saveCurrentState()
-            keepScreenOnIfDesired()
-
-            // if we're currently in the player we need to update
-            // immediately for the settings to take effect
-            updatePlayerIfCurrentlyShowing()
-        }
-        dialog.show(supportFragmentManager, "settings-dialog")
+//        val dialog = SettingsDialogFragment()
+//        dialog.setCurrentSettings(DataRepository.settings)
+//        dialog.resultListener = {
+//            Timber.d("Resultlistener was invoked")
+//            DataRepository.settings = it
+//            DataRepository.saveCurrentState()
+//            keepScreenOnIfDesired()
+//
+//            // if we're currently in the player we need to update
+//            // immediately for the settings to take effect
+//            updatePlayerIfCurrentlyShowing()
+//        }
+//        dialog.show(supportFragmentManager, "settings-dialog")
     }
 
     private fun clearLoopsList() {

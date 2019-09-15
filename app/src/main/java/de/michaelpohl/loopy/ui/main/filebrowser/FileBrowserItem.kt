@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
 
 class FileBrowserItem(

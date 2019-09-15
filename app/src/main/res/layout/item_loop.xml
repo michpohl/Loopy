@@ -11,7 +11,7 @@
                 type="de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
 
             style="@style/Row"
             android:background="@{model.backgroundColor}"
@@ -95,5 +95,5 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_name"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

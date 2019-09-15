@@ -1,20 +1,20 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_files_list.*
+import org.koin.android.ext.android.inject
 
 class FileBrowserFragment : BaseFragment() {
 
-    private lateinit var viewModel: FileBrowserViewModel
+    val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
 
@@ -38,7 +38,6 @@ class FileBrowserFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(FileBrowserViewModel::class.java)
         try {
             viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
         } catch (e: Exception) {

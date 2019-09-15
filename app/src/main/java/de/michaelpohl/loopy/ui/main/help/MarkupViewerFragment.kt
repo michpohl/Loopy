@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy.ui.main.help
 
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,13 @@ import de.michaelpohl.loopy.common.Library
 import de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_markup_viewer.*
+import org.koin.android.ext.android.inject
 import ru.noties.markwon.Markwon
 
 class MarkupViewerFragment : BaseFragment() {
 
     private var showButtons = false
-    private lateinit var viewModel: MarkupViewerViewModel
+    private val viewModel: MarkupViewerViewModel by inject()
     private lateinit var binding: FragmentMarkupViewerBinding
     private lateinit var markupString: String
     private lateinit var textView: TextView
@@ -57,7 +57,6 @@ class MarkupViewerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MarkupViewerViewModel::class.java)
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel

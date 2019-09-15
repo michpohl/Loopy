@@ -11,13 +11,13 @@
                 type="de.michaelpohl.loopy.ui.main.player.PlayerViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main"
             style="@style/MatchParent"
             android:background="@color/window_background"
             tools:context=".ui.main.player.PlayerFragment">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_loops"
                 style="@style/MatchWidth"
                 android:layout_height="0dp"
@@ -88,5 +88,5 @@
                 app:layout_constraintStart_toStartOf="parent"
                 />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

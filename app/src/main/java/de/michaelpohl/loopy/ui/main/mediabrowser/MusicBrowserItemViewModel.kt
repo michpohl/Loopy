@@ -1,9 +1,9 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
-import android.arch.lifecycle.ViewModel
-import android.databinding.ObservableField
 import android.view.View
 import android.view.View.INVISIBLE
+import androidx.databinding.ObservableField
+import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.AudioModel
 
 class MusicBrowserItemViewModel(

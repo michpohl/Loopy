@@ -3,7 +3,7 @@ package de.michaelpohl.loopy.ui.main.filebrowser
 import android.app.Application
 import de.michaelpohl.loopy.ui.main.mediabrowser.AlbumBrowserAdapter
 
-class AlbumBrowserViewModel(application: Application) : BrowserViewModel(application) {
+class AlbumBrowserViewModel : BrowserViewModel() {
 
     private var adapter =
         AlbumBrowserAdapter(this::onItemClicked)

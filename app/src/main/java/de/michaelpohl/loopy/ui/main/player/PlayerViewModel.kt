@@ -1,11 +1,10 @@
 package de.michaelpohl.loopy.ui.main.player
 
-import android.app.Application
-import android.databinding.ObservableBoolean
-import android.databinding.ObservableField
 import android.net.Uri
 import android.os.Handler
 import android.view.View
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
@@ -16,9 +15,9 @@ import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
 
-class PlayerViewModel(application: Application) : BaseViewModel(application) {
+class PlayerViewModel : BaseViewModel() {
 
-    private var adapter = LoopsAdapter(application, this::onProgressChangedByUser)
+    lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
 
     private var updateRunnable = object : Runnable {
@@ -39,10 +38,6 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
     var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
     lateinit var loopsList: List<AudioModel>
-
-    fun getAdapter(): LoopsAdapter {
-        return adapter
-    }
 
     fun onStartPlaybackClicked(view: View) {
 //        looper?.let {
@@ -143,7 +138,7 @@ class PlayerViewModel(application: Application) : BaseViewModel(application) {
         onPlaybackStopped()
     }
 
-    private fun onProgressChangedByUser(newProgress: Float) {
+    fun onProgressChangedByUser(newProgress: Float) {
         looper?.changePlaybackPosition(newProgress)
     }
 

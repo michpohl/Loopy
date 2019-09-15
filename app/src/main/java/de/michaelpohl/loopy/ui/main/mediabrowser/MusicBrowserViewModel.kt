@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 
-class MusicBrowserViewModel(application: Application) : BrowserViewModel(application) {
+class MusicBrowserViewModel : BrowserViewModel() {
 
     private var adapter =
         MusicBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)

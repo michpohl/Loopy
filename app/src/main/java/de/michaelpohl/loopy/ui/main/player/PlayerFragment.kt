@@ -1,17 +1,17 @@
 package de.michaelpohl.loopy.ui.main.player
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.ComponentName
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
-import android.databinding.DataBindingUtil
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.AudioModel
@@ -22,13 +22,14 @@ import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import kotlinx.android.synthetic.main.fragment_player.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
     //TODO loopslist needs to be persistent and gets given to the fragment when creating (which means in the activity?)
     private lateinit var loopsList: List<AudioModel>
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by inject()
     private lateinit var binding: FragmentPlayerBinding
     private lateinit var playerService: PlayerService
     lateinit var onResumeListener: (PlayerFragment) -> Unit
@@ -86,7 +87,6 @@ class PlayerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         playerService = PlayerService()
         bindAudioService()
         activity!!.startService(Intent(activity, playerService::class.java))
@@ -95,6 +95,7 @@ class PlayerFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
+        loopsList = DataRepository.testIntegrity(listOf())
         initAdapter()
     }
 
@@ -103,7 +104,8 @@ class PlayerFragment : BaseFragment() {
         Timber.d("onResume in fragment")
 
         if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
-        loopsList = DataRepository.testIntegrity(loopsList)
+
+
         try {
             viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
         } catch (e: Exception) {
@@ -137,15 +139,17 @@ class PlayerFragment : BaseFragment() {
     private fun initAdapter() {
         rv_loops.layoutManager = LinearLayoutManager(context)
         viewModel.loopsList = loopsList
-        val adapter = viewModel.getAdapter().apply {
-            dialogHelper = DialogHelper(activity!!)
-            onItemSelectedListener =
-                { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
-                    viewModel.onItemSelected(a, b, c)
-                }
-        }
+        viewModel.adapter =
+            LoopsAdapter(context!!) { viewModel.onProgressChangedByUser(it) }.apply {
+                dialogHelper = DialogHelper(activity!!)
+                onItemSelectedListener =
+                    { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
+                        viewModel.onItemSelected(a, b, c)
+                    }
+            }
 
-        rv_loops.adapter = adapter
+        //TODO move adapter out of viewModel (or not? what's right?)
+        rv_loops.adapter = viewModel.adapter
         viewModel.updateData()
     }
 
@@ -153,10 +157,13 @@ class PlayerFragment : BaseFragment() {
         Timber.d("bindAudioService")
         if (playerServiceBinder == null) {
             val intent = Intent(activity, PlayerService::class.java)
+
             // Below code will invoke serviceConnection's onServiceConnected method.
-            activity!!.startService(
-               intent
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            activity!!.startForegroundService(intent)
+            } else {
+                activity!!.startService(intent)
+            }
             activity!!.bindService(
                 intent,
                 serviceConnection,
