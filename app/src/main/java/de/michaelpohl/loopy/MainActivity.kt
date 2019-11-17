@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
@@ -22,7 +24,7 @@ import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
-import de.michaelpohl.loopy.ui.main.player.PlayerFragment
+import de.michaelpohl.loopy.ui.main.player.PlayerFragmentOld
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -45,14 +47,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("onCreate")
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.main_activity)
 
         setupTimber()
+        setupNavigation()
 
         DataRepository.init(
             getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         )
 
-        setContentView(R.layout.main_activity)
         if (Intent.ACTION_VIEW == intent.action) {
             Timber.d("Intent")
             handleIntent()
@@ -69,6 +72,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
+    }
+
+    private fun setupNavigation() {
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val navController = findNavController(R.id.nav_host)
+        navigationView.setupWithNavController(navController)
     }
 
     private fun setupDrawer() {
@@ -191,10 +200,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     /**
-     * this gets called in PlayerFragment's onResume() to make sure it always is the currentFragment
+     * this gets called in PlayerFragmentOld's onResume() to make sure it always is the currentFragment
      * when it is open. That is necessary for some functionality and this way is a convenient shortcut
      */
-    fun updateCurrentFragment(fragment: PlayerFragment) {
+    fun updateCurrentFragment(fragment: PlayerFragmentOld) {
         Timber.d("Putting Playerfragment back into place")
         currentFragment = fragment
     }
@@ -223,7 +232,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
 //        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
 //        val appData = AppData(audioModels = loops, settings = settings)
-//        val playerFragment = PlayerFragment.newInstance(appData)
+//        val playerFragment = PlayerFragmentOld.newInstance(appData)
 //        Timber.d("currentFragment should get assigned")
 //        currentFragment = playerFragment
 //        StateHelper.currentFragment = currentFragment
@@ -305,7 +314,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             showSnackbar(container, R.string.snackbar_error_message)
             return
         }
-        if (currentFragment is PlayerFragment) {
+        if (currentFragment is PlayerFragmentOld) {
             Timber.d("We say it's initialized")
             val dialogHelper = DialogHelper(this)
             dialogHelper.requestConfirmation(
@@ -322,13 +331,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun updatePlayerIfCurrentlyShowing() {
-        if (currentFragment is PlayerFragment) {
-            (currentFragment as PlayerFragment).updateViewModel()
+        if (currentFragment is PlayerFragmentOld) {
+            (currentFragment as PlayerFragmentOld).updateViewModel()
         }
     }
 
     private fun clearBackStack() {
-        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
+        if (currentFragment is PlayerFragmentOld) stopPlaybackIfDesired(currentFragment as PlayerFragmentOld)
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -347,7 +356,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
+    private fun stopPlaybackIfDesired(playerFragment: PlayerFragmentOld) {
         playerFragment.pausePlayback()
     }
 

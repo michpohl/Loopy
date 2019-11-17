@@ -3,9 +3,8 @@ package de.michaelpohl.loopy.ui.main
 import androidx.fragment.app.Fragment
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
-import org.koin.core.KoinComponent
 
-open class BaseFragment : Fragment(), KoinComponent {
+open class BaseFragment : Fragment() {
 
 
     override fun onResume() {
