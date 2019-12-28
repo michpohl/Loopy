@@ -7,4 +7,24 @@
         android:id="@+id/playerFragment"
         android:name="de.michaelpohl.loopy.ui.main.player.PlayerFragment"
         android:label="PlayerFragment" />
+    <fragment
+        android:id="@+id/albumBrowserFragment"
+        android:name="de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserFragment"
+        android:label="AlbumBrowserFragment" />
+    <fragment
+        android:id="@+id/musicBrowserFragment"
+        android:name="de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment"
+        android:label="MusicBrowserFragment" />
+    <fragment
+        android:id="@+id/fileBrowserFragment"
+        android:name="de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserFragment"
+        android:label="FileBrowserFragment" />
+    <fragment
+        android:id="@+id/settingsDialogFragment"
+        android:name="de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment"
+        android:label="SettingsDialogFragment" />
+    <fragment
+        android:id="@+id/markupViewerFragment"
+        android:name="de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment"
+        android:label="MarkupViewerFragment" />
 </navigation>

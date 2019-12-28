@@ -12,11 +12,11 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -28,7 +28,7 @@ import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragmentOld
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
-import kotlinx.android.synthetic.main.app_bar_main.*
+import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
@@ -38,7 +38,6 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     BrowserViewModel.OnBrowserActionListener,
     NavigationView.OnNavigationItemSelectedListener {
-
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
-//            showPlayerFragment(DataRepository.currentSelectedAudioModels)
+            //            showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
@@ -157,7 +156,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         supportFragmentManager.popBackStack()
         if (supportFragmentManager.backStackEntryCount == 0) {
-//            finish()
+            //            finish()
         }
     }
 
@@ -167,7 +166,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 drawer.openDrawer(GravityCompat.START)
                 true
             }
-            
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -250,18 +249,21 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         showPlayerFragmentWithFreshSelection()
     }
 
-    private fun showPlayerFragment(loops: List<AudioModel> = emptyList(), settings: Settings = Settings()) {
+    private fun showPlayerFragment(
+        loops: List<AudioModel> = emptyList(),
+        settings: Settings = Settings()
+    ) {
 
-//        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
-//        val appData = AppData(audioModels = loops, settings = settings)
-//        val playerFragment = PlayerFragment.newInstance(appData)
-//        Timber.d("currentFragment should get assigned")
-//        currentFragment = playerFragment
-//        StateHelper.currentFragment = currentFragment
-//        playerFragment.onResumeListener = this::updateCurrentFragment
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.container, playerFragment, "player")
-//            .commit()
+        //        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
+        //        val appData = AppData(audioModels = loops, settings = settings)
+        //        val playerFragment = PlayerFragment.newInstance(appData)
+        //        Timber.d("currentFragment should get assigned")
+        //        currentFragment = playerFragment
+        //        StateHelper.currentFragment = currentFragment
+        //        playerFragment.onResumeListener = this::updateCurrentFragment
+        //        supportFragmentManager.beginTransaction()
+        //            .replace(R.id.container, playerFragment, "player")
+        //            .commit()
     }
 
     private fun showPlayerFragmentWithFreshSelection() {
@@ -274,61 +276,50 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             showSnackbar(container, R.string.snackbar_text_no_new_files_selected)
         }
     }
-//    TODO refactor all the show() methods into something generic
+    //    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
-//        val filesListFragment = FileBrowserFragment.newInstance(path)
-//        val fragmentTransaction = supportFragmentManager.beginTransaction()
-//        currentFragment = filesListFragment
-//        fragmentTransaction.replace(R.id.container, filesListFragment)
-//        fragmentTransaction.addToBackStack(path)
-//        fragmentTransaction.commit()
-//        changeActionBar(R.menu.menu_file_browser)
+        //        val filesListFragment = FileBrowserFragment.newInstance(path)
+        //        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        //        currentFragment = filesListFragment
+        //        fragmentTransaction.replace(R.id.container, filesListFragment)
+        //        fragmentTransaction.addToBackStack(path)
+        //        fragmentTransaction.commit()
+        //        changeActionBar(R.menu.menu_file_browser)
     }
 
     private fun showAlbumBrowserFragment() {
-//        val fragment = AlbumBrowserFragment.newInstance()
-//        val fragmentTransaction = supportFragmentManager.beginTransaction()
-//        currentFragment = fragment
-//        fragmentTransaction.replace(R.id.container, fragment)
-//        fragmentTransaction.addToBackStack("album_browser")
-//        fragmentTransaction.commit()
-//        changeActionBar(R.menu.menu_file_browser)
+        nav_host_fragment.findNavController().navigate(
+            R.id.albumBrowserFragment
+        )
     }
 
     private fun showMusicBrowserFragment(albumTitle: String) {
-//        val fragment = MusicBrowserFragment.newInstance(albumTitle)
-//        val fragmentTransaction = supportFragmentManager.beginTransaction()
-//        currentFragment = fragment
-//        fragmentTransaction.replace(R.id.container, fragment)
-//        fragmentTransaction.addToBackStack("music_browser")
-//        fragmentTransaction.commit()
-//        changeActionBar(R.menu.menu_file_browser)
+        nav_host_fragment.findNavController().navigate(
+            R.id.musicBrowserFragment, buildStringArgs(albumTitle)
+        )
     }
 
     private fun showMarkupViewerFragment(markupFileName: String) {
-//        val helpFragment = MarkupViewerFragment.newInstance(markupFileName)
-//        val fragmentTransaction = supportFragmentManager.beginTransaction()
-//        currentFragment = helpFragment
-//        fragmentTransaction.replace(R.id.container, helpFragment, "markup")
-//        fragmentTransaction.addToBackStack("markup")
-//        fragmentTransaction.commit()
+        nav_host_fragment.findNavController().navigate(
+            R.id.markupViewerFragment,buildStringArgs(markupFileName)
+        )
     }
 
     private fun showSettingsDialog() {
-//        val dialog = SettingsDialogFragment()
-//        dialog.setCurrentSettings(DataRepository.settings)
-//        dialog.resultListener = {
-//            Timber.d("Resultlistener was invoked")
-//            DataRepository.settings = it
-//            DataRepository.saveCurrentState()
-//            keepScreenOnIfDesired()
-//
-//            // if we're currently in the player we need to update
-//            // immediately for the settings to take effect
-//            updatePlayerIfCurrentlyShowing()
-//        }
-//        dialog.show(supportFragmentManager, "settings-dialog")
+                val dialog = SettingsDialogFragment()
+                dialog.setCurrentSettings(DataRepository.settings)
+                dialog.resultListener = {
+                    Timber.d("Resultlistener was invoked")
+                    DataRepository.settings = it
+                    DataRepository.saveCurrentState()
+                    keepScreenOnIfDesired()
+
+                    // if we're currently in the player we need to update
+                    // immediately for the settings to take effect
+                    updatePlayerIfCurrentlyShowing()
+                }
+                dialog.show(supportFragmentManager, "settings-dialog")
     }
 
     private fun clearLoopsList() {
@@ -384,10 +375,17 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun isPermitted(): Boolean {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) &&
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED)
+            == PackageManager.PERMISSION_GRANTED) &&
+            (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED)
     }
+
+    private fun buildStringArgs(string: String): Bundle {
+        return Bundle().apply {
+            putString("string", string)
+        }
+    }
+
 }
 
 

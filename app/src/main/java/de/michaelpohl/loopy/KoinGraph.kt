@@ -2,6 +2,7 @@ package de.michaelpohl.loopy
 
 import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel
 import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserViewModel
+import de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel
 import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -26,6 +27,7 @@ object KoinGraph {
         viewModel { FileBrowserViewModel() }
         viewModel { PlayerViewModel() }
         viewModel { AlbumBrowserViewModel() }
-        viewModel { MusicBrowserViewModel()}
+        viewModel { MusicBrowserViewModel() }
+        viewModel { MarkupViewerViewModel() }
     }
 }
