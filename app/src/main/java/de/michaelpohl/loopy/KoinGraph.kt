@@ -1,5 +1,7 @@
 package de.michaelpohl.loopy
 
+import de.michaelpohl.loopy.model.InternalDataRepository
+import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel
 import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel
@@ -21,6 +23,8 @@ object KoinGraph {
 
     private val baseModule = module {
         single { androidApplication().resources }
+        single { SharedPreferencesManager(get()) }
+        single { InternalDataRepository(get()) }
     }
 
     private val viewModelModule = module {
