@@ -55,14 +55,11 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         initDataRepository()
         handlePossibleIntents()
         setupActionBar()
-
-        //drawer
         setupDrawer()
 
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
-            //            showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
@@ -279,13 +276,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     //    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
-        //        val filesListFragment = FileBrowserFragment.newInstance(path)
-        //        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        //        currentFragment = filesListFragment
-        //        fragmentTransaction.replace(R.id.container, filesListFragment)
-        //        fragmentTransaction.addToBackStack(path)
-        //        fragmentTransaction.commit()
-        //        changeActionBar(R.menu.menu_file_browser)
+        nav_host_fragment.findNavController().navigate(
+            R.id.fileBrowserFragment, buildStringArgs(path)
+        )
     }
 
     private fun showAlbumBrowserFragment() {
@@ -302,24 +295,24 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun showMarkupViewerFragment(markupFileName: String) {
         nav_host_fragment.findNavController().navigate(
-            R.id.markupViewerFragment,buildStringArgs(markupFileName)
+            R.id.markupViewerFragment, buildStringArgs(markupFileName)
         )
     }
 
     private fun showSettingsDialog() {
-                val dialog = SettingsDialogFragment()
-                dialog.setCurrentSettings(DataRepository.settings)
-                dialog.resultListener = {
-                    Timber.d("Resultlistener was invoked")
-                    DataRepository.settings = it
-                    DataRepository.saveCurrentState()
-                    keepScreenOnIfDesired()
+        val dialog = SettingsDialogFragment()
+        dialog.setCurrentSettings(DataRepository.settings)
+        dialog.resultListener = {
+            Timber.d("Resultlistener was invoked")
+            DataRepository.settings = it
+            DataRepository.saveCurrentState()
+            keepScreenOnIfDesired()
 
-                    // if we're currently in the player we need to update
-                    // immediately for the settings to take effect
-                    updatePlayerIfCurrentlyShowing()
-                }
-                dialog.show(supportFragmentManager, "settings-dialog")
+            // if we're currently in the player we need to update
+            // immediately for the settings to take effect
+            updatePlayerIfCurrentlyShowing()
+        }
+        dialog.show(supportFragmentManager, "settings-dialog")
     }
 
     private fun clearLoopsList() {
@@ -385,7 +378,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             putString("string", string)
         }
     }
-
 }
 
 
