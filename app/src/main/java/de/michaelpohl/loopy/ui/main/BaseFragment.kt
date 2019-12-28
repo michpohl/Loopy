@@ -1,6 +1,6 @@
 package de.michaelpohl.loopy.ui.main
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
 

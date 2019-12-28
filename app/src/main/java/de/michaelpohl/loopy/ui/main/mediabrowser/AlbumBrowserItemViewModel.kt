@@ -1,8 +1,8 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
-import android.arch.lifecycle.ViewModel
-import android.databinding.ObservableField
 import android.view.View
+import androidx.databinding.ObservableField
+import androidx.lifecycle.ViewModel
 
 class AlbumBrowserItemViewModel(
     private val position: Int,  //TODO is this needed?

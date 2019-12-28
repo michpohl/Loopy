@@ -12,7 +12,7 @@
             android:textAppearance="@style/Text.SubHeaderLarge"
             app:layout_constraintTop_toTopOf="parent"/>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/Row">
 
         <TextView
@@ -186,5 +186,5 @@
         app:layout_constraintEnd_toStartOf="@id/btn_ok"
         app:layout_constraintBaseline_toBaselineOf="@id/btn_ok"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

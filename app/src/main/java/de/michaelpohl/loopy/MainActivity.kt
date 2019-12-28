@@ -6,28 +6,29 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
-import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserFragment
-import de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment
-import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
+import de.michaelpohl.loopy.ui.main.player.PlayerFragmentOld
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
@@ -38,47 +39,77 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     BrowserViewModel.OnBrowserActionListener,
     NavigationView.OnNavigationItemSelectedListener {
 
-
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
+    private lateinit var drawer: DrawerLayout
+
     private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("onCreate")
         super.onCreate(savedInstanceState)
-
-        //Timber logging on when Debugging
-//        if (BuildConfig.DEBUG) {
-        Timber.plant(Timber.DebugTree())
-//        }
-
-        DataRepository.init(
-            getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        )
-
         setContentView(R.layout.main_activity)
-        if (Intent.ACTION_VIEW == intent.action) {
-            Timber.d("Intent")
-            handleIntent()
-        }
-        setSupportActionBar(toolbar)
+
+        setupTimber()
+        setupNavigation()
+        initDataRepository()
+        handlePossibleIntents()
+        setupActionBar()
 
         //drawer
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar, R.string.app_name, R.string.app_name
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        nav_view.setNavigationItemSelectedListener(this)
+        setupDrawer()
 
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
-            showPlayerFragment(DataRepository.currentSelectedAudioModels)
+            //            showPlayerFragment(DataRepository.currentSelectedAudioModels)
         }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
+    }
+
+    private fun handlePossibleIntents() {
+        if (Intent.ACTION_VIEW == intent.action) {
+            Timber.d("Intent")
+            handleIntent()
+        }
+    }
+
+    private fun initDataRepository() {
+        DataRepository.init(
+            getSharedPreferences(
+                resources.getString(R.string.preference_file_key),
+                Context.MODE_PRIVATE
+            )
+        )
+    }
+
+    private fun setupNavigation() {
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val navController = findNavController(R.id.nav_host_fragment)
+        navigationView.setupWithNavController(navController)
+    }
+
+    private fun setupDrawer() {
+        drawer = drawer_layout as DrawerLayout
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    private fun setupActionBar() {
+        val toolBar = tb_toolbar
+        setSupportActionBar(toolBar)
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_settings)
+        }
+    }
+
+    private fun setupTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
     override fun onResume() {
@@ -125,7 +156,18 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         supportFragmentManager.popBackStack()
         if (supportFragmentManager.backStackEntryCount == 0) {
-//            finish()
+            //            finish()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                drawer.openDrawer(GravityCompat.START)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -152,7 +194,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             else -> {
             } // do nothing
         }
-        drawer_layout.closeDrawers()
+        drawer.closeDrawers()
 
         // returning false suppresses the visual checking of clicked items. We don't need it so we return false
         return false
@@ -179,10 +221,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     /**
-     * this gets called in PlayerFragment's onResume() to make sure it always is the currentFragment
+     * this gets called in PlayerFragmentOld's onResume() to make sure it always is the currentFragment
      * when it is open. That is necessary for some functionality and this way is a convenient shortcut
      */
-    fun updateCurrentFragment(fragment: PlayerFragment) {
+    fun updateCurrentFragment(fragment: PlayerFragmentOld) {
         Timber.d("Putting Playerfragment back into place")
         currentFragment = fragment
     }
@@ -207,18 +249,21 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         showPlayerFragmentWithFreshSelection()
     }
 
-    private fun showPlayerFragment(loops: List<AudioModel> = emptyList(), settings: Settings = Settings()) {
+    private fun showPlayerFragment(
+        loops: List<AudioModel> = emptyList(),
+        settings: Settings = Settings()
+    ) {
 
-        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
-        val appData = AppData(audioModels = loops, settings = settings)
-        val playerFragment = PlayerFragment.newInstance(appData)
-        Timber.d("currentFragment should get assigned")
-        currentFragment = playerFragment
-        StateHelper.currentFragment = currentFragment
-        playerFragment.onResumeListener = this::updateCurrentFragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, playerFragment, "player")
-            .commit()
+        //        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
+        //        val appData = AppData(audioModels = loops, settings = settings)
+        //        val playerFragment = PlayerFragment.newInstance(appData)
+        //        Timber.d("currentFragment should get assigned")
+        //        currentFragment = playerFragment
+        //        StateHelper.currentFragment = currentFragment
+        //        playerFragment.onResumeListener = this::updateCurrentFragment
+        //        supportFragmentManager.beginTransaction()
+        //            .replace(R.id.container, playerFragment, "player")
+        //            .commit()
     }
 
     private fun showPlayerFragmentWithFreshSelection() {
@@ -231,61 +276,50 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             showSnackbar(container, R.string.snackbar_text_no_new_files_selected)
         }
     }
-//    TODO refactor all the show() methods into something generic
+    //    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
-        val filesListFragment = FileBrowserFragment.newInstance(path)
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = filesListFragment
-        fragmentTransaction.replace(R.id.container, filesListFragment)
-        fragmentTransaction.addToBackStack(path)
-        fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_file_browser)
+        //        val filesListFragment = FileBrowserFragment.newInstance(path)
+        //        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        //        currentFragment = filesListFragment
+        //        fragmentTransaction.replace(R.id.container, filesListFragment)
+        //        fragmentTransaction.addToBackStack(path)
+        //        fragmentTransaction.commit()
+        //        changeActionBar(R.menu.menu_file_browser)
     }
 
     private fun showAlbumBrowserFragment() {
-        val fragment = AlbumBrowserFragment.newInstance()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = fragment
-        fragmentTransaction.replace(R.id.container, fragment)
-        fragmentTransaction.addToBackStack("album_browser")
-        fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_file_browser)
+        nav_host_fragment.findNavController().navigate(
+            R.id.albumBrowserFragment
+        )
     }
 
     private fun showMusicBrowserFragment(albumTitle: String) {
-        val fragment = MusicBrowserFragment.newInstance(albumTitle)
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = fragment
-        fragmentTransaction.replace(R.id.container, fragment)
-        fragmentTransaction.addToBackStack("music_browser")
-        fragmentTransaction.commit()
-        changeActionBar(R.menu.menu_file_browser)
+        nav_host_fragment.findNavController().navigate(
+            R.id.musicBrowserFragment, buildStringArgs(albumTitle)
+        )
     }
 
     private fun showMarkupViewerFragment(markupFileName: String) {
-        val helpFragment = MarkupViewerFragment.newInstance(markupFileName)
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        currentFragment = helpFragment
-        fragmentTransaction.replace(R.id.container, helpFragment, "markup")
-        fragmentTransaction.addToBackStack("markup")
-        fragmentTransaction.commit()
+        nav_host_fragment.findNavController().navigate(
+            R.id.markupViewerFragment,buildStringArgs(markupFileName)
+        )
     }
 
     private fun showSettingsDialog() {
-        val dialog = SettingsDialogFragment()
-        dialog.setCurrentSettings(DataRepository.settings)
-        dialog.resultListener = {
-            Timber.d("Resultlistener was invoked")
-            DataRepository.settings = it
-            DataRepository.saveCurrentState()
-            keepScreenOnIfDesired()
+                val dialog = SettingsDialogFragment()
+                dialog.setCurrentSettings(DataRepository.settings)
+                dialog.resultListener = {
+                    Timber.d("Resultlistener was invoked")
+                    DataRepository.settings = it
+                    DataRepository.saveCurrentState()
+                    keepScreenOnIfDesired()
 
-            // if we're currently in the player we need to update
-            // immediately for the settings to take effect
-            updatePlayerIfCurrentlyShowing()
-        }
-        dialog.show(supportFragmentManager, "settings-dialog")
+                    // if we're currently in the player we need to update
+                    // immediately for the settings to take effect
+                    updatePlayerIfCurrentlyShowing()
+                }
+                dialog.show(supportFragmentManager, "settings-dialog")
     }
 
     private fun clearLoopsList() {
@@ -310,13 +344,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun updatePlayerIfCurrentlyShowing() {
-        if (currentFragment is PlayerFragment) {
-            (currentFragment as PlayerFragment).updateViewModel()
+        if (currentFragment is PlayerFragmentOld) {
+            (currentFragment as PlayerFragmentOld).updateViewModel()
         }
     }
 
     private fun clearBackStack() {
-        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
+        if (currentFragment is PlayerFragmentOld) stopPlaybackIfDesired(currentFragment as PlayerFragmentOld)
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -335,16 +369,23 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
+    private fun stopPlaybackIfDesired(playerFragment: PlayerFragmentOld) {
         playerFragment.pausePlayback()
     }
 
     private fun isPermitted(): Boolean {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) &&
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED)
+            == PackageManager.PERMISSION_GRANTED) &&
+            (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED)
     }
+
+    private fun buildStringArgs(string: String): Bundle {
+        return Bundle().apply {
+            putString("string", string)
+        }
+    }
+
 }
 
 

@@ -1,14 +1,13 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.app.Application
-import android.databinding.ObservableField
-import android.databinding.ObservableInt
 import android.view.View
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 
-open class BrowserViewModel(application: Application) : BaseViewModel(application) {
+open class BrowserViewModel : BaseViewModel() {
 
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE) //override if interested
     var bottomBarVisibility = ObservableInt(View.INVISIBLE)

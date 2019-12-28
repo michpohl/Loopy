@@ -10,11 +10,11 @@
                 type="de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_files"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -72,6 +72,6 @@
                 android:visibility="@{model.bottomBarVisibility}"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

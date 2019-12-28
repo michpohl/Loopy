@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.app.Application
 import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileHelper
@@ -8,7 +7,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.model.DataRepository
 
-class FileBrowserViewModel(application: Application) : BrowserViewModel(application) {
+class FileBrowserViewModel : BrowserViewModel() {
 
     private var adapter =
         FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)

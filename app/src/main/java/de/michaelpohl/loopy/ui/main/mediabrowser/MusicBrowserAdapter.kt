@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
-import android.databinding.DataBindingUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import de.michaelpohl.loopy.R

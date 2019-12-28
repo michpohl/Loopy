@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.ui.main.player
 
 import android.content.ComponentName
-import android.content.Context
+import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
@@ -25,15 +25,16 @@ import kotlinx.android.synthetic.main.fragment_player.*
 import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
-class PlayerFragment : BaseFragment() {
+class PlayerFragmentOld : BaseFragment() {
 
-    private lateinit var viewModel: PlayerViewModel
-    private lateinit var binding: FragmentPlayerBinding
-
+    //TODO loopslist needs to be persistent and gets given to the fragment when creating (which means in the activity?)
     private lateinit var loopsList: List<AudioModel>
+    private val viewModel : PlayerViewModel = getViewModel()
+    private lateinit var binding: FragmentPlayerBinding
     private lateinit var playerService: PlayerService
-    lateinit var onResumeListener: (PlayerFragment) -> Unit
+    lateinit var onResumeListener: (PlayerFragmentOld) -> Unit
 
+    ////
     private var playerServiceBinder: PlayerServiceBinder? = null
         set(value) {
             field = value
@@ -43,7 +44,7 @@ class PlayerFragment : BaseFragment() {
     // This service connection object is the bridge between activity and background service.
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
-            // Cast and assign background service's onBind method returned Binder object.
+            // Cast and assign background service's onBind method returned iBander object.
             Timber.d("Now setting the binder!")
             playerServiceBinder = iBinder as PlayerServiceBinder
         }
@@ -51,9 +52,21 @@ class PlayerFragment : BaseFragment() {
         override fun onServiceDisconnected(componentName: ComponentName) {
         }
     }
+    ////
+
+//    companion object {
+//        fun newInstance(
+//            appData: AppData
+//        ): PlayerFragmentOld {
+//            val fragment = PlayerFragmentOld()
+//            val args = Bundle()
+//            args.putParcelable("appData", appData)
+//            fragment.arguments = args
+//            return fragment
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("Creating Player fragment")
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (arguments != null) {
@@ -64,15 +77,11 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
+    ): View {
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player, container, false)
-        viewModel = getViewModel()
-        binding.model = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
@@ -151,14 +160,14 @@ class PlayerFragment : BaseFragment() {
 
             // Below code will invoke serviceConnection's onServiceConnected method.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                activity!!.startForegroundService(intent)
+            activity!!.startForegroundService(intent)
             } else {
                 activity!!.startService(intent)
             }
             activity!!.bindService(
                 intent,
                 serviceConnection,
-                Context.BIND_AUTO_CREATE
+                BIND_AUTO_CREATE
             )
             viewModel.looper = playerServiceBinder
             Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
@@ -168,18 +177,6 @@ class PlayerFragment : BaseFragment() {
     private fun unBindAudioService() {
         if (playerServiceBinder != null) {
             activity?.unbindService(serviceConnection)
-        }
-    }
-
-    companion object {
-        fun newInstance(
-            appData: AppData
-        ): PlayerFragmentOld {
-            val fragment = PlayerFragmentOld()
-            val args = Bundle()
-            args.putParcelable("appData", appData)
-            fragment.arguments = args
-            return fragment
         }
     }
 }

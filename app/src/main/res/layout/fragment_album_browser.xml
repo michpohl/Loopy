@@ -1,55 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-                name="model"
-                type="de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel"/>
+            name="model"
+            type="de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_files"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintTop_toTopOf="parent"
-app:layout_constraintBottom_toBottomOf="parent"                />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_files"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-                android:id="@+id/emptyFolderLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="@{model.getEmptyFolderLayoutVisibility}"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/emptyFolderLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="@{model.getEmptyFolderLayoutVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                    style="@style/WrapContent"
-                    android:textAppearance="@style/Text.HeaderLarge"
-                    android:text="@string/message_empty_folder"/>
+                style="@style/WrapContent"
+                android:text="@string/message_empty_folder"
+                android:textAppearance="@style/Text.HeaderLarge" />
 
         </LinearLayout>
 
         <!--<View-->
-                <!--android:id="@+id/bottom_background"-->
-                <!--style="@style/MatchConstraints"-->
-                <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="@id/btn_select_all"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--android:visibility="@{model.bottomBarVisibility}"-->
-                <!--android:background="@color/darkest_green"/>-->
+        <!--android:id="@+id/bottom_background"-->
+        <!--style="@style/MatchConstraints"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="@id/btn_select_all"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--android:visibility="@{model.bottomBarVisibility}"-->
+        <!--android:background="@color/darkest_green"/>-->
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

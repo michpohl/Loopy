@@ -10,7 +10,7 @@
                 type="de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserItemViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,5 +80,5 @@
                 android:checked="@{model.selected}"
                 android:layout_marginEnd="8dp"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,22 +1,22 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import kotlinx.android.synthetic.main.fragment_files_list.*
+import org.koin.android.ext.android.inject
 
 class MusicBrowserFragment : BaseFragment() {
 
-    private lateinit var viewModel: MusicBrowserViewModel
+    private val viewModel: MusicBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var album: String
 
@@ -40,7 +40,6 @@ class MusicBrowserFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MusicBrowserViewModel::class.java)
 
         try {
             viewModel.listener = context as BrowserViewModel.OnBrowserActionListener

@@ -1,10 +1,10 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.arch.lifecycle.ViewModel
-import android.databinding.ObservableField
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import androidx.databinding.ObservableField
+import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType

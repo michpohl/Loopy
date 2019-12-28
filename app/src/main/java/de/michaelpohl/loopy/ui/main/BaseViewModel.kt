@@ -1,10 +1,14 @@
 package de.michaelpohl.loopy.ui.main
 
-import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
+import android.content.res.Resources
+import androidx.lifecycle.ViewModel
 
-open class BaseViewModel(application: Application) : AndroidViewModel(application) {
-    private val resources = application.resources
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+
+open class BaseViewModel : ViewModel(), KoinComponent {
+
+    protected val resources: Resources by inject()
 
     protected fun getString(stringID : Int) : String {
         return resources.getString(stringID)
