@@ -18,21 +18,10 @@ class FileBrowserFragment : BaseFragment() {
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var path: String
 
-    companion object {
-
-        fun newInstance(path: String): FileBrowserFragment {
-            val fragment = FileBrowserFragment()
-            val args = Bundle()
-            args.putString("path", path)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            path = arguments!!.getString("path")
+            path = arguments!!.getString("string")
         }
     }
 
@@ -47,7 +36,11 @@ class FileBrowserFragment : BaseFragment() {
         initViews()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_files_list, container, false)
         var myView: View = binding.root
         return myView
