@@ -24,6 +24,7 @@ import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
+import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragmentOld
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -51,15 +52,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
         setupTimber()
         setupNavigation()
-
-        DataRepository.init(
-            getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        )
-
-        if (Intent.ACTION_VIEW == intent.action) {
-            Timber.d("Intent")
-            handleIntent()
-        }
+        initDataRepository()
+        handlePossibleIntents()
         setupActionBar()
 
         //drawer
@@ -74,9 +68,25 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         keepScreenOnIfDesired()
     }
 
+    private fun handlePossibleIntents() {
+        if (Intent.ACTION_VIEW == intent.action) {
+            Timber.d("Intent")
+            handleIntent()
+        }
+    }
+
+    private fun initDataRepository() {
+        DataRepository.init(
+            getSharedPreferences(
+                resources.getString(R.string.preference_file_key),
+                Context.MODE_PRIVATE
+            )
+        )
+    }
+
     private fun setupNavigation() {
         val navigationView: NavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host)
+        val navController = findNavController(R.id.nav_host_fragment)
         navigationView.setupWithNavController(navController)
     }
 
@@ -87,7 +97,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun setupActionBar() {
-        val toolBar = toolbar as Toolbar
+        val toolBar = tb_toolbar
         setSupportActionBar(toolBar)
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
@@ -232,7 +242,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
 //        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
 //        val appData = AppData(audioModels = loops, settings = settings)
-//        val playerFragment = PlayerFragmentOld.newInstance(appData)
+//        val playerFragment = PlayerFragment.newInstance(appData)
 //        Timber.d("currentFragment should get assigned")
 //        currentFragment = playerFragment
 //        StateHelper.currentFragment = currentFragment
@@ -314,7 +324,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             showSnackbar(container, R.string.snackbar_error_message)
             return
         }
-        if (currentFragment is PlayerFragmentOld) {
+        if (currentFragment is PlayerFragment) {
             Timber.d("We say it's initialized")
             val dialogHelper = DialogHelper(this)
             dialogHelper.requestConfirmation(

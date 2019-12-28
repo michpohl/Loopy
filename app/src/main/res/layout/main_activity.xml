@@ -4,28 +4,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/MatchParent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <LinearLayout
         style="@style/MatchParent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context="de.michaelpohl.loopy.MainActivity">
 
-        <include
-            layout="@layout/app_bar_main"
+<!--        <include-->
+<!--            layout="@layout/app_bar_main"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            app:titleTextColor="@color/white"
+            android:theme="@style/ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
 
         <fragment
-            android:id="@+id/nav_host"
-            class="androidx.navigation.fragment.NavHostFragment"
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
-
 
     </LinearLayout>
 

@@ -43,7 +43,7 @@ class PlayerFragment : BaseFragment() {
     // This service connection object is the bridge between activity and background service.
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
-            // Cast and assign background service's onBind method returned iBander object.
+            // Cast and assign background service's onBind method returned Binder object.
             Timber.d("Now setting the binder!")
             playerServiceBinder = iBinder as PlayerServiceBinder
         }
@@ -53,6 +53,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.d("Creating Player fragment")
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (arguments != null) {
