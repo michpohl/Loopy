@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
@@ -31,18 +32,22 @@ import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
-class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
+class MainActivity: AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     BrowserViewModel.OnBrowserActionListener,
-    NavigationView.OnNavigationItemSelectedListener {
+    NavigationView.OnNavigationItemSelectedListener, KoinComponent {
+
+    val dataRepo: AudioFilesRepository by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
-    private lateinit var drawer: DrawerLayout
 
+    private lateinit var drawer: DrawerLayout
     private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +68,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
+        dataRepo.autoCreateStandardLoopSet()
+
     }
 
     private fun handlePossibleIntents() {

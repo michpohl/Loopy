@@ -43,7 +43,7 @@ class PlayerViewModel : BaseViewModel() {
 //        looper?.let {
 //            if (it.getHasLoopFile()) startLooper()
 //        }
-        JniBridge.play("audio/testing.mp3")
+        JniBridge.play("testing.mp3")
     }
 
     fun onStopPlaybackClicked(view: View) {

@@ -9,6 +9,11 @@ object FileHelper {
 
     val excludedFolders = listOf("Android", "DCIM")
 
+    fun isValidAudioFile(name: String): Boolean {
+        //TODO turn extensions into CONSTs somewhere
+        return name.endsWith(".mp3") || name.endsWith(".ogg") || name.endsWith(".wav")
+    }
+
     fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
 

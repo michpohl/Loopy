@@ -8,7 +8,8 @@ object JniBridge {
         System.loadLibrary("native-lib")
         Timber.d("Native Lib loaded!")
     }
-    lateinit var assets :  AssetManager
+
+    lateinit var assets: AssetManager
 
     fun play(fileName: String) {
         playFromJNI(assets, fileName)
