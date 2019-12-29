@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy
 
+import de.michaelpohl.loopy.model.ExternalStorageManager
 import de.michaelpohl.loopy.model.InternalDataRepository
 import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel
@@ -24,7 +25,8 @@ object KoinGraph {
     private val baseModule = module {
         single { androidApplication().resources }
         single { SharedPreferencesManager(get()) }
-        single { InternalDataRepository(get()) }
+        single { InternalDataRepository(get(), get()) }
+        single { ExternalStorageManager(get()) }
     }
 
     private val viewModelModule = module {
