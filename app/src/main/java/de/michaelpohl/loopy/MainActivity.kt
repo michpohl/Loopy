@@ -22,8 +22,9 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.common.jni.JniBridge
-import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
+import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
@@ -38,11 +39,12 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
-class MainActivity: AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
+class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     BrowserViewModel.OnBrowserActionListener,
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
-    val dataRepo: AudioFilesRepository by inject()
+    private val dataRepo: AudioFilesRepository by inject()
+    private val prefs: SharedPreferencesManager by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
@@ -55,21 +57,35 @@ class MainActivity: AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        if (savedInstanceState == null) {
+            val permissionHelper = PermissionHelper(this)
+            permissionHelper.checkPermissions()
+        }
         setupTimber()
+        setupAppData()
         setupNavigation()
         initDataRepository()
         handlePossibleIntents()
         setupActionBar()
         setupDrawer()
 
-        if (savedInstanceState == null) {
-            val permissionHelper = PermissionHelper(this)
-            permissionHelper.checkPermissions()
-        }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
-        dataRepo.autoCreateStandardLoopSet()
+        doAtAppStartup()
+    }
 
+    private fun setupAppData() {
+        Timber.d("is App setup? ${prefs.isAppSetup}")
+        // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
+        // on Failure, whatever the reason might be, it stays false and will run again next startup
+        if (!prefs.isAppSetup) {
+            val setupComplete =  dataRepo.autoCreateStandardLoopSet()
+            prefs.saveAppSetupComplete(setupComplete)
+            Timber.d("is App setup now? ${prefs.isAppSetup}")
+        }
+    }
+
+    private fun doAtAppStartup() {
     }
 
     private fun handlePossibleIntents() {

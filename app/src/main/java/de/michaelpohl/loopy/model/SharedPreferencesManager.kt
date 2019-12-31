@@ -12,6 +12,12 @@ class SharedPreferencesManager(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE)
 
+    var isAppSetup = getBoolean(APP_IS_SETUP_KEY)
+
+    fun saveAppSetupComplete(value: Boolean) {
+        putBoolean(APP_IS_SETUP_KEY, value)
+    }
+
     fun loadLoopSets(): Sets {
         return getString(SETS_KEY)?.let {
             JsonDataClass.fromJsonString<Sets>(it)
@@ -28,6 +34,14 @@ class SharedPreferencesManager(context: Context) {
 
     private fun getString(key: String, defaultValue: String? = ""): String? {
         return sharedPreferences.getString(key, defaultValue)
+    }
+
+    private fun getBoolean(key: String): Boolean {
+        return sharedPreferences.getBoolean(key, false)
+    }
+
+    private fun putBoolean(key: String, value: Boolean) {
+        sharedPreferences.edit().putBoolean(key, value).apply()
     }
 
     private fun delete(key: String) {
@@ -48,5 +62,6 @@ class SharedPreferencesManager(context: Context) {
     companion object {
         const val SHARED_PREFS_KEY = "loopy"
         const val SETS_KEY = "sets"
+        const val APP_IS_SETUP_KEY = "setup"
     }
 }
