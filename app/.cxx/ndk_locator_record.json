@@ -27,7 +27,7 @@
     },
     {
       "level": "INFO",
-      "message": "Found requested ndk.dir (/Users/michael/Library/Android/sdk/ndk-bundle) which has version 20.0.5594570"
+      "message": "Found requested ndk.dir (/Users/michael/Library/Android/sdk/ndk-bundle) which has version 20.1.5948944"
     }
   ]
 }
