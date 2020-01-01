@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     BrowserViewModel.OnBrowserActionListener,
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
-    private val dataRepo: AudioFilesRepository by inject()
+    private val audioFilesRepo: AudioFilesRepository by inject()
     private val prefs: SharedPreferencesManager by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
@@ -75,15 +75,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun setupAppData() {
-        Timber.d("is App setup? ${prefs.isAppSetupComplete()}")
+        Timber.d("is App setup? ${prefs.setupComplete}")
         // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
         // on Failure, whatever the reason might be, it stays false and will run again next startup
-        if (!prefs.isAppSetupComplete()) {
-            val setupComplete = dataRepo.autoCreateStandardLoopSet()
+        if (!prefs.setupComplete) {
+            val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
             Timber.d("Setup complete? $setupComplete")
-            prefs.saveAppSetupComplete(setupComplete)
+            prefs.setupComplete = setupComplete
             Handler().postDelayed({
-                Timber.d("is App setup now? ${prefs.isAppSetupComplete()}")
+                Timber.d("is App setup now? ${prefs.setupComplete}")
             }, 500)
         }
     }

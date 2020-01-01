@@ -26,6 +26,10 @@ class ExternalStorageManager(val context: Context) {
             return Environment.MEDIA_MOUNTED.equals(extStorageState)
         }
 
+    fun listSets(): List<File> {
+        return FileHelper.getPathContent(path = appStorageFolder.path, onlyFolders = true)
+    }
+
     fun saveFile(fileToSave: File, path: String): Boolean {
         var externalFile = File(path, fileToSave.name.toString())
         return try {
@@ -69,7 +73,6 @@ class ExternalStorageManager(val context: Context) {
         } else true
     }
 
-    //TODO change this to handle a number of files
     fun copyStandardFilesToSdCard(): Boolean {
         Timber.d("Is external storage available: $isExternalStorageAvailable, read only: $isExternalStorageReadOnly")
         val outputPath = "${appStorageFolder.path}/$STANDARD_SET_FOLDER_NAME/"
@@ -118,8 +121,7 @@ class ExternalStorageManager(val context: Context) {
         }
         return list
     }
-
-    companion object {
-        const val STANDARD_SET_FOLDER_NAME = "standard"
-    }
 }
+
+// tODO make a const file
+const val STANDARD_SET_FOLDER_NAME = "standard"

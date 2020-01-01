@@ -14,7 +14,7 @@ object FileHelper {
         return name.endsWith(".mp3") || name.endsWith(".ogg") || name.endsWith(".wav")
     }
 
-    fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+    fun getPathContent(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
 
         if (file.listFiles() == null) {
@@ -54,7 +54,7 @@ object FileHelper {
         var containsAudio = false
 
         if (!isExcludedFolderName(path)) {
-            val filesToCheck: List<File> = getFilesFromPath(path)
+            val filesToCheck: List<File> = getPathContent(path)
             val foundFileModels: List<FileModel> =
                 getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FILE }
 
@@ -71,7 +71,7 @@ object FileHelper {
         var containsAudio = false
 
         if (!isExcludedFolderName(path)) {
-            val filesToCheck: List<File> = getFilesFromPath(path)
+            val filesToCheck: List<File> = getPathContent(path)
 
             val foundFolderModels: List<FileModel> =
                 getFileModelsFromFiles(filesToCheck)

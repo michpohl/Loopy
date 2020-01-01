@@ -3,7 +3,6 @@ package de.michaelpohl.loopy.model
 import android.content.res.AssetManager
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 
 class AudioFilesRepository(
     private val sharedPrefsManager: SharedPreferencesManager,
@@ -30,11 +29,9 @@ class AudioFilesRepository(
      * @return true if everything was successful
      */
     fun autoCreateStandardLoopSet(): Boolean {
-        val wasFolderCreated =  storage.createSetFolder()
-        val wereFilesCopied = storage.copyStandardFilesToSdCard()
-        Timber.d("Was setting up the standard folder successful? $wasFolderCreated, $wereFilesCopied")
-        return wasFolderCreated && wereFilesCopied
+        return if (storage.createSetFolder() && storage.copyStandardFilesToSdCard()) {
+            sharedPrefsManager.selectedSetName = STANDARD_SET_FOLDER_NAME
+            true
+        } else false
     }
-
-
 }
