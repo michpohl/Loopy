@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -71,21 +72,20 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
         JniBridge.assets = assets
         keepScreenOnIfDesired()
-        doAtAppStartup()
     }
 
     private fun setupAppData() {
-        Timber.d("is App setup? ${prefs.isAppSetup}")
+        Timber.d("is App setup? ${prefs.isAppSetupComplete()}")
         // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
         // on Failure, whatever the reason might be, it stays false and will run again next startup
-        if (!prefs.isAppSetup) {
-            val setupComplete =  dataRepo.autoCreateStandardLoopSet()
+        if (!prefs.isAppSetupComplete()) {
+            val setupComplete = dataRepo.autoCreateStandardLoopSet()
+            Timber.d("Setup complete? $setupComplete")
             prefs.saveAppSetupComplete(setupComplete)
-            Timber.d("is App setup now? ${prefs.isAppSetup}")
+            Handler().postDelayed({
+                Timber.d("is App setup now? ${prefs.isAppSetupComplete()}")
+            }, 500)
         }
-    }
-
-    private fun doAtAppStartup() {
     }
 
     private fun handlePossibleIntents() {

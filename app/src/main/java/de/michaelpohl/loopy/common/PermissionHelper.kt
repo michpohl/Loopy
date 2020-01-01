@@ -19,8 +19,14 @@ class PermissionHelper(private val activity: Activity) {
         )
         val permissionsNotGranted = mutableListOf<String>()
 
-        permissions.forEach { if (!checkSinglePermission(it)) permissionsNotGranted.add(it) }
-        if (permissionsNotGranted.isNotEmpty()) requestPermission(permissionsNotGranted.toTypedArray())
+        permissions.forEach {
+            if (!checkSinglePermission(it)) {
+                permissionsNotGranted.add(it)
+            }
+        }
+        if (permissionsNotGranted.isNotEmpty()) {
+            requestPermission(permissionsNotGranted.toTypedArray())
+        }
     }
 
     private fun checkSinglePermission(permission: String): Boolean {

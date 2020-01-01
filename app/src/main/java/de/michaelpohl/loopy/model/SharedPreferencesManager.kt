@@ -12,7 +12,9 @@ class SharedPreferencesManager(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE)
 
-    var isAppSetup = getBoolean(APP_IS_SETUP_KEY)
+    fun isAppSetupComplete() : Boolean {
+        return getBoolean(APP_IS_SETUP_KEY)
+    }
 
     fun saveAppSetupComplete(value: Boolean) {
         putBoolean(APP_IS_SETUP_KEY, value)
@@ -37,7 +39,7 @@ class SharedPreferencesManager(context: Context) {
     }
 
     private fun getBoolean(key: String): Boolean {
-        return sharedPreferences.getBoolean(key, false)
+      return sharedPreferences.getBoolean(key, false)
     }
 
     private fun putBoolean(key: String, value: Boolean) {
