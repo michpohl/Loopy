@@ -32,7 +32,7 @@ object KoinGraph {
 
     private val viewModelModule = module {
         viewModel { FileBrowserViewModel() }
-        viewModel { PlayerViewModel() }
+        viewModel { PlayerViewModel(get()) }
         viewModel { AlbumBrowserViewModel() }
         viewModel { MusicBrowserViewModel() }
         viewModel { MarkupViewerViewModel() }

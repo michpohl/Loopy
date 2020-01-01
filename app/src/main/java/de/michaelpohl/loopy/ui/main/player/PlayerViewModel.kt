@@ -9,13 +9,17 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
+import java.io.File
 
-class PlayerViewModel : BaseViewModel() {
+class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
+
+    val currentSet: List<File> = repository.getSingleSet()
 
     lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
@@ -40,9 +44,9 @@ class PlayerViewModel : BaseViewModel() {
     lateinit var loopsList: List<AudioModel>
 
     fun onStartPlaybackClicked(view: View) {
-//        looper?.let {
-//            if (it.getHasLoopFile()) startLooper()
-//        }
+        //        looper?.let {
+        //            if (it.getHasLoopFile()) startLooper()
+        //        }
         JniBridge.play("testing.mp3")
     }
 

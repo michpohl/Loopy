@@ -27,6 +27,8 @@ import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
+
+
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
 
@@ -53,7 +55,6 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("Creating Player fragment")
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (arguments != null) {
@@ -82,6 +83,7 @@ class PlayerFragment : BaseFragment() {
         bindAudioService()
         activity!!.startService(Intent(activity, playerService::class.java))
         binding.model = viewModel
+        viewModel.currentSet.forEach {Timber.d("${it.name}") }
     }
 
     override fun onStart() {

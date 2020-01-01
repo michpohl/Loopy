@@ -30,6 +30,10 @@ class ExternalStorageManager(val context: Context) {
         return FileHelper.getPathContent(path = appStorageFolder.path, onlyFolders = true)
     }
 
+    fun listSetContents(setFolderName: String): List<File> {
+        return FileHelper.getPathContent("${appStorageFolder.path}/$setFolderName")
+    }
+
     fun saveFile(fileToSave: File, path: String): Boolean {
         var externalFile = File(path, fileToSave.name.toString())
         return try {
