@@ -83,7 +83,7 @@ class PlayerFragment : BaseFragment() {
         bindAudioService()
         activity!!.startService(Intent(activity, playerService::class.java))
         binding.model = viewModel
-        viewModel.currentSet.forEach {Timber.d("${it.name}") }
+        viewModel.loopsList.forEach {Timber.d("${it.name}") }
     }
 
     override fun onStart() {
@@ -121,7 +121,7 @@ class PlayerFragment : BaseFragment() {
 
     fun updateViewModel() {
         loopsList = DataRepository.currentSelectedAudioModels
-        viewModel.loopsList = DataRepository.currentSelectedAudioModels
+//        viewModel.loopsList = DataRepository.currentSelectedAudioModels
         viewModel.updateData()
     }
 
@@ -131,7 +131,7 @@ class PlayerFragment : BaseFragment() {
 
     private fun initAdapter() {
         rv_loops.layoutManager = LinearLayoutManager(context)
-        viewModel.loopsList = loopsList
+//        viewModel.loopsList = loopsList
         viewModel.adapter =
             LoopsAdapter(context!!) { viewModel.onProgressChangedByUser(it) }.apply {
                 dialogHelper = DialogHelper(activity!!)
@@ -173,15 +173,4 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    companion object {
-        fun newInstance(
-            appData: AppData
-        ): PlayerFragmentOld {
-            val fragment = PlayerFragmentOld()
-            val args = Bundle()
-            args.putParcelable("appData", appData)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

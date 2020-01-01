@@ -2,6 +2,7 @@ package de.michaelpohl.loopy.model
 
 import android.content.Context
 import android.os.Environment
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileHelper
 import timber.log.Timber
 import java.io.File
@@ -30,8 +31,14 @@ class ExternalStorageManager(val context: Context) {
         return FileHelper.getPathContent(path = appStorageFolder.path, onlyFolders = true)
     }
 
-    fun listSetContents(setFolderName: String): List<File> {
-        return FileHelper.getPathContent("${appStorageFolder.path}/$setFolderName")
+    fun listSetContents(setFolderName: String): List<AudioModel> {
+        val audioModels = mutableListOf<AudioModel>()
+        with(FileHelper) {
+            getFileModelsFromFiles(getPathContent("${appStorageFolder.path}/$setFolderName")).forEach {
+                audioModels.add(fileModelToAudioModel(it))
+            }
+        }
+        return audioModels
     }
 
     fun saveFile(fileToSave: File, path: String): Boolean {

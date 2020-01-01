@@ -8,8 +8,9 @@
 #include <cinttypes>
 #include "AudioEngine.h"
 #include "logging.h"
+#include <fstream>
 
-AudioEngine::AudioEngine(AAssetManager &assetManager) : mAssetManager(assetManager) {
+AudioEngine::AudioEngine() {
 }
 
 void AudioEngine::prepare(std::string fileName) {
@@ -57,23 +58,70 @@ bool AudioEngine::setupSource() {
     };
 
 
-    // Create a data source and player
-    const char *x = fileToPlay.c_str();
-    std::shared_ptr<AAssetDataSource> loopSource{
-            AAssetDataSource::newFromCompressedAsset(mAssetManager, x, targetProperties)
-    };
+//    // Create a data source and player
+//    const char *x = fileToPlay.c_str();
+//    std::shared_ptr<AAssetDataSource> loopSource{
+//            AAssetDataSource::newFromCompressedAsset(mAssetManager, x, targetProperties)
+//    };
 
-    if (loopSource == nullptr) {
-        LOGE("Could not load source data for backing track");
-        return false;
-    }
-    loop = std::make_unique<Player>(loopSource);
-    loop->setPlaying(true);
-    loop->setLooping(true);
-
-    mMixer.addTrack(loop.get());
+//    if (loopSource == nullptr) {
+//        LOGE("Could not load source data for backing track");
+//        return false;
+//    }
+//    loop = std::make_unique<Player>(loopSource);
+//    loop->setPlaying(true);
+//    loop->setLooping(true);
+//
+//    mMixer.addTrack(loop.get());
 
     return true;
+}
+
+void AudioEngine::playFile(const char *filename) {
+    std::lock_guard<std::mutex> lock(mDataLock);
+
+    if (mData != nullptr) {
+        delete mData;
+        mData = nullptr;
+    }
+
+    std::ifstream file(filename, std::ifstream::in | std::ifstream::binary);
+    LOGD("file state: %i, fail: %i, bad: %i", file.good(), file.fail(), file.bad());
+    if (file.is_open()) {
+        // Parse header
+        int32_t length = 0;
+        if (!parseWave(file, &length)) {
+            LOGE("Failed to parse WAVE file.");
+
+            // Fallback?
+            file.seekg(0, file.end);
+            length = file.tellg();
+            file.seekg(0, file.beg);
+        }
+
+        int samples = (length) / 2;
+        int16_t *data = new int16_t[samples];
+        int index = 0;
+        char buffer[2];
+        while (!file.eof() && index < samples) {
+            file.read(buffer, 2);
+            data[index++] = *reinterpret_cast<int16_t *>(buffer);
+        }
+
+        // There are 4 bytes per frame because
+        // each sample is 2 bytes and
+        // it's a stereo recording which has 2 samples per frame.
+        mTotalFrames = (int32_t) (samples / 2);
+        mReadFrameIndex = 0;
+
+        mData = data;
+        LOGD("length: %i, samples: %i, mTotalFrames: %i, index: %i", length, samples, mTotalFrames,
+             index);
+
+        file.close();
+    } else {
+        LOGE("could not open file: %s", filename);
+    }
 }
 
 
@@ -108,6 +156,40 @@ bool AudioEngine::openStream() {
     mMixer.setChannelCount(mAudioStream->getChannelCount());
 
     return true;
+}
+
+bool AudioEngine::parseWave(std::ifstream &file, int32_t *length)
+{
+    char buffer[4];
+    file.read(buffer, 4);
+    if (strncmp(buffer, "RIFF", 4) != 0)
+        return false;
+
+    file.seekg(8);
+    file.read(buffer, 4);
+    if (strncmp(buffer, "WAVE", 4) != 0)
+        return false;
+
+    // Find data segment
+    int chuckPos = 12;
+    while (file.good()) {
+        file.read(buffer, 4);
+        // TODO: Verify fmt chunk? should be PCM,16bit,2ch,44100kHz
+        if (strncmp(buffer, "data", 4) == 0) {
+            // FOUND IT!
+            file.read(buffer, 4);
+            *length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+            return true;
+        }
+        else {
+            // different chunk
+            file.read(buffer, 4);
+            int32_t size = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+            chuckPos += 8 + size;
+            file.seekg(chuckPos);
+        }
+    }
+    return false;
 }
 
 DataCallbackResult

@@ -29,7 +29,6 @@ import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
-import de.michaelpohl.loopy.ui.main.player.PlayerFragmentOld
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.content_main.*
@@ -241,10 +240,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     /**
-     * this gets called in PlayerFragmentOld's onResume() to make sure it always is the currentFragment
+     * this gets called in PlayerFragment's onResume() to make sure it always is the currentFragment
      * when it is open. That is necessary for some functionality and this way is a convenient shortcut
      */
-    fun updateCurrentFragment(fragment: PlayerFragmentOld) {
+    fun updateCurrentFragment(fragment: PlayerFragment) {
         Timber.d("Putting Playerfragment back into place")
         currentFragment = fragment
     }
@@ -360,13 +359,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun updatePlayerIfCurrentlyShowing() {
-        if (currentFragment is PlayerFragmentOld) {
-            (currentFragment as PlayerFragmentOld).updateViewModel()
+        if (currentFragment is PlayerFragment) {
+            (currentFragment as PlayerFragment).updateViewModel()
         }
     }
 
     private fun clearBackStack() {
-        if (currentFragment is PlayerFragmentOld) stopPlaybackIfDesired(currentFragment as PlayerFragmentOld)
+        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -385,7 +384,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun stopPlaybackIfDesired(playerFragment: PlayerFragmentOld) {
+    private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
         playerFragment.pausePlayback()
     }
 

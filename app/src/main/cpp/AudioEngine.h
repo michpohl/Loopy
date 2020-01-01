@@ -28,9 +28,10 @@ enum class GameState {
 class AudioEngine : public AudioStreamCallback {
 
 public:
-    explicit AudioEngine(AAssetManager &);
+    explicit AudioEngine();
 
     void prepare(std::string fileName);
+
     void start();
 
     // Inherited from oboe::AudioStreamCallback
@@ -38,9 +39,9 @@ public:
     onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override;
 
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
+    void playFile(const char * filename);
 
 private:
-    AAssetManager &mAssetManager;
     AudioStream *mAudioStream{nullptr};
     std::string fileToPlay;
     std::unique_ptr<Player> loop;
@@ -59,6 +60,33 @@ private:
 
     bool setupSource();
 
+    // added from that library
+    oboe::AudioApi mAudioApi = oboe::AudioApi::Unspecified;
+    int32_t mPlaybackDeviceId = oboe::kUnspecified;
+
+    oboe::AudioStream *mPlayStream;
+    std::mutex mRestartingLock;
+
+    std::mutex mDataLock;
+
+    int32_t mChannelCount;
+    int32_t mFramesPerBurst;
+
+    // Audio file params:
+    int32_t mReadFrameIndex = 0;
+    const int16_t* mData = nullptr;
+    int32_t mTotalFrames = 0;
+
+//    void createPlaybackStream();
+//
+//    void closeOutputStream();
+//
+//    void restartStream();
+//
+//    void setupPlaybackStreamParameters(oboe::AudioStreamBuilder *builder);
+//    bool parseWave(std::ifstream &file, int32_t *length);
+
+    bool parseWave(std::ifstream &file, int32_t *length);
 };
 
 #endif //OBOE_TEST_AUDIOENGINE_H

@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.model
 
 import android.content.res.AssetManager
+import de.michaelpohl.loopy.common.AudioModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.io.File
@@ -20,7 +21,7 @@ class AudioFilesRepository(
         sharedPrefsManager.saveSingleSet(set)
     }
 
-    fun getSingleSet(setFolderName: String? = null): List<File> {
+    fun getSingleSet(setFolderName: String? = null): List<AudioModel> {
         return storage.listSetContents(setFolderName ?: STANDARD_SET_FOLDER_NAME)
     }
 

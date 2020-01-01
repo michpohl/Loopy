@@ -35,13 +35,19 @@ std::string jstring2string(JNIEnv *env, jstring jStr) {
 JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject jinstance, jobject jAssetManager, jstring fileName) {
     LOGD("Trying to play");
-    AAssetManager *assetManager = AAssetManager_fromJava(env, jAssetManager);
-    if (assetManager == nullptr) {
-        LOGE("Could not obtain the AAssetManager");
-        return;
-    }
+
     std::string convertedFileName = jstring2string(env, fileName);
-    audioEngine= std::make_unique<AudioEngine>(*assetManager);
+    audioEngine= std::make_unique<AudioEngine>();
+    audioEngine->prepare(convertedFileName);
+    audioEngine->start();
+}
+
+JNIEXPORT void JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI2(JNIEnv *env, jobject jinstance, jstring filePath) {
+    LOGD("Trying to play from storage");
+
+    std::string convertedFileName = jstring2string(env, filePath);
+    audioEngine= std::make_unique<AudioEngine>();
     audioEngine->prepare(convertedFileName);
     audioEngine->start();
 }

@@ -15,11 +15,10 @@ import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
-import java.io.File
 
 class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
 
-    val currentSet: List<File> = repository.getSingleSet()
+    val loopsList: List<AudioModel> = repository.getSingleSet()
 
     lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
@@ -41,7 +40,7 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
 
     var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
-    lateinit var loopsList: List<AudioModel>
+    //    lateinit var loopsList: List<AudioModel>
 
     fun onStartPlaybackClicked(view: View) {
         //        looper?.let {
@@ -81,7 +80,7 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     }
 
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
-        Timber.d("onItemSelected. Selectionstate: $selectionState, position: $position")
+        Timber.d("onItemSelected. Selection state: $selectionState, position: $position")
         looper?.let {
             Timber.d("I seem to have a looper")
             it.setLoopUri(Uri.parse(audioModel.path))
