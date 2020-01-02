@@ -12,7 +12,8 @@ object JniBridge {
     lateinit var assets: AssetManager
 
     fun play(fileName: String) {
-        playFromJNI(assets, fileName)
+//        playFromJNI(assets, fileName)
+        playFromJNI2(fileName)
     }
 
     private external fun stringFromJNI(): String

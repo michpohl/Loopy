@@ -48,7 +48,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI2(JNIEnv *env, jobject
 
     std::string convertedFileName = jstring2string(env, filePath);
     audioEngine= std::make_unique<AudioEngine>();
-    audioEngine->prepare(convertedFileName);
+    audioEngine->playFile(convertedFileName);
     audioEngine->start();
 }
 

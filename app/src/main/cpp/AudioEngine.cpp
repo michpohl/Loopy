@@ -1,129 +1,182 @@
-//
-// Created by Michael on 2019-07-19.
-//
+/*
+ * Copyright 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#include "Constants.h"
-#include "AAssetDataSource.h"
+#include <utils/logging.h>
 #include <thread>
-#include <cinttypes>
+#include <inttypes>
+#include "oboe/Oboe.h"
+
 #include "AudioEngine.h"
-#include "logging.h"
-#include <fstream>
 
-AudioEngine::AudioEngine() {
+
+AudioEngine::AudioEngine(AMediaExtractor &extractor): mExtraxtor(extractor) {
 }
+const char *mFileName;
 
-void AudioEngine::prepare(std::string fileName) {
-    fileToPlay = fileName;
-    LOGD("received this filename: %s", fileToPlay.c_str());
+void AudioEngine::load() {
+
+    if (!openStream()) {
+        mAudioEngineState = AudioEngineState::FailedToLoad;
+        return;
+    }
+
+    if (!setupAudioSources()) {
+        mAudioEngineState = AudioEngineState::FailedToLoad;
+        return;
+    }
+
+    scheduleSongEvents();
+
+    Result result = mAudioStream->requestStart();
+    if (result != Result::OK){
+        LOGE("Failed to start stream. Error: %s", convertToText(result));
+        mAudioEngineState = AudioEngineState::FailedToLoad;
+        return;
+    }
+
+    mAudioEngineState = AudioEngineState::Playing;
 }
 
 void AudioEngine::start() {
 
     // async returns a future, we must store this future to avoid blocking. It's not sufficient
-    // to store this in a local variable as its destructor will block until Game::load completes.
+    // to store this in a local variable as its destructor will block until AudioEngine::load completes.
     mLoadingResult = std::async(&AudioEngine::load, this);
-
 }
 
-void AudioEngine::load() {
+void AudioEngine::stop(){
 
-    if (!openStream()) {
-        mGameState = GameState::FailedToLoad;
-        return;
+    if (mAudioStream != nullptr){
+        mAudioStream->close();
+        delete mAudioStream;
+        mAudioStream = nullptr;
     }
-
-    if (!setupSource()) {
-        mGameState = GameState::FailedToLoad;
-        return;
-    }
-
-    Result result = mAudioStream->requestStart();
-    if (result != Result::OK) {
-        LOGE("Failed to start stream. Error: %s", convertToText(result));
-        mGameState = GameState::FailedToLoad;
-        return;
-    }
-
-    mGameState = GameState::Playing;
 }
 
-bool AudioEngine::setupSource() {
-    LOGD("Loop source: %s", fileToPlay.c_str());
+void AudioEngine::tap(int64_t eventTimeAsUptime) {
 
-    //  Set the properties of our audio source(s) to match that of our audio stream
-    AudioProperties targetProperties{
-            .channelCount = mAudioStream->getChannelCount(),
-            .sampleRate = mAudioStream->getSampleRate()
-    };
-
-
-//    // Create a data source and player
-//    const char *x = fileToPlay.c_str();
-//    std::shared_ptr<AAssetDataSource> loopSource{
-//            AAssetDataSource::newFromCompressedAsset(mAssetManager, x, targetProperties)
-//    };
-
-//    if (loopSource == nullptr) {
-//        LOGE("Could not load source data for backing track");
-//        return false;
-//    }
-//    loop = std::make_unique<Player>(loopSource);
-//    loop->setPlaying(true);
-//    loop->setLooping(true);
-//
-//    mMixer.addTrack(loop.get());
-
-    return true;
-}
-
-void AudioEngine::playFile(const char *filename) {
-    std::lock_guard<std::mutex> lock(mDataLock);
-
-    if (mData != nullptr) {
-        delete mData;
-        mData = nullptr;
-    }
-
-    std::ifstream file(filename, std::ifstream::in | std::ifstream::binary);
-    LOGD("file state: %i, fail: %i, bad: %i", file.good(), file.fail(), file.bad());
-    if (file.is_open()) {
-        // Parse header
-        int32_t length = 0;
-        if (!parseWave(file, &length)) {
-            LOGE("Failed to parse WAVE file.");
-
-            // Fallback?
-            file.seekg(0, file.end);
-            length = file.tellg();
-            file.seekg(0, file.beg);
-        }
-
-        int samples = (length) / 2;
-        int16_t *data = new int16_t[samples];
-        int index = 0;
-        char buffer[2];
-        while (!file.eof() && index < samples) {
-            file.read(buffer, 2);
-            data[index++] = *reinterpret_cast<int16_t *>(buffer);
-        }
-
-        // There are 4 bytes per frame because
-        // each sample is 2 bytes and
-        // it's a stereo recording which has 2 samples per frame.
-        mTotalFrames = (int32_t) (samples / 2);
-        mReadFrameIndex = 0;
-
-        mData = data;
-        LOGD("length: %i, samples: %i, mTotalFrames: %i, index: %i", length, samples, mTotalFrames,
-             index);
-
-        file.close();
+    if (mAudioEngineState != AudioEngineState::Playing){
+        LOGW("AudioEngine not in playing state, ignoring tap event");
     } else {
-        LOGE("could not open file: %s", filename);
+        mClap->setPlaying(true);
+
+        int64_t nextClapWindowTimeMs;
+        if (mClapWindows.pop(nextClapWindowTimeMs)){
+
+            // Convert the tap time to a song position
+            int64_t tapTimeInSongMs = mSongPositionMs + (eventTimeAsUptime - mLastUpdateTime);
+            TapResult result = getTapResult(tapTimeInSongMs, nextClapWindowTimeMs);
+            mUiEvents.push(result);
+        }
     }
 }
 
+void AudioEngine::tick(){
+
+    switch (mAudioEngineState){
+        case AudioEngineState::Playing:
+            TapResult r;
+            if (mUiEvents.pop(r)) {
+                renderEvent(r);
+            } else {
+                SetGLScreenColor(kPlayingColor);
+            }
+            break;
+
+        case AudioEngineState::Loading:
+            SetGLScreenColor(kLoadingColor);
+            break;
+
+        case AudioEngineState::FailedToLoad:
+            SetGLScreenColor(kLoadingFailedColor);
+            break;
+    }
+}
+
+void AudioEngine::onSurfaceCreated() {
+    SetGLScreenColor(kLoadingColor);
+}
+
+void AudioEngine::onSurfaceChanged(int widthInPixels, int heightInPixels) {
+}
+
+void AudioEngine::onSurfaceDestroyed() {
+}
+
+void AudioEngine::setFileName(const char * fileName) {
+    mFileName = fileName;
+}
+
+DataCallbackResult AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
+    LOGD("onAudioReady");
+    // If our audio stream is expecting 16-bit samples we need to render our floats into a separate
+    // buffer then convert them into 16-bit ints
+    bool is16Bit = (oboeStream->getFormat() == AudioFormat::I16);
+    float *outputBuffer = (is16Bit) ? mConversionBuffer.get() : static_cast<float *>(audioData);
+
+//    int64_t nextClapEventMs;
+
+    for (int i = 0; i < numFrames; ++i) {
+//
+//        mSongPositionMs = convertFramesToMillis(
+//                mCurrentFrame,
+//                mAudioStream->getSampleRate());
+//
+//        if (mClapEvents.peek(nextClapEventMs) && mSongPositionMs >= nextClapEventMs){
+//            mClap->setPlaying(true);
+//            mClapEvents.pop(nextClapEventMs);
+//        }
+        mMixer.renderAudio(outputBuffer+(oboeStream->getChannelCount()*i), 1);
+        mCurrentFrame++;
+    }
+
+    if (is16Bit){
+        oboe::convertFloatToPcm16(outputBuffer,
+                                  static_cast<int16_t*>(audioData),
+                                  numFrames * oboeStream->getChannelCount());
+    }
+
+    mLastUpdateTime = nowUptimeMillis();
+
+    return DataCallbackResult::Continue;
+}
+
+void AudioEngine::onErrorAfterClose(AudioStream *oboeStream, Result error){
+    LOGE("The audio stream was closed, please restart the game. Error: %s", convertToText(error));
+};
+
+/**
+ * Get the result of a tap
+ *
+ * @param tapTimeInMillis - The time the tap occurred in milliseconds
+ * @param tapWindowInMillis - The time at the middle of the "tap window" in milliseconds
+ * @return TapResult can be Early, Late or Success
+ */
+TapResult AudioEngine::getTapResult(int64_t tapTimeInMillis, int64_t tapWindowInMillis){
+    LOGD("Tap time %" PRId64 ", tap window time: %" PRId64, tapTimeInMillis, tapWindowInMillis);
+    if (tapTimeInMillis <= tapWindowInMillis + kWindowCenterOffsetMs) {
+        if (tapTimeInMillis >= tapWindowInMillis - kWindowCenterOffsetMs) {
+            return TapResult::Success;
+        } else {
+            return TapResult::Early;
+        }
+    } else {
+        return TapResult::Late;
+    }
+}
 
 bool AudioEngine::openStream() {
 
@@ -134,22 +187,21 @@ bool AudioEngine::openStream() {
     builder.setSharingMode(SharingMode::Exclusive);
 
     Result result = builder.openStream(&mAudioStream);
-    if (result != Result::OK) {
+    if (result != Result::OK){
         LOGE("Failed to open stream. Error: %s", convertToText(result));
         return false;
     }
 
-    if (mAudioStream->getFormat() == AudioFormat::I16) {
+    if (mAudioStream->getFormat() == AudioFormat::I16){
         mConversionBuffer = std::make_unique<float[]>(
-                (size_t) mAudioStream->getBufferCapacityInFrames() *
+                (size_t)mAudioStream->getBufferCapacityInFrames() *
                 mAudioStream->getChannelCount());
     }
-//
-//    // Reduce stream latency by setting the buffer size to a multiple of the burst size
+
+    // Reduce stream latency by setting the buffer size to a multiple of the burst size
     auto setBufferSizeResult = mAudioStream->setBufferSizeInFrames(
-            mAudioStream->getFramesPerBurst() *
-            2); // Use 2 bursts as the buffer size (double buffer)
-    if (setBufferSizeResult != Result::OK) {
+            mAudioStream->getFramesPerBurst() * kBufferSizeInBursts);
+    if (setBufferSizeResult != Result::OK){
         LOGW("Failed to set buffer size. Error: %s", convertToText(setBufferSizeResult.error()));
     }
 
@@ -158,70 +210,45 @@ bool AudioEngine::openStream() {
     return true;
 }
 
-bool AudioEngine::parseWave(std::ifstream &file, int32_t *length)
-{
-    char buffer[4];
-    file.read(buffer, 4);
-    if (strncmp(buffer, "RIFF", 4) != 0)
+bool AudioEngine::setupAudioSources() {
+
+    // Set the properties of our audio source(s) to match that of our audio stream
+    AudioProperties targetProperties {
+            .channelCount = mAudioStream->getChannelCount(),
+            .sampleRate = mAudioStream->getSampleRate()
+    };
+
+//     Create a data source and player for the clap sound
+//    std::shared_ptr<StorageDataSource> mClapSource {
+//            StorageDataSource::newFromStorageAsset(mExtraxtor, mFileName, targetProperties)
+//    };
+//    if (mClapSource == nullptr){
+//        LOGE("Could not load source data for clap sound");
+//        return false;
+//    }
+//    mClap = std::make_unique<Player>(mClapSource);
+
+//     Create a data source and player for our backing track
+    std::shared_ptr<StorageDataSource> backingTrackSource {
+            StorageDataSource::newFromStorageAsset(mExtraxtor, mFileName, targetProperties)
+    };
+    if (backingTrackSource == nullptr){
+        LOGE("Could not load source data for backing track");
         return false;
-
-    file.seekg(8);
-    file.read(buffer, 4);
-    if (strncmp(buffer, "WAVE", 4) != 0)
-        return false;
-
-    // Find data segment
-    int chuckPos = 12;
-    while (file.good()) {
-        file.read(buffer, 4);
-        // TODO: Verify fmt chunk? should be PCM,16bit,2ch,44100kHz
-        if (strncmp(buffer, "data", 4) == 0) {
-            // FOUND IT!
-            file.read(buffer, 4);
-            *length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-            return true;
-        }
-        else {
-            // different chunk
-            file.read(buffer, 4);
-            int32_t size = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-            chuckPos += 8 + size;
-            file.seekg(chuckPos);
-        }
     }
-    return false;
+    mBackingTrack = std::make_unique<Player>(backingTrackSource);
+    mBackingTrack->setPlaying(true);
+    mBackingTrack->setLooping(true);
+
+    // Add both players to a mixer
+//    mMixer.addTrack(mClap.get());
+    mMixer.addTrack(mBackingTrack.get());
+
+    return true;
 }
 
-DataCallbackResult
-AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
-    // If our audio stream is expecting 16-bit samples we need to render our floats into a separate
-    // buffer then convert them into 16-bit ints
-    bool is16Bit = (oboeStream->getFormat() == AudioFormat::I16);
-    float *outputBuffer = (is16Bit) ? mConversionBuffer.get() : static_cast<float *>(audioData);
+void AudioEngine::scheduleSongEvents() {
 
-    for (int i = 0; i < numFrames; ++i) {
-
-        mSongPositionMs = convertFramesToMillis(
-                mCurrentFrame,
-                mAudioStream->getSampleRate());
-
-        mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
-        mCurrentFrame++;
-    }
-
-    if (is16Bit) {
-        oboe::convertFloatToPcm16(outputBuffer,
-                                  static_cast<int16_t *>(audioData),
-                                  numFrames * oboeStream->getChannelCount());
-    }
-
-    mLastUpdateTime = nowUptimeMillis();
-
-    return DataCallbackResult::Continue;
+    for (auto t : kClapEvents) mClapEvents.push(t);
+    for (auto t : kClapWindows) mClapWindows.push(t);
 }
-
-void AudioEngine::onErrorAfterClose(AudioStream *oboeStream, Result error) {
-    AudioStreamCallback::onErrorAfterClose(oboeStream, error);
-}
-
-

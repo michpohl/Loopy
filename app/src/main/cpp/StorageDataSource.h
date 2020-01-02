@@ -14,29 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef OBOE_TEST_AASSETDATASOURCE_H
-#define OBOE_TEST_AASSETDATASOURCE_H
+#ifndef RHYTHMGAME_StorageDataSource_H
+#define RHYTHMGAME_StorageDataSource_H
 
 #include <android/asset_manager.h>
-#include <memory>
-#include "Constants.h"
+#include <AudioEngineConstants.h>
 #include "DataSource.h"
+#include "media/NdkMediaExtractor.h"
 
-class AAssetDataSource : public DataSource {
+class StorageDataSource : public DataSource {
 
 public:
     int64_t getSize() const override { return mBufferSize; }
     AudioProperties getProperties() const override { return mProperties; }
     const float* getData() const override { return mBuffer.get(); }
 
-    static AAssetDataSource* newFromCompressedAsset(
+    static StorageDataSource* newFromCompressedAsset(
             AAssetManager &assetManager,
             const char *filename,
             AudioProperties targetProperties);
 
+    static StorageDataSource* newFromStorageAsset(
+            AMediaExtractor &extractor,
+            const char*fileName,
+            AudioProperties targetProperties
+    );
+
 private:
 
-    AAssetDataSource(std::unique_ptr<float[]> data, size_t size,
+    StorageDataSource(std::unique_ptr<float[]> data, size_t size,
                      const AudioProperties properties)
             : mBuffer(std::move(data))
             , mBufferSize(size)
@@ -48,4 +54,4 @@ private:
     const AudioProperties mProperties;
 
 };
-#endif //OBOE_TEST_AASSETDATASOURCE_H
+#endif //RHYTHMGAME_StorageDataSource_H
