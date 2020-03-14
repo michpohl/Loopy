@@ -12,7 +12,6 @@ object JniBridge {
     lateinit var assets: AssetManager
 
     fun play(fileName: String) {
-//        playFromJNI(assets, fileName)
         playFromJNI(fileName)
     }
 
@@ -20,6 +19,15 @@ object JniBridge {
         stopJNIPlayback()
     }
 
+    fun testIt() {
+        test()
+    }
+
     private external fun playFromJNI(fileName: String)
     private external fun stopJNIPlayback()
+    private external fun test()
+
+    fun testCallBack(message: String) {
+        Timber.d("This is the string: $message")
+    }
 }

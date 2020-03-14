@@ -37,6 +37,21 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject 
 } // extern "C"
 extern "C"
 JNIEXPORT void JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_stopJNIPlayback(JNIEnv *env, jobject thiz) {
+Java_de_michaelpohl_loopy_common_jni_JniBridge_stopJNIPlayback(JNIEnv *env, jobject instance) {
     audioEngine->stop();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_test(JNIEnv *env, jobject instance) {
+
+    // Construct a String
+    jstring jstr = env->NewStringUTF("This string comes from JNI");
+    // First get the class that contains the method you need to call
+    jclass clazz = env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
+    // Get the method that you want to call
+    jmethodID messageMe = env->GetMethodID(clazz, "testCallBack", "(Ljava/lang/String;)V");
+    // Call the method on the object
+    env->CallVoidMethod(instance, messageMe, jstr);    // Get a C-style string
+
 }
