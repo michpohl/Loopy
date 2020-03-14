@@ -35,7 +35,6 @@
 
 using namespace oboe;
 
-
 enum class AudioEngineState {
     Loading,
     Playing,
@@ -48,11 +47,6 @@ public:
     void start();
     void stop();
     void setFileName(const char * fileName);
-    void onSurfaceCreated();
-    void onSurfaceDestroyed();
-    void onSurfaceChanged(int widthInPixels, int heightInPixels);
-    void tick();
-    void tap(int64_t eventTimeAsUptime);
 
     // Inherited from oboe::AudioStreamCallback
     DataCallbackResult
