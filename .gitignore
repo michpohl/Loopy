@@ -15,5 +15,5 @@
 .idea/workspace.xml___jb_tmp___
 .idea/misc.xml
 .idea/assetWizardSettings.xml
-app/.cxx/ndk_locator_record.json
-app/.cxx/ndk_locator_record.json
+.externalNativeBuild/
+.cxx/
