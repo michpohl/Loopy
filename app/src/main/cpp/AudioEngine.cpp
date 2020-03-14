@@ -16,7 +16,7 @@
 
 #include <utils/logging.h>
 #include <thread>
-#include <inttypes>
+#include <inttypes.h>
 #include "oboe/Oboe.h"
 
 #include "AudioEngine.h"
@@ -90,7 +90,7 @@ void AudioEngine::tick(){
         case AudioEngineState::Playing:
             TapResult r;
             if (mUiEvents.pop(r)) {
-                renderEvent(r);
+//                renderEvent(r);
             } else {
                 SetGLScreenColor(kPlayingColor);
             }

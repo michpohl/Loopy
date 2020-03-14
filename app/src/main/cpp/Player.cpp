@@ -15,7 +15,7 @@
  */
 
 #include "Player.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 void Player::renderAudio(float *targetData, int32_t numFrames){
 

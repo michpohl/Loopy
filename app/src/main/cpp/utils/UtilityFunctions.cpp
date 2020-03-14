@@ -19,7 +19,7 @@
 #include "OpenGLFunctions.h"
 #include "Constants.h"
 #include "UtilityFunctions.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 int64_t nowUptimeMillis() {
     using namespace std::chrono;

@@ -13,11 +13,9 @@ object JniBridge {
 
     fun play(fileName: String) {
 //        playFromJNI(assets, fileName)
-        playFromJNI2(fileName)
+        playFromJNI(fileName)
     }
 
-    private external fun stringFromJNI(): String
-    private external fun playFromJNI(assetManager: AssetManager, fileName: String)
-    private external fun playFromJNI2(fileName: String)
+    private external fun playFromJNI(fileName: String)
 
 }

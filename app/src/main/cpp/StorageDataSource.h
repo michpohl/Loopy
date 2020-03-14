@@ -18,7 +18,7 @@
 #define RHYTHMGAME_StorageDataSource_H
 
 #include <android/asset_manager.h>
-#include <AudioEngineConstants.h>
+#include <Constants.h>
 #include "DataSource.h"
 #include "media/NdkMediaExtractor.h"
 
