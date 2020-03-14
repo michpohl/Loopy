@@ -29,11 +29,6 @@ public:
     AudioProperties getProperties() const override { return mProperties; }
     const float* getData() const override { return mBuffer.get(); }
 
-    static StorageDataSource* newFromCompressedAsset(
-            AAssetManager &assetManager,
-            const char *filename,
-            AudioProperties targetProperties);
-
     static StorageDataSource* newFromStorageAsset(
             AMediaExtractor &extractor,
             const char*fileName,

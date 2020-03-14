@@ -16,6 +16,10 @@ object JniBridge {
         playFromJNI(fileName)
     }
 
-    private external fun playFromJNI(fileName: String)
+    fun stop() {
+        stopJNIPlayback()
+    }
 
+    private external fun playFromJNI(fileName: String)
+    private external fun stopJNIPlayback()
 }

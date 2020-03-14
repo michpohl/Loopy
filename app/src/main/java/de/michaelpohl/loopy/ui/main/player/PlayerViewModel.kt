@@ -33,7 +33,6 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     }
 
     var isPlaying = ObservableBoolean(false)
-    //    var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
@@ -50,7 +49,8 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     }
 
     fun onStopPlaybackClicked(view: View) {
-        stopLooper()
+//        stopLooper()
+        stopJNILooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
@@ -72,7 +72,8 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
         } else {
             emptyMessageVisibility.set(View.VISIBLE)
             clearListButtonVisibility.set(View.GONE)
-            stopLooper()
+//            stopLooper()
+            stopJNILooper()
             looper?.setHasLoopFile(false)
         }
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
@@ -114,8 +115,9 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
                 Timber.d("old: $oldPosition, new: $position")
                 adapter.notifyMultipleItems(arrayOf(oldPosition, position))
                 if (!it.isPaused()) {
-
-                    startLooper()
+                    Timber.d("Attempting to play natively: ${audioModel.path}")
+                    startJNILooper(audioModel.path)
+//                    startLooper()
                 }
             }
         } ?: Timber.d("onItemSelected with no looper")
@@ -125,6 +127,14 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
         isPlaying.set(true)
         updateRunnable.run()
         looper?.start()
+    }
+
+    private fun startJNILooper(path: String) {
+        JniBridge.play(path)
+    }
+
+    fun stopJNILooper() {
+        JniBridge.stop()
     }
 
     fun stopLooper() {

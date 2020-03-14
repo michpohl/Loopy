@@ -115,7 +115,7 @@ class PlayerFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.stopLooper()
+        viewModel.stopJNILooper()
         DataRepository.saveCurrentState(viewModel.loopsList)
     }
 
