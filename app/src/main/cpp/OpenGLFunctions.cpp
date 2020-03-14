@@ -15,7 +15,7 @@
  */
 
 #include "OpenGLFunctions.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 void CheckOpenGLError(const char* stmt, const char* fname, int line)
 {

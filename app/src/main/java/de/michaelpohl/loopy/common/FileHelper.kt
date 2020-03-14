@@ -9,7 +9,12 @@ object FileHelper {
 
     val excludedFolders = listOf("Android", "DCIM")
 
-    fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+    fun isValidAudioFile(name: String): Boolean {
+        //TODO turn extensions into CONSTs somewhere
+        return name.endsWith(".mp3") || name.endsWith(".ogg") || name.endsWith(".wav")
+    }
+
+    fun getPathContent(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
         val file = File(path)
 
         if (file.listFiles() == null) {
@@ -49,7 +54,7 @@ object FileHelper {
         var containsAudio = false
 
         if (!isExcludedFolderName(path)) {
-            val filesToCheck: List<File> = getFilesFromPath(path)
+            val filesToCheck: List<File> = getPathContent(path)
             val foundFileModels: List<FileModel> =
                 getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FILE }
 
@@ -66,7 +71,7 @@ object FileHelper {
         var containsAudio = false
 
         if (!isExcludedFolderName(path)) {
-            val filesToCheck: List<File> = getFilesFromPath(path)
+            val filesToCheck: List<File> = getPathContent(path)
 
             val foundFolderModels: List<FileModel> =
                 getFileModelsFromFiles(filesToCheck)
@@ -122,7 +127,7 @@ object FileHelper {
 
     fun fileModelToAudioModel(fileModel: FileModel) : AudioModel {
 
-        // this just takes the last containing folder and assues it is the album name
+        // this just takes the last containing folder and assumes it is the album name
         // this might be wrong if there is metainformation stored in the file. We'll see
         val albumNameFromFolder: () -> String = {
             val pathPieces = fileModel.path.split("/")

@@ -27,6 +27,8 @@ import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
+
+
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
 
@@ -53,7 +55,6 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("Creating Player fragment")
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         if (arguments != null) {
@@ -82,6 +83,7 @@ class PlayerFragment : BaseFragment() {
         bindAudioService()
         activity!!.startService(Intent(activity, playerService::class.java))
         binding.model = viewModel
+        viewModel.loopsList.forEach {Timber.d("${it.name}") }
     }
 
     override fun onStart() {
@@ -113,13 +115,13 @@ class PlayerFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.stopLooper()
+        viewModel.stopJNILooper()
         DataRepository.saveCurrentState(viewModel.loopsList)
     }
 
     fun updateViewModel() {
         loopsList = DataRepository.currentSelectedAudioModels
-        viewModel.loopsList = DataRepository.currentSelectedAudioModels
+//        viewModel.loopsList = DataRepository.currentSelectedAudioModels
         viewModel.updateData()
     }
 
@@ -129,7 +131,7 @@ class PlayerFragment : BaseFragment() {
 
     private fun initAdapter() {
         rv_loops.layoutManager = LinearLayoutManager(context)
-        viewModel.loopsList = loopsList
+//        viewModel.loopsList = loopsList
         viewModel.adapter =
             LoopsAdapter(context!!) { viewModel.onProgressChangedByUser(it) }.apply {
                 dialogHelper = DialogHelper(activity!!)
@@ -171,15 +173,4 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    companion object {
-        fun newInstance(
-            appData: AppData
-        ): PlayerFragmentOld {
-            val fragment = PlayerFragmentOld()
-            val args = Bundle()
-            args.putParcelable("appData", appData)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

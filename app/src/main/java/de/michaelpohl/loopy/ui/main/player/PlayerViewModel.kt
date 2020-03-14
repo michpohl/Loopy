@@ -9,13 +9,16 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
 
-class PlayerViewModel : BaseViewModel() {
+class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
+
+    val loopsList: List<AudioModel> = repository.getSingleSet()
 
     lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
@@ -30,24 +33,24 @@ class PlayerViewModel : BaseViewModel() {
     }
 
     var isPlaying = ObservableBoolean(false)
-    //    var looper: LoopedPlayer = LoopedPlayer.create(application)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
     var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
 
     var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
-    lateinit var loopsList: List<AudioModel>
+    //    lateinit var loopsList: List<AudioModel>
 
     fun onStartPlaybackClicked(view: View) {
-//        looper?.let {
-//            if (it.getHasLoopFile()) startLooper()
-//        }
-        JniBridge.play("testing.mp3")
+        //        looper?.let {
+        //            if (it.getHasLoopFile()) startLooper()
+        //        }
+        JniBridge.play(loopsList[0].path)
     }
 
     fun onStopPlaybackClicked(view: View) {
-        stopLooper()
+//        stopLooper()
+        stopJNILooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
@@ -69,7 +72,8 @@ class PlayerViewModel : BaseViewModel() {
         } else {
             emptyMessageVisibility.set(View.VISIBLE)
             clearListButtonVisibility.set(View.GONE)
-            stopLooper()
+//            stopLooper()
+            stopJNILooper()
             looper?.setHasLoopFile(false)
         }
         acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
@@ -77,7 +81,7 @@ class PlayerViewModel : BaseViewModel() {
     }
 
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
-        Timber.d("onItemSelected. Selectionstate: $selectionState, position: $position")
+        Timber.d("onItemSelected. Selection state: $selectionState, position: $position")
         looper?.let {
             Timber.d("I seem to have a looper")
             it.setLoopUri(Uri.parse(audioModel.path))
@@ -111,8 +115,9 @@ class PlayerViewModel : BaseViewModel() {
                 Timber.d("old: $oldPosition, new: $position")
                 adapter.notifyMultipleItems(arrayOf(oldPosition, position))
                 if (!it.isPaused()) {
-
-                    startLooper()
+                    Timber.d("Attempting to play natively: ${audioModel.path}")
+                    startJNILooper(audioModel.path)
+//                    startLooper()
                 }
             }
         } ?: Timber.d("onItemSelected with no looper")
@@ -122,6 +127,14 @@ class PlayerViewModel : BaseViewModel() {
         isPlaying.set(true)
         updateRunnable.run()
         looper?.start()
+    }
+
+    private fun startJNILooper(path: String) {
+        JniBridge.play(path)
+    }
+
+    fun stopJNILooper() {
+        JniBridge.stop()
     }
 
     fun stopLooper() {

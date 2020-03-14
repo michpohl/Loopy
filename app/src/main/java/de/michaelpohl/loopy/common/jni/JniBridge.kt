@@ -8,12 +8,18 @@ object JniBridge {
         System.loadLibrary("native-lib")
         Timber.d("Native Lib loaded!")
     }
-    lateinit var assets :  AssetManager
+
+    lateinit var assets: AssetManager
 
     fun play(fileName: String) {
-        playFromJNI(assets, fileName)
+//        playFromJNI(assets, fileName)
+        playFromJNI(fileName)
     }
 
-    private external fun stringFromJNI(): String
-    private external fun playFromJNI(assetManager: AssetManager, fileName: String)
+    fun stop() {
+        stopJNIPlayback()
+    }
+
+    private external fun playFromJNI(fileName: String)
+    private external fun stopJNIPlayback()
 }

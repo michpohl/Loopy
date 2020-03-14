@@ -21,7 +21,7 @@ data class FileModel(
     private var supportedFileTypes = listOf("wav", "mp3", "ogg")
 
     fun getSubFiles(showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
-        return FileHelper.getFilesFromPath(path, showHiddenFiles, onlyFolders)
+        return FileHelper.getPathContent(path, showHiddenFiles, onlyFolders)
     }
 
     fun isValidFileType(): Boolean {

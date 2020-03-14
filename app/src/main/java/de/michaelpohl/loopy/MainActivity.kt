@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,27 +23,33 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
-import de.michaelpohl.loopy.ui.main.player.PlayerFragmentOld
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     BrowserViewModel.OnBrowserActionListener,
-    NavigationView.OnNavigationItemSelectedListener {
+    NavigationView.OnNavigationItemSelectedListener, KoinComponent {
+
+    private val audioFilesRepo: AudioFilesRepository by inject()
+    private val prefs: SharedPreferencesManager by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
-    private lateinit var drawer: DrawerLayout
 
+    private lateinit var drawer: DrawerLayout
     private lateinit var currentFragment: BaseFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,22 +57,34 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        if (savedInstanceState == null) {
+            val permissionHelper = PermissionHelper(this)
+            permissionHelper.checkPermissions()
+        }
         setupTimber()
+        setupAppData()
         setupNavigation()
         initDataRepository()
         handlePossibleIntents()
         setupActionBar()
-
-        //drawer
         setupDrawer()
 
-        if (savedInstanceState == null) {
-            val permissionHelper = PermissionHelper(this)
-            permissionHelper.checkPermissions()
-            //            showPlayerFragment(DataRepository.currentSelectedAudioModels)
-        }
         JniBridge.assets = assets
         keepScreenOnIfDesired()
+    }
+
+    private fun setupAppData() {
+        Timber.d("is App setup? ${prefs.setupComplete}")
+        // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
+        // on Failure, whatever the reason might be, it stays false and will run again next startup
+        if (!prefs.setupComplete) {
+            val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
+            Timber.d("Setup complete? $setupComplete")
+            prefs.setupComplete = setupComplete
+            Handler().postDelayed({
+                Timber.d("is App setup now? ${prefs.setupComplete}")
+            }, 500)
+        }
     }
 
     private fun handlePossibleIntents() {
@@ -221,10 +240,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     /**
-     * this gets called in PlayerFragmentOld's onResume() to make sure it always is the currentFragment
+     * this gets called in PlayerFragment's onResume() to make sure it always is the currentFragment
      * when it is open. That is necessary for some functionality and this way is a convenient shortcut
      */
-    fun updateCurrentFragment(fragment: PlayerFragmentOld) {
+    fun updateCurrentFragment(fragment: PlayerFragment) {
         Timber.d("Putting Playerfragment back into place")
         currentFragment = fragment
     }
@@ -279,13 +298,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     //    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
-        //        val filesListFragment = FileBrowserFragment.newInstance(path)
-        //        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        //        currentFragment = filesListFragment
-        //        fragmentTransaction.replace(R.id.container, filesListFragment)
-        //        fragmentTransaction.addToBackStack(path)
-        //        fragmentTransaction.commit()
-        //        changeActionBar(R.menu.menu_file_browser)
+        nav_host_fragment.findNavController().navigate(
+            R.id.fileBrowserFragment, buildStringArgs(path)
+        )
     }
 
     private fun showAlbumBrowserFragment() {
@@ -302,24 +317,24 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun showMarkupViewerFragment(markupFileName: String) {
         nav_host_fragment.findNavController().navigate(
-            R.id.markupViewerFragment,buildStringArgs(markupFileName)
+            R.id.markupViewerFragment, buildStringArgs(markupFileName)
         )
     }
 
     private fun showSettingsDialog() {
-                val dialog = SettingsDialogFragment()
-                dialog.setCurrentSettings(DataRepository.settings)
-                dialog.resultListener = {
-                    Timber.d("Resultlistener was invoked")
-                    DataRepository.settings = it
-                    DataRepository.saveCurrentState()
-                    keepScreenOnIfDesired()
+        val dialog = SettingsDialogFragment()
+        dialog.setCurrentSettings(DataRepository.settings)
+        dialog.resultListener = {
+            Timber.d("Resultlistener was invoked")
+            DataRepository.settings = it
+            DataRepository.saveCurrentState()
+            keepScreenOnIfDesired()
 
-                    // if we're currently in the player we need to update
-                    // immediately for the settings to take effect
-                    updatePlayerIfCurrentlyShowing()
-                }
-                dialog.show(supportFragmentManager, "settings-dialog")
+            // if we're currently in the player we need to update
+            // immediately for the settings to take effect
+            updatePlayerIfCurrentlyShowing()
+        }
+        dialog.show(supportFragmentManager, "settings-dialog")
     }
 
     private fun clearLoopsList() {
@@ -344,13 +359,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun updatePlayerIfCurrentlyShowing() {
-        if (currentFragment is PlayerFragmentOld) {
-            (currentFragment as PlayerFragmentOld).updateViewModel()
+        if (currentFragment is PlayerFragment) {
+            (currentFragment as PlayerFragment).updateViewModel()
         }
     }
 
     private fun clearBackStack() {
-        if (currentFragment is PlayerFragmentOld) stopPlaybackIfDesired(currentFragment as PlayerFragmentOld)
+        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }
@@ -369,7 +384,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun stopPlaybackIfDesired(playerFragment: PlayerFragmentOld) {
+    private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
         playerFragment.pausePlayback()
     }
 
@@ -385,7 +400,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             putString("string", string)
         }
     }
-
 }
 
 

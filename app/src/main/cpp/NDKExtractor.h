@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef OBOE_TEST_NDKMEDIAEXTRACTOR_H
-#define OBOE_TEST_NDKMEDIAEXTRACTOR_H
+#ifndef FFMPEG_NDKMEDIAEXTRACTOR_H
+#define FFMPEG_NDKMEDIAEXTRACTOR_H
 
 
 #include <cstdint>
 #include <android/asset_manager.h>
-#include "Constants.h"
+#include <Constants.h>
 
 
 class NDKExtractor {
 
 public:
     static int32_t decode(AAsset *asset, uint8_t *targetData, AudioProperties targetProperties);
+    static int32_t decode(AMediaExtractor &extractor, uint8_t *targetData,
+                          AudioProperties targetProperties);
+
 };
 
 
