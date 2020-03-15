@@ -20,6 +20,8 @@ add_library(native-lib
         src/main/cpp/Mixer.h
         src/main/cpp/IRenderableAudio.h
         src/main/cpp/utils/UtilityFunctions.cpp
+        src/main/cpp/ObserverChain.h
+        src/main/cpp/ObserverChain.cpp
         )
 
 set (TARGET_LIBS log android oboe GLESv2)

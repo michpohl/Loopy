@@ -15,19 +15,23 @@
  */
 
 #include <utils/logging.h>
-#include <thread>
 #include <inttypes.h>
 
 #include "oboe/Oboe.h"
 #include "AudioEngine.h"
 
 
-AudioEngine::AudioEngine(AMediaExtractor &extractor) : mExtraxtor(extractor) {
+AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback, JNIEnv &env)
+        : mExtraxtor(
+        extractor), mCallback(callback), mEnv(env) {
 }
 
 const char *mFileName;
 
+
+
 void AudioEngine::load() {
+
 
     if (!openStream()) {
         mAudioEngineState = AudioEngineState::FailedToLoad;
@@ -51,9 +55,8 @@ void AudioEngine::load() {
 
 void AudioEngine::start() {
 
-    // async returns a future, we must store this future to avoid blocking. It's not sufficient
-    // to store this in a local variable as its destructor will block until AudioEngine::load completes.
     mLoadingResult = std::async(&AudioEngine::load, this);
+
 }
 
 void AudioEngine::stop() {
@@ -72,6 +75,8 @@ void AudioEngine::setFileName(const char *fileName) {
 DataCallbackResult
 AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
     LOGD("onAudioReady");
+
+
     // If our audio stream is expecting 16-bit samples we need to render our floats into a separate
     // buffer then convert them into 16-bit ints
     bool is16Bit = (oboeStream->getFormat() == AudioFormat::I16);
@@ -80,6 +85,7 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     for (int i = 0; i < numFrames; ++i) {
         mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
         mCurrentFrame++;
+        mCallback.playBackProgress(i);
     }
 
     if (is16Bit) {
@@ -89,36 +95,12 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     }
 
     mLastUpdateTime = nowUptimeMillis();
-
     return DataCallbackResult::Continue;
 }
 
 void AudioEngine::onErrorAfterClose(AudioStream *oboeStream, Result error) {
     LOGE("The audio stream was closed, please restart the game. Error: %s", convertToText(error));
 };
-
-/**
- * Get the result of a tap
- *
- * @param tapTimeInMillis - The time the tap occurred in milliseconds
- * @param tapWindowInMillis - The time at the middle of the "tap window" in milliseconds
- * @return TapResult can be Early, Late or Success
- */
-TapResult AudioEngine::getTapResult(int64_t tapTimeInMillis, int64_t tapWindowInMillis) {
-    LOGD("Tap time %"
-                 PRId64
-                 ", tap window time: %"
-                 PRId64, tapTimeInMillis, tapWindowInMillis);
-    if (tapTimeInMillis <= tapWindowInMillis + kWindowCenterOffsetMs) {
-        if (tapTimeInMillis >= tapWindowInMillis - kWindowCenterOffsetMs) {
-            return TapResult::Success;
-        } else {
-            return TapResult::Early;
-        }
-    } else {
-        return TapResult::Late;
-    }
-}
 
 bool AudioEngine::openStream() {
 
@@ -178,8 +160,3 @@ bool AudioEngine::setupAudioSources() {
     return true;
 }
 
-void AudioEngine::scheduleSongEvents() {
-
-    for (auto t : kClapEvents) mClapEvents.push(t);
-    for (auto t : kClapWindows) mClapWindows.push(t);
-}

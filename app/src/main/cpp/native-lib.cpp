@@ -8,12 +8,14 @@
 #include "utils/logging.h"
 #include <android/asset_manager_jni.h>
 #include <memory>
+#include "ObserverChain.h"
 
 extern "C" {
 
 std::unique_ptr<AudioEngine> audioEngine;
+std::unique_ptr<AudioCallback> callback;
 
-JNIEnv * mEnv;
+JNIEnv *mEnv;
 jobject mInstance;
 
 JNIEXPORT void JNICALL
@@ -23,6 +25,9 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject 
     // storing env & instance for later reuse
     mEnv = env;
     mInstance = instance;
+    callback = std::make_unique<AudioCallback>(*mEnv, mInstance);
+
+
 
     const char *uri = env->GetStringUTFChars(URI, NULL);
     std::string s(uri);
@@ -36,7 +41,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject 
     if (amresult != AMEDIA_OK) {
         LOGE("Error setting extractor data source, err %d", amresult);
     }
-    audioEngine = std::make_unique<AudioEngine>(*extractor);
+    audioEngine = std::make_unique<AudioEngine>(*extractor, *callback, *mEnv);
     audioEngine->setFileName(uri);
     audioEngine->start();
 }
@@ -61,4 +66,125 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_test(JNIEnv *env, jobject instanc
     // Call the method on the object
     env->CallVoidMethod(instance, messageMe, jstr);    // Get a C-style string
 
+}
+
+//FROM HERE CALLBACK STUFF
+
+#include <vector>
+
+static JavaVM *jvm = NULL;
+
+
+std::vector<ObserverChain *> store_Wlistener_vector;
+
+JNIEnv *store_env;
+
+
+void txtCallback(JNIEnv *env, const _jstring *message_);
+
+//extern "C"
+//JNIEXPORT jstring JNICALL
+//Java_de_michaelpohl_loopy_common_jni_JniBridge_stringFromJNI(
+//        JNIEnv *env,
+//        jobject /* this */) {
+//
+//    return env->NewStringUTF(hello.c_str());
+//}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_nsubscribeListener(JNIEnv *env, jobject instance,
+                                                                  jobject listener) {
+
+    env->GetJavaVM(&jvm); //store jvm reference for later call
+
+    store_env = env;
+
+    jweak store_Wlistener = env->NewWeakGlobalRef(listener);
+    jclass clazz = env->GetObjectClass(store_Wlistener);
+
+    jmethodID store_method = env->GetMethodID(clazz, "onAcceptMessage", "(Ljava/lang/String;)V");
+    jmethodID store_methodVAL = env->GetMethodID(clazz, "onAcceptMessageVal", "(I)V");
+
+    ObserverChain *tmpt = new ObserverChain(store_Wlistener, store_method, store_methodVAL);
+
+    store_Wlistener_vector.push_back(tmpt);
+
+
+    __android_log_print(ANDROID_LOG_VERBOSE, "GetEnv:", " Subscribe to Listener  OK \n");
+    if (NULL == store_method) return;
+
+
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_ndismissListener(JNIEnv *env, jobject instance) {
+    if (!store_Wlistener_vector.empty()) {
+        for (int i = 0; i < store_Wlistener_vector.size(); i++) {
+            env->DeleteWeakGlobalRef(store_Wlistener_vector[i]->store_Wlistener);
+            store_Wlistener_vector[i]->store_method = NULL;
+            store_Wlistener_vector[i]->store_methodVAL = NULL;
+        }
+        store_Wlistener_vector.clear();
+    }
+
+
+}
+
+void test_string_callback_fom_c(char *val) {
+    LOGD("GetEnv: start Callback  to JNL [%s]", val);
+    JNIEnv *g_env;
+    if (NULL == jvm) {
+        LOGD("GetEnv:  No VM ");
+        return;
+    }
+    //  double check it's all ok
+    JavaVMAttachArgs args;
+    args.version = JNI_VERSION_1_6; // set your JNI version
+    args.name = NULL; // you might want to give the java thread a name
+    args.group = NULL; // you might want to assign the java thread to a ThreadGroup
+
+    int getEnvStat = jvm->GetEnv((void **) &g_env, JNI_VERSION_1_6);
+
+    if (getEnvStat == JNI_EDETACHED) {
+        LOGD("GetEnv: not attached");
+        if (jvm->AttachCurrentThread(&g_env, &args) != 0) {
+            LOGD("GetEnv: Failed to attach");
+        }
+    } else if (getEnvStat == JNI_OK) {
+        LOGD("GetEnv: JNI_OK");
+    } else if (getEnvStat == JNI_EVERSION) {
+        LOGD("GetEnv: version not supported");
+    }
+
+    jstring message = g_env->NewStringUTF(val);//
+
+    txtCallback(g_env, message);
+
+    if (g_env->ExceptionCheck()) {
+        g_env->ExceptionDescribe();
+    }
+
+    if (getEnvStat == JNI_EDETACHED) {
+        jvm->DetachCurrentThread();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_nonNextListener(JNIEnv *env, jobject instance,
+                                                               jstring message_) {
+
+    txtCallback(env, message_);
+
+}
+
+void txtCallback(JNIEnv *env, const _jstring *message_) {
+    if (!store_Wlistener_vector.empty()) {
+        for (int i = 0; i < store_Wlistener_vector.size(); i++) {
+            env->CallVoidMethod(store_Wlistener_vector[i]->store_Wlistener,
+                                store_Wlistener_vector[i]->store_method, message_);
+        }
+
+    }
 }

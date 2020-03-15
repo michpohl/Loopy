@@ -11,16 +11,12 @@
 class AudioCallback {
 
 public:
-   explicit AudioCallback();
-    void setMethodId(jmethodID id);
-    void setEnv(JNIEnv *env);
-    void setJObject(jobject object);
+   explicit AudioCallback(JNIEnv&, jobject);
     void playBackProgress(int progressPercentage);
 
 private:
-    JNIEnv *mEnv;
-    jmethodID mId;
-    jobject mObject;
+    JNIEnv& mEnv;
+    jobject& mObject;
 };
 
 

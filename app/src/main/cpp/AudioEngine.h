@@ -44,7 +44,8 @@ enum class AudioEngineState {
 
 class AudioEngine : public AudioStreamCallback {
 public:
-    explicit AudioEngine(AMediaExtractor&);
+    explicit AudioEngine(AMediaExtractor&, AudioCallback&, JNIEnv&);
+
     void start();
     void stop();
     void setFileName(const char * fileName);
@@ -55,7 +56,9 @@ public:
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
 
 private:
+    JNIEnv& mEnv;
     AMediaExtractor& mExtraxtor;
+    AudioCallback& mCallback;
     AudioStream *mAudioStream { nullptr };
     std::unique_ptr<Player> mClap;
     std::unique_ptr<Player> mBackingTrack;
@@ -72,10 +75,8 @@ private:
     std::future<void> mLoadingResult;
 
     void load();
-    TapResult getTapResult(int64_t tapTimeInMillis, int64_t tapWindowInMillis);
     bool openStream();
     bool setupAudioSources();
-    void scheduleSongEvents();
 
 };
 
