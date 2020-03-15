@@ -13,9 +13,16 @@ extern "C" {
 
 std::unique_ptr<AudioEngine> audioEngine;
 
+JNIEnv * mEnv;
+jobject mInstance;
+
 JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject instance,
                                                            jstring URI) {
+
+    // storing env & instance for later reuse
+    mEnv = env;
+    mInstance = instance;
 
     const char *uri = env->GetStringUTFChars(URI, NULL);
     std::string s(uri);

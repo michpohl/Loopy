@@ -8,6 +8,7 @@ add_library(native-lib
 
         src/main/cpp/native-lib.cpp
         src/main/cpp/AudioEngine.cpp
+        src/main/cpp/AudioCallback.cpp
         src/main/cpp/DataSource.h
         src/main/cpp/StorageDataSource.cpp
         src/main/cpp/LockFreeQueue.h
