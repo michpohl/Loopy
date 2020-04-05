@@ -21,9 +21,9 @@
 #include "AudioEngine.h"
 
 
-AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback, JNIEnv &env)
+AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
         : mExtraxtor(
-        extractor), mCallback(callback), mEnv(env) {
+        extractor), mCallback(callback) {
 }
 
 const char *mFileName;

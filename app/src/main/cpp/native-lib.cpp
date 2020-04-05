@@ -15,22 +15,42 @@ extern "C" {
 std::unique_ptr<AudioEngine> audioEngine;
 std::unique_ptr<AudioCallback> callback;
 
-JNIEnv *mEnv;
+JavaVM *jvm = nullptr;
 jobject mInstance;
+jclass target;
+jmethodID id;
+
+
+jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+    JNIEnv jvm_env;
+
+    int getEnvStatus = vm->GetEnv((void **) &jvm_env, JNI_VERSION_1_6);
+
+    if (getEnvStatus != JNI_OK) {
+        LOGE("JNI_ONLOAD Failed to get the environment using GetEnv()");
+        return -1;
+    }
+    jvm = vm;
+    if (jvm == NULL) {
+        LOGE("JNI_ONLOAD: globabl jvm is NULL");
+    } else {
+        LOGD("JNI_ONLOAD: global jvm is NOT NULL <- by here");
+    }
+    LOGD("Onload done");
+    return JNI_VERSION_1_6;
+}
+
 
 JNIEXPORT void JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject instance,
-                                                           jstring URI) {
+Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject instance,jstring URI) {
+    LOGD("PlayFromJNI");
+//    target = env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
+//    id = env->GetMethodID(target, "integerCallback", "(I)V");
 
-    // storing env & instance for later reuse
-    mEnv = env;
-    mInstance = instance;
-    callback = std::make_unique<AudioCallback>(*mEnv, mInstance);
-
-
+    callback = std::make_unique<AudioCallback>(*jvm, instance);
 
     const char *uri = env->GetStringUTFChars(URI, NULL);
-    std::string s(uri);
+//    std::string s(uri);
 
     AMediaExtractor *extractor = AMediaExtractor_new();
     if (extractor == nullptr) {
@@ -41,9 +61,10 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject 
     if (amresult != AMEDIA_OK) {
         LOGE("Error setting extractor data source, err %d", amresult);
     }
-    audioEngine = std::make_unique<AudioEngine>(*extractor, *callback, *mEnv);
+    audioEngine = std::make_unique<AudioEngine>(*extractor, *callback);
     audioEngine->setFileName(uri);
     audioEngine->start();
+
 }
 
 } // extern "C"
@@ -71,8 +92,6 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_test(JNIEnv *env, jobject instanc
 //FROM HERE CALLBACK STUFF
 
 #include <vector>
-
-static JavaVM *jvm = NULL;
 
 
 std::vector<ObserverChain *> store_Wlistener_vector;

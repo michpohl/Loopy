@@ -44,7 +44,7 @@ enum class AudioEngineState {
 
 class AudioEngine : public AudioStreamCallback {
 public:
-    explicit AudioEngine(AMediaExtractor&, AudioCallback&, JNIEnv&);
+    explicit AudioEngine(AMediaExtractor&, AudioCallback&);
 
     void start();
     void stop();
@@ -56,7 +56,6 @@ public:
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
 
 private:
-    JNIEnv& mEnv;
     AMediaExtractor& mExtraxtor;
     AudioCallback& mCallback;
     AudioStream *mAudioStream { nullptr };
