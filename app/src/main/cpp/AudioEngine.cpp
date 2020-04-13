@@ -54,7 +54,6 @@ void AudioEngine::load() {
 }
 
 void AudioEngine::start() {
-
     mLoadingResult = std::async(&AudioEngine::load, this);
 
 }

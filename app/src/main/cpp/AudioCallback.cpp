@@ -6,23 +6,28 @@
 #include <utils/logging.h>
 #include "AudioCallback.h"
 
-AudioCallback::AudioCallback(JavaVM &jvm, jobject &object) : mJvm(jvm), mObject(object) {
+
+jclass target;
+jmethodID id;
+
+AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object(object) {
+    JNIEnv *g_env;
+    int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
+    LOGD("Env Stat: %d", getEnvStat);
+
+    if (g_env != NULL) {
+        target = g_env->GetObjectClass(g_object);
+        id = g_env->GetMethodID(target, "integerCallback", "(I)V");
+    }
 }
 
 void AudioCallback::playBackProgress(int progressPercentage) {
-
-
-    JNIEnv *g_env = NULL;
-
-    int getEnvStat = mJvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
-    JavaVMAttachArgs vmAttachArgs;
-    vmAttachArgs.version = JNI_VERSION_1_6;
-    vmAttachArgs.name = NULL;
-    vmAttachArgs.group = NULL;
+    JNIEnv *g_env;
+    int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
 
     if (getEnvStat == JNI_EDETACHED) {
         LOGD("GetEnv: not attached - attaching");
-        if (mJvm.AttachCurrentThread(&g_env, &vmAttachArgs) != 0) {
+        if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
             LOGD("GetEnv: Failed to attach");
         }
     } else if (getEnvStat == JNI_OK) {
@@ -30,18 +35,8 @@ void AudioCallback::playBackProgress(int progressPercentage) {
     } else if (getEnvStat == JNI_EVERSION) {
         LOGD("GetEnv: version not supported");
     }
-    LOGD("Env stat: %d", getEnvStat);
-
-    LOGD("Progress! %d", progressPercentage);
-
-    if (g_env != NULL) {
-        jclass target = g_env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
-        jmethodID id = g_env->GetMethodID(target, "integerCallback", "(I)V");
-        g_env->CallVoidMethod(mObject, id, (jint) progressPercentage);
-    } else {
-        LOGE("IT's null!");
+    g_env->CallVoidMethod(g_object, id, (jint) progressPercentage);
 //    mJvm.DetachCurrentThread();
-    }
 }
 
 

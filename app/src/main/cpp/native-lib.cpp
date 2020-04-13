@@ -15,39 +15,73 @@ extern "C" {
 std::unique_ptr<AudioEngine> audioEngine;
 std::unique_ptr<AudioCallback> callback;
 
-JavaVM *jvm = nullptr;
-jobject mInstance;
-jclass target;
-jmethodID id;
+JavaVM *g_jvm = nullptr;
+static jobject gClassLoader;
+static jmethodID gFindClassMethod;
 
+static jobject myJNIClass;
 
-jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-    JNIEnv jvm_env;
+static jclass myClass;
 
-    int getEnvStatus = vm->GetEnv((void **) &jvm_env, JNI_VERSION_1_6);
-
-    if (getEnvStatus != JNI_OK) {
-        LOGE("JNI_ONLOAD Failed to get the environment using GetEnv()");
-        return -1;
+JNIEnv* getEnv() {
+    JNIEnv *env;
+    int status = g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
+    if(status < 0) {
+        status = g_jvm->AttachCurrentThread(&env, NULL);
+        if(status < 0) {
+            return nullptr;
+        }
     }
-    jvm = vm;
-    if (jvm == NULL) {
-        LOGE("JNI_ONLOAD: globabl jvm is NULL");
-    } else {
-        LOGD("JNI_ONLOAD: global jvm is NOT NULL <- by here");
-    }
-    LOGD("Onload done");
+    return env;
+}
+
+jclass findClass(const char* name) {
+    return static_cast<jclass>(getEnv()->CallObjectMethod(gClassLoader, gFindClassMethod, getEnv()->NewStringUTF(name)));
+}
+
+jint JNI_OnLoad(JavaVM *pJvm, void *reserved) {
+    g_jvm = pJvm;
+
+
+//    auto env = getEnv();
+//
+
+//
+//    auto randomClass = env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
+//    jclass classClass = env->GetObjectClass(randomClass);
+//    auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
+//    auto getClassLoaderMethod = env->GetMethodID(classClass, "getClassLoader",
+//                                                 "()Ljava/lang/ClassLoader;");
+//
+//
+//
+//    gClassLoader = env->NewGlobalRef(env->CallObjectMethod(randomClass, getClassLoaderMethod));
+//    gFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
+//                                        "(Ljava/lang/String;)Ljava/lang/Class;");
+//
+//    // global classref approach
+//
+//    jobject tmp = env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
+////    jmethodID id = env->GetMethodID(tmp, "integerCallback", "(I)V");
+//    myJNIClass = env->NewGlobalRef(tmp);
+////    myMethod = env->NewGlobalRef(id);
+//
+
     return JNI_VERSION_1_6;
 }
+
 
 
 JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject instance,jstring URI) {
     LOGD("PlayFromJNI");
-//    target = env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
-//    id = env->GetMethodID(target, "integerCallback", "(I)V");
+    myJNIClass = env->NewGlobalRef(instance);
+//    myClass = env->FindClass("de/michaelpohl/loopy/common/jni/JniBridge");
+//    jmethodID id = env->GetMethodID(myClass, "integerCallback", "(I)V");
+//    env->CallVoidMethod(instance, id, (jint) 101);
 
-    callback = std::make_unique<AudioCallback>(*jvm, instance);
+    callback = std::make_unique<AudioCallback>(*g_jvm, myJNIClass);
+    callback->playBackProgress(104);
 
     const char *uri = env->GetStringUTFChars(URI, NULL);
 //    std::string s(uri);
@@ -115,7 +149,7 @@ JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_nsubscribeListener(JNIEnv *env, jobject instance,
                                                                   jobject listener) {
 
-    env->GetJavaVM(&jvm); //store jvm reference for later call
+    env->GetJavaVM(&g_jvm); //store jvm reference for later call
 
     store_env = env;
 
@@ -153,7 +187,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_ndismissListener(JNIEnv *env, job
 void test_string_callback_fom_c(char *val) {
     LOGD("GetEnv: start Callback  to JNL [%s]", val);
     JNIEnv *g_env;
-    if (NULL == jvm) {
+    if (NULL == g_jvm) {
         LOGD("GetEnv:  No VM ");
         return;
     }
@@ -163,11 +197,11 @@ void test_string_callback_fom_c(char *val) {
     args.name = NULL; // you might want to give the java thread a name
     args.group = NULL; // you might want to assign the java thread to a ThreadGroup
 
-    int getEnvStat = jvm->GetEnv((void **) &g_env, JNI_VERSION_1_6);
+    int getEnvStat = g_jvm->GetEnv((void **) &g_env, JNI_VERSION_1_6);
 
     if (getEnvStat == JNI_EDETACHED) {
         LOGD("GetEnv: not attached");
-        if (jvm->AttachCurrentThread(&g_env, &args) != 0) {
+        if (g_jvm->AttachCurrentThread(&g_env, &args) != 0) {
             LOGD("GetEnv: Failed to attach");
         }
     } else if (getEnvStat == JNI_OK) {
@@ -185,7 +219,7 @@ void test_string_callback_fom_c(char *val) {
     }
 
     if (getEnvStat == JNI_EDETACHED) {
-        jvm->DetachCurrentThread();
+        g_jvm->DetachCurrentThread();
     }
 }
 
