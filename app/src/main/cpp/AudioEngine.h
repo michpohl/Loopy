@@ -30,11 +30,11 @@
 #include "LockFreeQueue.h"
 #include "utils/UtilityFunctions.h"
 #include "Constants.h"
+#include "AudioCallback.h"
 #include <media/NdkMediaExtractor.h>
 
 
 using namespace oboe;
-
 
 enum class AudioEngineState {
     Loading,
@@ -44,15 +44,11 @@ enum class AudioEngineState {
 
 class AudioEngine : public AudioStreamCallback {
 public:
-    explicit AudioEngine(AMediaExtractor&);
+    explicit AudioEngine(AMediaExtractor&, AudioCallback&);
+
     void start();
     void stop();
     void setFileName(const char * fileName);
-    void onSurfaceCreated();
-    void onSurfaceDestroyed();
-    void onSurfaceChanged(int widthInPixels, int heightInPixels);
-    void tick();
-    void tap(int64_t eventTimeAsUptime);
 
     // Inherited from oboe::AudioStreamCallback
     DataCallbackResult
@@ -61,6 +57,7 @@ public:
 
 private:
     AMediaExtractor& mExtraxtor;
+    AudioCallback& mCallback;
     AudioStream *mAudioStream { nullptr };
     std::unique_ptr<Player> mClap;
     std::unique_ptr<Player> mBackingTrack;
@@ -77,10 +74,8 @@ private:
     std::future<void> mLoadingResult;
 
     void load();
-    TapResult getTapResult(int64_t tapTimeInMillis, int64_t tapWindowInMillis);
     bool openStream();
     bool setupAudioSources();
-    void scheduleSongEvents();
 
 };
 

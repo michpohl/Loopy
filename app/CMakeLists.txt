@@ -8,6 +8,7 @@ add_library(native-lib
 
         src/main/cpp/native-lib.cpp
         src/main/cpp/AudioEngine.cpp
+        src/main/cpp/AudioCallback.cpp
         src/main/cpp/DataSource.h
         src/main/cpp/StorageDataSource.cpp
         src/main/cpp/LockFreeQueue.h
@@ -19,6 +20,8 @@ add_library(native-lib
         src/main/cpp/Mixer.h
         src/main/cpp/IRenderableAudio.h
         src/main/cpp/utils/UtilityFunctions.cpp
+        src/main/cpp/ObserverChain.h
+        src/main/cpp/ObserverChain.cpp
         )
 
 set (TARGET_LIBS log android oboe GLESv2)
