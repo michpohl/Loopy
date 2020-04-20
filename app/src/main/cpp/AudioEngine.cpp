@@ -84,7 +84,6 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     for (int i = 0; i < numFrames; ++i) {
         mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
         mCurrentFrame++;
-        mCallback.playBackProgress(i);
     }
 
     if (is16Bit) {
@@ -94,6 +93,7 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     }
 
     mLastUpdateTime = nowUptimeMillis();
+    mCallback.playBackProgress((int) mLastUpdateTime);
     return DataCallbackResult::Continue;
 }
 
