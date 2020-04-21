@@ -6,7 +6,6 @@
 #include <utils/logging.h>
 #include "AudioCallback.h"
 
-
 jclass target;
 jmethodID id;
 

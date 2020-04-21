@@ -71,9 +71,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
         JniBridge.assets = assets
         keepScreenOnIfDesired()
-        JniBridge.testIt()
     }
-
 
     private fun setupAppData() {
         Timber.d("is App setup? ${prefs.setupComplete}")
