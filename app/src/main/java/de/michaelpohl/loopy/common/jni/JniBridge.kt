@@ -21,7 +21,7 @@ object JniBridge {
     }
 
     fun integerCallback(value: Int) {
-        Timber.d("This is my int: $value")
+//        Timber.d("This is my int: $value")
     }
 
     /* end subscription test */
