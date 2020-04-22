@@ -17,6 +17,8 @@
 #include "Player.h"
 #include "utils/logging.h"
 
+float position = 0;
+
 void Player::renderAudio(float *targetData, int32_t numFrames) {
 
     const AudioProperties properties = mSource->getProperties();
@@ -44,6 +46,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
             // Increment and handle wraparound
             if (++mReadFrameIndex >= totalSourceFrames) {
                 mReadFrameIndex = 0;
+                position = 0;
             }
         }
 
@@ -51,7 +54,11 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
             // fill the rest of the buffer with silence
             renderSilence(&targetData[framesToRenderFromData], numFrames * properties.channelCount);
         }
-        float progress =  ((float) mReadFrameIndex / totalSourceFrames);
+        float progress = ((float) mReadFrameIndex / totalSourceFrames) * 100;
+        if (progress > (position + 1)) {
+            mCallback.playBackProgress((int) progress);
+            position = progress;
+        }
 
     } else {
         renderSilence(targetData, numFrames * properties.channelCount);

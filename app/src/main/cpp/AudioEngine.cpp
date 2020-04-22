@@ -73,8 +73,6 @@ void AudioEngine::setFileName(const char *fileName) {
 
 DataCallbackResult
 AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
-    LOGD("onAudioReady");
-
 
     // If our audio stream is expecting 16-bit samples we need to render our floats into a separate
     // buffer then convert them into 16-bit ints
@@ -93,7 +91,7 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     }
 
     mLastUpdateTime = nowUptimeMillis();
-    mCallback.playBackProgress((int) mLastUpdateTime);
+//    mCallback.playBackProgress((int) mLastUpdateTime);
     return DataCallbackResult::Continue;
 }
 
@@ -149,7 +147,7 @@ bool AudioEngine::setupAudioSources() {
         LOGE("Could not load source data for backing track");
         return false;
     }
-    mBackingTrack = std::make_unique<Player>(backingTrackSource);
+    mBackingTrack = std::make_unique<Player>(backingTrackSource, mCallback);
     mBackingTrack->setPlaying(true);
     mBackingTrack->setLooping(true);
 
