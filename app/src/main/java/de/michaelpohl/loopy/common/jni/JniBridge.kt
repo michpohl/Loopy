@@ -10,6 +10,7 @@ object JniBridge {
         Timber.d("Native Lib loaded!")
     }
 
+    var progressListener: ((Int) -> Unit)? = null
     lateinit var assets: AssetManager
 
     fun play(fileName: String) {
@@ -21,7 +22,7 @@ object JniBridge {
     }
 
     fun integerCallback(value: Int) {
-        Timber.d("This is my int: $value")
+        progressListener?.invoke(value)
     }
 
     /* end subscription test */
