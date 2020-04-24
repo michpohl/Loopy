@@ -60,6 +60,8 @@ void AudioEngine::start() {
 
 void AudioEngine::stop() {
 
+    //TODO reset progress, empty pointers, all that stuff I don't really know how to do...
+    //also: differentiate between stop and pause...
     if (mAudioStream != nullptr) {
         mAudioStream->close();
         delete mAudioStream;
