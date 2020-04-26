@@ -29,7 +29,6 @@ AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
 const char *mFileName;
 
 
-
 void AudioEngine::load() {
 
 
@@ -60,12 +59,14 @@ void AudioEngine::start() {
 
 void AudioEngine::stop() {
 
-    //TODO reset progress, empty pointers, all that stuff I don't really know how to do...
     //also: differentiate between stop and pause...
     if (mAudioStream != nullptr) {
         mAudioStream->close();
         delete mAudioStream;
         mAudioStream = nullptr;
+    }
+    if (mBackingTrack != nullptr) {
+        mBackingTrack->resetPlayHead();
     }
 }
 
@@ -150,6 +151,7 @@ bool AudioEngine::setupAudioSources() {
         return false;
     }
     mBackingTrack = std::make_unique<Player>(backingTrackSource, mCallback);
+    mBackingTrack->resetPlayHead();
     mBackingTrack->setPlaying(true);
     mBackingTrack->setLooping(true);
 

@@ -17,8 +17,6 @@
 #include "Player.h"
 #include "utils/logging.h"
 
-float position = 0;
-
 void Player::renderAudio(float *targetData, int32_t numFrames) {
 
     const AudioProperties properties = mSource->getProperties();

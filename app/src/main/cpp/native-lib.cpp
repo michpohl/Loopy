@@ -51,7 +51,10 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject 
 
 JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_stopJNIPlayback(JNIEnv *env, jobject instance) {
+
+    if (audioEngine != nullptr) {
     audioEngine->stop();
+    }
 }
 
 }

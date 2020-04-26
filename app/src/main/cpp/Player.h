@@ -30,7 +30,7 @@
 #include "DataSource.h"
 #include "AudioCallback.h"
 
-class Player : public IRenderableAudio{
+class Player : public IRenderableAudio {
 
 public:
     /**
@@ -40,23 +40,32 @@ public:
      *
      * @param source
      */
-    Player(std::shared_ptr<DataSource> source, AudioCallback& callback)
-        : mSource(source), mCallback(callback)
-    {};
+    Player(std::shared_ptr<DataSource> source, AudioCallback &callback)
+            : mSource(source), mCallback(callback) {};
 
     void renderAudio(float *targetData, int32_t numFrames);
-    void resetPlayHead() { mReadFrameIndex = 0; };
-    void setPlaying(bool isPlaying) { mIsPlaying = isPlaying; resetPlayHead(); };
+
+    void resetPlayHead() {
+        mReadFrameIndex = 0;
+        position = 0;
+    };
+
+    void setPlaying(bool isPlaying) {
+        mIsPlaying = isPlaying;
+        resetPlayHead();
+    };
+
     void setLooping(bool isLooping) { mIsLooping = isLooping; };
 
 private:
+    float position = 0;
     int32_t mReadFrameIndex = 0;
-    std::atomic<bool> mIsPlaying { false };
-    std::atomic<bool> mIsLooping { false };
+    std::atomic<bool> mIsPlaying{false};
+    std::atomic<bool> mIsLooping{false};
     std::shared_ptr<DataSource> mSource;
-    AudioCallback& mCallback;
+    AudioCallback &mCallback;
 
-    void renderSilence(float*, int32_t);
+    void renderSilence(float *, int32_t);
 };
 
 #endif //OBOE_TEST_SOUNDRECORDING_H
