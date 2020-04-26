@@ -26,9 +26,9 @@ jint JNI_OnLoad(JavaVM *pJvm, void *reserved) {
 }
 
 JNIEXPORT void JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject instance,
-                                                           jstring URI) {
-    LOGD("PlayFromJNI");
+Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject instance,
+                                                          jstring URI) {
+    LOGD("loadNative");
     myJNIClass = env->NewGlobalRef(instance);
 
     callback = std::make_unique<AudioCallback>(*g_jvm, myJNIClass);
@@ -45,15 +45,23 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_playFromJNI(JNIEnv *env, jobject 
         LOGE("Error setting extractor data source, err %d", amresult);
     }
     audioEngine = std::make_unique<AudioEngine>(*extractor, *callback);
-    audioEngine->setFileName(uri);
-    audioEngine->start();
+    audioEngine->loadFile(uri);
 }
 
 JNIEXPORT void JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_stopJNIPlayback(JNIEnv *env, jobject instance) {
+Java_de_michaelpohl_loopy_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, jobject thiz) {
+    if (audioEngine != nullptr) {
+        audioEngine->start();
+    } else {
+        LOGE("AudioEngine is null!");
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env, jobject instance) {
 
     if (audioEngine != nullptr) {
-    audioEngine->stop();
+        audioEngine->stop();
     }
 }
 

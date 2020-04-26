@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy.common.jni
 
 import android.content.res.AssetManager
-import de.michaelpohl.loopy.JNIListener
 import timber.log.Timber
 
 object JniBridge {
@@ -13,12 +12,16 @@ object JniBridge {
     var progressListener: ((Int) -> Unit)? = null
     lateinit var assets: AssetManager
 
-    fun play(fileName: String) {
-        playFromJNI(fileName)
+    fun load(fileName: String) {
+        loadNative(fileName)
+    }
+
+    fun play() {
+        startPlaybackNative()
     }
 
     fun stop() {
-        stopJNIPlayback()
+        stopPlaybackNative()
     }
 
     fun integerCallback(value: Int) {
@@ -26,7 +29,7 @@ object JniBridge {
     }
 
     /* end subscription test */
-    private external fun playFromJNI(fileName: String)
-    private external fun stopJNIPlayback()
-
+    private external fun loadNative(fileName: String)
+    private external fun startPlaybackNative()
+    private external fun stopPlaybackNative()
 }

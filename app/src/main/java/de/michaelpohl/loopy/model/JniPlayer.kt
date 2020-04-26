@@ -27,7 +27,8 @@ class JniPlayer() {
     lateinit var onLoopedListener: (Int) -> Unit
     fun start() {
         JniBridge.stop()
-        JniBridge.play(loopUri.toString())
+        JniBridge.load(loopUri.toString())
+        JniBridge.play()
     }
 
     fun pause() {

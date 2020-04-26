@@ -128,10 +128,6 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
         looper?.start()
     }
 
-    private fun startJNILooper(path: String) {
-        JniBridge.play(path)
-    }
-
     fun stopJNILooper() {
         JniBridge.stop()
     }

@@ -29,8 +29,7 @@ AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
 const char *mFileName;
 
 
-void AudioEngine::load() {
-
+void AudioEngine::prepare() {
 
     if (!openStream()) {
         mAudioEngineState = AudioEngineState::FailedToLoad;
@@ -41,20 +40,28 @@ void AudioEngine::load() {
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
+}
 
+void AudioEngine::start() {
+    std::async(&AudioEngine::startPlaying, this);
+}
+
+void AudioEngine::startPlaying() {
+    if (mAudioStream == nullptr) {
+        LOGE("Cannot start playback: Audiostream is a null pointer.");
+        return;
+    }
+    if (mBackingTrack == nullptr) {
+        LOGE("Cannot start playback: Track to play is a null pointer.");
+        return;
+    }
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
         LOGE("Failed to start stream. Error: %s", convertToText(result));
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
-
     mAudioEngineState = AudioEngineState::Playing;
-}
-
-void AudioEngine::start() {
-    mLoadingResult = std::async(&AudioEngine::load, this);
-
 }
 
 void AudioEngine::stop() {
@@ -70,8 +77,10 @@ void AudioEngine::stop() {
     }
 }
 
-void AudioEngine::setFileName(const char *fileName) {
+void AudioEngine::loadFile(const char *fileName) {
     mFileName = fileName;
+    prepare();
+
 }
 
 DataCallbackResult
@@ -147,7 +156,7 @@ bool AudioEngine::setupAudioSources() {
             StorageDataSource::newFromStorageAsset(mExtraxtor, mFileName, targetProperties)
     };
     if (backingTrackSource == nullptr) {
-        LOGE("Could not load source data for backing track");
+        LOGE("Could not prepare source data for backing track");
         return false;
     }
     mBackingTrack = std::make_unique<Player>(backingTrackSource, mCallback);

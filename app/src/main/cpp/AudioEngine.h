@@ -47,8 +47,9 @@ public:
     explicit AudioEngine(AMediaExtractor&, AudioCallback&);
 
     void start();
+    void startPlaying();
     void stop();
-    void setFileName(const char * fileName);
+    void loadFile(const char * fileName);
 
     // Inherited from oboe::AudioStreamCallback
     DataCallbackResult
@@ -73,7 +74,7 @@ private:
     std::atomic<AudioEngineState> mAudioEngineState { AudioEngineState::Loading };
     std::future<void> mLoadingResult;
 
-    void load();
+    void prepare();
     bool openStream();
     bool setupAudioSources();
 
