@@ -10,7 +10,8 @@ import timber.log.Timber
 class PlayerServiceBinder(serviceContext: Context) : Binder(),
     PlayerServiceInterface {
 
-    private var looper = LoopedPlayer.create(serviceContext)
+//    private var looper = LoopedPlayer.create(serviceContext)
+    private var looper = JniPlayer()
 
     override fun start() {
         Timber.d("Start in Binder")

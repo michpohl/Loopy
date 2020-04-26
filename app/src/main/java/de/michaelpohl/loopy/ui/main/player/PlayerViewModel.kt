@@ -42,10 +42,9 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     //    lateinit var loopsList: List<AudioModel>
 
     fun onStartPlaybackClicked(view: View) {
-        //        looper?.let {
-        //            if (it.getHasLoopFile()) startLooper()
-        //        }
-        JniBridge.play(loopsList[0].path)
+                looper?.let {
+                    if (it.getHasLoopFile()) startLooper()
+                }
     }
 
     fun onStopPlaybackClicked(view: View) {
@@ -116,16 +115,14 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
                 adapter.notifyMultipleItems(arrayOf(oldPosition, position))
                 if (!serviceInterface.isPaused()) {
                     Timber.d("Attempting to play natively: ${audioModel.path}")
-                    //TODO LISTENER
-                    JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
-                    startJNILooper(audioModel.path)
-//                    startLooper()
+                    startLooper()
                 }
             }
         } ?: Timber.d("onItemSelected with no looper")
     }
 
     private fun startLooper() {
+        JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
         isPlaying.set(true)
         updateRunnable.run()
         looper?.start()
