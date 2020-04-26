@@ -29,7 +29,6 @@ AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
 const char *mFileName;
 
 
-
 void AudioEngine::load() {
 
 
@@ -60,10 +59,14 @@ void AudioEngine::start() {
 
 void AudioEngine::stop() {
 
+    //also: differentiate between stop and pause...
     if (mAudioStream != nullptr) {
         mAudioStream->close();
         delete mAudioStream;
         mAudioStream = nullptr;
+    }
+    if (mBackingTrack != nullptr) {
+        mBackingTrack->resetPlayHead();
     }
 }
 
@@ -73,8 +76,6 @@ void AudioEngine::setFileName(const char *fileName) {
 
 DataCallbackResult
 AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) {
-    LOGD("onAudioReady");
-
 
     // If our audio stream is expecting 16-bit samples we need to render our floats into a separate
     // buffer then convert them into 16-bit ints
@@ -84,7 +85,6 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     for (int i = 0; i < numFrames; ++i) {
         mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
         mCurrentFrame++;
-        mCallback.playBackProgress(i);
     }
 
     if (is16Bit) {
@@ -94,6 +94,7 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     }
 
     mLastUpdateTime = nowUptimeMillis();
+//    mCallback.playBackProgress((int) mLastUpdateTime);
     return DataCallbackResult::Continue;
 }
 
@@ -149,7 +150,8 @@ bool AudioEngine::setupAudioSources() {
         LOGE("Could not load source data for backing track");
         return false;
     }
-    mBackingTrack = std::make_unique<Player>(backingTrackSource);
+    mBackingTrack = std::make_unique<Player>(backingTrackSource, mCallback);
+    mBackingTrack->resetPlayHead();
     mBackingTrack->setPlaying(true);
     mBackingTrack->setLooping(true);
 

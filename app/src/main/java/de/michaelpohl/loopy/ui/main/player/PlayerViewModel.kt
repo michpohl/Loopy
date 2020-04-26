@@ -42,10 +42,9 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     //    lateinit var loopsList: List<AudioModel>
 
     fun onStartPlaybackClicked(view: View) {
-        //        looper?.let {
-        //            if (it.getHasLoopFile()) startLooper()
-        //        }
-        JniBridge.play(loopsList[0].path)
+                looper?.let {
+                    if (it.getHasLoopFile()) startLooper()
+                }
     }
 
     fun onStopPlaybackClicked(view: View) {
@@ -82,18 +81,18 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
 
     fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
         Timber.d("onItemSelected. Selection state: $selectionState, position: $position")
-        looper?.let {
+        looper?.let { serviceInterface ->
             Timber.d("I seem to have a looper")
-            it.setLoopUri(Uri.parse(audioModel.path))
+            serviceInterface.setLoopUri(Uri.parse(audioModel.path))
             Timber.d("Setting uri to: ${audioModel.path}")
             // when just looping the looper sets a new listener to repeat the loop automatically
             // in WAIT mode (and only while playing) we replace the onLoopSwitchedListener with a different one to switch to the preselected loop
-            if (selectionState == SelectionState.PRESELECTED && it.getSwitchingLoopsBehaviour() == SwitchingLoopsBehaviour.WAIT && it.isPlaying()) {
+            if (selectionState == SelectionState.PRESELECTED && serviceInterface.getSwitchingLoopsBehaviour() == SwitchingLoopsBehaviour.WAIT && serviceInterface.isPlaying()) {
                 val oldPosition = adapter.preSelectedPosition
                 adapter.preSelectedPosition = position
                 adapter.notifyMultipleItems(arrayOf(oldPosition, position))
 
-                it.setOnLoopSwitchedListener {
+                serviceInterface.setOnLoopSwitchedListener {
                     val oldSelected = adapter.selectedPosition
                     adapter.selectedPosition = adapter.preSelectedPosition
 
@@ -114,16 +113,16 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
                 adapter.selectedPosition = position
                 Timber.d("old: $oldPosition, new: $position")
                 adapter.notifyMultipleItems(arrayOf(oldPosition, position))
-                if (!it.isPaused()) {
+                if (!serviceInterface.isPaused()) {
                     Timber.d("Attempting to play natively: ${audioModel.path}")
-                    startJNILooper(audioModel.path)
-//                    startLooper()
+                    startLooper()
                 }
             }
         } ?: Timber.d("onItemSelected with no looper")
     }
 
     private fun startLooper() {
+        JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
         isPlaying.set(true)
         updateRunnable.run()
         looper?.start()

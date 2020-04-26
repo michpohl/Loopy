@@ -36,7 +36,7 @@ class PlayerItem(
         viewModel = model
         binding.model = viewModel
 //        TODO inflate wave from audio model
-        //prevent directorys from tring to get rendered should they show up here.
+        //prevent directorys from trying to get rendered should they show up here.
         if (!FileHelper.getSingleFile(model.audioModel.path).isDirectory) {
             inflateWave(itemView.wave, FileHelper.getSingleFile(model.audioModel.path).readBytes())
         }
