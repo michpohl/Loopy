@@ -51,7 +51,7 @@ void AudioEngine::startPlaying() {
         LOGE("Cannot start playback: Audiostream is a null pointer.");
         return;
     }
-    if (mBackingTrack == nullptr) {
+    if (currentLoop == nullptr) {
         LOGE("Cannot start playback: Track to play is a null pointer.");
         return;
     }
@@ -66,15 +66,26 @@ void AudioEngine::startPlaying() {
 
 void AudioEngine::stop() {
 
-    //also: differentiate between stop and pause...
     if (mAudioStream != nullptr) {
         mAudioStream->close();
         delete mAudioStream;
         mAudioStream = nullptr;
     }
-    if (mBackingTrack != nullptr) {
-        mBackingTrack->resetPlayHead();
+    if (currentLoop != nullptr) {
+        currentLoop->resetPlayHead();
     }
+}
+
+void AudioEngine::pause() {
+    LOGD("Trying to pause");
+    if (mAudioStream != nullptr) {
+        mAudioStream->pause();
+//        delete mAudioStream;
+//        mAudioStream = nullptr;
+    }
+//    if (loop != nullptr) {
+//        loop->resetPlayHead();
+//    }
 }
 
 void AudioEngine::loadFile(const char *fileName) {
@@ -159,13 +170,13 @@ bool AudioEngine::setupAudioSources() {
         LOGE("Could not prepare source data for backing track");
         return false;
     }
-    mBackingTrack = std::make_unique<Player>(backingTrackSource, mCallback);
-    mBackingTrack->resetPlayHead();
-    mBackingTrack->setPlaying(true);
-    mBackingTrack->setLooping(true);
+    currentLoop = std::make_unique<Player>(backingTrackSource, mCallback);
+    currentLoop->resetPlayHead();
+    currentLoop->setPlaying(true);
+    currentLoop->setLooping(true);
 
     // Add player to our mixer
-    mMixer.addTrack(mBackingTrack.get());
+    mMixer.addTrack(currentLoop.get());
 
     return true;
 }

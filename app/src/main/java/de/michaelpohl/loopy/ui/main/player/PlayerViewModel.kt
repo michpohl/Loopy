@@ -23,15 +23,6 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
 
-    private var updateRunnable = object : Runnable {
-        override fun run() {
-            looper?.getCurrentPosition()?.let {
-                adapter.updateProgress(it)
-            }
-            updateHandler.postDelayed(this, 40)
-        }
-    }
-
     var isPlaying = ObservableBoolean(false)
     var emptyMessageVisibility = ObservableField(View.VISIBLE)
     var clearListButtonVisibility = ObservableField(View.GONE)
@@ -124,7 +115,6 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     private fun startLooper() {
         JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
         isPlaying.set(true)
-        updateRunnable.run()
         looper?.start()
     }
 
@@ -157,7 +147,6 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
 
     private fun onPlaybackStopped() {
         isPlaying.set(false)
-        updateHandler.removeCallbacks(updateRunnable)
     }
 
     interface PlayerActionsListener {

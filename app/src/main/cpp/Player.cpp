@@ -16,6 +16,9 @@
 
 #include "Player.h"
 #include "utils/logging.h"
+#include <time.h>
+
+
 
 void Player::renderAudio(float *targetData, int32_t numFrames) {
 
@@ -53,9 +56,11 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
             renderSilence(&targetData[framesToRenderFromData], numFrames * properties.channelCount);
         }
         float progress = ((float) mReadFrameIndex / totalSourceFrames) * 100;
-        if (progress > (position + 1)) {
+        double thisProgressCall = now_ms();
+        if (progress > (position + 1) && thisProgressCall > lastProgressCall + 30) {
             mCallback.playBackProgress((int) progress);
             position = progress;
+            lastProgressCall = thisProgressCall;
         }
 
     } else {
@@ -67,4 +72,14 @@ void Player::renderSilence(float *start, int32_t numSamples) {
     for (int i = 0; i < numSamples; ++i) {
         start[i] = 0;
     }
+}
+
+// from android samples
+/* return current time in milliseconds */
+double Player::now_ms(void) {
+
+    struct timespec res;
+    clock_gettime(CLOCK_REALTIME, &res);
+    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
+
 }

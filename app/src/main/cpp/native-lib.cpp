@@ -53,7 +53,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, 
     if (audioEngine != nullptr) {
         audioEngine->start();
     } else {
-        LOGE("AudioEngine is null!");
+        LOGE(" Cannot start playback: AudioEngine is null!");
     }
 }
 
@@ -65,4 +65,13 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env, j
     }
 }
 
+JNIEXPORT jboolean JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_pausePlaybackNative(JNIEnv * env , jobject thiz ) {
+//TODO this boolean value does not yet really tell if everything worked
+if ( audioEngine != nullptr ) {
+audioEngine -> pause();
+return ( jboolean ) true ;
+}
+return (jboolean) false;
+}
 }

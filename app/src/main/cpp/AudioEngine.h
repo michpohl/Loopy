@@ -49,6 +49,7 @@ public:
     void start();
     void startPlaying();
     void stop();
+    void pause();
     void loadFile(const char * fileName);
 
     // Inherited from oboe::AudioStreamCallback
@@ -61,7 +62,7 @@ private:
     AudioCallback& mCallback;
     AudioStream *mAudioStream { nullptr };
     std::unique_ptr<Player> mClap;
-    std::unique_ptr<Player> mBackingTrack;
+    std::unique_ptr<Player> currentLoop;
     Mixer mMixer;
     std::unique_ptr<float[]> mConversionBuffer { nullptr }; // For float->int16 conversion
 

@@ -59,6 +59,7 @@ public:
 
 private:
     float position = 0;
+    double lastProgressCall = 0;
     int32_t mReadFrameIndex = 0;
     std::atomic<bool> mIsPlaying{false};
     std::atomic<bool> mIsLooping{false};
@@ -66,6 +67,8 @@ private:
     AudioCallback &mCallback;
 
     void renderSilence(float *, int32_t);
+
+    double now_ms(void);
 };
 
 #endif //OBOE_TEST_SOUNDRECORDING_H

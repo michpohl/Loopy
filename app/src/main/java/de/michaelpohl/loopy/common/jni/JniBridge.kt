@@ -20,6 +20,10 @@ object JniBridge {
         startPlaybackNative()
     }
 
+    fun pause(): Boolean {
+        return pausePlaybackNative()
+    }
+
     fun stop() {
         stopPlaybackNative()
     }
@@ -32,4 +36,5 @@ object JniBridge {
     private external fun loadNative(fileName: String)
     private external fun startPlaybackNative()
     private external fun stopPlaybackNative()
+    private external fun pausePlaybackNative() : Boolean
 }

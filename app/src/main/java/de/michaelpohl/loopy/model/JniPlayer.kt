@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import de.michaelpohl.loopy.common.PlayerState
+import de.michaelpohl.loopy.common.PlayerState.*
 import de.michaelpohl.loopy.common.jni.JniBridge
 
 class JniPlayer() {
@@ -19,24 +20,36 @@ class JniPlayer() {
 
     var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     var hasLoopFile = false
-    var state = PlayerState.UNKNOWN
+    var state = UNKNOWN
     var isReady = false
         private set
 
     lateinit var onLoopSwitchedListener: () -> Unit
     lateinit var onLoopedListener: (Int) -> Unit
+
+
+    // TODO refactor this into prepare & start, and change isReady to be a PlayerState too
     fun start() {
+
+        if (state == PAUSED) {
+           JniBridge.play()
+            return
+        }
         JniBridge.stop()
         JniBridge.load(loopUri.toString())
+        isReady = true
         JniBridge.play()
+        state = PLAYING
     }
 
     fun pause() {
-        TODO("Not yet implemented")
+        if (JniBridge.pause()) state = PAUSED
     }
 
     fun stop() {
         JniBridge.stop()
+        state = STOPPED
+
     }
 
     fun changePlaybackPosition(newPosition: Float) {
@@ -47,7 +60,7 @@ class JniPlayer() {
     }
 
     fun isPlaying(): Boolean {
-        return false
+        return state == PLAYING
     }
 
     fun setLoopUri(uri: Uri) {
