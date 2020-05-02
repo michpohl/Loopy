@@ -45,12 +45,12 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject i
         LOGE("Error setting extractor data source, err %d", amresult);
     }
     if (audioEngine == nullptr) {
-    audioEngine = std::make_unique<AudioEngine>(*extractor, *callback);
+    audioEngine = std::make_unique<AudioEngine>(*callback);
     } else {
         LOGD("Not instantiation audioEngine, we already have one.");
     }
     audioEngine->setWaitMode((bool) isWaitMode);
-    audioEngine->prepareNextPlayer(uri);
+    audioEngine->prepareNextPlayer(uri, *extractor);
 }
 
 JNIEXPORT void JNICALL

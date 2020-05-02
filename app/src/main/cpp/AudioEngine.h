@@ -44,7 +44,7 @@ enum class AudioEngineState {
 
 class AudioEngine : public AudioStreamCallback {
 public:
-    explicit AudioEngine(AMediaExtractor &, AudioCallback &);
+    explicit AudioEngine(AudioCallback &);
 
     void start();
 
@@ -56,7 +56,7 @@ public:
 
     void setWaitMode(bool value);
 
-    bool prepareNextPlayer(const char *fileName);
+    bool prepareNextPlayer(const char *fileName, AMediaExtractor &extractor);
 
     // Inherited from oboe::AudioStreamCallback
     DataCallbackResult
@@ -65,9 +65,10 @@ public:
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
 
 private:
-    AMediaExtractor &mExtraxtor;
+//    AMediaExtractor &mExtraxtor;
     AudioCallback &mCallback;
     AudioStream *mAudioStream{nullptr};
+    AudioProperties audioProperties;
     std::vector<std::unique_ptr<Player>> players;
     std::unique_ptr<Player> loopA;
     std::unique_ptr<Player> loopB;

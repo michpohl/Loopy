@@ -69,7 +69,7 @@ class JniPlayer() {
             return
         }
         JniBridge.stop()
-        JniBridge.load(loopUri.toString(), switchingLoopsBehaviour == WAIT)
+        JniBridge.load(loopUri.toString(), true)
         isReady = true
     }
 

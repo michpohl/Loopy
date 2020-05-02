@@ -21,16 +21,15 @@
 #include "AudioEngine.h"
 
 
-AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
-        : mExtraxtor(
-        extractor), mCallback(callback) {
+AudioEngine::AudioEngine(AudioCallback &callback): mCallback(callback) {
 }
 
-bool isWaitMode = false;
+bool isWaitMode = true;
 
 void AudioEngine::setWaitMode(bool value) {
     isWaitMode = value;
 }
+
 
 void AudioEngine::prepare() {
 
@@ -38,7 +37,10 @@ void AudioEngine::prepare() {
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
-
+   audioProperties = AudioProperties{
+            .channelCount = mAudioStream->getChannelCount(),
+            .sampleRate = mAudioStream->getSampleRate()
+    };
     isPrepared = true;
 }
 
@@ -87,26 +89,27 @@ void AudioEngine::pause() {
     }
 }
 
-bool AudioEngine::prepareNextPlayer(const char *fileName) {
+bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extractor) {
     if (!isPrepared) {
         prepare();
+    } else {
+        LOGD("Engine is already prepared. Skipping...");
     }
-    AudioProperties targetProperties{
-            .channelCount = mAudioStream->getChannelCount(),
-            .sampleRate = mAudioStream->getSampleRate()
-    };
-
-    std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, mExtraxtor,
-                                                                 targetProperties);
+//    AudioProperties targetProperties{
+//            .channelCount = mAudioStream->getChannelCount(),
+//            .sampleRate = mAudioStream->getSampleRate()
+//    };
+    LOGD("Creating new player");
+    std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
+                                                                 audioProperties);
     if (newPlayer == nullptr) {
         LOGE("Failed to create a player for file: $s", fileName);
         return false;
     }
     newPlayer->setLooping(true);
-    mMixer.addTrack(newPlayer.get());
-
     // adding the new player to the vector
     players.push_back(std::move(newPlayer));
+    mMixer.addTrack(players.front().get());
     LOGD("Next player successfully prepared!");
     return true;
 }

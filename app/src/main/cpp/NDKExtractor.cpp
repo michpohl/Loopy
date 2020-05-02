@@ -32,7 +32,7 @@ int32_t NDKExtractor::decode(AMediaExtractor &extractor, uint8_t *targetData,
 
     // Specify our desired output format by creating it from our source
     AMediaFormat *format = AMediaExtractor_getTrackFormat(&extractor, 0);
-
+    LOGD("Got media format");
     int32_t sampleRate;
     if (AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_SAMPLE_RATE, &sampleRate)) {
         LOGD("Source sample rate %d", sampleRate);
