@@ -68,7 +68,6 @@ class JniPlayer() {
             JniBridge.play()
             return
         }
-        JniBridge.stop()
         JniBridge.load(loopUri.toString(), true)
         isReady = true
     }

@@ -55,6 +55,9 @@ public:
     void pause();
 
     void setWaitMode(bool value);
+    bool getWaitMode();
+
+    AudioEngineState getState();
 
     bool prepareNextPlayer(const char *fileName, AMediaExtractor &extractor);
 
@@ -81,7 +84,6 @@ private:
     LockFreeQueue<int64_t, kMaxQueueItems> mClapWindows;
     LockFreeQueue<TapResult, kMaxQueueItems> mUiEvents;
     std::atomic<int64_t> mLastUpdateTime{0};
-    std::atomic<AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
     std::future<void> mLoadingResult;
 
     void prepare();

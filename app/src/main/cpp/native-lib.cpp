@@ -31,8 +31,9 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject i
     LOGD("loadNative");
     myJNIClass = env->NewGlobalRef(instance);
 
-    callback = std::make_unique<AudioCallback>(*g_jvm, myJNIClass);
-    callback->playBackProgress(104);
+    if (callback == nullptr) {
+        callback = std::make_unique<AudioCallback>(*g_jvm, myJNIClass);
+    }
 
     const char *uri = env->GetStringUTFChars(URI, NULL);
     AMediaExtractor *extractor = AMediaExtractor_new();
@@ -45,7 +46,8 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject i
         LOGE("Error setting extractor data source, err %d", amresult);
     }
     if (audioEngine == nullptr) {
-    audioEngine = std::make_unique<AudioEngine>(*callback);
+        LOGD("AudioEngine created");
+        audioEngine = std::make_unique<AudioEngine>(*callback);
     } else {
         LOGD("Not instantiation audioEngine, we already have one.");
     }
@@ -55,10 +57,14 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject i
 
 JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, jobject thiz) {
-    if (audioEngine != nullptr) {
+    if (audioEngine == nullptr) {
+        LOGE(" Cannot start playback: AudioEngine is null!");
+        return;
+    }
+    if (!audioEngine->getWaitMode() || audioEngine->getState() != AudioEngineState::Playing) {
         audioEngine->start();
     } else {
-        LOGE(" Cannot start playback: AudioEngine is null!");
+        LOGD("Playback not started on click, because WAIT mode is on and the engine is playing right now");
     }
 }
 
@@ -71,12 +77,12 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env, j
 }
 
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_pausePlaybackNative(JNIEnv * env , jobject thiz ) {
+Java_de_michaelpohl_loopy_common_jni_JniBridge_pausePlaybackNative(JNIEnv *env, jobject thiz) {
 //TODO this boolean value does not yet really tell if everything worked
-if ( audioEngine != nullptr ) {
-audioEngine -> pause();
-return ( jboolean ) true ;
-}
-return (jboolean) false;
+    if (audioEngine != nullptr) {
+        audioEngine->pause();
+        return (jboolean) true;
+    }
+    return (jboolean) false;
 }
 }

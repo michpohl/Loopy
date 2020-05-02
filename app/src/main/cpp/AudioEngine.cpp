@@ -25,10 +25,20 @@ AudioEngine::AudioEngine(AudioCallback &callback): mCallback(callback) {
 }
 
 bool isWaitMode = true;
+std::atomic<AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
+
 
 void AudioEngine::setWaitMode(bool value) {
     isWaitMode = value;
 }
+
+bool AudioEngine::getWaitMode() {
+    return isWaitMode;
+}
+
+AudioEngineState AudioEngine::getState() {
+    return mAudioEngineState;
+};
 
 
 void AudioEngine::prepare() {
@@ -103,7 +113,7 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
     std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
                                                                  audioProperties);
     if (newPlayer == nullptr) {
-        LOGE("Failed to create a player for file: $s", fileName);
+        LOGE("Failed to create a player for file: %s", fileName);
         return false;
     }
     newPlayer->setLooping(true);
@@ -172,5 +182,6 @@ bool AudioEngine::openStream() {
 
     return true;
 }
+
 
 
