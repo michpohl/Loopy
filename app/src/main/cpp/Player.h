@@ -25,10 +25,12 @@
 #include <atomic>
 
 #include <android/asset_manager.h>
+#include <media/NdkMediaExtractor.h>
 
 #include "IRenderableAudio.h"
-#include "DataSource.h"
+#include "StorageDataSource.h"
 #include "AudioCallback.h"
+#include <vector>
 
 class Player : public IRenderableAudio {
 
@@ -40,8 +42,11 @@ public:
      *
      * @param source
      */
-    Player(std::shared_ptr<DataSource> source, AudioCallback &callback)
-            : mSource(source), mCallback(callback) {};
+
+    Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
+           AudioProperties properties);
+
+    bool isPlaying() { return mIsPlaying; };
 
     void renderAudio(float *targetData, int32_t numFrames);
 
@@ -63,7 +68,7 @@ private:
     int32_t mReadFrameIndex = 0;
     std::atomic<bool> mIsPlaying{false};
     std::atomic<bool> mIsLooping{false};
-    std::shared_ptr<DataSource> mSource;
+    std::unique_ptr<StorageDataSource> mSource;
     AudioCallback &mCallback;
 
     void renderSilence(float *, int32_t);

@@ -26,8 +26,11 @@ AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
         extractor), mCallback(callback) {
 }
 
-const char *mFileName;
+bool isWaitMode = false;
 
+void AudioEngine::setWaitMode(bool value) {
+    isWaitMode = value;
+}
 
 void AudioEngine::prepare() {
 
@@ -36,10 +39,7 @@ void AudioEngine::prepare() {
         return;
     }
 
-    if (!setupAudioSources()) {
-        mAudioEngineState = AudioEngineState::FailedToLoad;
-        return;
-    }
+    isPrepared = true;
 }
 
 void AudioEngine::start() {
@@ -51,9 +51,13 @@ void AudioEngine::startPlaying() {
         LOGE("Cannot start playback: Audiostream is a null pointer.");
         return;
     }
-    if (currentLoop == nullptr) {
+    if (players.front() == nullptr) {
         LOGE("Cannot start playback: Track to play is a null pointer.");
         return;
+    } else {
+        LOGD("Play the first in the players vector!");
+
+        players.front()->setPlaying(true);
     }
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
@@ -71,8 +75,8 @@ void AudioEngine::stop() {
         delete mAudioStream;
         mAudioStream = nullptr;
     }
-    if (currentLoop != nullptr) {
-        currentLoop->resetPlayHead();
+    if (loopA != nullptr) {
+        loopA->resetPlayHead();
     }
 }
 
@@ -80,18 +84,31 @@ void AudioEngine::pause() {
     LOGD("Trying to pause");
     if (mAudioStream != nullptr) {
         mAudioStream->pause();
-//        delete mAudioStream;
-//        mAudioStream = nullptr;
     }
-//    if (loop != nullptr) {
-//        loop->resetPlayHead();
-//    }
 }
 
-void AudioEngine::loadFile(const char *fileName) {
-    mFileName = fileName;
-    prepare();
+bool AudioEngine::prepareNextPlayer(const char *fileName) {
+    if (!isPrepared) {
+        prepare();
+    }
+    AudioProperties targetProperties{
+            .channelCount = mAudioStream->getChannelCount(),
+            .sampleRate = mAudioStream->getSampleRate()
+    };
 
+    std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, mExtraxtor,
+                                                                 targetProperties);
+    if (newPlayer == nullptr) {
+        LOGE("Failed to create a player for file: $s", fileName);
+        return false;
+    }
+    newPlayer->setLooping(true);
+    mMixer.addTrack(newPlayer.get());
+
+    // adding the new player to the vector
+    players.push_back(std::move(newPlayer));
+    LOGD("Next player successfully prepared!");
+    return true;
 }
 
 DataCallbackResult
@@ -114,7 +131,6 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     }
 
     mLastUpdateTime = nowUptimeMillis();
-//    mCallback.playBackProgress((int) mLastUpdateTime);
     return DataCallbackResult::Continue;
 }
 
@@ -154,30 +170,4 @@ bool AudioEngine::openStream() {
     return true;
 }
 
-bool AudioEngine::setupAudioSources() {
-
-    // Set the properties of our audio source(s) to match that of our audio stream
-    AudioProperties targetProperties{
-            .channelCount = mAudioStream->getChannelCount(),
-            .sampleRate = mAudioStream->getSampleRate()
-    };
-
-    // Create a data source and player for our backing track
-    std::shared_ptr<StorageDataSource> backingTrackSource{
-            StorageDataSource::newFromStorageAsset(mExtraxtor, mFileName, targetProperties)
-    };
-    if (backingTrackSource == nullptr) {
-        LOGE("Could not prepare source data for backing track");
-        return false;
-    }
-    currentLoop = std::make_unique<Player>(backingTrackSource, mCallback);
-    currentLoop->resetPlayHead();
-    currentLoop->setPlaying(true);
-    currentLoop->setLooping(true);
-
-    // Add player to our mixer
-    mMixer.addTrack(currentLoop.get());
-
-    return true;
-}
 

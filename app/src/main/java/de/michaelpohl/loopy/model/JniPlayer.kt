@@ -3,8 +3,11 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import de.michaelpohl.loopy.common.PlayerState
-import de.michaelpohl.loopy.common.PlayerState.*
+import de.michaelpohl.loopy.common.PlayerState.PAUSED
+import de.michaelpohl.loopy.common.PlayerState.PLAYING
+import de.michaelpohl.loopy.common.PlayerState.STOPPED
+import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
+import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
 import de.michaelpohl.loopy.common.jni.JniBridge
 
 class JniPlayer() {
@@ -14,11 +17,15 @@ class JniPlayer() {
     private var shouldBePlaying = false
     private var loopsElapsed = 0
 
+    // TODO remove / improve when it all works
+    var switchingLoopsBehaviour = WAIT
+
     lateinit var currentPlayer: MediaPlayer
     private lateinit var nextPlayer: MediaPlayer
-    private lateinit var loopUri: Uri
+    private var loopUri: Uri? = null
+    private var nextLoopUri: Uri? = null
 
-    var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
+    //    var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     var hasLoopFile = false
     var state = UNKNOWN
     var isReady = false
@@ -27,17 +34,8 @@ class JniPlayer() {
     lateinit var onLoopSwitchedListener: () -> Unit
     lateinit var onLoopedListener: (Int) -> Unit
 
-
     // TODO refactor this into prepare & start, and change isReady to be a PlayerState too
     fun start() {
-
-        if (state == PAUSED) {
-           JniBridge.play()
-            return
-        }
-        JniBridge.stop()
-        JniBridge.load(loopUri.toString())
-        isReady = true
         JniBridge.play()
         state = PLAYING
     }
@@ -49,7 +47,6 @@ class JniPlayer() {
     fun stop() {
         JniBridge.stop()
         state = STOPPED
-
     }
 
     fun changePlaybackPosition(newPosition: Float) {
@@ -63,8 +60,17 @@ class JniPlayer() {
         return state == PLAYING
     }
 
-    fun setLoopUri(uri: Uri) {
-        this.loopUri = uri
+    // always replace the current uri when switching
+    // in WAIT mode, we first check if we already have a uri. In that case, we set nextLoopUri for the waiting file
+    fun prepare(uri: Uri) {
+        loopUri = uri
+        if (state == PAUSED) {
+            JniBridge.play()
+            return
+        }
+        JniBridge.stop()
+        JniBridge.load(loopUri.toString(), switchingLoopsBehaviour == WAIT)
+        isReady = true
     }
 
     fun getCurrentPosition(): Float {

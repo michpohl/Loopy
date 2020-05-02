@@ -17,7 +17,14 @@
 #include "Player.h"
 #include "utils/logging.h"
 #include <time.h>
+#include "StorageDataSource.h"
 
+
+Player::Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
+               AudioProperties properties) : mCallback(callback),
+                                             mSource(StorageDataSource::newFromStorageAsset(
+                                                     extractor, fileName, properties)) {
+};
 
 
 void Player::renderAudio(float *targetData, int32_t numFrames) {
@@ -28,7 +35,6 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
 
         int64_t framesToRenderFromData = numFrames;
         int64_t totalSourceFrames = mSource->getSize() / properties.channelCount;
-//        LOGD("Total: %lld", (long long) totalSourceFrames);
 
         const float *data = mSource->getData();
 
@@ -83,3 +89,5 @@ double Player::now_ms(void) {
     return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
 
 }
+
+

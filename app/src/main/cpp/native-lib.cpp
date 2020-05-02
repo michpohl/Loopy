@@ -27,7 +27,7 @@ jint JNI_OnLoad(JavaVM *pJvm, void *reserved) {
 
 JNIEXPORT void JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject instance,
-                                                          jstring URI) {
+                                                          jstring URI, jboolean isWaitMode) {
     LOGD("loadNative");
     myJNIClass = env->NewGlobalRef(instance);
 
@@ -44,8 +44,13 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject i
     if (amresult != AMEDIA_OK) {
         LOGE("Error setting extractor data source, err %d", amresult);
     }
+    if (audioEngine == nullptr) {
     audioEngine = std::make_unique<AudioEngine>(*extractor, *callback);
-    audioEngine->loadFile(uri);
+    } else {
+        LOGD("Not instantiation audioEngine, we already have one.");
+    }
+    audioEngine->setWaitMode((bool) isWaitMode);
+    audioEngine->prepareNextPlayer(uri);
 }
 
 JNIEXPORT void JNICALL

@@ -60,7 +60,7 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopSwitchedListener = receiver
     }
 
-    override fun setLoopUri(uri: Uri) = looper.setLoopUri(uri)
+    override fun setLoopUri(uri: Uri) = looper.prepare(uri)
 
     override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {
         looper.switchingLoopsBehaviour = behaviour

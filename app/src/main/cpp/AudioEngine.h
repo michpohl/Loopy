@@ -44,40 +44,50 @@ enum class AudioEngineState {
 
 class AudioEngine : public AudioStreamCallback {
 public:
-    explicit AudioEngine(AMediaExtractor&, AudioCallback&);
+    explicit AudioEngine(AMediaExtractor &, AudioCallback &);
 
     void start();
+
     void startPlaying();
+
     void stop();
+
     void pause();
-    void loadFile(const char * fileName);
+
+    void setWaitMode(bool value);
+
+    bool prepareNextPlayer(const char *fileName);
 
     // Inherited from oboe::AudioStreamCallback
     DataCallbackResult
     onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numFrames) override;
+
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
 
 private:
-    AMediaExtractor& mExtraxtor;
-    AudioCallback& mCallback;
-    AudioStream *mAudioStream { nullptr };
-    std::unique_ptr<Player> mClap;
-    std::unique_ptr<Player> currentLoop;
+    AMediaExtractor &mExtraxtor;
+    AudioCallback &mCallback;
+    AudioStream *mAudioStream{nullptr};
+    std::vector<std::unique_ptr<Player>> players;
+    std::unique_ptr<Player> loopA;
+    std::unique_ptr<Player> loopB;
     Mixer mMixer;
-    std::unique_ptr<float[]> mConversionBuffer { nullptr }; // For float->int16 conversion
+    std::unique_ptr<float[]> mConversionBuffer{nullptr}; // For float->int16 conversion
 
     LockFreeQueue<int64_t, kMaxQueueItems> mClapEvents;
-    std::atomic<int64_t> mCurrentFrame { 0 };
-    std::atomic<int64_t> mSongPositionMs { 0 };
+    std::atomic<int64_t> mCurrentFrame{0};
+    std::atomic<int64_t> mSongPositionMs{0};
     LockFreeQueue<int64_t, kMaxQueueItems> mClapWindows;
     LockFreeQueue<TapResult, kMaxQueueItems> mUiEvents;
-    std::atomic<int64_t> mLastUpdateTime { 0 };
-    std::atomic<AudioEngineState> mAudioEngineState { AudioEngineState::Loading };
+    std::atomic<int64_t> mLastUpdateTime{0};
+    std::atomic<AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
     std::future<void> mLoadingResult;
 
     void prepare();
+
     bool openStream();
-    bool setupAudioSources();
+
+    bool isPrepared = false;
 
 };
 
