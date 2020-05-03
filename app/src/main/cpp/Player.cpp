@@ -38,7 +38,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
 
         const float *data = mSource->getData();
 
-        // Check whether we're about to reach the end of the recording
+        // Check whether we're about to reach the end of the recording, only if we're looping
         if (!mIsLooping && mReadFrameIndex + numFrames >= totalSourceFrames) {
             framesToRenderFromData = totalSourceFrames - mReadFrameIndex;
             mIsPlaying = false;

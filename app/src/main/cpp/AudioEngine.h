@@ -39,6 +39,8 @@ using namespace oboe;
 enum class AudioEngineState {
     Loading,
     Playing,
+    Paused,
+    Stopped,
     FailedToLoad
 };
 

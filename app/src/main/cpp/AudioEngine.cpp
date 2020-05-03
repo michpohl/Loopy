@@ -68,9 +68,9 @@ void AudioEngine::startPlaying() {
         return;
     } else {
         LOGD("Play the first in the players vector!");
-
         players.front()->setPlaying(true);
     }
+    mMixer.addTrack(players.front().get());
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
         LOGE("Failed to start stream. Error: %s", convertToText(result));
@@ -97,6 +97,7 @@ void AudioEngine::pause() {
     if (mAudioStream != nullptr) {
         mAudioStream->pause();
     }
+    mAudioEngineState = AudioEngineState::Paused;
 }
 
 bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extractor) {
@@ -105,10 +106,7 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
     } else {
         LOGD("Engine is already prepared. Skipping...");
     }
-//    AudioProperties targetProperties{
-//            .channelCount = mAudioStream->getChannelCount(),
-//            .sampleRate = mAudioStream->getSampleRate()
-//    };
+
     LOGD("Creating new player");
     std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
                                                                  audioProperties);
@@ -117,9 +115,15 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
         return false;
     }
     newPlayer->setLooping(true);
+
+    //TODO test if this is enough! Stops the first one in the vector from looping, if there is one
+    //which means we assume this will only be executed on selecting a successor
+    if (!players.empty()) {
+        players.front()->setLooping(false);
+    }
+
     // adding the new player to the vector
     players.push_back(std::move(newPlayer));
-    mMixer.addTrack(players.front().get());
     LOGD("Next player successfully prepared!");
     return true;
 }
@@ -177,7 +181,6 @@ bool AudioEngine::openStream() {
     if (setBufferSizeResult != Result::OK) {
         LOGW("Failed to set buffer size. Error: %s", convertToText(setBufferSizeResult.error()));
     }
-
     mMixer.setChannelCount(mAudioStream->getChannelCount());
 
     return true;
