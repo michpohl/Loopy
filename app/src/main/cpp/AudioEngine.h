@@ -69,8 +69,9 @@ public:
 
     void onErrorAfterClose(AudioStream *oboeStream, Result error) override;
 
+    void onPlayerEnded();
+
 private:
-//    AMediaExtractor &mExtraxtor;
     AudioCallback &mCallback;
     AudioStream *mAudioStream{nullptr};
     AudioProperties audioProperties;
@@ -91,6 +92,7 @@ private:
     void prepare();
 
     bool openStream();
+
 
     bool isPrepared = false;
 

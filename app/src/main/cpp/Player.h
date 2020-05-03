@@ -43,8 +43,11 @@ public:
      * @param source
      */
 
+    typedef std::function<void()> PlaybackEndedCallback;
+    PlaybackEndedCallback playbackEndedCallback;
+
     Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
-           AudioProperties properties);
+           AudioProperties properties, PlaybackEndedCallback c);
 
     bool isPlaying() { return mIsPlaying; };
 

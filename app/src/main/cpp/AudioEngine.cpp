@@ -21,7 +21,8 @@
 #include "AudioEngine.h"
 
 
-AudioEngine::AudioEngine(AudioCallback &callback): mCallback(callback) {
+AudioEngine::AudioEngine(AudioCallback &callback) : mCallback(callback) {
+
 }
 
 bool isWaitMode = true;
@@ -47,7 +48,7 @@ void AudioEngine::prepare() {
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
-   audioProperties = AudioProperties{
+    audioProperties = AudioProperties{
             .channelCount = mAudioStream->getChannelCount(),
             .sampleRate = mAudioStream->getSampleRate()
     };
@@ -109,15 +110,13 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
 
     LOGD("Creating new player");
     std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
-                                                                 audioProperties);
+                                                                 audioProperties, std::bind(
+                    &AudioEngine::onPlayerEnded, this));
     if (newPlayer == nullptr) {
         LOGE("Failed to create a player for file: %s", fileName);
         return false;
     }
     newPlayer->setLooping(true);
-
-    //TODO test if this is enough! Stops the first one in the vector from looping, if there is one
-    //which means we assume this will only be executed on selecting a successor
     if (!players.empty()) {
         players.front()->setLooping(false);
     }
@@ -187,4 +186,15 @@ bool AudioEngine::openStream() {
 }
 
 
+void AudioEngine::onPlayerEnded() {
+    LOGD("Player ended");
+//    players.erase(players.begin());
+//TODO remove the first, when the last is succesfully playing.
+mMixer.addTrack(players.back().get());
+players.back()->setPlaying(true);
+    LOGD("Player erased");
+    if (!players.empty()) {
 
+    }
+
+}

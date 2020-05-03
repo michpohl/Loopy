@@ -19,11 +19,12 @@
 #include <time.h>
 #include "StorageDataSource.h"
 
-
 Player::Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
-               AudioProperties properties) : mCallback(callback),
-                                             mSource(StorageDataSource::newFromStorageAsset(
-                                                     extractor, fileName, properties)) {
+               AudioProperties properties, PlaybackEndedCallback c) : mCallback(callback),
+                                                                      mSource(StorageDataSource::newFromStorageAsset(
+                                                                              extractor, fileName,
+                                                                              properties)),
+                                                                      playbackEndedCallback(c) {
 };
 
 
@@ -68,10 +69,14 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
             position = progress;
             lastProgressCall = thisProgressCall;
         }
-
+    if (!mIsPlaying) {
+    LOGD("Trigger ending callback");
+        playbackEndedCallback();
+    }
     } else {
         renderSilence(targetData, numFrames * properties.channelCount);
     }
+
 }
 
 void Player::renderSilence(float *start, int32_t numSamples) {
