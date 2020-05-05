@@ -136,7 +136,11 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     float *outputBuffer = (is16Bit) ? mConversionBuffer.get() : static_cast<float *>(audioData);
 
     for (int i = 0; i < numFrames; ++i) {
-        mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
+
+        // mixer disabled because we only play files consecutively
+        // mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
+
+        players.front()->renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
         mCurrentFrame++;
     }
 
@@ -188,10 +192,8 @@ bool AudioEngine::openStream() {
 
 void AudioEngine::onPlayerEnded() {
     LOGD("Player ended");
-//    players.erase(players.begin());
-//TODO remove the first, when the last is succesfully playing.
-mMixer.addTrack(players.back().get());
-players.back()->setPlaying(true);
+    players.back()->setPlaying(true);
+    players.erase(players.begin());
     LOGD("Player erased");
     if (!players.empty()) {
 
