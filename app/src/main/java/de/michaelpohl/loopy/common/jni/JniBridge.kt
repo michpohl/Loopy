@@ -28,8 +28,12 @@ object JniBridge {
         stopPlaybackNative()
     }
 
-    fun integerCallback(value: Int) {
+    fun onPlaybackProgressChanged(value: Int) {
         progressListener?.invoke(value)
+    }
+
+    fun onPlayedFileChanged(value: String) {
+        Timber.d("name: $value")
     }
 
     /* end subscription test */

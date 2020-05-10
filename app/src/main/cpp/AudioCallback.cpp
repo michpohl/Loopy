@@ -6,8 +6,10 @@
 #include <utils/logging.h>
 #include "AudioCallback.h"
 
-jclass target;
-jmethodID id;
+
+jmethodID progressChangedMethod;
+jmethodID fileNameChangedMethod;
+const char *mFileName;
 
 AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object(object) {
     JNIEnv *g_env;
@@ -15,12 +17,37 @@ AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object
     LOGD("Env Stat: %d", getEnvStat);
 
     if (g_env != NULL) {
-        target = g_env->GetObjectClass(g_object);
-        id = g_env->GetMethodID(target, "integerCallback", "(I)V");
+        jclass target = g_env->GetObjectClass(g_object);
+        progressChangedMethod = g_env->GetMethodID(target, "onPlaybackProgressChanged",
+                                                   "(I)V");
+        fileNameChangedMethod = g_env->GetMethodID(target, "onPlayedFileChanged",
+                                                   "(Ljava/lang/String;)V");
     }
 }
 
-void AudioCallback::playBackProgress(int progressPercentage) {
+void AudioCallback::onFileChanged(const char *fileName) {
+    if (mFileName != fileName || mFileName == NULL) {
+        mFileName = fileName;
+        JNIEnv *g_env;
+        int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
+
+        if (getEnvStat == JNI_EDETACHED) {
+            LOGD("GetEnv: not attached - attaching");
+            if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
+                LOGD("GetEnv: Failed to attach");
+            }
+        } else if (getEnvStat == JNI_OK) {
+            LOGD("GetEnv: JNI_OK");
+        } else if (getEnvStat == JNI_EVERSION) {
+            LOGD("GetEnv: version not supported");
+        }
+
+        g_env->CallVoidMethod(g_object, fileNameChangedMethod, (g_env->NewStringUTF(mFileName)));
+//    mJvm.DetachCurrentThread();
+    }
+}
+
+void AudioCallback::updatePlaybackProgress(int progressPercentage) {
     JNIEnv *g_env;
     int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
 
@@ -34,7 +61,7 @@ void AudioCallback::playBackProgress(int progressPercentage) {
     } else if (getEnvStat == JNI_EVERSION) {
 //        LOGD("GetEnv: version not supported");
     }
-    g_env->CallVoidMethod(g_object, id, (jint) progressPercentage);
+    g_env->CallVoidMethod(g_object, progressChangedMethod, (jint) progressPercentage);
 //    mJvm.DetachCurrentThread();
 }
 

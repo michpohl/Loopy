@@ -20,7 +20,8 @@
 #include "StorageDataSource.h"
 
 Player::Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
-               AudioProperties properties, PlaybackEndedCallback c) : mCallback(callback),
+               AudioProperties properties, PlaybackEndedCallback c) : mFilename(fileName),
+                                                                      mCallback(callback),
                                                                       mSource(StorageDataSource::newFromStorageAsset(
                                                                               extractor, fileName,
                                                                               properties)),
@@ -33,7 +34,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
     const AudioProperties properties = mSource->getProperties();
 
     if (mIsPlaying) {
-
+        mCallback.onFileChanged(mFilename);
         int64_t framesToRenderFromData = numFrames;
         int64_t totalSourceFrames = mSource->getSize() / properties.channelCount;
 
@@ -65,14 +66,14 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
         float progress = ((float) mReadFrameIndex / totalSourceFrames) * 100;
         double thisProgressCall = now_ms();
         if (progress > (position + 1) && thisProgressCall > lastProgressCall + 30) {
-            mCallback.playBackProgress((int) progress);
+            mCallback.updatePlaybackProgress((int) progress);
             position = progress;
             lastProgressCall = thisProgressCall;
         }
-    if (!mIsPlaying) {
-    LOGD("Trigger ending callback");
-        playbackEndedCallback();
-    }
+        if (!mIsPlaying) {
+            LOGD("Trigger ending callback");
+            playbackEndedCallback();
+        }
     } else {
         renderSilence(targetData, numFrames * properties.channelCount);
     }

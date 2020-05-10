@@ -66,6 +66,7 @@ public:
     void setLooping(bool isLooping) { mIsLooping = isLooping; };
 
 private:
+    const char *mFilename;
     float position = 0;
     double lastProgressCall = 0;
     int32_t mReadFrameIndex = 0;
