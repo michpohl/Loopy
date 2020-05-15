@@ -72,7 +72,7 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
 
     override fun getCurrentPosition() = looper.getCurrentPosition()
 
-    override fun getHasLoopFile(): Boolean {
+    override fun hasLoopFile(): Boolean {
         return looper.hasLoopFile
     }
 

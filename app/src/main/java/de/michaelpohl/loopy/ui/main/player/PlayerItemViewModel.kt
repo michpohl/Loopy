@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
 import timber.log.Timber
 
@@ -17,7 +18,7 @@ class PlayerItemViewModel(
     private val onItemClickedListener: (Int, SelectionState) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
     private val onRemoveItemClickedListener: (Int) -> Unit
-) : ViewModel() {
+) : BaseViewModel() {
 
     val blockUpdatesFromPlayer = ObservableBoolean(false)
     var backgroundColor: Int = 0
@@ -28,6 +29,7 @@ class PlayerItemViewModel(
 
     var selectedState = NOT_SELECTED
         set (state) {
+            //TODO change background colors here
             if (state == NOT_SELECTED) {
                 removeButtonVisibility.set(View.VISIBLE)
             } else {

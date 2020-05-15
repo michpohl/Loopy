@@ -10,6 +10,7 @@ object JniBridge {
     }
 
     var progressListener: ((Int) -> Unit)? = null
+    var playedFileChangedListener: ((String) -> Unit)? = null
     lateinit var assets: AssetManager
 
     fun load(fileName: String, isWaitMode: Boolean) {
@@ -40,5 +41,5 @@ object JniBridge {
     private external fun loadNative(fileName: String, isWaitMode: Boolean)
     private external fun startPlaybackNative()
     private external fun stopPlaybackNative()
-    private external fun pausePlaybackNative() : Boolean
+    private external fun pausePlaybackNative(): Boolean
 }

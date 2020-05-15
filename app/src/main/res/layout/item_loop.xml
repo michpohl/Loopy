@@ -8,13 +8,12 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel"/>
+                type="de.michaelpohl.loopy.ui.main.player.NewPlayerItemViewModel"/>
     </data>
 
+<!--            android:background="@{model.backgroundColor}"-->
     <androidx.constraintlayout.widget.ConstraintLayout
-
             style="@style/Row"
-            android:background="@{model.backgroundColor}"
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{model::onItemClicked}"

@@ -17,7 +17,7 @@ interface PlayerServiceInterface {
     fun isPlaying(): Boolean
     fun isPaused(): Boolean
     fun getState(): PlayerState //TODO reduce the state calls to this one
-    fun getHasLoopFile(): Boolean
+    fun hasLoopFile(): Boolean
     fun setHasLoopFile(hasFile: Boolean)
     fun setOnLoopedListener(receiver: (Int) -> Unit)
     fun setOnLoopSwitchedListener(receiver: () -> Unit)

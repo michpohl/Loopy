@@ -41,8 +41,9 @@ void AudioCallback::onFileChanged(const char *fileName) {
         } else if (getEnvStat == JNI_EVERSION) {
             LOGD("GetEnv: version not supported");
         }
-
-        g_env->CallVoidMethod(g_object, fileNameChangedMethod, (g_env->NewStringUTF(mFileName)));
+        jstring callbackString = g_env->NewStringUTF(mFileName);
+        g_env->CallVoidMethod(g_object, fileNameChangedMethod, callbackString);
+        g_env->DeleteLocalRef(callbackString);
 //    mJvm.DetachCurrentThread();
     }
 }
@@ -52,14 +53,14 @@ void AudioCallback::updatePlaybackProgress(int progressPercentage) {
     int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
 
     if (getEnvStat == JNI_EDETACHED) {
-//        LOGD("GetEnv: not attached - attaching");
+        LOGD("GetEnv: not attached - attaching");
         if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
             LOGD("GetEnv: Failed to attach");
         }
     } else if (getEnvStat == JNI_OK) {
-//        LOGD("GetEnv: JNI_OK");
+        LOGD("GetEnv: JNI_OK");
     } else if (getEnvStat == JNI_EVERSION) {
-//        LOGD("GetEnv: version not supported");
+        LOGD("GetEnv: version not supported");
     }
     g_env->CallVoidMethod(g_object, progressChangedMethod, (jint) progressPercentage);
 //    mJvm.DetachCurrentThread();
