@@ -30,7 +30,7 @@ class NewPlayerItemViewModel(
     private val _removeButtonVisibility = MutableLiveData(View.INVISIBLE)
     val removeButtonVisibility = _removeButtonVisibility.immutable()
 
-    val name = "gtgreg"
+    val name = audioModel.name
     val canSeekAudio = false
 
     var selectedState = NOT_SELECTED
