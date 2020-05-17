@@ -10,7 +10,7 @@ import kotlin.reflect.KFunction0
 
 class NewPlayerItemViewModel(
     val audioModel: AudioModel,
-    private val onItemClickedListener: KFunction0<Unit>,
+    private val onItemClickedListener: (AudioModel) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
     private val onRemoveItemClickedListener: KFunction0<Unit>
 ) : BaseViewModel() {
@@ -45,6 +45,7 @@ class NewPlayerItemViewModel(
         }
 
     fun onItemClicked(view: View) {
+        onItemClickedListener.invoke((audioModel))
     }
 
     fun onRemoveItemClicked(view: View) {

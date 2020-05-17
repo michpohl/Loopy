@@ -11,7 +11,8 @@ import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import timber.log.Timber
 
 class NewPlayerAdapter(
-    private val onProgressChangedByUserListener: (Float) -> Unit
+    private val onProgressChangedByUserListener: (Float) -> Unit,
+    private val onLoopClickedListener: (AudioModel) -> Unit
 
 ) : Adapter<NewPlayerItemHolder>() {
 
@@ -43,8 +44,8 @@ class NewPlayerAdapter(
         // define the item's selection status, imho per name
     }
 
-    private fun onItemClicked() {
-        Timber.d("Clicked")
+    private fun onItemClicked(model: AudioModel) {
+        onLoopClickedListener.invoke(model)
     }
 
     private fun onRemoveItemClicked() {

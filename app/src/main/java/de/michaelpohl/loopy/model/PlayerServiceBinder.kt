@@ -10,13 +10,8 @@ import timber.log.Timber
 class PlayerServiceBinder(serviceContext: Context) : Binder(),
     PlayerServiceInterface {
 
-//    private var looper = LoopedPlayer.create(serviceContext)
+    //    private var looper = LoopedPlayer.create(serviceContext)
     private var looper = JniPlayer()
-
-    override fun start() {
-        Timber.d("Start in Binder")
-        looper.start()
-    }
 
     override fun pause() {
         looper.pause()
@@ -60,7 +55,10 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopSwitchedListener = receiver
     }
 
-    override fun setLoopUri(uri: Uri) = looper.prepare(uri)
+    override fun startImmediately(uri: Uri) {
+        looper.prepare(uri)
+        looper.start()
+    }
 
     override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {
         looper.switchingLoopsBehaviour = behaviour
@@ -87,7 +85,7 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         if (looper.state == PlayerState.PLAYING) {
             looper.stop()
         }
-//TODO properly release looper
-//        looper.release()
+        //TODO properly release looper
+        //        looper.release()
     }
 }

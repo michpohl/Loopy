@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 interface PlayerServiceInterface {
     fun preselect()
     fun select()
-    fun start()
+    fun startImmediately(path: Uri)
     fun pause()
     fun stop()
     fun getCurrentPosition(): Float
@@ -21,7 +21,6 @@ interface PlayerServiceInterface {
     fun setHasLoopFile(hasFile: Boolean)
     fun setOnLoopedListener(receiver: (Int) -> Unit)
     fun setOnLoopSwitchedListener(receiver: () -> Unit)
-    fun setLoopUri(uri: Uri)
     fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour)
     fun getSwitchingLoopsBehaviour(): SwitchingLoopsBehaviour
 }

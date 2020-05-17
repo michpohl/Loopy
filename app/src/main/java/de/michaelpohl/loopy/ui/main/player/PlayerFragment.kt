@@ -14,7 +14,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.common.find
@@ -60,10 +59,10 @@ class PlayerFragment : BaseFragment() {
         setHasOptionsMenu(true)
 
         //        TODO Reinstate arguments or do it differently
-//        if (arguments != null) {
-//            val appData: AppData = requireArguments().getParcelable("appData")!!
-//            Timber.d("Loops when starting player: %s", loopsList)
-//        }
+        //        if (arguments != null) {
+        //            val appData: AppData = requireArguments().getParcelable("appData")!!
+        //            Timber.d("Loops when starting player: %s", loopsList)
+        //        }
     }
 
     override fun onCreateView(
@@ -117,19 +116,21 @@ class PlayerFragment : BaseFragment() {
 
     fun updateViewModel() {
         //TODO this should be handled differently
-//        loopsList = DataRepository.currentSelectedAudioModels
-//        //        viewModel.loopsList = DataRepository.currentSelectedAudioModels
-//        viewModel.showEmptyState()
+        //        loopsList = DataRepository.currentSelectedAudioModels
+        //        //        viewModel.loopsList = DataRepository.currentSelectedAudioModels
+        //        viewModel.showEmptyState()
     }
 
     fun pausePlayback() {
         playerServiceBinder?.pause()
     }
 
-    private fun initAdapter(loopsList : List<AudioModel>) {
-        adapter = NewPlayerAdapter { viewModel.onProgressChangedByUser(it) }.also {
+    private fun initAdapter(loopsList: List<AudioModel>) {
+        adapter = NewPlayerAdapter({
+            viewModel.onProgressChangedByUser(it)
+        }, { viewModel.onLoopClicked(it) }).also {
             it.items = loopsList
-            it.dialogHelper = DialogHelper(requireActivity())
+            it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
 
         }
         // todo sort recycler and adapter code blocks better
