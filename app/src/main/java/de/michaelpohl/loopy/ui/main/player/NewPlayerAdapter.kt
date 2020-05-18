@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
+import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.SELECTED
 import timber.log.Timber
 
 class NewPlayerAdapter(
@@ -18,8 +22,55 @@ class NewPlayerAdapter(
 
     private val holders = mutableListOf<NewPlayerItemHolder>()
     var items = listOf<AudioModel>()
-
     lateinit var dialogHelper: DialogHelper
+
+    private var currentlyPlaying: String? = null
+        set(newValue) {
+            newValue?.let { value ->
+                field = value
+                updatePlaybackState(value)
+            }
+        }
+
+    private var preselected: String? = null
+        set(newValue) {
+            newValue?.let { value ->
+                field = value
+                updatePreselectionState(value)
+            }
+        }
+
+    private fun updatePlaybackState(currentlyPlaying: String) {
+        holders.forEach {
+            when {
+                currentlyPlaying == it.getName() -> it.state = SELECTED
+                it.state == PRESELECTED -> {  /*do nothing */
+                }
+                else -> it.state = NOT_SELECTED
+            }
+
+        }
+    }
+
+    private fun updatePreselectionState(preselected: String) {
+        holders.forEach {
+            when {
+                preselected == it.getName() && currentlyPlaying != it.getName() -> it.state = PRESELECTED
+                it.state == SELECTED -> { /* do nothting */
+                }
+                else -> it.state = NOT_SELECTED
+            }
+
+        }
+    }
+    //        holders.find { currentlyPlaying.contains(it.getName()) }?.setState(PlayerItemViewModel.SelectionState.SELECTED)
+
+    init {
+        with(JniBridge) {
+            playedFileChangedListener = { currentlyPlaying = it }
+            filePreselectedListener = { preselected = it }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewPlayerItemHolder {
         val binding: ItemLoopBinding =
@@ -42,6 +93,16 @@ class NewPlayerAdapter(
         )
         holder.bind(itemViewModel)
         // define the item's selection status, imho per name
+    }
+
+    override fun onViewAttachedToWindow(holder: NewPlayerItemHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.onAppear()
+    }
+
+    override fun onViewDetachedFromWindow(holder: NewPlayerItemHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.onDisappear()
     }
 
     private fun onItemClicked(model: AudioModel) {

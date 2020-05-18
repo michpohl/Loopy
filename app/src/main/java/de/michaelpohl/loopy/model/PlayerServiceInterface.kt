@@ -5,9 +5,9 @@ import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 
 interface PlayerServiceInterface {
-    fun preselect()
+    fun preselect(path: String)
     fun select()
-    fun startImmediately(path: Uri)
+    fun startImmediately(path: String)
     fun pause()
     fun stop()
     fun getCurrentPosition(): Float

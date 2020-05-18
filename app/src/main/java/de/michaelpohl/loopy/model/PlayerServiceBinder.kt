@@ -55,8 +55,8 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopSwitchedListener = receiver
     }
 
-    override fun startImmediately(uri: Uri) {
-        looper.prepare(uri)
+    override fun startImmediately(path: String) {
+        looper.prepare(path)
         looper.start()
     }
 
@@ -74,7 +74,8 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         return looper.hasLoopFile
     }
 
-    override fun preselect() {
+    override fun preselect(path: String) {
+        looper.preselect(path)
     }
 
     override fun select() {

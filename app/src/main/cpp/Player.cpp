@@ -34,7 +34,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
     const AudioProperties properties = mSource->getProperties();
 
     if (mIsPlaying) {
-        mCallback.onFileChanged(mFilename);
+        mCallback.onFileStartsPlaying(mFilename);
         int64_t framesToRenderFromData = numFrames;
         int64_t totalSourceFrames = mSource->getSize() / properties.channelCount;
 

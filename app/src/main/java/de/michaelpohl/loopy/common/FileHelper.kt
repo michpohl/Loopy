@@ -136,7 +136,7 @@ object FileHelper {
         }
 
         return AudioModel(
-            name = fileModel.name.split(".")[0], //throw away file extension from name
+            name = fileModel.path, //throw away file extension from name
             album = albumNameFromFolder(),
             path = fileModel.path,
             fileExtension = fileModel.extension,

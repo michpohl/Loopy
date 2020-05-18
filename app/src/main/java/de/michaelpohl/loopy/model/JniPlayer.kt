@@ -2,15 +2,16 @@ package de.michaelpohl.loopy.model
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.net.Uri
 import de.michaelpohl.loopy.common.PlayerState.PAUSED
 import de.michaelpohl.loopy.common.PlayerState.PLAYING
 import de.michaelpohl.loopy.common.PlayerState.STOPPED
 import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
 import de.michaelpohl.loopy.common.jni.JniBridge
+import org.koin.core.KoinComponent
 
-class JniPlayer() {
+class JniPlayer() : KoinComponent {
+
 
     private var mContext: Context? = null
     private var mCounter = 1
@@ -22,8 +23,8 @@ class JniPlayer() {
 
     lateinit var currentPlayer: MediaPlayer
     private lateinit var nextPlayer: MediaPlayer
-    private var loopUri: Uri? = null
-    private var nextLoopUri: Uri? = null
+    private var loopLocation: String? = null
+    private var nextLoopUri: String? = null
 
     //    var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     var hasLoopFile = false
@@ -62,14 +63,18 @@ class JniPlayer() {
 
     // always replace the current uri when switching
     // in WAIT mode, we first check if we already have a uri. In that case, we set nextLoopUri for the waiting file
-    fun prepare(uri: Uri) {
-        loopUri = uri
+    fun prepare(path: String) {
+        loopLocation = path
         if (state == PAUSED) {
             JniBridge.play()
             return
         }
-        JniBridge.load(loopUri.toString(), true)
+        JniBridge.load(loopLocation.toString(), true)
         isReady = true
+    }
+
+    fun preselect(path: String) {
+        nextLoopUri = path
     }
 
     fun getCurrentPosition(): Float {

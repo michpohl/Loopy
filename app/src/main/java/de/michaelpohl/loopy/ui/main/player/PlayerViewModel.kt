@@ -9,6 +9,7 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
@@ -16,7 +17,7 @@ import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import timber.log.Timber
 
-class PlayerViewModel(private val repository: AudioFilesRepository) : BaseViewModel() {
+class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) : BaseViewModel() {
 
     val loopsList: List<AudioModel> = repository.getSingleSet() //TODO LiveData?
 
@@ -75,8 +76,11 @@ class PlayerViewModel(private val repository: AudioFilesRepository) : BaseViewMo
     fun onLoopClicked(audioModel : AudioModel) {
         Timber.d("Clicked on: ${audioModel.name}")
                 looper?.let { serviceInterface ->
-                    Timber.d("I seem to have a looper")
-                    serviceInterface.startImmediately(Uri.parse(audioModel.path))
+
+                    if (appState.isWaitMode) {
+                        serviceInterface.preselect(audioModel.name)
+                    }
+                    serviceInterface.startImmediately(audioModel.name)
                     Timber.d("Setting uri to: ${audioModel.path}")
                     // when just looping the looper sets a new listener to repeat the loop automatically
                     // in WAIT mode (and only while playing) we replace the onLoopSwitchedListener with a different one to switch to the preselected loop

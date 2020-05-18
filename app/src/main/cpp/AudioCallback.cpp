@@ -9,6 +9,7 @@
 
 jmethodID progressChangedMethod;
 jmethodID fileNameChangedMethod;
+jmethodID filePreselectedMethod;
 const char *mFileName;
 
 AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object(object) {
@@ -22,10 +23,12 @@ AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object
                                                    "(I)V");
         fileNameChangedMethod = g_env->GetMethodID(target, "onPlayedFileChanged",
                                                    "(Ljava/lang/String;)V");
+        filePreselectedMethod = g_env->GetMethodID(target, "onFilePreselected",
+                                                   "(Ljava/lang/String;)V");
     }
 }
 
-void AudioCallback::onFileChanged(const char *fileName) {
+void AudioCallback::onFileStartsPlaying(const char *fileName) {
     if (mFileName != fileName || mFileName == NULL) {
         mFileName = fileName;
         JNIEnv *g_env;
@@ -43,6 +46,29 @@ void AudioCallback::onFileChanged(const char *fileName) {
         }
         jstring callbackString = g_env->NewStringUTF(mFileName);
         g_env->CallVoidMethod(g_object, fileNameChangedMethod, callbackString);
+        g_env->DeleteLocalRef(callbackString);
+//    mJvm.DetachCurrentThread();
+    }
+}
+
+void AudioCallback::onFilePreselected(const char *fileName) {
+    if (mFileName != fileName || mFileName == NULL) {
+        mFileName = fileName;
+        JNIEnv *g_env;
+        int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
+
+        if (getEnvStat == JNI_EDETACHED) {
+            LOGD("GetEnv: not attached - attaching");
+            if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
+                LOGD("GetEnv: Failed to attach");
+            }
+        } else if (getEnvStat == JNI_OK) {
+            LOGD("GetEnv: JNI_OK");
+        } else if (getEnvStat == JNI_EVERSION) {
+            LOGD("GetEnv: version not supported");
+        }
+        jstring callbackString = g_env->NewStringUTF(mFileName);
+        g_env->CallVoidMethod(g_object, filePreselectedMethod, callbackString);
         g_env->DeleteLocalRef(callbackString);
 //    mJvm.DetachCurrentThread();
     }

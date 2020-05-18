@@ -121,9 +121,19 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
         players.front()->setLooping(false);
     }
 
+    // removing the last player in the vector, since we are preselection a different one
+    if (players.size() > 1) {
+        players.erase(players.begin()  + players.size() - 1);
+    }
+
     // adding the new player to the vector
     players.push_back(std::move(newPlayer));
     LOGD("Next player successfully prepared!");
+
+    if (getWaitMode()) {
+        LOGD("It's wait mode time");
+        mCallback.onFilePreselected(fileName);
+    }
     return true;
 }
 

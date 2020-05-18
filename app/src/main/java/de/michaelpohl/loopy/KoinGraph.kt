@@ -1,7 +1,10 @@
 package de.michaelpohl.loopy
 
-import de.michaelpohl.loopy.model.ExternalStorageManager
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
+import de.michaelpohl.loopy.model.ExternalStorageManager
+import de.michaelpohl.loopy.model.JniPlayer
+import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel
 import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserViewModel
@@ -28,11 +31,12 @@ object KoinGraph {
         single { SharedPreferencesManager(get()) }
         single { AudioFilesRepository(get(), get()) }
         single { ExternalStorageManager(get()) }
+        single { AppStateRepository() }
     }
 
     private val viewModelModule = module {
         viewModel { FileBrowserViewModel() }
-        viewModel { PlayerViewModel(get()) }
+        viewModel { PlayerViewModel(get(), get()) }
         viewModel { AlbumBrowserViewModel() }
         viewModel { MusicBrowserViewModel() }
         viewModel { MarkupViewerViewModel() }

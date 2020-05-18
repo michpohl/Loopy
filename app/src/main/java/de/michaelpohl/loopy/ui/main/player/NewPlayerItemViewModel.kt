@@ -2,10 +2,14 @@ package de.michaelpohl.loopy.ui.main.player
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.ui.main.BaseViewModel
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.SELECTED
+import timber.log.Timber
 import kotlin.reflect.KFunction0
 
 class NewPlayerItemViewModel(
@@ -27,19 +31,38 @@ class NewPlayerItemViewModel(
     private val _loopsCountVisibility = MutableLiveData(View.INVISIBLE)
     val loopsCountVisibility = _loopsCountVisibility.immutable()
 
-    private val _removeButtonVisibility = MutableLiveData(View.INVISIBLE)
+    private val _removeButtonVisibility = MutableLiveData(View.VISIBLE)
     val removeButtonVisibility = _removeButtonVisibility.immutable()
 
     val name = audioModel.name
     val canSeekAudio = false
 
-    var selectedState = NOT_SELECTED
+    var selectionState = NOT_SELECTED
         set(state) {
+            Timber.d("State is being set to: $state")
+            when (state) {
+                NOT_SELECTED -> {
+                    Timber.d("Not Selected")
+                    _backgroundColor.postValue(resources.getColor(R.color.dark_green))
+                    _removeButtonVisibility.postValue(View.VISIBLE)
+                }
+                PRESELECTED -> {
+                    Timber.d("Preselected")
+                    _removeButtonVisibility.postValue(View.GONE)
+                    _backgroundColor.postValue(resources.getColor(R.color.active_green))
+                    _progress.postValue(50F)
+
+                }
+                SELECTED -> {
+                    Timber.d("Selected")
+                    _removeButtonVisibility.postValue(View.GONE)
+                    _backgroundColor.postValue(resources.getColor(R.color.bright_purple))
+
+                }
+            }
             //TODO change background colors here
             if (state == NOT_SELECTED) {
-                _removeButtonVisibility.postValue(View.VISIBLE)
             } else {
-                _removeButtonVisibility.postValue(View.GONE)
             }
             field = state
         }
@@ -58,8 +81,8 @@ class NewPlayerItemViewModel(
     fun updateProgress(newProgress: Float) {
 
         // if we update the progress on a non-selected item, we want 0 instead
-        if (selectedState == NOT_SELECTED && _progress.value != 0F) {
-           _progress.postValue(0F)
+        if (selectionState == NOT_SELECTED && _progress.value != 0F) {
+            _progress.postValue(0F)
             return
         }
 

@@ -15,7 +15,9 @@ public:
 
     void updatePlaybackProgress(int progressPercentage);
 
-    void onFileChanged(const char *fileName);
+    void onFileStartsPlaying(const char *fileName);
+
+    void onFilePreselected(const char *fileName);
 
 private:
     JavaVM &g_jvm;
