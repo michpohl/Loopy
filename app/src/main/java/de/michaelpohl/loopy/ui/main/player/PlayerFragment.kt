@@ -132,7 +132,10 @@ class PlayerFragment : BaseFragment() {
             it.items = loopsList
             it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
 
+        }.apply {
+            selected.observe(viewLifecycleOwner, androidx.lifecycle.Observer { viewModel.currentlySelected = it })
         }
+
         // todo sort recycler and adapter code blocks better
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = adapter

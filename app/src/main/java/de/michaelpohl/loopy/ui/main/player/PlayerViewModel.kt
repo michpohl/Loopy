@@ -38,6 +38,8 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
 
+    var currentlySelected: String? = null
+
     fun onStartPlaybackClicked(view: View) {
                 looper?.let {
                     if (it.hasLoopFile()) startLooper()
@@ -161,6 +163,8 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 //    }
 
     private fun startLooper() {
+
+        // TODO here start the looper again with currentlySelected
 //        JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
 //        JniBridge.playedFileChangedListener = {adapter.highlightPlayingFile(it)}
 //        isPlaying.set(true)

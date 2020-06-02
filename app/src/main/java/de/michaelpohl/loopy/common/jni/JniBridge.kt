@@ -10,7 +10,7 @@ object JniBridge {
     }
 
     var progressListener: ((Int) -> Unit)? = null
-    var playedFileChangedListener: ((String) -> Unit)? = null
+    var fileSelectedListener: ((String) -> Unit)? = null
     var filePreselectedListener: ((String) -> Unit)? = null
 
     lateinit var assets: AssetManager
@@ -35,14 +35,14 @@ object JniBridge {
         progressListener?.invoke(value)
     }
 
-    fun onPlayedFileChanged(value: String) {
+    fun onFileSelected(value: String) {
         Timber.d("name: $value")
-        playedFileChangedListener?.invoke(value)
+        fileSelectedListener?.invoke(value)
     }
 
     fun onFilePreselected(value: String) {
         Timber.d("preselected: name: $value")
-        playedFileChangedListener?.invoke(value)
+        fileSelectedListener?.invoke(value)
         filePreselectedListener?.invoke(value)
 
     }

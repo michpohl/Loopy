@@ -3,10 +3,12 @@ package de.michaelpohl.loopy.ui.main.player
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
+import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
@@ -24,13 +26,8 @@ class NewPlayerAdapter(
     var items = listOf<AudioModel>()
     lateinit var dialogHelper: DialogHelper
 
-    private var currentlyPlaying: String? = null
-        set(newValue) {
-            newValue?.let { value ->
-                field = value
-                updatePlaybackState(value)
-            }
-        }
+    private val _selected = MutableLiveData<String>()
+    val selected = _selected.immutable()
 
     private var preselected: String? = null
         set(newValue) {
@@ -40,10 +37,10 @@ class NewPlayerAdapter(
             }
         }
 
-    private fun updatePlaybackState(currentlyPlaying: String) {
+    private fun updateSelectionState(toBeSelected: String) {
         holders.forEach {
             when {
-                currentlyPlaying == it.getName() -> it.state = SELECTED
+                toBeSelected == it.getName() -> it.state = SELECTED
                 it.state == PRESELECTED -> {  /*do nothing */
                 }
                 else -> it.state = NOT_SELECTED
@@ -55,7 +52,7 @@ class NewPlayerAdapter(
     private fun updatePreselectionState(preselected: String) {
         holders.forEach {
             when {
-                preselected == it.getName() && currentlyPlaying != it.getName() -> it.state = PRESELECTED
+                preselected == it.getName() && selected.value != it.getName() -> it.state = PRESELECTED
                 it.state == SELECTED -> { /* do nothting */
                 }
                 else -> it.state = NOT_SELECTED
@@ -67,7 +64,10 @@ class NewPlayerAdapter(
 
     init {
         with(JniBridge) {
-            playedFileChangedListener = { currentlyPlaying = it }
+            fileSelectedListener = {
+                _selected.postValue(it)
+                updateSelectionState(it)
+            }
             filePreselectedListener = { preselected = it }
         }
     }
@@ -92,7 +92,6 @@ class NewPlayerAdapter(
             this::onRemoveItemClicked
         )
         holder.bind(itemViewModel)
-        // define the item's selection status, imho per name
     }
 
     override fun onViewAttachedToWindow(holder: NewPlayerItemHolder) {
