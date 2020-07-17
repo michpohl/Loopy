@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.common.immutable
-import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.common.jni.OldJniBridge
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
@@ -63,7 +63,7 @@ class NewPlayerAdapter(
     //        holders.find { currentlyPlaying.contains(it.getName()) }?.setState(PlayerItemViewModel.SelectionState.SELECTED)
 
     init {
-        with(JniBridge) {
+        with(OldJniBridge) {
             fileSelectedListener = {
                 _selected.postValue(it)
                 updateSelectionState(it)

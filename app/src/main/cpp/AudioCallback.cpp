@@ -21,9 +21,9 @@ AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object
         jclass target = g_env->GetObjectClass(g_object);
         progressChangedMethod = g_env->GetMethodID(target, "onPlaybackProgressChanged",
                                                    "(I)V");
-        fileNameChangedMethod = g_env->GetMethodID(target, "onPlayedFileChanged",
+        fileNameChangedMethod = g_env->GetMethodID(target, "onFileSelected",
                                                    "(Ljava/lang/String;)V");
-        filePreselectedMethod = g_env->GetMethodID(target, "onFilePreselected",
+        filePreselectedMethod = g_env->GetMethodID(target, "onSelected",
                                                    "(Ljava/lang/String;)V");
     }
 }
@@ -40,7 +40,7 @@ void AudioCallback::onFileStartsPlaying(const char *fileName) {
                 LOGD("GetEnv: Failed to attach");
             }
         } else if (getEnvStat == JNI_OK) {
-            LOGD("GetEnv: JNI_OK");
+//            LOGD("GetEnv: JNI_OK");
         } else if (getEnvStat == JNI_EVERSION) {
             LOGD("GetEnv: version not supported");
         }
@@ -56,14 +56,14 @@ void AudioCallback::onFilePreselected(const char *fileName) {
         mFileName = fileName;
         JNIEnv *g_env;
         int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
-
+        // TODO there is duplicated code here. Maybe refactor
         if (getEnvStat == JNI_EDETACHED) {
             LOGD("GetEnv: not attached - attaching");
             if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
                 LOGD("GetEnv: Failed to attach");
             }
         } else if (getEnvStat == JNI_OK) {
-            LOGD("GetEnv: JNI_OK");
+//            LOGD("GetEnv: JNI_OK");
         } else if (getEnvStat == JNI_EVERSION) {
             LOGD("GetEnv: version not supported");
         }
@@ -84,7 +84,7 @@ void AudioCallback::updatePlaybackProgress(int progressPercentage) {
             LOGD("GetEnv: Failed to attach");
         }
     } else if (getEnvStat == JNI_OK) {
-        LOGD("GetEnv: JNI_OK");
+//        LOGD("GetEnv: JNI_OK");
     } else if (getEnvStat == JNI_EVERSION) {
         LOGD("GetEnv: version not supported");
     }

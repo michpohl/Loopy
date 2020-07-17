@@ -22,7 +22,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
-import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.SharedPreferencesManager
@@ -68,8 +67,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         handlePossibleIntents()
         setupActionBar()
         setupDrawer()
-
-        JniBridge.assets = assets
         keepScreenOnIfDesired()
     }
 

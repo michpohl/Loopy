@@ -1,34 +1,62 @@
 package de.michaelpohl.loopy.common.jni
 
-import android.content.res.AssetManager
 import timber.log.Timber
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object JniBridge {
-    init {
-        System.loadLibrary("native-lib")
-        Timber.d("Native Lib loaded!")
-    }
+
+    private var selectionJob: Continuation<JniResult<String>>? = null
+    private var waitMode = false
+
+    var currentlySelectedFile: String? = null
 
     var progressListener: ((Int) -> Unit)? = null
     var fileSelectedListener: ((String) -> Unit)? = null
     var filePreselectedListener: ((String) -> Unit)? = null
 
-    lateinit var assets: AssetManager
 
-    fun load(fileName: String, isWaitMode: Boolean) {
-        loadNative(fileName, isWaitMode)
+    init {
+        System.loadLibrary("native-lib")
+        Timber.d("Native Lib loaded!")
     }
 
-    fun play() {
-        startPlaybackNative()
+    suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
+        waitMode = shouldWait
+        return successResult(waitMode)
     }
 
-    fun pause(): Boolean {
-        return pausePlaybackNative()
+    suspend fun select(filename: String): JniResult<String> = suspendCoroutine { job ->
+        selectionJob = job
+        selectNative(filename, waitMode)
     }
 
-    fun stop() {
-        stopPlaybackNative()
+    suspend fun start(filename: String): JniResult<String> {
+        // TODO depending on the situation, a file needs to first be loaded
+        return successResult(filename)
+    }
+
+    suspend fun pause(): JniResult<Nothing> {
+        return successResult()
+    }
+
+    suspend fun stop(): JniResult<Nothing> {
+        return successResult()
+    }
+
+    fun onSelected(filename: String) {
+        currentlySelectedFile = filename
+        selectionJob?.resume(successResult(filename)) ?: error("Continuation to resume does not exist!")
+    }
+
+    fun onStarted(filename: String) {
+    }
+
+    fun onPaused(filename: String) {
+    }
+
+    fun onStopped(filename: String) {
     }
 
     fun onPlaybackProgressChanged(value: Int) {
@@ -47,8 +75,7 @@ object JniBridge {
 
     }
 
-    /* end subscription test */
-    private external fun loadNative(fileName: String, isWaitMode: Boolean)
+    private external fun selectNative(filename: String, isWaitMode: Boolean) // TODO factor out the wait mode
     private external fun startPlaybackNative()
     private external fun stopPlaybackNative()
     private external fun pausePlaybackNative(): Boolean

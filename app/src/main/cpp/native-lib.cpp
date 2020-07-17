@@ -26,8 +26,8 @@ jint JNI_OnLoad(JavaVM *pJvm, void *reserved) {
 }
 
 JNIEXPORT void JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_loadNative(JNIEnv *env, jobject instance,
-                                                          jstring URI, jboolean isWaitMode) {
+Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject instance,
+                                                            jstring URI, jboolean isWaitMode) {
     LOGD("loadNative");
     myJNIClass = env->NewGlobalRef(instance);
 

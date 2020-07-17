@@ -1,15 +1,15 @@
 package de.michaelpohl.loopy.model
 
-import android.net.Uri
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
+import de.michaelpohl.loopy.common.jni.JniResult
 
 interface PlayerServiceInterface {
-    fun preselect(path: String)
-    fun select()
-    fun startImmediately(path: String)
-    fun pause()
-    fun stop()
+    suspend fun preselect(path: String) : JniResult<String> // TODO this should be obsolete if I'm doing it right
+    suspend fun select(path: String) : JniResult<String>
+    suspend fun startImmediately(path: String): JniResult<String>
+    suspend fun pause() : JniResult<Nothing>
+    suspend fun stop() : JniResult<Nothing>
     fun getCurrentPosition(): Float
     fun changePlaybackPosition(newPosition: Float)
     fun resetPreSelection()

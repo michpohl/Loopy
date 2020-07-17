@@ -39,8 +39,10 @@ class PlayerFragment : BaseFragment() {
 
     private var playerServiceBinder: PlayerServiceBinder? = null
         set(value) {
+            value?.let {
             field = value
             viewModel.looper = value
+            }
         }
 
     // This service connection object is the bridge between activity and background service.
@@ -122,7 +124,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun pausePlayback() {
-        playerServiceBinder?.pause()
+//        playerServiceBinder?.pause()
     }
 
     private fun initAdapter(loopsList: List<AudioModel>) {
@@ -159,7 +161,6 @@ class PlayerFragment : BaseFragment() {
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
             )
-            viewModel.looper = playerServiceBinder
             Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
         }
     }

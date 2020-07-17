@@ -1,11 +1,11 @@
 package de.michaelpohl.loopy.model
 
 import android.content.Context
-import android.net.Uri
 import android.os.Binder
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import timber.log.Timber
+import de.michaelpohl.loopy.common.jni.JniResult
+import de.michaelpohl.loopy.common.jni.errorResult
 
 class PlayerServiceBinder(serviceContext: Context) : Binder(),
     PlayerServiceInterface {
@@ -13,13 +13,12 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
     //    private var looper = LoopedPlayer.create(serviceContext)
     private var looper = JniPlayer()
 
-    override fun pause() {
-        looper.pause()
+    override suspend fun pause(): JniResult<Nothing> {
+        return looper.pause()
     }
 
-    override fun stop() {
-        looper.stop()
-        destroyAudioPlayer()
+    override suspend fun stop(): JniResult<Nothing> {
+        return looper.stop()
     }
 
     override fun changePlaybackPosition(newPosition: Float) =
@@ -55,9 +54,9 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopSwitchedListener = receiver
     }
 
-    override fun startImmediately(path: String) {
-        looper.prepare(path)
-        looper.start()
+    override suspend fun startImmediately(path: String): JniResult<String> {
+        var result = looper.select(path)
+        return if (result.isSuccess()) looper.start(path) else errorResult()
     }
 
     override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {
@@ -74,19 +73,20 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         return looper.hasLoopFile
     }
 
-    override fun preselect(path: String) {
-        looper.preselect(path)
+    override suspend fun preselect(path: String): JniResult<String> {
+        return looper.select(path) //TODO this might not be correct
     }
 
-    override fun select() {
+    override suspend fun select(path: String): JniResult<String> {
+        return looper.select(path)
     }
 
-    // Destroy audio player.
-    private fun destroyAudioPlayer() {
-        if (looper.state == PlayerState.PLAYING) {
-            looper.stop()
-        }
-        //TODO properly release looper
-        //        looper.release()
-    }
+//    // Destroy audio player.
+//    private fun destroyAudioPlayer() {
+//        if (looper.state == PlayerState.PLAYING) {
+//            looper.stop()
+//        }
+//        //TODO properly release looper
+//        //        looper.release()
+//    }
 }

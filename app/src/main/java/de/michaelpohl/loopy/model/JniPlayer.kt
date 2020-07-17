@@ -1,17 +1,19 @@
 package de.michaelpohl.loopy.model
 
 import android.content.Context
-import android.media.MediaPlayer
 import de.michaelpohl.loopy.common.PlayerState.PAUSED
 import de.michaelpohl.loopy.common.PlayerState.PLAYING
 import de.michaelpohl.loopy.common.PlayerState.STOPPED
 import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
 import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.common.jni.JniResult
+import de.michaelpohl.loopy.common.jni.errorResult
+import de.michaelpohl.loopy.common.jni.toJniResult
 import org.koin.core.KoinComponent
+import timber.log.Timber
 
-class JniPlayer() : KoinComponent {
-
+class JniPlayer : KoinComponent {
 
     private var mContext: Context? = null
     private var mCounter = 1
@@ -21,8 +23,6 @@ class JniPlayer() : KoinComponent {
     // TODO remove / improve when it all works
     var switchingLoopsBehaviour = WAIT
 
-    lateinit var currentPlayer: MediaPlayer
-    private lateinit var nextPlayer: MediaPlayer
     private var loopLocation: String? = null
     private var nextLoopUri: String? = null
 
@@ -35,19 +35,31 @@ class JniPlayer() : KoinComponent {
     lateinit var onLoopSwitchedListener: () -> Unit
     lateinit var onLoopedListener: (Int) -> Unit
 
-    // TODO refactor this into prepare & start, and change isReady to be a PlayerState too
-    fun start() {
-        JniBridge.play()
-        state = PLAYING
+    //    runs start if we have a filename, if the bridge knows a selected file, otherwise it returns an error
+    suspend fun start(filename: String?): JniResult<String> {
+        val filename = filename ?: JniBridge.currentlySelectedFile ?: return errorResult()
+        with(JniBridge.start(filename)) {
+            if (this.isSuccess()) state = PLAYING
+            return@start this
+        }
     }
 
-    fun pause() {
-        if (JniBridge.pause()) state = PAUSED
+    suspend fun pause(): JniResult<Nothing> {
+        with(JniBridge.pause()) {
+            if (this.isSuccess()) state = PAUSED
+            return@pause this
+        }
     }
 
-    fun stop() {
-        JniBridge.stop()
-        state = STOPPED
+    suspend fun stop(): JniResult<Nothing> {
+        with(JniBridge.stop()) {
+            if (this.isSuccess()) state = STOPPED
+            return@stop this
+        }
+    }
+
+    suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
+        return JniBridge.setWaitMode(shouldWait)
     }
 
     fun changePlaybackPosition(newPosition: Float) {
@@ -63,14 +75,23 @@ class JniPlayer() : KoinComponent {
 
     // always replace the current uri when switching
     // in WAIT mode, we first check if we already have a uri. In that case, we set nextLoopUri for the waiting file
-    fun prepare(path: String) {
-        loopLocation = path
-        if (state == PAUSED) {
-            JniBridge.play()
-            return
+    suspend fun select(path: String): JniResult<Nothing> {
+        Timber.d("Selecting")
+        with(JniBridge.select(path).isSuccess()) {
+            Timber.d("Select success: $this")
+            if (this) {
+                isReady = true // TODO let's see if this still makes sense
+                startPlayerIfNotPlaying(path)
+            }
+            return@select this.toJniResult()
         }
-        JniBridge.load(loopLocation.toString(), true)
-        isReady = true
+    }
+
+    private suspend fun startPlayerIfNotPlaying(path: String) {
+        Timber.d("Start if not playing")
+        if (!isPlaying()) {
+            Timber.d("Start result: ${start(path).isSuccess()}")
+        }
     }
 
     fun preselect(path: String) {

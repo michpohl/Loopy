@@ -26,7 +26,7 @@ AudioEngine::AudioEngine(AudioCallback &callback) : mCallback(callback) {
 }
 
 bool isWaitMode = true;
-std::atomic<AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
+std::atomic <AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
 
 
 void AudioEngine::setWaitMode(bool value) {
@@ -71,6 +71,7 @@ void AudioEngine::startPlaying() {
         LOGD("Play the first in the players vector!");
         players.front()->setPlaying(true);
     }
+    IRenderableAudio *trackToAdd = players.front().get();
     mMixer.addTrack(players.front().get());
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
@@ -78,6 +79,7 @@ void AudioEngine::startPlaying() {
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
+
     mAudioEngineState = AudioEngineState::Playing;
 }
 
@@ -109,8 +111,8 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
     }
 
     LOGD("Creating new player");
-    std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
-                                                                 audioProperties, std::bind(
+    std::unique_ptr <Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
+                                                                  audioProperties, std::bind(
                     &AudioEngine::onPlayerEnded, this));
     if (newPlayer == nullptr) {
         LOGE("Failed to create a player for file: %s", fileName);
@@ -123,17 +125,15 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
 
     // removing the last player in the vector, since we are preselection a different one
     if (players.size() > 1) {
-        players.erase(players.begin()  + players.size() - 1);
+        players.erase(players.begin() + players.size() - 1);
     }
 
     // adding the new player to the vector
     players.push_back(std::move(newPlayer));
     LOGD("Next player successfully prepared!");
 
-    if (getWaitMode()) {
-        LOGD("It's wait mode time");
-        mCallback.onFilePreselected(fileName);
-    }
+    mCallback.onFilePreselected(fileName);
+
     return true;
 }
 
