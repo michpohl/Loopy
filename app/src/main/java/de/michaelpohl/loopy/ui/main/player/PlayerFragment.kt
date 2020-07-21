@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
@@ -48,7 +49,6 @@ class PlayerFragment : BaseFragment() {
     // This service connection object is the bridge between activity and background service.
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
-            Timber.d("Now setting the binder!")
             playerServiceBinder = iBinder as PlayerServiceBinder
         }
 
@@ -91,6 +91,7 @@ class PlayerFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        observe()
         Timber.d("onResume in fragment")
 
         // TODO change that to lose reflection here
@@ -114,6 +115,7 @@ class PlayerFragment : BaseFragment() {
         super.onDestroy()
         viewModel.stopLooper()
         DataRepository.saveCurrentState(viewModel.loopsList)
+        unBindAudioService()
     }
 
     fun updateViewModel() {
@@ -143,6 +145,10 @@ class PlayerFragment : BaseFragment() {
         recycler.adapter = adapter
         // TODO this could get handled better
         viewModel.showEmptyState(loopsList.isEmpty())
+    }
+
+    private fun observe() {
+        viewModel.fileCurrentlyPlayed.observe(viewLifecycleOwner, Observer { adapter.updateSelectedFile(it) })
     }
 
     private fun bindAudioService() {

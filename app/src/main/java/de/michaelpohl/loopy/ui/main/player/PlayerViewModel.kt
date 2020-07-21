@@ -26,6 +26,9 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private val _isPlaying = MutableLiveData(false)
     val isPlaying = _isPlaying.immutable()
 
+    private val _fileCurrentlyPlayed = MutableLiveData<String>()
+    val fileCurrentlyPlayed = _fileCurrentlyPlayed.immutable()
+
     private val _emptyMessageVisibility = MutableLiveData(View.VISIBLE)
     val emptyMessageVisibility = _emptyMessageVisibility.immutable()
 
@@ -77,10 +80,23 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
         //        looper?.setOnLoopedListener { elapsed -> adapter.onLoopsElapsedChanged(elapsed) }
     }
 
+    // TODO make nicer
     fun onLoopClicked(audioModel: AudioModel) {
         Timber.d("Clicked on: ${audioModel.name}")
         uiJob {
-            looper?.select(audioModel.path)
+            looper?.let {
+                var result = it.select(audioModel.path)
+                if (result.isSuccess() && !it.isPlaying()) {
+                    Timber.d("Starting immediately")
+                    val startResult = it.startImmediately()
+                   if (startResult.isSuccess()) {
+                       Timber.d("Starting success")
+                       _fileCurrentlyPlayed.postValue(startResult.data)
+                   }
+                }
+        }
+
+
         }
     }
 

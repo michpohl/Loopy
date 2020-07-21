@@ -13,7 +13,7 @@ class AudioCallback {
 public:
     explicit AudioCallback(JavaVM &, jobject);
 
-    void updatePlaybackProgress(int progressPercentage);
+    void updatePlaybackProgress(const char *filename, int progressPercentage);
 
     void onFileStartsPlaying(const char *fileName);
 

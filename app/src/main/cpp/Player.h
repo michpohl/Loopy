@@ -51,6 +51,8 @@ public:
 
     bool isPlaying() { return mIsPlaying; };
 
+    const char *getName() { return mFilename; };
+
     void renderAudio(float *targetData, int32_t numFrames);
 
     void resetPlayHead() {
@@ -72,7 +74,7 @@ private:
     int32_t mReadFrameIndex = 0;
     std::atomic<bool> mIsPlaying{false};
     std::atomic<bool> mIsLooping{false};
-    std::unique_ptr<StorageDataSource> mSource;
+    std::unique_ptr <StorageDataSource> mSource;
     AudioCallback &mCallback;
 
     void renderSilence(float *, int32_t);

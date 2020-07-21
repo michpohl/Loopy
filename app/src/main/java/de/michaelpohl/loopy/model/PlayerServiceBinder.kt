@@ -54,9 +54,8 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopSwitchedListener = receiver
     }
 
-    override suspend fun startImmediately(path: String): JniResult<String> {
-        var result = looper.select(path)
-        return if (result.isSuccess()) looper.start(path) else errorResult()
+    override suspend fun startImmediately(): JniResult<String> {
+        return looper.start()
     }
 
     override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {

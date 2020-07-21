@@ -71,15 +71,17 @@ void AudioEngine::startPlaying() {
         LOGD("Play the first in the players vector!");
         players.front()->setPlaying(true);
     }
-    IRenderableAudio *trackToAdd = players.front().get();
-    mMixer.addTrack(players.front().get());
+    Player *player = players.front().get();
+    mMixer.addTrack(player);
+    const char* filename = player->getName();
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
         LOGE("Failed to start stream. Error: %s", convertToText(result));
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
-
+    LOGD("Playing: %s", filename);
+    mCallback.onFileStartsPlaying(filename);
     mAudioEngineState = AudioEngineState::Playing;
 }
 
@@ -131,8 +133,6 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
     // adding the new player to the vector
     players.push_back(std::move(newPlayer));
     LOGD("Next player successfully prepared!");
-
-    mCallback.onFilePreselected(fileName);
 
     return true;
 }

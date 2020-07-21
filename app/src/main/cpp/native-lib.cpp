@@ -25,7 +25,7 @@ jint JNI_OnLoad(JavaVM *pJvm, void *reserved) {
     return JNI_VERSION_1_6;
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT bool JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject instance,
                                                             jstring URI, jboolean isWaitMode) {
     LOGD("loadNative");
@@ -39,7 +39,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject
     AMediaExtractor *extractor = AMediaExtractor_new();
     if (extractor == nullptr) {
         LOGE("Could not obtain AMediaExtractor");
-        return;
+        return false;
     }
     media_status_t amresult = AMediaExtractor_setDataSource(extractor, uri);
     if (amresult != AMEDIA_OK) {
@@ -52,7 +52,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject
         LOGD("Not instantiation audioEngine, we already have one.");
     }
     audioEngine->setWaitMode((bool) isWaitMode);
-    audioEngine->prepareNextPlayer(uri, *extractor);
+    return audioEngine->prepareNextPlayer(uri, *extractor);
 }
 
 JNIEXPORT void JNICALL

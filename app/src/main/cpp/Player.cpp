@@ -34,7 +34,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
     const AudioProperties properties = mSource->getProperties();
 
     if (mIsPlaying) {
-        mCallback.onFileStartsPlaying(mFilename);
+//        mCallback.onFileStartsPlaying(mFilename);
         int64_t framesToRenderFromData = numFrames;
         int64_t totalSourceFrames = mSource->getSize() / properties.channelCount;
 
@@ -66,7 +66,7 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
         float progress = ((float) mReadFrameIndex / totalSourceFrames) * 100;
         double thisProgressCall = now_ms();
         if (progress > (position + 1) && thisProgressCall > lastProgressCall + 30) {
-            mCallback.updatePlaybackProgress((int) progress);
+            mCallback.updatePlaybackProgress(mFilename, (int) progress);
             position = progress;
             lastProgressCall = thisProgressCall;
         }

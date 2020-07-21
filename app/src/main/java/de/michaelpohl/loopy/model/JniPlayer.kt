@@ -36,9 +36,8 @@ class JniPlayer : KoinComponent {
     lateinit var onLoopedListener: (Int) -> Unit
 
     //    runs start if we have a filename, if the bridge knows a selected file, otherwise it returns an error
-    suspend fun start(filename: String?): JniResult<String> {
-        val filename = filename ?: JniBridge.currentlySelectedFile ?: return errorResult()
-        with(JniBridge.start(filename)) {
+    suspend fun start(): JniResult<String> {
+        with(JniBridge.start()) {
             if (this.isSuccess()) state = PLAYING
             return@start this
         }
@@ -66,7 +65,7 @@ class JniPlayer : KoinComponent {
     }
 
     fun resetPreSelection() {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
     fun isPlaying(): Boolean {
@@ -81,16 +80,23 @@ class JniPlayer : KoinComponent {
             Timber.d("Select success: $this")
             if (this) {
                 isReady = true // TODO let's see if this still makes sense
-                startPlayerIfNotPlaying(path)
+                // TODO here we could turn on and of autoplay
+                startPlayerIfNotPlaying()
             }
             return@select this.toJniResult()
         }
     }
 
-    private suspend fun startPlayerIfNotPlaying(path: String) {
+    /**
+     * This plays the first item from the vector array of our native audio engine.
+     * Make sure it's always what we want!!
+     */
+    private suspend fun startPlayerIfNotPlaying(): JniResult<String> {
         Timber.d("Start if not playing")
-        if (!isPlaying()) {
-            Timber.d("Start result: ${start(path).isSuccess()}")
+        return if (!isPlaying()) {
+            JniBridge.start()
+        } else {
+            errorResult()
         }
     }
 

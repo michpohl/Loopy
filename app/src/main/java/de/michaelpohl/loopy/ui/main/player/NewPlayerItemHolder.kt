@@ -51,9 +51,9 @@ class NewPlayerItemHolder(
     }
 
     fun getName(): String {
+        Timber.d("Getting holder name: ${viewModel.name}")
         return viewModel.name
     }
-
     var state: SelectionState = NOT_SELECTED
         set(value) {
             viewModel.selectionState = value
