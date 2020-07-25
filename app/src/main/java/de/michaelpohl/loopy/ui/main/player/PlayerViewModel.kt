@@ -29,6 +29,9 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private val _fileCurrentlyPlayed = MutableLiveData<String>()
     val fileCurrentlyPlayed = _fileCurrentlyPlayed.immutable()
 
+    private val _filePreselected = MutableLiveData<String>()
+    val filePreselected = _filePreselected.immutable()
+
     private val _emptyMessageVisibility = MutableLiveData(View.VISIBLE)
     val emptyMessageVisibility = _emptyMessageVisibility.immutable()
 
@@ -39,6 +42,21 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     val acceptedFileTypesAsString = _acceptedFileTypesAsString.immutable()
 
     var looper: PlayerServiceInterface? = null
+        set(value) {
+            field = value
+            setPlayerWaitModeTo(appState.isWaitMode)
+        }
+
+    private fun setPlayerWaitModeTo(shouldWait: Boolean) {
+        uiJob {
+            if (looper?.setWaitMode(appState.isWaitMode)?.isSuccess() == true) {
+                Timber.d("Wait mode set from app state")
+            } else {
+                error("Failed to set wait mode. This is a program error.")
+            }
+        }
+    }
+
     lateinit var playerActionsListener: PlayerActionsListener
 
     var currentlySelected: String? = null
@@ -84,19 +102,9 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     fun onLoopClicked(audioModel: AudioModel) {
         Timber.d("Clicked on: ${audioModel.name}")
         uiJob {
-            looper?.let {
-                var result = it.select(audioModel.path)
-                if (result.isSuccess() && !it.isPlaying()) {
-                    Timber.d("Starting immediately")
-                    val startResult = it.startImmediately()
-                   if (startResult.isSuccess()) {
-                       Timber.d("Starting success")
-                       _fileCurrentlyPlayed.postValue(startResult.data)
-                   }
-                }
-        }
-
-
+            with (looper?.select(audioModel.path)) {
+                if (this?.isSuccess() == true) _filePreselected.postValue(this.data)
+            }
         }
     }
 

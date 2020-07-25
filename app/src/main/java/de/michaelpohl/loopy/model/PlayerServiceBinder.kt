@@ -21,6 +21,10 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         return looper.stop()
     }
 
+    override suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
+        return looper.setWaitMode(shouldWait)
+    }
+
     override fun changePlaybackPosition(newPosition: Float) =
         looper.changePlaybackPosition(newPosition)
 

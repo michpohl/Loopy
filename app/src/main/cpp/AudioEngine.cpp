@@ -29,8 +29,9 @@ bool isWaitMode = true;
 std::atomic <AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
 
 
-void AudioEngine::setWaitMode(bool value) {
+bool AudioEngine::setWaitMode(bool value) {
     isWaitMode = value;
+    return true;
 }
 
 bool AudioEngine::getWaitMode() {

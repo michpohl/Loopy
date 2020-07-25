@@ -56,7 +56,7 @@ public:
 
     void pause();
 
-    void setWaitMode(bool value);
+    bool setWaitMode(bool value);
     bool getWaitMode();
 
     AudioEngineState getState();

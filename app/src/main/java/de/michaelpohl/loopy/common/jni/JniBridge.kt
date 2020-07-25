@@ -9,7 +9,8 @@ object JniBridge {
 
     private var startJob: Continuation<JniResult<String>>? = null
 
-    private var waitMode = false
+    var waitMode = false // TODO later the waitmode should come from settings
+        private set
 
     var currentlySelectedFile: String? = null
 
@@ -22,13 +23,19 @@ object JniBridge {
         Timber.d("Native Lib loaded!")
     }
 
-    suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
-        waitMode = shouldWait
-        return successResult(waitMode)
+    suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> = suspendCoroutine { job ->
+        if (setWaitModeNative(shouldWait)) {
+            waitMode = shouldWait
+            job.resume(successResult(shouldWait))
+        } else {
+            job.resume(errorResult()) // shouldn't ever happen, let's see
+        }
     }
 
-    suspend fun select(filename: String): JniResult<Nothing> = suspendCoroutine {
-        it.resume(selectNative(filename, waitMode).toJniResult())
+    suspend fun select(filename: String): JniResult<String> = suspendCoroutine { job ->
+        with (selectNative(filename)) {
+            job.resume( if (this) successResult(filename) else errorResult())
+        }
     }
 
     suspend fun start(): JniResult<String> = suspendCoroutine {
@@ -42,15 +49,13 @@ object JniBridge {
 
     suspend fun stop(): JniResult<Nothing> {
         TODO("Crash my friend")
-//        return successResult()
+        //        return successResult()
     }
 
     fun onSelected(filename: String) {
     }
 
     fun onStarted(filename: String) {
-        Timber.d("Calls the callback: $filename")
-        Timber.d("Is Startjob null: ${startJob == null}")
     }
 
     fun onPaused(filename: String) {
@@ -79,7 +84,8 @@ object JniBridge {
         filePreselectedListener?.invoke(value)
     }
 
-    private external fun selectNative(filename: String, isWaitMode: Boolean): Boolean // TODO factor out the wait mode
+    private external fun setWaitModeNative(shouldWait: Boolean): Boolean
+    private external fun selectNative(filename: String): Boolean // TODO factor out the wait mode
     private external fun startPlaybackNative()
     private external fun stopPlaybackNative()
     private external fun pausePlaybackNative(): Boolean

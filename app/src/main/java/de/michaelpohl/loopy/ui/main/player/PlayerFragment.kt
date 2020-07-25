@@ -148,7 +148,9 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun observe() {
-        viewModel.fileCurrentlyPlayed.observe(viewLifecycleOwner, Observer { adapter.updateSelectedFile(it) })
+        viewModel.fileCurrentlyPlayed.observe(viewLifecycleOwner, Observer { adapter.updateFileCurrentlyPlayed(it) })
+        viewModel.filePreselected.observe(viewLifecycleOwner, Observer { adapter.updateFilePreselected(it) })
+
     }
 
     private fun bindAudioService() {

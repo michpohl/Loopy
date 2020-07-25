@@ -65,15 +65,18 @@ class NewPlayerAdapter(
     init {
         with(OldJniBridge) {
             fileSelectedListener = {
-                updateSelectedFile(it)
+                updateFileCurrentlyPlayed(it)
             }
             filePreselectedListener = { preselected = it }
         }
     }
 
-    fun updateSelectedFile(it: String) {
-        _selected.postValue(it)
-        updateSelectionState(it)
+    fun updateFileCurrentlyPlayed(filename: String) {
+        _selected.postValue(filename)
+        updateSelectionState(filename)
+    }
+
+    fun updateFilePreselected(filename: String) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewPlayerItemHolder {

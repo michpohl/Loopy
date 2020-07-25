@@ -8,7 +8,6 @@ import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.common.jni.JniResult
-import de.michaelpohl.loopy.common.jni.errorResult
 import de.michaelpohl.loopy.common.jni.toJniResult
 import org.koin.core.KoinComponent
 import timber.log.Timber
@@ -26,10 +25,12 @@ class JniPlayer : KoinComponent {
     private var loopLocation: String? = null
     private var nextLoopUri: String? = null
 
-    //    var switchingLoopsBehaviour = DataRepository.settings.switchingLoopsBehaviour
     var hasLoopFile = false
     var state = UNKNOWN
     var isReady = false
+        private set
+
+    var waitMode = JniBridge.waitMode
         private set
 
     lateinit var onLoopSwitchedListener: () -> Unit
@@ -65,7 +66,7 @@ class JniPlayer : KoinComponent {
     }
 
     fun resetPreSelection() {
-//        TODO("Not yet implemented")
+        //        TODO("Not yet implemented")
     }
 
     fun isPlaying(): Boolean {
@@ -74,14 +75,18 @@ class JniPlayer : KoinComponent {
 
     // always replace the current uri when switching
     // in WAIT mode, we first check if we already have a uri. In that case, we set nextLoopUri for the waiting file
-    suspend fun select(path: String): JniResult<Nothing> {
+    suspend fun select(path: String): JniResult<String> {
         Timber.d("Selecting")
         with(JniBridge.select(path).isSuccess()) {
-            Timber.d("Select success: $this")
             if (this) {
+                when (state) {
+                    PLAYING, PAUSED, STOPPED -> { if (!waitMode) startPlayer() }
+                    else -> {} // do nothing
+                }
+                Timber.d("Successfully selected: $this")
                 isReady = true // TODO let's see if this still makes sense
                 // TODO here we could turn on and of autoplay
-                startPlayerIfNotPlaying()
+                startPlayer()
             }
             return@select this.toJniResult()
         }
@@ -91,12 +96,11 @@ class JniPlayer : KoinComponent {
      * This plays the first item from the vector array of our native audio engine.
      * Make sure it's always what we want!!
      */
-    private suspend fun startPlayerIfNotPlaying(): JniResult<String> {
-        Timber.d("Start if not playing")
-        return if (!isPlaying()) {
-            JniBridge.start()
-        } else {
-            errorResult()
+    private suspend fun startPlayer(): JniResult<String> {
+        with(JniBridge.start()) {
+            Timber.d("Start Player with: ${this.data}")
+            if (this.isSuccess()) state = PLAYING
+            return this
         }
     }
 
