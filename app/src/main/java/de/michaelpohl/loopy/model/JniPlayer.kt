@@ -8,7 +8,6 @@ import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.common.jni.JniResult
-import de.michaelpohl.loopy.common.jni.toJniResult
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
@@ -36,7 +35,6 @@ class JniPlayer : KoinComponent {
     lateinit var onLoopSwitchedListener: () -> Unit
     lateinit var onLoopedListener: (Int) -> Unit
 
-    //    runs start if we have a filename, if the bridge knows a selected file, otherwise it returns an error
     suspend fun start(): JniResult<String> {
         with(JniBridge.start()) {
             if (this.isSuccess()) state = PLAYING
@@ -59,7 +57,10 @@ class JniPlayer : KoinComponent {
     }
 
     suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
-        return JniBridge.setWaitMode(shouldWait)
+        Timber.d("Setting WaitMode: $shouldWait")
+        val result =  JniBridge.setWaitMode(shouldWait)
+        if (result.isSuccess()) waitMode = result.data ?: false
+        return result
     }
 
     fun changePlaybackPosition(newPosition: Float) {
@@ -69,27 +70,11 @@ class JniPlayer : KoinComponent {
         //        TODO("Not yet implemented")
     }
 
-    fun isPlaying(): Boolean {
-        return state == PLAYING
-    }
-
     // always replace the current uri when switching
     // in WAIT mode, we first check if we already have a uri. In that case, we set nextLoopUri for the waiting file
     suspend fun select(path: String): JniResult<String> {
         Timber.d("Selecting")
-        with(JniBridge.select(path).isSuccess()) {
-            if (this) {
-                when (state) {
-                    PLAYING, PAUSED, STOPPED -> { if (!waitMode) startPlayer() }
-                    else -> {} // do nothing
-                }
-                Timber.d("Successfully selected: $this")
-                isReady = true // TODO let's see if this still makes sense
-                // TODO here we could turn on and of autoplay
-                startPlayer()
-            }
-            return@select this.toJniResult()
-        }
+        return JniBridge.select(path)
     }
 
     /**

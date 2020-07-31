@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.common.jni.JniResult
 interface PlayerServiceInterface {
     suspend fun preselect(path: String) : JniResult<String> // TODO this should be obsolete if I'm doing it right
     suspend fun select(path: String) : JniResult<String>
-    suspend fun startImmediately(): JniResult<String>
+    suspend fun play(): JniResult<String>
     suspend fun pause() : JniResult<Nothing>
     suspend fun stop() : JniResult<Nothing>
     suspend fun setWaitMode(shouldWait: Boolean) : JniResult<Boolean>
@@ -15,9 +15,9 @@ interface PlayerServiceInterface {
     fun changePlaybackPosition(newPosition: Float)
     fun resetPreSelection()
     fun isReady(): Boolean
-    fun isPlaying(): Boolean
     fun isPaused(): Boolean
     fun getState(): PlayerState //TODO reduce the state calls to this one
+    fun getWaitMode() : Boolean
     fun hasLoopFile(): Boolean
     fun setHasLoopFile(hasFile: Boolean)
     fun setOnLoopedListener(receiver: (Int) -> Unit)

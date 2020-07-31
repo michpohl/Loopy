@@ -4,7 +4,6 @@ import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
-import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
@@ -47,7 +46,7 @@ class PlayerItemViewModel(
         if (isWaitingMode()) {
             if (selectedState != PRESELECTED) selectedState = PRESELECTED
         } else {
-            selectedState = SELECTED
+            selectedState = PLAYING
             canSeekAudio.set(true)
         }
         Timber.d("Selected state is now: $selectedState")
@@ -81,11 +80,11 @@ class PlayerItemViewModel(
             return
         }
 
-        if (selectedState != SELECTED) {
+        if (selectedState != PLAYING) {
             loopsCountVisibility.set(View.INVISIBLE)
         } else {
             loopsCount.set(count.toString())
-            if (selectedState == SELECTED) {
+            if (selectedState == PLAYING) {
                 loopsCountVisibility.set(View.VISIBLE)
             }
         }
@@ -100,6 +99,6 @@ class PlayerItemViewModel(
     }
 
     enum class SelectionState {
-        NOT_SELECTED, PRESELECTED, SELECTED
+        NOT_SELECTED, PRESELECTED, PLAYING
     }
 }

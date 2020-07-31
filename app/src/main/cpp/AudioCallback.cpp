@@ -77,7 +77,6 @@ void AudioCallback::onFilePreselected(const char *fileName) {
 }
 
 void AudioCallback::updatePlaybackProgress(const char *filename, int progressPercentage) {
-    LOGD("Updating");
     JNIEnv *g_env;
     int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
 

@@ -8,7 +8,7 @@ import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.SELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PLAYING
 import timber.log.Timber
 import kotlin.reflect.KFunction0
 
@@ -53,7 +53,7 @@ class NewPlayerItemViewModel(
                     _progress.postValue(50F)
 
                 }
-                SELECTED -> {
+                PLAYING -> {
                     Timber.d("Selected")
                     _removeButtonVisibility.postValue(View.GONE)
                     _backgroundColor.postValue(resources.getColor(R.color.bright_purple))

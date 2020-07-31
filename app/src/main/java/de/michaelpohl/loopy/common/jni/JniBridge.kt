@@ -26,6 +26,7 @@ object JniBridge {
     suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> = suspendCoroutine { job ->
         if (setWaitModeNative(shouldWait)) {
             waitMode = shouldWait
+            Timber.d("Resuming with $waitMode")
             job.resume(successResult(shouldWait))
         } else {
             job.resume(errorResult()) // shouldn't ever happen, let's see
@@ -56,6 +57,8 @@ object JniBridge {
     }
 
     fun onStarted(filename: String) {
+        Timber.d("onStarted $filename")
+        startJob?.resume(JniResult.Success(filename))
     }
 
     fun onPaused(filename: String) {
@@ -65,11 +68,11 @@ object JniBridge {
     }
 
     fun onPlaybackProgressChanged(filename: String, percentage: Int) {
-        Timber.d("progress: $percentage, filename: $filename")
-        startJob?.let {
-            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
-            startJob = null
-        }
+//        Timber.d("progress: $percentage, filename: $filename")
+//        startJob?.let {
+//            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
+//            startJob = null
+//        }
         progressListener?.invoke(percentage)
     }
 

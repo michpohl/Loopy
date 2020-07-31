@@ -50,7 +50,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
         uiJob {
             if (looper?.setWaitMode(appState.isWaitMode)?.isSuccess() == true) {
-                Timber.d("Wait mode set from app state")
+                Timber.d("Wait mode set from app state: ${looper?.getWaitMode()}")
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
@@ -73,14 +73,14 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     fun onPausePlaybackClicked(view: View) {
         uiJob {
-            looper?.let {
-
-                if (!it.isReady()) cancel()
-                if (it.isPlaying()) {
-                    it.pause()
-                    onPlaybackStopped()
-                } else if (it.getState() == PlayerState.PAUSED) startLooper()
-            }
+            //            looper?.let {
+            //
+            //                if (!it.isReady()) cancel()
+            //                if (it.isPlaying()) {
+            //                    it.pause()
+            //                    onPlaybackStopped()
+            //                } else if (it.getState() == PlayerState.PAUSED) startLooper()
+            //            }
         }
     }
 
@@ -102,19 +102,46 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     fun onLoopClicked(audioModel: AudioModel) {
         Timber.d("Clicked on: ${audioModel.name}")
         uiJob {
-            with (looper?.select(audioModel.path)) {
-                if (this?.isSuccess() == true) _filePreselected.postValue(this.data)
+            with(looper?.select(audioModel.path)) {
+                Timber.d("Updating with: ${this?.data}")
+                if (this?.isSuccess() == true) {
+                    this.data?.let {
+                        onFileSelected(it)
+                    } ?: error("Got no filename back grom JNI. This shouldn't happen")
+                }
             }
+        }
+    }
+
+    private fun onFileSelected(filename: String) {
+
+        Timber.d("Selected: $filename, looper state: ${looper?.getState()}, wait: ${looper?.getWaitMode()}")
+        if (looper?.getWaitMode() == true) {
+            when (looper?.getState()) {
+                PlayerState.PLAYING -> _filePreselected.postValue(filename)
+                PlayerState.PAUSED -> _filePreselected.postValue(filename)
+                PlayerState.STOPPED -> startLooper()
+                PlayerState.UNKNOWN -> startLooper()
+                PlayerState.READY -> _filePreselected.postValue(filename)
+                null -> TODO()
+            }
+        } else {
+            startLooper()
         }
     }
 
     private fun startLooper() {
 
-        // TODO here start the looper again with currentlySelected
-        //        JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
-        //        JniBridge.playedFileChangedListener = {adapter.highlightPlayingFile(it)}
-        //        isPlaying.set(true)
-        //        looper?.start()
+        uiJob {
+            with(looper?.play()) {
+                if (this?.isSuccess() == true) {
+                    this.data?.let {
+                        Timber.d("Started: $it")
+                        _fileCurrentlyPlayed.postValue(this.data)
+                    }
+                }
+            }
+        }
     }
 
     fun stopLooper() {

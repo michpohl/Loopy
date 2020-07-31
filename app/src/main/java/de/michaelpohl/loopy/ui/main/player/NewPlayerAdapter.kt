@@ -13,7 +13,7 @@ import de.michaelpohl.loopy.common.jni.OldJniBridge
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.SELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PLAYING
 import timber.log.Timber
 
 class NewPlayerAdapter(
@@ -40,7 +40,7 @@ class NewPlayerAdapter(
     private fun updateSelectionState(toBeSelected: String) {
         holders.forEach {
             when {
-                toBeSelected == it.getName() -> it.state = SELECTED
+                toBeSelected == it.getName() -> it.state = PLAYING
                 it.state == PRESELECTED -> {  /*do nothing */
                 }
                 else -> it.state = NOT_SELECTED
@@ -53,7 +53,7 @@ class NewPlayerAdapter(
         holders.forEach {
             when {
                 preselected == it.getName() && selected.value != it.getName() -> it.state = PRESELECTED
-                it.state == SELECTED -> { /* do nothting */
+                it.state == PLAYING -> { /* do nothting */
                 }
                 else -> it.state = NOT_SELECTED
             }
@@ -72,11 +72,17 @@ class NewPlayerAdapter(
     }
 
     fun updateFileCurrentlyPlayed(filename: String) {
-        _selected.postValue(filename)
-        updateSelectionState(filename)
+        Timber.d("Playback update: $filename")
+        holders.forEach {
+           it.state = if (it.getName() == filename) PLAYING else NOT_SELECTED
+       }
     }
 
     fun updateFilePreselected(filename: String) {
+        Timber.d("Preselected update: $filename")
+        holders.filter { it.state != PLAYING}.forEach {
+            it.state = if (it.getName() == filename) PRESELECTED else NOT_SELECTED
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewPlayerItemHolder {

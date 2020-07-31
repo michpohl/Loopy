@@ -5,7 +5,6 @@ import android.os.Binder
 import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.jni.JniResult
-import de.michaelpohl.loopy.common.jni.errorResult
 
 class PlayerServiceBinder(serviceContext: Context) : Binder(),
     PlayerServiceInterface {
@@ -34,16 +33,16 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         return looper.isReady
     }
 
-    override fun isPlaying(): Boolean {
-        return looper.isPlaying()
-    }
-
     override fun isPaused(): Boolean {
         return looper.state == PlayerState.PAUSED
     }
 
     override fun getState(): PlayerState {
         return looper.state
+    }
+
+    override fun getWaitMode(): Boolean {
+        return looper.waitMode
     }
 
     override fun setHasLoopFile(hasFile: Boolean) {
@@ -56,10 +55,6 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
 
     override fun setOnLoopSwitchedListener(receiver: () -> Unit) {
         looper.onLoopSwitchedListener = receiver
-    }
-
-    override suspend fun startImmediately(): JniResult<String> {
-        return looper.start()
     }
 
     override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {
@@ -84,12 +79,16 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         return looper.select(path)
     }
 
-//    // Destroy audio player.
-//    private fun destroyAudioPlayer() {
-//        if (looper.state == PlayerState.PLAYING) {
-//            looper.stop()
-//        }
-//        //TODO properly release looper
-//        //        looper.release()
-//    }
+    override suspend fun play(): JniResult<String> {
+     return looper.start()
+    }
+
+    //    // Destroy audio player.
+    //    private fun destroyAudioPlayer() {
+    //        if (looper.state == PlayerState.PLAYING) {
+    //            looper.stop()
+    //        }
+    //        //TODO properly release looper
+    //        //        looper.release()
+    //    }
 }
