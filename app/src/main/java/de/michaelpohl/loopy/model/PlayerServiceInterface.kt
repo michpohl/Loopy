@@ -13,6 +13,7 @@ interface PlayerServiceInterface {
     suspend fun setWaitMode(shouldWait: Boolean) : JniResult<Boolean>
 
     fun setFileStartedByPlayerListener(listener: (String) -> Unit)
+    fun setPlaybackProgressListener(listener: (String, Int) -> Unit)
 
     fun getCurrentPosition(): Float
     fun changePlaybackPosition(newPosition: Float)

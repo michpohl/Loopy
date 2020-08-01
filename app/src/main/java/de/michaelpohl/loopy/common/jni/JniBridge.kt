@@ -15,8 +15,9 @@ object JniBridge {
     var currentlySelectedFile: String? = null
 
     var progressListener: ((Int) -> Unit)? = null
-    var fileStartedByPlayerListener: ((String) -> Unit)? = null
     var filePreselectedListener: ((String) -> Unit)? = null
+    lateinit var fileStartedByPlayerListener: ((String) -> Unit)
+    lateinit var playbackProgressListener: (String, Int) -> Unit
 
     init {
         System.loadLibrary("native-lib")
@@ -57,12 +58,11 @@ object JniBridge {
     }
 
     fun onStarted(filename: String) {
-        Timber.d("onStarted $filename")
         startJob?.let {
             it.resume(JniResult.Success(filename))
             startJob = null
         } ?: run {
-            fileStartedByPlayerListener?.invoke(filename)
+            fileStartedByPlayerListener(filename)
         }
     }
 
@@ -73,12 +73,12 @@ object JniBridge {
     }
 
     fun onPlaybackProgressChanged(filename: String, percentage: Int) {
-        //        Timber.d("progress: $percentage, filename: $filename")
+                Timber.d("progress: $percentage, filename: $filename")
         //        startJob?.let {
         //            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
         //            startJob = null
         //        }
-        progressListener?.invoke(percentage)
+        playbackProgressListener(filename, percentage)
     }
 
     fun onFileSelected(value: String) {

@@ -78,20 +78,20 @@ class NewPlayerItemViewModel(
         _loopsCount.postValue(count.toString())
     }
 
-    fun updateProgress(newProgress: Float) {
+    fun updateProgress(newProgress: Int) {
 
         // if we update the progress on a non-selected item, we want 0 instead
-        if (selectionState == NOT_SELECTED && _progress.value != 0F) {
-            _progress.postValue(0F)
-            return
-        }
+//        if (selectionState == NOT_SELECTED && _progress.value != 0F) {
+//            _progress.postValue(0F)
+//            return
+//        }
 
         // safeguarding crazy values so we stay between 0 and 100
         _progress.postValue(
             when (newProgress) {
                 in Float.MIN_VALUE..0F -> 0F
                 in 100F..Float.MAX_VALUE -> 100F
-                else -> newProgress
+                else -> newProgress.toFloat()
             }
         )
     }

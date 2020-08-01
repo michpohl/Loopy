@@ -54,6 +54,10 @@ class NewPlayerItemHolder(
         Timber.d("Getting holder name: ${viewModel.name}")
         return viewModel.name
     }
+
+    fun updateProgress(percentage: Int) {
+            viewModel.updateProgress(percentage)
+    }
     var state: SelectionState = NOT_SELECTED
         set(value) {
             viewModel.selectionState = value

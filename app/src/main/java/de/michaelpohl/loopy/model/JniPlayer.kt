@@ -74,6 +74,9 @@ class JniPlayer : KoinComponent {
         JniBridge.fileStartedByPlayerListener = listener
     }
 
+    fun setPlaybackProgressListener(listener: (String, Int) -> Unit) {
+JniBridge.playbackProgressListener = listener    }
+
     // always replace the current uri when switching
     // in WAIT mode, we first check if we already have a uri. In that case, we set nextLoopUri for the waiting file
     suspend fun select(path: String): JniResult<String> {

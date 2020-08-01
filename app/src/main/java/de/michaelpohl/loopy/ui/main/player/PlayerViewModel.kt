@@ -32,6 +32,9 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private val _filePreselected = MutableLiveData<String>()
     val filePreselected = _filePreselected.immutable()
 
+    private val _playbackProgress = MutableLiveData<Pair<String, Int>>()
+    val playbackProgress = _playbackProgress.immutable()
+
     private val _emptyMessageVisibility = MutableLiveData(View.VISIBLE)
     val emptyMessageVisibility = _emptyMessageVisibility.immutable()
 
@@ -46,6 +49,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
             field = value
             setPlayerWaitModeTo(appState.isWaitMode)
             field?.setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
+            field?.setPlaybackProgressListener { name, value -> _playbackProgress.postValue(Pair(name, value)) }
         }
 
     private fun onPlayerSwitchedToNextFile(filename: String) {
@@ -55,7 +59,6 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
         uiJob {
             if (looper?.setWaitMode(appState.isWaitMode)?.isSuccess() == true) {
-                Timber.d("Wait mode set from app state: ${looper?.getWaitMode()}")
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
@@ -158,10 +161,10 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
                 }
             }
         }
-        resetPreSelection()
-
-        //        adapter.resetProgress()
-        onPlaybackStopped()
+//        resetPreSelection()
+//
+//        //        adapter.resetProgress()
+//        onPlaybackStopped()
     }
 
     fun onProgressChangedByUser(newProgress: Float) {

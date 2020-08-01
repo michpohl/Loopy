@@ -124,4 +124,10 @@ class NewPlayerAdapter(
     private fun onRemoveItemClicked() {
         Timber.d("OnRemoveClicked")
     }
+
+    fun updatePlaybackProgress(data: Pair<String, Int>?) {
+        data?.let {data ->
+            holders.find { it.getName() ==  data.first}?.updateProgress(data.second)
+        }
+    }
 }
