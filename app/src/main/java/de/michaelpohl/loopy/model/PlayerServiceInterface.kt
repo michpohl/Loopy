@@ -11,6 +11,9 @@ interface PlayerServiceInterface {
     suspend fun pause() : JniResult<Nothing>
     suspend fun stop() : JniResult<Nothing>
     suspend fun setWaitMode(shouldWait: Boolean) : JniResult<Boolean>
+
+    fun setFileStartedByPlayerListener(listener: (String) -> Unit)
+
     fun getCurrentPosition(): Float
     fun changePlaybackPosition(newPosition: Float)
     fun resetPreSelection()

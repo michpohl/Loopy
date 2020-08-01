@@ -45,7 +45,12 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
         set(value) {
             field = value
             setPlayerWaitModeTo(appState.isWaitMode)
+            field?.setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
         }
+
+    private fun onPlayerSwitchedToNextFile(filename: String) {
+        _fileCurrentlyPlayed.postValue(filename)
+    }
 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
         uiJob {

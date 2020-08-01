@@ -204,6 +204,8 @@ bool AudioEngine::openStream() {
 void AudioEngine::onPlayerEnded() {
     LOGD("Player ended");
     players.back()->setPlaying(true);
+    const char* filename = players.back()->getName();
+    mCallback.onFileStartsPlaying(filename);
     players.erase(players.begin());
     LOGD("Player erased");
     if (!players.empty()) {

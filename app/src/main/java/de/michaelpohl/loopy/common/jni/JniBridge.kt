@@ -15,7 +15,7 @@ object JniBridge {
     var currentlySelectedFile: String? = null
 
     var progressListener: ((Int) -> Unit)? = null
-    var fileSelectedListener: ((String) -> Unit)? = null
+    var fileStartedByPlayerListener: ((String) -> Unit)? = null
     var filePreselectedListener: ((String) -> Unit)? = null
 
     init {
@@ -34,8 +34,8 @@ object JniBridge {
     }
 
     suspend fun select(filename: String): JniResult<String> = suspendCoroutine { job ->
-        with (selectNative(filename)) {
-            job.resume( if (this) successResult(filename) else errorResult())
+        with(selectNative(filename)) {
+            job.resume(if (this) successResult(filename) else errorResult())
         }
     }
 
@@ -58,7 +58,12 @@ object JniBridge {
 
     fun onStarted(filename: String) {
         Timber.d("onStarted $filename")
-        startJob?.resume(JniResult.Success(filename))
+        startJob?.let {
+            it.resume(JniResult.Success(filename))
+            startJob = null
+        } ?: run {
+            fileStartedByPlayerListener?.invoke(filename)
+        }
     }
 
     fun onPaused(filename: String) {
@@ -68,22 +73,22 @@ object JniBridge {
     }
 
     fun onPlaybackProgressChanged(filename: String, percentage: Int) {
-//        Timber.d("progress: $percentage, filename: $filename")
-//        startJob?.let {
-//            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
-//            startJob = null
-//        }
+        //        Timber.d("progress: $percentage, filename: $filename")
+        //        startJob?.let {
+        //            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
+        //            startJob = null
+        //        }
         progressListener?.invoke(percentage)
     }
 
     fun onFileSelected(value: String) {
         Timber.d("name: $value")
-        fileSelectedListener?.invoke(value)
+        fileStartedByPlayerListener?.invoke(value)
     }
 
     fun onFilePreselected(value: String) {
         Timber.d("preselected: name: $value")
-        fileSelectedListener?.invoke(value)
+        fileStartedByPlayerListener?.invoke(value)
         filePreselectedListener?.invoke(value)
     }
 

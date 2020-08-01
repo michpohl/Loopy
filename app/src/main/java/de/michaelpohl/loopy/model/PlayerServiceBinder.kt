@@ -24,6 +24,10 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         return looper.setWaitMode(shouldWait)
     }
 
+    override fun setFileStartedByPlayerListener(listener: (String) -> Unit) {
+        looper.setFileStartedByPlayerListener(listener)
+    }
+
     override fun changePlaybackPosition(newPosition: Float) =
         looper.changePlaybackPosition(newPosition)
 
