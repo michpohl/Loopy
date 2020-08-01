@@ -1,15 +1,12 @@
 package de.michaelpohl.loopy.model
 
-import android.content.Context
 import android.os.Binder
 import de.michaelpohl.loopy.common.PlayerState
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.jni.JniResult
 
-class PlayerServiceBinder(serviceContext: Context) : Binder(),
+class PlayerServiceBinder : Binder(),
     PlayerServiceInterface {
 
-    //    private var looper = LoopedPlayer.create(serviceContext)
     private var looper = JniPlayer()
 
     override suspend fun pause(): JniResult<Nothing> {
@@ -61,26 +58,10 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopedListener = receiver
     }
 
-    override fun setOnLoopSwitchedListener(receiver: () -> Unit) {
-        looper.onLoopSwitchedListener = receiver
-    }
-
-    override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {
-        looper.switchingLoopsBehaviour = behaviour
-    }
-
-    override fun getSwitchingLoopsBehaviour(): SwitchingLoopsBehaviour {
-        return looper.switchingLoopsBehaviour
-    }
-
     override fun getCurrentPosition() = looper.getCurrentPosition()
 
     override fun hasLoopFile(): Boolean {
         return looper.hasLoopFile
-    }
-
-    override suspend fun preselect(path: String): JniResult<String> {
-        return looper.select(path) //TODO this might not be correct
     }
 
     override suspend fun select(path: String): JniResult<String> {
@@ -88,7 +69,7 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
     }
 
     override suspend fun play(): JniResult<String> {
-     return looper.start()
+        return looper.start()
     }
 
     //    // Destroy audio player.

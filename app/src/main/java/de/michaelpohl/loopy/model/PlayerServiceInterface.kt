@@ -5,7 +5,6 @@ import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.jni.JniResult
 
 interface PlayerServiceInterface {
-    suspend fun preselect(path: String) : JniResult<String> // TODO this should be obsolete if I'm doing it right
     suspend fun select(path: String) : JniResult<String>
     suspend fun play(): JniResult<String>
     suspend fun pause() : JniResult<Nothing>
@@ -25,7 +24,5 @@ interface PlayerServiceInterface {
     fun hasLoopFile(): Boolean
     fun setHasLoopFile(hasFile: Boolean)
     fun setOnLoopedListener(receiver: (Int) -> Unit)
-    fun setOnLoopSwitchedListener(receiver: () -> Unit)
-    fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour)
-    fun getSwitchingLoopsBehaviour(): SwitchingLoopsBehaviour
+
 }

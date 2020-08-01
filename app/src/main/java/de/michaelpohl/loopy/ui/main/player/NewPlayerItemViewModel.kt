@@ -35,6 +35,7 @@ class NewPlayerItemViewModel(
     val removeButtonVisibility = _removeButtonVisibility.immutable()
 
     val displayName = getFilenameFromFullPath(audioModel.name)
+    val fullPath = audioModel.name
     val canSeekAudio = false
 
     var selectionState = NOT_SELECTED

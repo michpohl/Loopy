@@ -9,11 +9,10 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.common.immutable
-import de.michaelpohl.loopy.common.jni.OldJniBridge
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PLAYING
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
 import timber.log.Timber
 
 class NewPlayerAdapter(
@@ -29,58 +28,14 @@ class NewPlayerAdapter(
     private val _selected = MutableLiveData<String>()
     val selected = _selected.immutable()
 
-    private var preselected: String? = null
-        set(newValue) {
-            newValue?.let { value ->
-                field = value
-                updatePreselectionState(value)
-            }
-        }
-
-    private fun updateSelectionState(toBeSelected: String) {
-        holders.forEach {
-            when {
-                toBeSelected == it.getName() -> it.state = PLAYING
-                it.state == PRESELECTED -> {  /*do nothing */
-                }
-                else -> it.state = NOT_SELECTED
-            }
-
-        }
-    }
-
-    private fun updatePreselectionState(preselected: String) {
-        holders.forEach {
-            when {
-                preselected == it.getName() && selected.value != it.getName() -> it.state = PRESELECTED
-                it.state == PLAYING -> { /* do nothting */
-                }
-                else -> it.state = NOT_SELECTED
-            }
-
-        }
-    }
-    //        holders.find { currentlyPlaying.contains(it.getName()) }?.setState(PlayerItemViewModel.SelectionState.SELECTED)
-
-    init {
-//        with(OldJniBridge) {
-//            fileSelectedListener = {
-//                updateFileCurrentlyPlayed(it)
-//            }
-//            filePreselectedListener = { preselected = it }
-//        }
-    }
-
     fun updateFileCurrentlyPlayed(filename: String) {
-        Timber.d("Playback update: $filename")
         holders.forEach {
-           it.state = if (it.getName() == filename) PLAYING else NOT_SELECTED
-       }
+            it.state = if (it.getName() == filename) PLAYING else NOT_SELECTED
+        }
     }
 
     fun updateFilePreselected(filename: String) {
-        Timber.d("Preselected update: $filename")
-        holders.filter { it.state != PLAYING}.forEach {
+        holders.filter { it.state != PLAYING }.forEach {
             it.state = if (it.getName() == filename) PRESELECTED else NOT_SELECTED
         }
     }
@@ -126,8 +81,8 @@ class NewPlayerAdapter(
     }
 
     fun updatePlaybackProgress(data: Pair<String, Int>?) {
-        data?.let {data ->
-            holders.find { it.getName() ==  data.first}?.updateProgress(data.second)
+        data?.let { data ->
+            holders.find { it.getName() == data.first }?.updateProgress(data.second)
         }
     }
 }

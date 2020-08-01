@@ -10,7 +10,6 @@ import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
-import timber.log.Timber
 
 class NewPlayerItemHolder(
     var binding: ItemLoopBinding
@@ -24,7 +23,6 @@ class NewPlayerItemHolder(
         lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
     }
 
-    // TODO do I need a more complex life cycle?
     fun onAppear() {
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
     }
@@ -38,7 +36,6 @@ class NewPlayerItemHolder(
     }
 
     fun bind(model: NewPlayerItemViewModel) {
-        Timber.d("Bind is called")
         viewModel = model
         binding.model = viewModel
         binding.lifecycleOwner = this
@@ -51,13 +48,13 @@ class NewPlayerItemHolder(
     }
 
     fun getName(): String {
-        Timber.d("Getting holder name: ${viewModel.displayName}")
-        return viewModel.audioModel.name
+        return viewModel.fullPath
     }
 
     fun updateProgress(percentage: Int) {
-            viewModel.updateProgress(percentage)
+        viewModel.updateProgress(percentage)
     }
+
     var state: SelectionState = NOT_SELECTED
         set(value) {
             viewModel.selectionState = value
