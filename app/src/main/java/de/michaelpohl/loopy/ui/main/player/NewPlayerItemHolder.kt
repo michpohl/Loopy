@@ -51,8 +51,8 @@ class NewPlayerItemHolder(
     }
 
     fun getName(): String {
-        Timber.d("Getting holder name: ${viewModel.name}")
-        return viewModel.name
+        Timber.d("Getting holder name: ${viewModel.displayName}")
+        return viewModel.audioModel.name
     }
 
     fun updateProgress(percentage: Int) {

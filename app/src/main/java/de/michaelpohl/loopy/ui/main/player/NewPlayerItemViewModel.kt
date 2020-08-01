@@ -34,7 +34,7 @@ class NewPlayerItemViewModel(
     private val _removeButtonVisibility = MutableLiveData(View.VISIBLE)
     val removeButtonVisibility = _removeButtonVisibility.immutable()
 
-    val name = audioModel.name
+    val displayName = getFilenameFromFullPath(audioModel.name)
     val canSeekAudio = false
 
     var selectionState = NOT_SELECTED
@@ -80,12 +80,6 @@ class NewPlayerItemViewModel(
 
     fun updateProgress(newProgress: Int) {
 
-        // if we update the progress on a non-selected item, we want 0 instead
-//        if (selectionState == NOT_SELECTED && _progress.value != 0F) {
-//            _progress.postValue(0F)
-//            return
-//        }
-
         // safeguarding crazy values so we stay between 0 and 100
         _progress.postValue(
             when (newProgress) {
@@ -94,5 +88,10 @@ class NewPlayerItemViewModel(
                 else -> newProgress.toFloat()
             }
         )
+    }
+
+    private fun getFilenameFromFullPath(path: String) : String {
+        val filename = path.subSequence(path.lastIndexOf("/") +1, path.lastIndex)
+        return filename.substring(0, filename.lastIndexOf("."))
     }
 }

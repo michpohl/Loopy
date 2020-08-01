@@ -63,12 +63,12 @@ class NewPlayerAdapter(
     //        holders.find { currentlyPlaying.contains(it.getName()) }?.setState(PlayerItemViewModel.SelectionState.SELECTED)
 
     init {
-        with(OldJniBridge) {
-            fileSelectedListener = {
-                updateFileCurrentlyPlayed(it)
-            }
-            filePreselectedListener = { preselected = it }
-        }
+//        with(OldJniBridge) {
+//            fileSelectedListener = {
+//                updateFileCurrentlyPlayed(it)
+//            }
+//            filePreselectedListener = { preselected = it }
+//        }
     }
 
     fun updateFileCurrentlyPlayed(filename: String) {
