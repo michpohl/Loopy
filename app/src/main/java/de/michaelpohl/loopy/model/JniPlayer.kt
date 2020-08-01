@@ -4,11 +4,9 @@ import de.michaelpohl.loopy.common.PlayerState.PAUSED
 import de.michaelpohl.loopy.common.PlayerState.PLAYING
 import de.michaelpohl.loopy.common.PlayerState.STOPPED
 import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.common.jni.JniResult
 import org.koin.core.KoinComponent
-import timber.log.Timber
 
 class JniPlayer : KoinComponent {
 
@@ -50,6 +48,7 @@ class JniPlayer : KoinComponent {
     }
 
     fun changePlaybackPosition(newPosition: Float) {
+        //        TODO("Not yet implemented")
     }
 
     fun resetPreSelection() {

@@ -22,7 +22,7 @@ class NewPlayerItemViewModel(
     private val _progress = MutableLiveData(0F)
     val progress = _progress.immutable()
 
-    private val _backgroundColor = MutableLiveData(0)
+    private val _backgroundColor = MutableLiveData(resources.getColor(R.color.dark_green))
     val backgroundColor = _backgroundColor.immutable()
 
     private val _loopsCount = MutableLiveData("0")
@@ -40,30 +40,21 @@ class NewPlayerItemViewModel(
 
     var selectionState = NOT_SELECTED
         set(state) {
-            Timber.d("State is being set to: $state")
             when (state) {
                 NOT_SELECTED -> {
-                    Timber.d("Not Selected")
                     _backgroundColor.postValue(resources.getColor(R.color.dark_green))
                     _removeButtonVisibility.postValue(View.VISIBLE)
                 }
                 PRESELECTED -> {
-                    Timber.d("Preselected")
                     _removeButtonVisibility.postValue(View.GONE)
                     _backgroundColor.postValue(resources.getColor(R.color.active_green))
                     _progress.postValue(50F)
-
                 }
                 PLAYING -> {
-                    Timber.d("Selected")
                     _removeButtonVisibility.postValue(View.GONE)
                     _backgroundColor.postValue(resources.getColor(R.color.bright_purple))
 
                 }
-            }
-            //TODO change background colors here
-            if (state == NOT_SELECTED) {
-            } else {
             }
             field = state
         }
@@ -75,17 +66,19 @@ class NewPlayerItemViewModel(
     fun onRemoveItemClicked(view: View) {
     }
 
-    fun updateLoopsCount(count: Int) {
+    private fun updateLoopsCount(count: Int) {
+        Timber.d("updating count with: $count")
         _loopsCount.postValue(count.toString())
     }
 
     fun updateProgress(newProgress: Int) {
-
         // safeguarding crazy values so we stay between 0 and 100
+        if (newProgress < progress.value?: 0F) updateLoopsCount((loopsCount.value?.toInt() ?: 0) + 1)
+
         _progress.postValue(
             when (newProgress) {
                 in Float.MIN_VALUE..0F -> 0F
-                in 100F..Float.MAX_VALUE -> 100F
+                in 99F..Float.MAX_VALUE -> 100F
                 else -> newProgress.toFloat()
             }
         )
