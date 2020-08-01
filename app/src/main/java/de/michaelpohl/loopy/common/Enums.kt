@@ -14,7 +14,7 @@ enum class SwitchingLoopsBehaviour {
 }
 
 enum class PlayerState {
-    PLAYING, PAUSED, STOPPED, UNKNOWN
+    PLAYING, PAUSED, STOPPED, UNKNOWN, READY
 }
 
 enum class Library(

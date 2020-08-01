@@ -16,20 +16,31 @@
 
 #include "Player.h"
 #include "utils/logging.h"
+#include <time.h>
+#include "StorageDataSource.h"
+
+Player::Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
+               AudioProperties properties, PlaybackEndedCallback c) : mFilename(fileName),
+                                                                      mCallback(callback),
+                                                                      mSource(StorageDataSource::newFromStorageAsset(
+                                                                              extractor, fileName,
+                                                                              properties)),
+                                                                      playbackEndedCallback(c) {
+};
+
 
 void Player::renderAudio(float *targetData, int32_t numFrames) {
 
     const AudioProperties properties = mSource->getProperties();
 
     if (mIsPlaying) {
-
+//        mCallback.onFileStartsPlaying(mFilename);
         int64_t framesToRenderFromData = numFrames;
         int64_t totalSourceFrames = mSource->getSize() / properties.channelCount;
-//        LOGD("Total: %lld", (long long) totalSourceFrames);
 
         const float *data = mSource->getData();
 
-        // Check whether we're about to reach the end of the recording
+        // Check whether we're about to reach the end of the recording, only if we're looping
         if (!mIsLooping && mReadFrameIndex + numFrames >= totalSourceFrames) {
             framesToRenderFromData = totalSourceFrames - mReadFrameIndex;
             mIsPlaying = false;
@@ -53,14 +64,20 @@ void Player::renderAudio(float *targetData, int32_t numFrames) {
             renderSilence(&targetData[framesToRenderFromData], numFrames * properties.channelCount);
         }
         float progress = ((float) mReadFrameIndex / totalSourceFrames) * 100;
-        if (progress > (position + 1)) {
-            mCallback.playBackProgress((int) progress);
+        double thisProgressCall = now_ms();
+        if (progress > (position + 1) && thisProgressCall > lastProgressCall + 30) {
+            mCallback.updatePlaybackProgress(mFilename, (int) progress);
             position = progress;
+            lastProgressCall = thisProgressCall;
         }
-
+        if (!mIsPlaying) {
+            LOGD("Trigger ending callback");
+            playbackEndedCallback();
+        }
     } else {
         renderSilence(targetData, numFrames * properties.channelCount);
     }
+
 }
 
 void Player::renderSilence(float *start, int32_t numSamples) {
@@ -68,3 +85,15 @@ void Player::renderSilence(float *start, int32_t numSamples) {
         start[i] = 0;
     }
 }
+
+// from android samples
+/* return current time in milliseconds */
+double Player::now_ms(void) {
+
+    struct timespec res;
+    clock_gettime(CLOCK_REALTIME, &res);
+    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
+
+}
+
+

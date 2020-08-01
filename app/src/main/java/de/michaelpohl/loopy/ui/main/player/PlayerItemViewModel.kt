@@ -4,10 +4,10 @@ import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
-import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.ui.main.BaseViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
 import timber.log.Timber
 
@@ -17,7 +17,7 @@ class PlayerItemViewModel(
     private val onItemClickedListener: (Int, SelectionState) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
     private val onRemoveItemClickedListener: (Int) -> Unit
-) : ViewModel() {
+) : BaseViewModel() {
 
     val blockUpdatesFromPlayer = ObservableBoolean(false)
     var backgroundColor: Int = 0
@@ -28,6 +28,7 @@ class PlayerItemViewModel(
 
     var selectedState = NOT_SELECTED
         set (state) {
+            //TODO change background colors here
             if (state == NOT_SELECTED) {
                 removeButtonVisibility.set(View.VISIBLE)
             } else {
@@ -45,7 +46,7 @@ class PlayerItemViewModel(
         if (isWaitingMode()) {
             if (selectedState != PRESELECTED) selectedState = PRESELECTED
         } else {
-            selectedState = SELECTED
+            selectedState = PLAYING
             canSeekAudio.set(true)
         }
         Timber.d("Selected state is now: $selectedState")
@@ -79,11 +80,11 @@ class PlayerItemViewModel(
             return
         }
 
-        if (selectedState != SELECTED) {
+        if (selectedState != PLAYING) {
             loopsCountVisibility.set(View.INVISIBLE)
         } else {
             loopsCount.set(count.toString())
-            if (selectedState == SELECTED) {
+            if (selectedState == PLAYING) {
                 loopsCountVisibility.set(View.VISIBLE)
             }
         }
@@ -98,6 +99,6 @@ class PlayerItemViewModel(
     }
 
     enum class SelectionState {
-        NOT_SELECTED, PRESELECTED, SELECTED
+        NOT_SELECTED, PRESELECTED, PLAYING
     }
 }

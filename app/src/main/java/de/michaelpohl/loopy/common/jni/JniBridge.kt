@@ -1,32 +1,101 @@
 package de.michaelpohl.loopy.common.jni
 
-import android.content.res.AssetManager
-import de.michaelpohl.loopy.JNIListener
 import timber.log.Timber
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object JniBridge {
+
+    private var startJob: Continuation<JniResult<String>>? = null
+
+    var waitMode = false // TODO later the waitmode should come from settings
+        private set
+
+    var currentlySelectedFile: String? = null
+
+    var progressListener: ((Int) -> Unit)? = null
+    var fileStartedByPlayerListener: ((String) -> Unit)? = null
+    var filePreselectedListener: ((String) -> Unit)? = null
+
     init {
         System.loadLibrary("native-lib")
         Timber.d("Native Lib loaded!")
     }
 
-    var progressListener: ((Int) -> Unit)? = null
-    lateinit var assets: AssetManager
-
-    fun play(fileName: String) {
-        playFromJNI(fileName)
+    suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> = suspendCoroutine { job ->
+        if (setWaitModeNative(shouldWait)) {
+            waitMode = shouldWait
+            Timber.d("Resuming with $waitMode")
+            job.resume(successResult(shouldWait))
+        } else {
+            job.resume(errorResult()) // shouldn't ever happen, let's see
+        }
     }
 
-    fun stop() {
-        stopJNIPlayback()
+    suspend fun select(filename: String): JniResult<String> = suspendCoroutine { job ->
+        with(selectNative(filename)) {
+            job.resume(if (this) successResult(filename) else errorResult())
+        }
     }
 
-    fun integerCallback(value: Int) {
-        progressListener?.invoke(value)
+    suspend fun start(): JniResult<String> = suspendCoroutine {
+        startJob = it
+        startPlaybackNative()
     }
 
-    /* end subscription test */
-    private external fun playFromJNI(fileName: String)
-    private external fun stopJNIPlayback()
+    suspend fun pause(): JniResult<Nothing> {
+        return successResult()
+    }
 
+    suspend fun stop(): JniResult<Nothing> {
+        TODO("Crash my friend")
+        //        return successResult()
+    }
+
+    fun onSelected(filename: String) {
+    }
+
+    fun onStarted(filename: String) {
+        Timber.d("onStarted $filename")
+        startJob?.let {
+            it.resume(JniResult.Success(filename))
+            startJob = null
+        } ?: run {
+            fileStartedByPlayerListener?.invoke(filename)
+        }
+    }
+
+    fun onPaused(filename: String) {
+    }
+
+    fun onStopped(filename: String) {
+    }
+
+    fun onPlaybackProgressChanged(filename: String, percentage: Int) {
+        //        Timber.d("progress: $percentage, filename: $filename")
+        //        startJob?.let {
+        //            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
+        //            startJob = null
+        //        }
+        progressListener?.invoke(percentage)
+    }
+
+    fun onFileSelected(value: String) {
+        Timber.d("name: $value")
+        fileStartedByPlayerListener?.invoke(value)
+    }
+
+    fun onFilePreselected(value: String) {
+        Timber.d("preselected: name: $value")
+        fileStartedByPlayerListener?.invoke(value)
+        filePreselectedListener?.invoke(value)
+    }
+
+    private external fun setWaitModeNative(shouldWait: Boolean): Boolean
+    private external fun selectNative(filename: String): Boolean // TODO factor out the wait mode
+    private external fun startPlaybackNative()
+    private external fun stopPlaybackNative()
+    private external fun pausePlaybackNative(): Boolean
 }
+

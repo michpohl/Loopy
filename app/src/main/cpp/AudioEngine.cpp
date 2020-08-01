@@ -21,57 +21,121 @@
 #include "AudioEngine.h"
 
 
-AudioEngine::AudioEngine(AMediaExtractor &extractor, AudioCallback &callback)
-        : mExtraxtor(
-        extractor), mCallback(callback) {
+AudioEngine::AudioEngine(AudioCallback &callback) : mCallback(callback) {
+
 }
 
-const char *mFileName;
+bool isWaitMode = true;
+std::atomic <AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
 
 
-void AudioEngine::load() {
+bool AudioEngine::setWaitMode(bool value) {
+    isWaitMode = value;
+    return true;
+}
 
+bool AudioEngine::getWaitMode() {
+    return isWaitMode;
+}
+
+AudioEngineState AudioEngine::getState() {
+    return mAudioEngineState;
+};
+
+
+void AudioEngine::prepare() {
 
     if (!openStream()) {
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
+    audioProperties = AudioProperties{
+            .channelCount = mAudioStream->getChannelCount(),
+            .sampleRate = mAudioStream->getSampleRate()
+    };
+    isPrepared = true;
+}
 
-    if (!setupAudioSources()) {
-        mAudioEngineState = AudioEngineState::FailedToLoad;
+void AudioEngine::start() {
+    std::async(&AudioEngine::startPlaying, this);
+}
+
+void AudioEngine::startPlaying() {
+    if (mAudioStream == nullptr) {
+        LOGE("Cannot start playback: Audiostream is a null pointer.");
         return;
     }
-
+    if (players.front() == nullptr) {
+        LOGE("Cannot start playback: Track to play is a null pointer.");
+        return;
+    } else {
+        LOGD("Play the first in the players vector!");
+        players.front()->setPlaying(true);
+    }
+    Player *player = players.front().get();
+    mMixer.addTrack(player);
+    const char* filename = player->getName();
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
         LOGE("Failed to start stream. Error: %s", convertToText(result));
         mAudioEngineState = AudioEngineState::FailedToLoad;
         return;
     }
-
+    LOGD("Playing: %s", filename);
+    mCallback.onFileStartsPlaying(filename);
     mAudioEngineState = AudioEngineState::Playing;
-}
-
-void AudioEngine::start() {
-    mLoadingResult = std::async(&AudioEngine::load, this);
-
 }
 
 void AudioEngine::stop() {
 
-    //also: differentiate between stop and pause...
     if (mAudioStream != nullptr) {
         mAudioStream->close();
         delete mAudioStream;
         mAudioStream = nullptr;
     }
-    if (mBackingTrack != nullptr) {
-        mBackingTrack->resetPlayHead();
+    if (loopA != nullptr) {
+        loopA->resetPlayHead();
     }
 }
 
-void AudioEngine::setFileName(const char *fileName) {
-    mFileName = fileName;
+void AudioEngine::pause() {
+    LOGD("Trying to pause");
+    if (mAudioStream != nullptr) {
+        mAudioStream->pause();
+    }
+    mAudioEngineState = AudioEngineState::Paused;
+}
+
+bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extractor) {
+    if (!isPrepared) {
+        prepare();
+    } else {
+        LOGD("Engine is already prepared. Skipping...");
+    }
+
+    LOGD("Creating new player");
+    std::unique_ptr <Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
+                                                                  audioProperties, std::bind(
+                    &AudioEngine::onPlayerEnded, this));
+    if (newPlayer == nullptr) {
+        LOGE("Failed to create a player for file: %s", fileName);
+        return false;
+    }
+    newPlayer->setLooping(true);
+    if (!players.empty()) {
+        players.front()->setLooping(false);
+    }
+
+    // removing the last player in the vector, since we are preselection a different one
+    if (players.size() > 1) {
+        players.erase(players.begin() + players.size() - 1);
+    }
+
+    // adding the new player to the vector
+    players.push_back(std::move(newPlayer));
+    LOGD("Next player successfully prepared!");
+
+    return true;
 }
 
 DataCallbackResult
@@ -83,7 +147,11 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     float *outputBuffer = (is16Bit) ? mConversionBuffer.get() : static_cast<float *>(audioData);
 
     for (int i = 0; i < numFrames; ++i) {
-        mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
+
+        // mixer disabled because we only play files consecutively
+        // mMixer.renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
+
+        players.front()->renderAudio(outputBuffer + (oboeStream->getChannelCount() * i), 1);
         mCurrentFrame++;
     }
 
@@ -94,7 +162,6 @@ AudioEngine::onAudioReady(AudioStream *oboeStream, void *audioData, int32_t numF
     }
 
     mLastUpdateTime = nowUptimeMillis();
-//    mCallback.playBackProgress((int) mLastUpdateTime);
     return DataCallbackResult::Continue;
 }
 
@@ -128,36 +195,21 @@ bool AudioEngine::openStream() {
     if (setBufferSizeResult != Result::OK) {
         LOGW("Failed to set buffer size. Error: %s", convertToText(setBufferSizeResult.error()));
     }
-
     mMixer.setChannelCount(mAudioStream->getChannelCount());
 
     return true;
 }
 
-bool AudioEngine::setupAudioSources() {
 
-    // Set the properties of our audio source(s) to match that of our audio stream
-    AudioProperties targetProperties{
-            .channelCount = mAudioStream->getChannelCount(),
-            .sampleRate = mAudioStream->getSampleRate()
-    };
+void AudioEngine::onPlayerEnded() {
+    LOGD("Player ended");
+    players.back()->setPlaying(true);
+    const char* filename = players.back()->getName();
+    mCallback.onFileStartsPlaying(filename);
+    players.erase(players.begin());
+    LOGD("Player erased");
+    if (!players.empty()) {
 
-    // Create a data source and player for our backing track
-    std::shared_ptr<StorageDataSource> backingTrackSource{
-            StorageDataSource::newFromStorageAsset(mExtraxtor, mFileName, targetProperties)
-    };
-    if (backingTrackSource == nullptr) {
-        LOGE("Could not load source data for backing track");
-        return false;
     }
-    mBackingTrack = std::make_unique<Player>(backingTrackSource, mCallback);
-    mBackingTrack->resetPlayHead();
-    mBackingTrack->setPlaying(true);
-    mBackingTrack->setLooping(true);
 
-    // Add player to our mixer
-    mMixer.addTrack(mBackingTrack.get());
-
-    return true;
 }
-

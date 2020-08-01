@@ -1,152 +1,166 @@
 package de.michaelpohl.loopy.ui.main.player
 
-import android.net.Uri
 import android.os.Handler
 import android.view.View
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.common.util.coroutines.uiJob
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
+import kotlinx.coroutines.cancel
 import timber.log.Timber
 
-class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
+class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) :
+    BaseViewModel() {
 
-    val loopsList: List<AudioModel> = repository.getSingleSet()
+    val loopsList: List<AudioModel> = repository.getSingleSet() //TODO LiveData?
 
     lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
 
-    private var updateRunnable = object : Runnable {
-        override fun run() {
-            looper?.getCurrentPosition()?.let {
-                adapter.updateProgress(it)
+    private val _isPlaying = MutableLiveData(false)
+    val isPlaying = _isPlaying.immutable()
+
+    private val _fileCurrentlyPlayed = MutableLiveData<String>()
+    val fileCurrentlyPlayed = _fileCurrentlyPlayed.immutable()
+
+    private val _filePreselected = MutableLiveData<String>()
+    val filePreselected = _filePreselected.immutable()
+
+    private val _emptyMessageVisibility = MutableLiveData(View.VISIBLE)
+    val emptyMessageVisibility = _emptyMessageVisibility.immutable()
+
+    private val _clearListButtonVisibility = MutableLiveData(View.GONE)
+    val clearListButtonVisibility = _clearListButtonVisibility.immutable()
+
+    private val _acceptedFileTypesAsString = MutableLiveData(DataRepository.getAllowedFileTypeListAsString())
+    val acceptedFileTypesAsString = _acceptedFileTypesAsString.immutable()
+
+    var looper: PlayerServiceInterface? = null
+        set(value) {
+            field = value
+            setPlayerWaitModeTo(appState.isWaitMode)
+            field?.setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
+        }
+
+    private fun onPlayerSwitchedToNextFile(filename: String) {
+        _fileCurrentlyPlayed.postValue(filename)
+    }
+
+    private fun setPlayerWaitModeTo(shouldWait: Boolean) {
+        uiJob {
+            if (looper?.setWaitMode(appState.isWaitMode)?.isSuccess() == true) {
+                Timber.d("Wait mode set from app state: ${looper?.getWaitMode()}")
+            } else {
+                error("Failed to set wait mode. This is a program error.")
             }
-            updateHandler.postDelayed(this, 40)
         }
     }
 
-    var isPlaying = ObservableBoolean(false)
-    var emptyMessageVisibility = ObservableField(View.VISIBLE)
-    var clearListButtonVisibility = ObservableField(View.GONE)
-    var acceptedFileTypesAsString = ObservableField(DataRepository.getAllowedFileTypeListAsString())
-
-    var looper: PlayerServiceInterface? = null
     lateinit var playerActionsListener: PlayerActionsListener
-    //    lateinit var loopsList: List<AudioModel>
+
+    var currentlySelected: String? = null
 
     fun onStartPlaybackClicked(view: View) {
-                looper?.let {
-                    if (it.getHasLoopFile()) startLooper()
-                }
+        looper?.let {
+            if (it.hasLoopFile()) startLooper()
+        }
     }
 
     fun onStopPlaybackClicked(view: View) {
-//        stopLooper()
-        stopJNILooper()
+        stopLooper()
     }
 
     fun onPausePlaybackClicked(view: View) {
-        looper?.let {
-
-            if (!it.isReady()) return
-            if (it.isPlaying()) {
-                it.pause()
-                onPlaybackStopped()
-            } else if (it.getState() == PlayerState.PAUSED) startLooper()
+        uiJob {
+            //            looper?.let {
+            //
+            //                if (!it.isReady()) cancel()
+            //                if (it.isPlaying()) {
+            //                    it.pause()
+            //                    onPlaybackStopped()
+            //                } else if (it.getState() == PlayerState.PAUSED) startLooper()
+            //            }
         }
     }
 
-    fun updateData() {
-        adapter.updateData(loopsList)
-        if (adapter.itemCount != 0) {
-            emptyMessageVisibility.set(View.INVISIBLE)
-            clearListButtonVisibility.set(View.VISIBLE)
+    fun showEmptyState(shouldShow: Boolean) {
+        if (shouldShow) {
+            _emptyMessageVisibility.postValue(View.VISIBLE)
+            _clearListButtonVisibility.postValue(View.GONE)
         } else {
-            emptyMessageVisibility.set(View.VISIBLE)
-            clearListButtonVisibility.set(View.GONE)
-//            stopLooper()
-            stopJNILooper()
-            looper?.setHasLoopFile(false)
+            _emptyMessageVisibility.postValue(View.INVISIBLE)
+            _clearListButtonVisibility.postValue(View.VISIBLE)
+            //            stopLooper()
+            //            looper?.setHasLoopFile(false)
         }
-        acceptedFileTypesAsString.set(DataRepository.getAllowedFileTypeListAsString())
-        looper?.setOnLoopedListener { elapsed -> adapter.onLoopsElapsedChanged(elapsed) }
+        _acceptedFileTypesAsString.postValue(DataRepository.getAllowedFileTypeListAsString())
+        //        looper?.setOnLoopedListener { elapsed -> adapter.onLoopsElapsedChanged(elapsed) }
     }
 
-    fun onItemSelected(audioModel: AudioModel, position: Int, selectionState: SelectionState) {
-        Timber.d("onItemSelected. Selection state: $selectionState, position: $position")
-        looper?.let { serviceInterface ->
-            Timber.d("I seem to have a looper")
-            serviceInterface.setLoopUri(Uri.parse(audioModel.path))
-            Timber.d("Setting uri to: ${audioModel.path}")
-            // when just looping the looper sets a new listener to repeat the loop automatically
-            // in WAIT mode (and only while playing) we replace the onLoopSwitchedListener with a different one to switch to the preselected loop
-            if (selectionState == SelectionState.PRESELECTED && serviceInterface.getSwitchingLoopsBehaviour() == SwitchingLoopsBehaviour.WAIT && serviceInterface.isPlaying()) {
-                val oldPosition = adapter.preSelectedPosition
-                adapter.preSelectedPosition = position
-                adapter.notifyMultipleItems(arrayOf(oldPosition, position))
-
-                serviceInterface.setOnLoopSwitchedListener {
-                    val oldSelected = adapter.selectedPosition
-                    adapter.selectedPosition = adapter.preSelectedPosition
-
-                    adapter.notifyMultipleItems(
-                        arrayOf(
-                            oldSelected,
-                            adapter.preSelectedPosition,
-                            adapter.selectedPosition
-                        )
-                    )
-                    adapter.preSelectedPosition = -1
-                }
-
-                // in all other situations this standard behaviour is sufficient
-            } else {
-
-                val oldPosition = adapter.selectedPosition
-                adapter.selectedPosition = position
-                Timber.d("old: $oldPosition, new: $position")
-                adapter.notifyMultipleItems(arrayOf(oldPosition, position))
-                if (!serviceInterface.isPaused()) {
-                    Timber.d("Attempting to play natively: ${audioModel.path}")
-                    startLooper()
+    // TODO make nicer
+    fun onLoopClicked(audioModel: AudioModel) {
+        Timber.d("Clicked on: ${audioModel.name}")
+        uiJob {
+            with(looper?.select(audioModel.path)) {
+                Timber.d("Updating with: ${this?.data}")
+                if (this?.isSuccess() == true) {
+                    this.data?.let {
+                        onFileSelected(it)
+                    } ?: error("Got no filename back grom JNI. This shouldn't happen")
                 }
             }
-        } ?: Timber.d("onItemSelected with no looper")
+        }
+    }
+
+    private fun onFileSelected(filename: String) {
+
+        Timber.d("Selected: $filename, looper state: ${looper?.getState()}, wait: ${looper?.getWaitMode()}")
+        if (looper?.getWaitMode() == true) {
+            when (looper?.getState()) {
+                PlayerState.PLAYING -> _filePreselected.postValue(filename)
+                PlayerState.PAUSED -> _filePreselected.postValue(filename)
+                PlayerState.STOPPED -> startLooper()
+                PlayerState.UNKNOWN -> startLooper()
+                PlayerState.READY -> _filePreselected.postValue(filename)
+                null -> TODO()
+            }
+        } else {
+            startLooper()
+        }
     }
 
     private fun startLooper() {
-        JniBridge.progressListener = { adapter.updateProgress((it.toFloat()))}
-        isPlaying.set(true)
-        updateRunnable.run()
-        looper?.start()
-    }
 
-    private fun startJNILooper(path: String) {
-        JniBridge.play(path)
-    }
-
-    fun stopJNILooper() {
-        JniBridge.stop()
+        uiJob {
+            with(looper?.play()) {
+                if (this?.isSuccess() == true) {
+                    this.data?.let {
+                        Timber.d("Started: $it")
+                        _fileCurrentlyPlayed.postValue(this.data)
+                    }
+                }
+            }
+        }
     }
 
     fun stopLooper() {
-        looper?.let {
-
-            if (!it.isReady()) return
-            if (it.getState() == PlayerState.PLAYING || it.getState() == PlayerState.PAUSED) {
-                it.stop()
+        uiJob {
+            looper?.let {
+                if (!it.isReady()) this.cancel()
+                if (it.getState() == PlayerState.PLAYING || it.getState() == PlayerState.PAUSED) {
+                    it.stop()
+                }
             }
         }
         resetPreSelection()
 
-        adapter.resetProgress()
+        //        adapter.resetProgress()
         onPlaybackStopped()
     }
 
@@ -155,13 +169,12 @@ class PlayerViewModel(val repository: AudioFilesRepository) : BaseViewModel() {
     }
 
     private fun resetPreSelection() {
-        adapter.resetPreSelection()
+        //        adapter.resetPreSelection()
         looper?.resetPreSelection()
     }
 
     private fun onPlaybackStopped() {
-        isPlaying.set(false)
-        updateHandler.removeCallbacks(updateRunnable)
+        _isPlaying.value = false
     }
 
     interface PlayerActionsListener {

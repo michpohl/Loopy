@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.10)
 
 include_directories(src/main/cpp/)
 
@@ -35,7 +35,7 @@ target_link_libraries( native-lib ${TARGET_LIBS} )
 #set(CMAKE_CXX_STANDARD 14)
 
 # Set the path to the Oboe directory.
-set(OBOE_DIR /Volumes/Work/Repos/Android/oboe-test/oboe)
+set(OBOE_DIR /Users/michaelpohl/Development/misc/oboe)
 
 # Add the Oboe library as a subdirectory.
 add_subdirectory(${OBOE_DIR} ./oboe)

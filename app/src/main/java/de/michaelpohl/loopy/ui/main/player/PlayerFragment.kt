@@ -11,26 +11,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AppData
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
+import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import kotlinx.android.synthetic.main.fragment_player.*
 import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
-
+    private lateinit var adapter: NewPlayerAdapter
 
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
+    private lateinit var recycler: RecyclerView
 
     private lateinit var loopsList: List<AudioModel>
     private lateinit var playerService: PlayerService
@@ -38,15 +40,15 @@ class PlayerFragment : BaseFragment() {
 
     private var playerServiceBinder: PlayerServiceBinder? = null
         set(value) {
+            value?.let {
             field = value
             viewModel.looper = value
+            }
         }
 
     // This service connection object is the bridge between activity and background service.
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
-            // Cast and assign background service's onBind method returned Binder object.
-            Timber.d("Now setting the binder!")
             playerServiceBinder = iBinder as PlayerServiceBinder
         }
 
@@ -57,11 +59,12 @@ class PlayerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        if (arguments != null) {
-            val appData: AppData = arguments!!.getParcelable("appData")
-            loopsList = appData.audioModels
-            Timber.d("Loops when starting player: %s", loopsList)
-        }
+
+        //        TODO Reinstate arguments or do it differently
+        //        if (arguments != null) {
+        //            val appData: AppData = requireArguments().getParcelable("appData")!!
+        //            Timber.d("Loops when starting player: %s", loopsList)
+        //        }
     }
 
     override fun onCreateView(
@@ -74,6 +77,8 @@ class PlayerFragment : BaseFragment() {
         viewModel = getViewModel()
         binding.model = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        recycler = binding.root.find(R.id.rv_loops)
+        initAdapter(viewModel.loopsList)
         return binding.root
     }
 
@@ -81,23 +86,16 @@ class PlayerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         playerService = PlayerService()
         bindAudioService()
-        activity!!.startService(Intent(activity, playerService::class.java))
-        binding.model = viewModel
-        viewModel.loopsList.forEach {Timber.d("${it.name}") }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        loopsList = DataRepository.testIntegrity(listOf())
-        initAdapter()
+        requireActivity().startService(Intent(activity, playerService::class.java))
     }
 
     override fun onResume() {
         super.onResume()
+        observe()
         Timber.d("onResume in fragment")
 
+        // TODO change that to lose reflection here
         if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
-
 
         try {
             viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
@@ -115,35 +113,44 @@ class PlayerFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.stopJNILooper()
+        viewModel.stopLooper()
         DataRepository.saveCurrentState(viewModel.loopsList)
+        unBindAudioService()
     }
 
     fun updateViewModel() {
-        loopsList = DataRepository.currentSelectedAudioModels
-//        viewModel.loopsList = DataRepository.currentSelectedAudioModels
-        viewModel.updateData()
+        //TODO this should be handled differently
+        //        loopsList = DataRepository.currentSelectedAudioModels
+        //        //        viewModel.loopsList = DataRepository.currentSelectedAudioModels
+        //        viewModel.showEmptyState()
     }
 
     fun pausePlayback() {
-        playerServiceBinder?.pause()
+//        playerServiceBinder?.pause()
     }
 
-    private fun initAdapter() {
-        rv_loops.layoutManager = LinearLayoutManager(context)
-//        viewModel.loopsList = loopsList
-        viewModel.adapter =
-            LoopsAdapter(context!!) { viewModel.onProgressChangedByUser(it) }.apply {
-                dialogHelper = DialogHelper(activity!!)
-                onItemSelectedListener =
-                    { a: AudioModel, b: Int, c: PlayerItemViewModel.SelectionState ->
-                        viewModel.onItemSelected(a, b, c)
-                    }
-            }
+    private fun initAdapter(loopsList: List<AudioModel>) {
+        adapter = NewPlayerAdapter({
+            viewModel.onProgressChangedByUser(it)
+        }, { viewModel.onLoopClicked(it) }).also {
+            it.items = loopsList
+            it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
 
-        //TODO move adapter out of viewModel (or not? what's right?)
-        rv_loops.adapter = viewModel.adapter
-        viewModel.updateData()
+        }.apply {
+            selected.observe(viewLifecycleOwner, androidx.lifecycle.Observer { viewModel.currentlySelected = it })
+        }
+
+        // todo sort recycler and adapter code blocks better
+        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.adapter = adapter
+        // TODO this could get handled better
+        viewModel.showEmptyState(loopsList.isEmpty())
+    }
+
+    private fun observe() {
+        viewModel.fileCurrentlyPlayed.observe(viewLifecycleOwner, Observer { adapter.updateFileCurrentlyPlayed(it) })
+        viewModel.filePreselected.observe(viewLifecycleOwner, Observer { adapter.updateFilePreselected(it) })
+
     }
 
     private fun bindAudioService() {
@@ -153,16 +160,15 @@ class PlayerFragment : BaseFragment() {
 
             // Below code will invoke serviceConnection's onServiceConnected method.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                activity!!.startForegroundService(intent)
+                requireActivity().startForegroundService(intent)
             } else {
-                activity!!.startService(intent)
+                requireActivity().startService(intent)
             }
-            activity!!.bindService(
+            requireActivity().bindService(
                 intent,
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
             )
-            viewModel.looper = playerServiceBinder
             Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
         }
     }
@@ -172,5 +178,4 @@ class PlayerFragment : BaseFragment() {
             activity?.unbindService(serviceConnection)
         }
     }
-
 }

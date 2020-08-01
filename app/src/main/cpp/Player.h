@@ -25,10 +25,12 @@
 #include <atomic>
 
 #include <android/asset_manager.h>
+#include <media/NdkMediaExtractor.h>
 
 #include "IRenderableAudio.h"
-#include "DataSource.h"
+#include "StorageDataSource.h"
 #include "AudioCallback.h"
+#include <vector>
 
 class Player : public IRenderableAudio {
 
@@ -40,8 +42,16 @@ public:
      *
      * @param source
      */
-    Player(std::shared_ptr<DataSource> source, AudioCallback &callback)
-            : mSource(source), mCallback(callback) {};
+
+    typedef std::function<void()> PlaybackEndedCallback;
+    PlaybackEndedCallback playbackEndedCallback;
+
+    Player(const char *fileName, AudioCallback &callback, AMediaExtractor &extractor,
+           AudioProperties properties, PlaybackEndedCallback c);
+
+    bool isPlaying() { return mIsPlaying; };
+
+    const char *getName() { return mFilename; };
 
     void renderAudio(float *targetData, int32_t numFrames);
 
@@ -58,14 +68,18 @@ public:
     void setLooping(bool isLooping) { mIsLooping = isLooping; };
 
 private:
+    const char *mFilename;
     float position = 0;
+    double lastProgressCall = 0;
     int32_t mReadFrameIndex = 0;
     std::atomic<bool> mIsPlaying{false};
     std::atomic<bool> mIsLooping{false};
-    std::shared_ptr<DataSource> mSource;
+    std::unique_ptr <StorageDataSource> mSource;
     AudioCallback &mCallback;
 
     void renderSilence(float *, int32_t);
+
+    double now_ms(void);
 };
 
 #endif //OBOE_TEST_SOUNDRECORDING_H
