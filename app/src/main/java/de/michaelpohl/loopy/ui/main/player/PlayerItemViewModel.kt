@@ -38,6 +38,7 @@ class PlayerItemViewModel(
 
     var selectionState = PlayerAdapter.Companion.SelectionState.NOT_SELECTED
         set(state) {
+                Timber.d("State: $state")
             when (state) {
                 PlayerAdapter.Companion.SelectionState.NOT_SELECTED -> {
                     _backgroundColor.postValue(resources.getColor(R.color.content_background))

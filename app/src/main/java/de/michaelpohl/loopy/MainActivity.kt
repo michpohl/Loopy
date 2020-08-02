@@ -62,26 +62,25 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
         }
-        setupTimber()
         setupAppData()
         setupNavigation()
         initDataRepository()
         handlePossibleIntents()
         setupActionBar()
         setupDrawer()
-        keepScreenOnIfDesired(appState.getSettings())
+        keepScreenOnIfDesired(appState.settings)
     }
 
     private fun setupAppData() {
-        Timber.d("is App setup? ${prefs.setupComplete}")
+        Timber.d("is App set up? ${appState.isSetupComplete}")
         // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
         // on Failure, whatever the reason might be, it stays false and will run again next startup
-        if (!prefs.setupComplete) {
+        if (!appState.isSetupComplete) {
             val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
             Timber.d("Setup complete? $setupComplete")
-            prefs.setupComplete = setupComplete
+            appState.isSetupComplete = setupComplete
             Handler().postDelayed({
-                Timber.d("is App setup now? ${prefs.setupComplete}")
+                Timber.d("is App setup now? ${appState.isSetupComplete}")
             }, 500)
         }
     }
@@ -121,12 +120,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_settings)
-        }
-    }
-
-    private fun setupTimber() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
         }
     }
 

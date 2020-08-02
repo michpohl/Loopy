@@ -46,7 +46,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     var looper: PlayerServiceInterface? = null
         set(value) {
             field = value
-            setPlayerWaitModeTo(appState.getSettings().isWaitMode)
+            setPlayerWaitModeTo(appState.settings.isWaitMode)
             field?.setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
             field?.setPlaybackProgressListener { name, value -> _playbackProgress.postValue(Pair(name, value)) }
         }
@@ -57,7 +57,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
         uiJob {
-            if (looper?.setWaitMode(appState.getSettings().isWaitMode)?.isSuccess() == true) {
+            if (looper?.setWaitMode(appState.settings.isWaitMode)?.isSuccess() == true) {
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
@@ -114,14 +114,14 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
                 if (this?.isSuccess() == true) {
                     this.data?.let {
                         onFileSelected(it)
-                    } ?: error("Got no filename back grom JNI. This shouldn't happen")
+                    } ?: error("Got no filename back from JNI. This shouldn't happen")
                 }
             }
         }
     }
 
     private fun onFileSelected(filename: String) {
-
+        Timber.d("isWaitmode: ${looper?.getWaitMode()}")
         Timber.d("Selected: $filename, looper state: ${looper?.getState()}, wait: ${looper?.getWaitMode()}")
         if (looper?.getWaitMode() == true) {
             when (looper?.getState()) {
@@ -180,7 +180,6 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     }
 
     interface PlayerActionsListener {
-
         fun onOpenFileBrowserClicked()
         fun onBrowseMediaStoreClicked()
     }

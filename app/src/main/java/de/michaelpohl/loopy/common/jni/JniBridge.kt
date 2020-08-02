@@ -73,11 +73,6 @@ object JniBridge {
     }
 
     fun onPlaybackProgressChanged(filename: String, percentage: Int) {
-                Timber.d("progress: $percentage, filename: $filename")
-        //        startJob?.let {
-        //            it.resume(successResult(filename)) ?: error("Continuation to resume is null!")
-        //            startJob = null
-        //        }
         playbackProgressListener(filename, percentage)
     }
 

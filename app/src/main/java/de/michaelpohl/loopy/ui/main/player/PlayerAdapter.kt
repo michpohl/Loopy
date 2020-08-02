@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
-import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import de.michaelpohl.loopy.ui.main.player.PlayerAdapter.Companion.SelectionState.*
@@ -37,6 +36,7 @@ class PlayerAdapter(
     fun updateFilePreselected(filename: String) {
         holders.filter { it.state != PLAYING }.forEach {
             it.state = if (it.getName() == filename) PRESELECTED else NOT_SELECTED
+            Timber.d("Setting ${it.getName()} to ${it.state}")
         }
     }
 

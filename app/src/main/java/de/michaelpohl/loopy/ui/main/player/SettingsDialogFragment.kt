@@ -28,7 +28,7 @@ class SettingsDialogFragment() : DialogFragment(), KoinComponent {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        settings = appState.getSettings()
+        settings = appState.settings
 
         val view: View = inflater.inflate(R.layout.dialog_settings, container, false)
 
@@ -117,7 +117,7 @@ class SettingsDialogFragment() : DialogFragment(), KoinComponent {
 
     private fun onOkClicked() {
 
-        appState.saveSettings(settings)
+        appState.settings = this.settings
 //        resultListener.invoke(settings)
         dismiss()
     }
@@ -125,7 +125,6 @@ class SettingsDialogFragment() : DialogFragment(), KoinComponent {
     private fun onCancelClicked() {
         dismiss()
     }
-
 
     private fun allow(fileType: AudioFileType) {
         if (!settings.acceptedFileTypes.contains(fileType)) {

@@ -17,14 +17,6 @@ class SharedPreferencesManager(context: Context) {
 
     private val moshi = Moshi.Builder().build()
 
-    var setupComplete: Boolean
-        get() {
-            return getBoolean(APP_SETUP_COMPLTE)
-        }
-        set(value) {
-            putBoolean(APP_SETUP_COMPLTE, value)
-        }
-
     var selectedSetName: String?
         get() {
             return getString(SELECTED_SET, "")
@@ -54,19 +46,19 @@ class SharedPreferencesManager(context: Context) {
         putString(SETTINGS_KEY, moshi.adapter(Settings::class.java).toJson(settings))
     }
 
-    private fun putString(key: String, value: String) {
+    fun putString(key: String, value: String) {
         sharedPreferences.edit().putString(key, value).apply()
     }
 
-    private fun getString(key: String, defaultValue: String? = null): String? {
+    fun getString(key: String, defaultValue: String? = null): String? {
         return sharedPreferences.getString(key, defaultValue)
     }
 
-    private fun getBoolean(key: String): Boolean {
+    fun getBoolean(key: String): Boolean {
         return sharedPreferences.getBoolean(key, false)
     }
 
-    private fun putBoolean(key: String, value: Boolean) {
+    fun putBoolean(key: String, value: Boolean) {
         sharedPreferences.edit().putBoolean(key, value).apply()
     }
 
@@ -88,7 +80,6 @@ class SharedPreferencesManager(context: Context) {
     companion object {
         const val SHARED_PREFS_KEY = "loopy"
         const val SETS = "sets"
-        const val APP_SETUP_COMPLTE = "setup"
         const val SELECTED_SET = "selectedset"
 
         const val SETTINGS_KEY = "settings"
