@@ -45,13 +45,16 @@ object JniBridge {
         startPlaybackNative()
     }
 
-    suspend fun pause(): JniResult<Nothing> {
-        return successResult()
+    suspend fun pause(): JniResult<Nothing> = suspendCoroutine { job ->
+        with(pausePlaybackNative()) {
+            job.resume(this.toJniResult())
+        }
     }
 
-    suspend fun stop(): JniResult<Nothing> {
-        TODO("Crash my friend")
-        //        return successResult()
+    suspend fun stop(): JniResult<Nothing> = suspendCoroutine { job ->
+        with(stopPlaybackNative()) {
+            job.resume(this.toJniResult())
+        }
     }
 
     fun onSelected(filename: String) {
@@ -90,7 +93,7 @@ object JniBridge {
     private external fun setWaitModeNative(shouldWait: Boolean): Boolean
     private external fun selectNative(filename: String): Boolean // TODO factor out the wait mode
     private external fun startPlaybackNative()
-    private external fun stopPlaybackNative()
+    private external fun stopPlaybackNative() : Boolean
     private external fun pausePlaybackNative(): Boolean
 }
 

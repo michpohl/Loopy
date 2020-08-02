@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.ui.main.player
 
-import android.os.Handler
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.common.AudioModel
@@ -12,15 +11,12 @@ import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.BaseViewModel
-import kotlinx.coroutines.cancel
 import timber.log.Timber
 
 class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) :
     BaseViewModel() {
 
     val loopsList: List<AudioModel> = repository.getSingleSet() //TODO LiveData?
-
-    private var updateHandler = Handler()
 
     private val _isPlaying = MutableLiveData(false)
     val isPlaying = _isPlaying.immutable()
@@ -43,13 +39,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private val _acceptedFileTypesAsString = MutableLiveData(DataRepository.getAllowedFileTypeListAsString())
     val acceptedFileTypesAsString = _acceptedFileTypesAsString.immutable()
 
-    var looper: PlayerServiceInterface? = null
-        set(value) {
-            field = value
-            setPlayerWaitModeTo(appState.settings.isWaitMode)
-            field?.setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
-            field?.setPlaybackProgressListener { name, value -> _playbackProgress.postValue(Pair(name, value)) }
-        }
+    lateinit var looper: PlayerServiceInterface
 
     private fun onPlayerSwitchedToNextFile(filename: String) {
         _fileCurrentlyPlayed.postValue(filename)
@@ -57,7 +47,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
         uiJob {
-            if (looper?.setWaitMode(appState.settings.isWaitMode)?.isSuccess() == true) {
+            if (looper.setWaitMode(appState.settings.isWaitMode).isSuccess()) {
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
@@ -68,26 +58,34 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     var currentlySelected: String? = null
 
-    fun onStartPlaybackClicked(view: View) {
-        looper?.let {
-            if (it.hasLoopFile()) startLooper()
+    fun setPlayer(player: PlayerServiceInterface) {
+        looper = player.apply {
+            setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
+            setPlaybackProgressListener { name, value -> _playbackProgress.postValue(Pair(name, value)) }
         }
+        setPlayerWaitModeTo(appState.settings.isWaitMode)
+    }
+
+    fun onStartPlaybackClicked(view: View) {
+        if (looper.hasLoopFile()) startLooper()
     }
 
     fun onStopPlaybackClicked(view: View) {
-        stopLooper()
+        when (looper.getState()) {
+            PlayerState.PLAYING, PlayerState.PAUSED -> stopLooper()
+            else -> { /* do nothing */
+            }
+        }
     }
 
     fun onPausePlaybackClicked(view: View) {
         uiJob {
-            //            looper?.let {
-            //
-            //                if (!it.isReady()) cancel()
-            //                if (it.isPlaying()) {
-            //                    it.pause()
-            //                    onPlaybackStopped()
-            //                } else if (it.getState() == PlayerState.PAUSED) startLooper()
-            //            }
+
+            when (looper.getState()) {
+                PlayerState.PLAYING -> looper.pause()
+                else -> looper.play()
+            }
+
         }
     }
 
@@ -109,9 +107,9 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     fun onLoopClicked(audioModel: AudioModel) {
         Timber.d("Clicked on: ${audioModel.name}")
         uiJob {
-            with(looper?.select(audioModel.path)) {
+            with(looper.select(audioModel.path)) {
                 Timber.d("Updating with: ${this?.data}")
-                if (this?.isSuccess() == true) {
+                if (this.isSuccess()) {
                     this.data?.let {
                         onFileSelected(it)
                     } ?: error("Got no filename back from JNI. This shouldn't happen")
@@ -121,10 +119,10 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     }
 
     private fun onFileSelected(filename: String) {
-        Timber.d("isWaitmode: ${looper?.getWaitMode()}")
-        Timber.d("Selected: $filename, looper state: ${looper?.getState()}, wait: ${looper?.getWaitMode()}")
-        if (looper?.getWaitMode() == true) {
-            when (looper?.getState()) {
+        Timber.d("isWaitmode: ${looper.getWaitMode()}")
+        Timber.d("Selected: $filename, looper state: ${looper.getState()}, wait: ${looper.getWaitMode()}")
+        if (looper.getWaitMode()) {
+            when (looper.getState()) {
                 PlayerState.PLAYING -> _filePreselected.postValue(filename)
                 PlayerState.PAUSED -> _filePreselected.postValue(filename)
                 PlayerState.STOPPED -> startLooper()
@@ -140,8 +138,8 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private fun startLooper() {
 
         uiJob {
-            with(looper?.play()) {
-                if (this?.isSuccess() == true) {
+            with(looper.play()) {
+                if (this.isSuccess()) {
                     this.data?.let {
                         Timber.d("Started: $it")
                         _fileCurrentlyPlayed.postValue(this.data)
@@ -153,26 +151,21 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     fun stopLooper() {
         uiJob {
-            looper?.let {
-                if (!it.isReady()) this.cancel()
-                if (it.getState() == PlayerState.PLAYING || it.getState() == PlayerState.PAUSED) {
-                    it.stop()
-                }
+            if (looper.stop().isSuccess()) {
+                _playbackProgress.postValue(Pair(fileCurrentlyPlayed.value ?: "", 0))
+                _fileCurrentlyPlayed.postValue("")
+                _filePreselected.postValue("")
             }
         }
-//        resetPreSelection()
-//
-//        //        adapter.resetProgress()
-//        onPlaybackStopped()
     }
 
     fun onProgressChangedByUser(newProgress: Float) {
-        looper?.changePlaybackPosition(newProgress)
+        looper.changePlaybackPosition(newProgress)
     }
 
     private fun resetPreSelection() {
         //        adapter.resetPreSelection()
-        looper?.resetPreSelection()
+        looper.resetPreSelection()
     }
 
     private fun onPlaybackStopped() {

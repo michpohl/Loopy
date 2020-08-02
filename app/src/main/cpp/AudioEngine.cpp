@@ -86,7 +86,7 @@ void AudioEngine::startPlaying() {
     mAudioEngineState = AudioEngineState::Playing;
 }
 
-void AudioEngine::stop() {
+bool AudioEngine::stop() {
 
     if (mAudioStream != nullptr) {
         mAudioStream->close();
@@ -96,15 +96,18 @@ void AudioEngine::stop() {
     if (loopA != nullptr) {
         loopA->resetPlayHead();
     }
-    isPrepared = false; // TODO this can be handled through the return value
+    isPrepared = false;
+    mAudioEngineState = AudioEngineState::Stopped;
+    return true;
 }
 
-void AudioEngine::pause() {
+bool AudioEngine::pause() {
     LOGD("Trying to pause");
     if (mAudioStream != nullptr) {
         mAudioStream->pause();
     }
     mAudioEngineState = AudioEngineState::Paused;
+    return true;
 }
 
 bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extractor) {

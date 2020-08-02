@@ -41,7 +41,7 @@ class PlayerFragment : BaseFragment() {
         set(value) {
             value?.let {
             field = value
-            viewModel.looper = value
+            viewModel.setPlayer(value)
             }
         }
 
@@ -72,8 +72,12 @@ class PlayerFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player, container, false)
+
         viewModel = getViewModel()
+        playerService = PlayerService()
+        bindAudioService()
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player, container, false)
         binding.model = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         recycler = binding.root.find(R.id.rv_loops)
@@ -83,8 +87,7 @@ class PlayerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        playerService = PlayerService()
-        bindAudioService()
+
         requireActivity().startService(Intent(activity, playerService::class.java))
     }
 
@@ -169,7 +172,7 @@ class PlayerFragment : BaseFragment() {
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
             )
-            Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
+//            Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
         }
     }
 

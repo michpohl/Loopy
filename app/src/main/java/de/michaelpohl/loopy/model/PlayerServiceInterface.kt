@@ -17,7 +17,6 @@ interface PlayerServiceInterface {
     fun changePlaybackPosition(newPosition: Float)
     fun resetPreSelection()
     fun isReady(): Boolean
-    fun isPaused(): Boolean
     fun getState(): PlayerState //TODO reduce the state calls to this one
     fun getWaitMode() : Boolean
     fun hasLoopFile(): Boolean

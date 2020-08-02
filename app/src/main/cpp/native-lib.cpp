@@ -82,21 +82,23 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, 
     }
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env,
                                                                   jobject instance) {
 
     if (audioEngineExists(env, instance)) {
-        audioEngine->stop();
+        bool success = audioEngine->stop();
+        return (jboolean) success;
     }
+    return (jboolean) false;
 }
 
 JNIEXPORT jboolean JNICALL
 Java_de_michaelpohl_loopy_common_jni_JniBridge_pausePlaybackNative(JNIEnv *env, jobject instance) {
 //TODO this boolean value does not yet really tell if everything worked
     if (audioEngineExists(env, instance)) {
-        audioEngine->pause();
-        return (jboolean) true;
+        bool success = audioEngine->pause();
+        (jboolean) success;
     }
     return (jboolean) false;
 }

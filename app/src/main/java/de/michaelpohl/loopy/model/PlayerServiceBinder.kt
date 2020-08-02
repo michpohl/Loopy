@@ -38,10 +38,6 @@ class PlayerServiceBinder : Binder(),
         return looper.isReady
     }
 
-    override fun isPaused(): Boolean {
-        return looper.state == PlayerState.PAUSED
-    }
-
     override fun getState(): PlayerState {
         return looper.state
     }

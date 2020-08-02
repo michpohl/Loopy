@@ -42,12 +42,13 @@ class PlayerItemViewModel(
             when (state) {
                 PlayerAdapter.Companion.SelectionState.NOT_SELECTED -> {
                     _backgroundColor.postValue(resources.getColor(R.color.content_background))
+                    _progress.postValue(0F)
                     _removeButtonVisibility.postValue(View.VISIBLE)
                 }
                 PlayerAdapter.Companion.SelectionState.PRESELECTED -> {
                     _removeButtonVisibility.postValue(View.GONE)
                     _backgroundColor.postValue(resources.getColor(R.color.item_selected_background))
-                    _progress.postValue(50F)
+                    _progress.postValue(0F)
                 }
                 PlayerAdapter.Companion.SelectionState.PLAYING -> {
                     _removeButtonVisibility.postValue(View.GONE)

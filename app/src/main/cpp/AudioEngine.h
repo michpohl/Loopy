@@ -52,9 +52,9 @@ public:
 
     void startPlaying();
 
-    void stop();
+    bool stop();
 
-    void pause();
+    bool pause();
 
     bool setWaitMode(bool value);
     bool getWaitMode();
