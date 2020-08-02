@@ -26,7 +26,7 @@ AudioEngine::AudioEngine(AudioCallback &callback) : mCallback(callback) {
 }
 
 bool isWaitMode = true;
-std::atomic <AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
+std::atomic<AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
 
 
 bool AudioEngine::setWaitMode(bool value) {
@@ -74,7 +74,7 @@ void AudioEngine::startPlaying() {
     }
     Player *player = players.front().get();
     mMixer.addTrack(player);
-    const char* filename = player->getName();
+    const char *filename = player->getName();
     Result result = mAudioStream->requestStart();
     if (result != Result::OK) {
         LOGE("Failed to start stream. Error: %s", convertToText(result));
@@ -96,6 +96,7 @@ void AudioEngine::stop() {
     if (loopA != nullptr) {
         loopA->resetPlayHead();
     }
+    isPrepared = false; // TODO this can be handled through the return value
 }
 
 void AudioEngine::pause() {
@@ -107,6 +108,7 @@ void AudioEngine::pause() {
 }
 
 bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extractor) {
+
     if (!isPrepared) {
         prepare();
     } else {
@@ -114,8 +116,8 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
     }
 
     LOGD("Creating new player");
-    std::unique_ptr <Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
-                                                                  audioProperties, std::bind(
+    std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
+                                                                 audioProperties, std::bind(
                     &AudioEngine::onPlayerEnded, this));
     if (newPlayer == nullptr) {
         LOGE("Failed to create a player for file: %s", fileName);
@@ -126,15 +128,26 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
         players.front()->setLooping(false);
     }
 
-    // removing the last player in the vector, since we are preselection a different one
-    if (players.size() > 1) {
-        players.erase(players.begin() + players.size() - 1);
+    if (isWaitMode) {
+
+        // removing the last player in the vector, since we are preselecting a different one
+        if (players.size() > 1) {
+            players.erase(players.begin() + players.size() - 1);
+        }
+    } else {
+        // since we're not in wait mode, we just throw away all players and replace them with a new one
+        stop();
+        if (!isPrepared) {
+            prepare();
+        } else {
+            LOGD("Engine is already prepared. Skipping...");
+        }
+        players.clear();
     }
 
     // adding the new player to the vector
     players.push_back(std::move(newPlayer));
-    LOGD("Next player successfully prepared!");
-
+    LOGD("Next player successfully prepared! Waiting for loop to end");
     return true;
 }
 
@@ -204,7 +217,7 @@ bool AudioEngine::openStream() {
 void AudioEngine::onPlayerEnded() {
     LOGD("Player ended");
     players.back()->setPlaying(true);
-    const char* filename = players.back()->getName();
+    const char *filename = players.back()->getName();
     mCallback.onFileStartsPlaying(filename);
     players.erase(players.begin());
     LOGD("Player erased");
