@@ -58,7 +58,7 @@ class SharedPreferencesManager(context: Context) {
         sharedPreferences.edit().putString(key, value).apply()
     }
 
-    private fun getString(key: String, defaultValue: String? = ""): String? {
+    private fun getString(key: String, defaultValue: String? = null): String? {
         return sharedPreferences.getString(key, defaultValue)
     }
 

@@ -26,7 +26,7 @@ object DataRepository {
      */
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
-//        this.savedAppData = loadSavedAppData()
+        this.savedAppData = loadSavedAppData()
         currentSelectedAudioModels = savedAppData.audioModels
 //        this.settings = savedAppData.settings
 
@@ -106,7 +106,7 @@ object DataRepository {
      * If there is no selectedState, an AppData object is created with the standard settings
      * @return The AppData object from SharedPreferences or a new one, if none exists
      */
-//    private fun loadSavedAppData(): AppData {
+    private fun loadSavedAppData(): AppData {
 //        //        val warnString = "warning" //TODO this can be done better :-)
 //        //        val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
 //        //
@@ -115,9 +115,9 @@ object DataRepository {
 //        //            appDataFromJson(jsonString)
 //        //        } else {
 //        //            // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
-//        return AppData(settings = Settings(acceptedFileTypes = AppStateRepository.Companion.AudioFileType.values()))
+        return AppData(settings = Settings(acceptedFileTypes = AppStateRepository.Companion.AudioFileType.values().toMutableList(),isWaitMode = true, showLoopCount = true, keepScreenOn = true, playInBackground = true))
 //        //        }
-//    }
+    }
 
 
     fun getAllowedFileTypeListAsString(): String {
