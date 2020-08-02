@@ -97,6 +97,7 @@ bool AudioEngine::stop() {
         loopA->resetPlayHead();
     }
     isPrepared = false;
+    players.clear();
     mAudioEngineState = AudioEngineState::Stopped;
     return true;
 }
