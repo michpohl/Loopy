@@ -39,21 +39,18 @@
     <!--COLOR REFERENCES-->
 
     <color name="window_background">@color/black</color>
-    <color name="content_background">@color/darkest_green</color>
-    <color name="content_background_editable">@color/action</color>
+    <color name="content_background">@color/dark_green</color>
+    <color name="item_selected_background">@color/green</color>
+    <color name="active">@color/bright_purple</color>
 
-    <color name="action_bar_background_color">@color/dark_green</color>
     <color name="text_color_2">@color/dark_green</color>
     <color name="text_color_3">@color/grey4</color>
 
-    <color name="light_red">@color/bright_purple</color>
     <color name="dark_red">#c2434a</color>
     <color name="darkest_red">#46050d</color>
     <color name="green">@color/base_green</color>
     <color name="yellow">@color/base_yellow</color>
 
-    <color name="active">@color/dark_green</color>
-    <color name="active_green">@color/green</color>
     <color name="inactive">@color/greyblue</color>
     <color name="disabled">@color/greyblue</color>
     <color name="enabled">@color/cyan</color>
@@ -62,7 +59,7 @@
     <color name="preselected_item">@color/green</color>
 
 
-    <color name="action">@color/light_red</color>
+    <color name="action">@color/active</color>
     <color name="action_dark">@color/dark_red</color>
     <color name="action_darkest">@color/darkest_red</color>
     <color name="transparent">@null</color>

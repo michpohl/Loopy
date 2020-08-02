@@ -6,35 +6,41 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.common.Settings
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.SWITCH
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour.WAIT
-import de.michaelpohl.loopy.common.ValidAudioFileType
+import de.michaelpohl.loopy.model.AppStateRepository
+import de.michaelpohl.loopy.model.AppStateRepository.Companion.AudioFileType
 import kotlinx.android.synthetic.main.dialog_settings.*
 import kotlinx.android.synthetic.main.dialog_settings.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
-class SettingsDialogFragment : DialogFragment() {
+class SettingsDialogFragment() : DialogFragment(), KoinComponent {
+
+    private val appState: AppStateRepository by inject()
 
     private lateinit var settings: Settings
-    private lateinit var allowedFileTypes: MutableList<ValidAudioFileType>
+    private lateinit var allowedFileTypes: MutableList<FileType>
     private var showLoopCount: Boolean = false
 
     lateinit var resultListener: (Settings) -> Unit
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        settings = appState.getSettings()
+
         val view: View = inflater.inflate(R.layout.dialog_settings, container, false)
 
-        view.rb_switch_immediately.isChecked = settings.switchingLoopsBehaviour == SWITCH
-        view.rb_wait_until_finished.isChecked = settings.switchingLoopsBehaviour == WAIT
+        view.rb_switch_immediately.isChecked = settings.isWaitMode.not()
+        view.rb_wait_until_finished.isChecked = settings.isWaitMode
 
 
-        view.cb_check_wav.isChecked = allowedFileTypes.contains(ValidAudioFileType.WAVE)
-        view.cb_check_mp3.isChecked = allowedFileTypes.contains(ValidAudioFileType.MP3)
-        view.cb_check_ogg.isChecked = allowedFileTypes.contains(ValidAudioFileType.OGG)
+        view.cb_check_wav.isChecked = settings.acceptedFileTypes.contains(AudioFileType.WAVE)
+        view.cb_check_mp3.isChecked = settings.acceptedFileTypes.contains(AudioFileType.MP3)
+        view.cb_check_ogg.isChecked = settings.acceptedFileTypes.contains(AudioFileType.OGG)
 
-        view.cb_check_show_loop_count.isChecked = showLoopCount
+        view.cb_check_show_loop_count.isChecked = settings.showLoopCount
         view.cb_check_keep_screen_on.isChecked = settings.keepScreenOn
         view.cb_check_play_in_background.isChecked = settings.playInBackground
 
@@ -55,15 +61,8 @@ class SettingsDialogFragment : DialogFragment() {
         return view
     }
 
-    //TODO whe don't need local variables here we can just use the settings object and avoid some confusion
-    fun setCurrentSettings(currentSettings: Settings) {
-        this.settings = currentSettings
-        this.allowedFileTypes = currentSettings.allowedFileTypes.toMutableList()
-        this.showLoopCount = settings.showLoopCount
-    }
-
     private fun onCheckBoxWavClicked() {
-        val fileType = ValidAudioFileType.WAVE
+        val fileType = AudioFileType.WAVE
         if (cb_check_wav.isChecked) {
             allow(fileType)
         } else {
@@ -72,7 +71,7 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onCheckBoxMp3Clicked() {
-        val fileType = ValidAudioFileType.MP3
+        val fileType = AudioFileType.MP3
         if (cb_check_mp3.isChecked) {
             allow(fileType)
         } else {
@@ -81,7 +80,7 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onCheckBoxOggClicked() {
-        val fileType = ValidAudioFileType.OGG
+        val fileType = AudioFileType.OGG
 
         if (cb_check_ogg.isChecked) {
             allow(fileType)
@@ -91,13 +90,13 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onSwitchImmediatelyClicked() {
-        settings.switchingLoopsBehaviour = SWITCH
+        settings.isWaitMode = false
         view?.rb_switch_immediately?.isChecked = true
         view?.rb_wait_until_finished?.isChecked = false
     }
 
     private fun onWaitUntilFinishedClicked() {
-        settings.switchingLoopsBehaviour = WAIT
+        settings.isWaitMode = true
         view?.rb_switch_immediately?.isChecked = false
         view?.rb_wait_until_finished?.isChecked = true
     }
@@ -117,9 +116,9 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
     private fun onOkClicked() {
-        settings.allowedFileTypes = allowedFileTypes.toTypedArray()
-        settings.showLoopCount = showLoopCount
-        resultListener.invoke(settings)
+
+        appState.saveSettings(settings)
+//        resultListener.invoke(settings)
         dismiss()
     }
 
@@ -128,21 +127,20 @@ class SettingsDialogFragment : DialogFragment() {
     }
 
 
-    private fun allow(fileType: ValidAudioFileType) {
-        if (!allowedFileTypes.contains(fileType)) {
-            allowedFileTypes.add(fileType)
+    private fun allow(fileType: AudioFileType) {
+        if (!settings.acceptedFileTypes.contains(fileType)) {
+            settings.acceptedFileTypes.add(fileType)
         }
     }
 
-    private fun forbid(fileType: ValidAudioFileType) {
-        if (allowedFileTypes.contains(fileType)) {
-            allowedFileTypes.remove(fileType)
+    private fun forbid(fileType: AudioFileType) {
+        if (settings.acceptedFileTypes.contains(fileType)) {
+            settings.acceptedFileTypes.remove(fileType)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Timber.d("invoking result listener")
-        resultListener.invoke(settings)
     }
 }

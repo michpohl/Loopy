@@ -1,30 +1,16 @@
 package de.michaelpohl.loopy.common
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.squareup.moshi.JsonClass
+import de.michaelpohl.loopy.model.AppStateRepository
 
-@Parcelize
-data class Settings (
-    var allowedFileTypes: Array<ValidAudioFileType> = emptyArray(),
-    var switchingLoopsBehaviour: SwitchingLoopsBehaviour = SwitchingLoopsBehaviour.SWITCH,
+// TODO replace with immutable concept
+@JsonClass(generateAdapter = true)
+data class Settings(
+    var acceptedFileTypes: MutableList<AppStateRepository.Companion.AudioFileType>,
+    var isWaitMode: Boolean,
     var showLoopCount: Boolean = true,
     var keepScreenOn: Boolean = false,
     var playInBackground: Boolean = true
-) : Parcelable {
+)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Settings
-
-        if (!allowedFileTypes.contentEquals(other.allowedFileTypes)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return allowedFileTypes.contentHashCode()
-    }
-}
 

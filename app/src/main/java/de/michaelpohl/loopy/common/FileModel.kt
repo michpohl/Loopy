@@ -1,12 +1,11 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.DataRepository
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
-//remember this smart solution to get a parcelable from any path class!!
-// annotate in the front and implement in the back
 @Parcelize
 data class FileModel(
     val path: String,
@@ -28,7 +27,7 @@ data class FileModel(
         if (fileType == FileType.FILE) {
             var isValid = false
 
-            DataRepository.settings.allowedFileTypes.forEach {
+            AppStateRepository.Companion.AudioFileType.values().forEach {
 //                Timber.d("Testing for: %s", it.suffix)
                 if (name.endsWith(it.suffix)) {
                     isValid = true

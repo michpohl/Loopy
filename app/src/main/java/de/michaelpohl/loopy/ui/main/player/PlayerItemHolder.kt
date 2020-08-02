@@ -6,16 +6,14 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.common.FileHelper
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
 
-class NewPlayerItemHolder(
+class PlayerItemHolder(
     var binding: ItemLoopBinding
 ) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
 
-    private lateinit var viewModel: NewPlayerItemViewModel
+    private lateinit var viewModel: PlayerItemViewModel
 
     private val lifecycleRegistry = LifecycleRegistry(this)
 
@@ -35,7 +33,7 @@ class NewPlayerItemHolder(
         return lifecycleRegistry
     }
 
-    fun bind(model: NewPlayerItemViewModel) {
+    fun bind(model: PlayerItemViewModel) {
         viewModel = model
         binding.model = viewModel
         binding.lifecycleOwner = this
@@ -55,7 +53,7 @@ class NewPlayerItemHolder(
         viewModel.updateProgress(percentage)
     }
 
-    var state: SelectionState = NOT_SELECTED
+    var state: PlayerAdapter.Companion.SelectionState = PlayerAdapter.Companion.SelectionState.NOT_SELECTED
         set(value) {
             viewModel.selectionState = value
             field = value

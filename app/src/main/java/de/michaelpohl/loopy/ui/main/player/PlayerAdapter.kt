@@ -8,20 +8,20 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
+import de.michaelpohl.loopy.common.PlayerState
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.NOT_SELECTED
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PLAYING
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.PRESELECTED
+import de.michaelpohl.loopy.ui.main.player.PlayerAdapter.Companion.SelectionState.*
+
 import timber.log.Timber
 
-class NewPlayerAdapter(
+class PlayerAdapter(
     private val onProgressChangedByUserListener: (Float) -> Unit,
     private val onLoopClickedListener: (AudioModel) -> Unit
 
-) : Adapter<NewPlayerItemHolder>() {
+) : Adapter<PlayerItemHolder>() {
 
-    private val holders = mutableListOf<NewPlayerItemHolder>()
+    private val holders = mutableListOf<PlayerItemHolder>()
     var items = listOf<AudioModel>()
     lateinit var dialogHelper: DialogHelper
 
@@ -40,10 +40,10 @@ class NewPlayerAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewPlayerItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerItemHolder {
         val binding: ItemLoopBinding =
             DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_loop, parent, false)
-        val item = NewPlayerItemHolder(binding)
+        val item = PlayerItemHolder(binding)
         holders.add(item)
         return item
     }
@@ -52,8 +52,8 @@ class NewPlayerAdapter(
         return items.size
     }
 
-    override fun onBindViewHolder(holder: NewPlayerItemHolder, position: Int) {
-        val itemViewModel = NewPlayerItemViewModel(
+    override fun onBindViewHolder(holder: PlayerItemHolder, position: Int) {
+        val itemViewModel = PlayerItemViewModel(
             items[position],
             this::onItemClicked,
             this::onProgressChangedByUserListener.invoke(),
@@ -62,12 +62,12 @@ class NewPlayerAdapter(
         holder.bind(itemViewModel)
     }
 
-    override fun onViewAttachedToWindow(holder: NewPlayerItemHolder) {
+    override fun onViewAttachedToWindow(holder: PlayerItemHolder) {
         super.onViewAttachedToWindow(holder)
         holder.onAppear()
     }
 
-    override fun onViewDetachedFromWindow(holder: NewPlayerItemHolder) {
+    override fun onViewDetachedFromWindow(holder: PlayerItemHolder) {
         super.onViewDetachedFromWindow(holder)
         holder.onDisappear()
     }
@@ -84,5 +84,9 @@ class NewPlayerAdapter(
         data?.let { data ->
             holders.find { it.getName() == data.first }?.updateProgress(data.second)
         }
+    }
+
+    companion object {
+        enum class SelectionState { NOT_SELECTED, PRESELECTED, PLAYING }
     }
 }

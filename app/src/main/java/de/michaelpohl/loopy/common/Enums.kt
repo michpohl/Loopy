@@ -3,15 +3,6 @@ package de.michaelpohl.loopy.common
 import com.franmontiel.attributionpresenter.entities.Attribution
 import com.franmontiel.attributionpresenter.entities.License
 
-enum class ValidAudioFileType(val suffix: String) {
-    WAVE("wav"),
-    MP3("mp3"),
-    OGG("ogg")
-}
-
-enum class SwitchingLoopsBehaviour {
-    SWITCH, WAIT
-}
 
 enum class PlayerState {
     PLAYING, PAUSED, STOPPED, UNKNOWN, READY

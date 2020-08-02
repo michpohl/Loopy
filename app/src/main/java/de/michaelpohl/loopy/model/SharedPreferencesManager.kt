@@ -2,7 +2,10 @@ package de.michaelpohl.loopy.model
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.squareup.moshi.Moshi
 import de.michaelpohl.loopy.common.JsonDataClass
+import de.michaelpohl.loopy.common.Settings
+import timber.log.Timber
 
 /**
  * Possible null/empty objects should be handled here, so that downstream there are no nulls!
@@ -11,6 +14,8 @@ class SharedPreferencesManager(context: Context) {
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE)
+
+    private val moshi = Moshi.Builder().build()
 
     var setupComplete: Boolean
         get() {
@@ -36,6 +41,17 @@ class SharedPreferencesManager(context: Context) {
 
     fun saveLoopSets(sets: Sets) {
         return putString(sets.toJsonString(), Sets(listOf()).toJsonString())
+    }
+
+    fun getSettings(): Settings? {
+        return getString(SETTINGS_KEY)?.let {
+            moshi.adapter(Settings::class.java).fromJson(it)
+        }
+    }
+
+    fun saveSettings(settings: Settings) {
+        Timber.d("Settings String: $settings")
+        putString(SETTINGS_KEY, moshi.adapter(Settings::class.java).toJson(settings))
     }
 
     private fun putString(key: String, value: String) {
@@ -74,5 +90,7 @@ class SharedPreferencesManager(context: Context) {
         const val SETS = "sets"
         const val APP_SETUP_COMPLTE = "setup"
         const val SELECTED_SET = "selectedset"
+
+        const val SETTINGS_KEY = "settings"
     }
 }

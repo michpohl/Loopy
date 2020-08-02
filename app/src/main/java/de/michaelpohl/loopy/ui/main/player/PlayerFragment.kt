@@ -19,7 +19,6 @@ import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
-import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.ui.main.BaseFragment
@@ -28,7 +27,7 @@ import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
-    private lateinit var adapter: NewPlayerAdapter
+    private lateinit var adapter: PlayerAdapter
 
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
@@ -106,15 +105,15 @@ class PlayerFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
-        if (!DataRepository.settings.playInBackground) {
-            pausePlayback()
-        }
+//        if (!DataRepository.settings.playInBackground) {
+//            pausePlayback()
+//        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopLooper()
-        DataRepository.saveCurrentState(viewModel.loopsList)
+//        DataRepository.saveCurrentState(viewModel.loopsList)
         unBindAudioService()
     }
 
@@ -130,7 +129,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun initAdapter(loopsList: List<AudioModel>) {
-        adapter = NewPlayerAdapter({
+        adapter = PlayerAdapter({
             viewModel.onProgressChangedByUser(it)
         }, { viewModel.onLoopClicked(it) }).also {
             it.items = loopsList

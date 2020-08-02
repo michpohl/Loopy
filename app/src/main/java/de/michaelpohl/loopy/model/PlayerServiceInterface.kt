@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy.model
 
 import de.michaelpohl.loopy.common.PlayerState
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
 import de.michaelpohl.loopy.common.jni.JniResult
 
 interface PlayerServiceInterface {

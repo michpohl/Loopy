@@ -22,6 +22,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.SharedPreferencesManager
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private val audioFilesRepo: AudioFilesRepository by inject()
     private val prefs: SharedPreferencesManager by inject()
+    private val appState: AppStateRepository by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
     private var menuResourceID = R.menu.menu_main
@@ -67,7 +69,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         handlePossibleIntents()
         setupActionBar()
         setupDrawer()
-        keepScreenOnIfDesired()
+        keepScreenOnIfDesired(appState.getSettings())
     }
 
     private fun setupAppData() {
@@ -266,11 +268,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun showPlayerFragment(
-        loops: List<AudioModel> = emptyList(),
-        settings: Settings = Settings()
+        loops: List<AudioModel> = emptyList()
     ) {
 
-        //        //TODO this method can be better - handling what's in AppData should completely move into DataRepository
+        //        //TODO this method can be better - handling what's in AppData should completely move into AppStateRepository
         //        val appData = AppData(audioModels = loops, settings = settings)
         //        val playerFragment = PlayerFragment.newInstance(appData)
         //        Timber.d("currentFragment should get assigned")
@@ -286,7 +287,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         val didUpdate = DataRepository.updateAndSaveFileSelection()
         if (didUpdate) {
             clearBackStack()
-            showPlayerFragment(DataRepository.currentSelectedAudioModels, DataRepository.settings)
+            showPlayerFragment(DataRepository.currentSelectedAudioModels)
             true
         } else {
             showSnackbar(container, R.string.snackbar_text_no_new_files_selected)
@@ -320,12 +321,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun showSettingsDialog() {
         val dialog = SettingsDialogFragment()
-        dialog.setCurrentSettings(DataRepository.settings)
         dialog.resultListener = {
             Timber.d("Resultlistener was invoked")
-            DataRepository.settings = it
-            DataRepository.saveCurrentState()
-            keepScreenOnIfDesired()
+            keepScreenOnIfDesired(it)
 
             // if we're currently in the player we need to update
             // immediately for the settings to take effect
@@ -373,8 +371,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         invalidateOptionsMenu()
     }
 
-    private fun keepScreenOnIfDesired() {
-        if (DataRepository.settings.keepScreenOn) {
+    private fun keepScreenOnIfDesired(settings: Settings) {
+        if (settings.keepScreenOn) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

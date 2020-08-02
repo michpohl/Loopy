@@ -20,7 +20,6 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     val loopsList: List<AudioModel> = repository.getSingleSet() //TODO LiveData?
 
-    lateinit var adapter: LoopsAdapter
     private var updateHandler = Handler()
 
     private val _isPlaying = MutableLiveData(false)
@@ -47,7 +46,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     var looper: PlayerServiceInterface? = null
         set(value) {
             field = value
-            setPlayerWaitModeTo(appState.isWaitMode)
+            setPlayerWaitModeTo(appState.getSettings().isWaitMode)
             field?.setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
             field?.setPlaybackProgressListener { name, value -> _playbackProgress.postValue(Pair(name, value)) }
         }
@@ -58,7 +57,7 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
         uiJob {
-            if (looper?.setWaitMode(appState.isWaitMode)?.isSuccess() == true) {
+            if (looper?.setWaitMode(appState.getSettings().isWaitMode)?.isSuccess() == true) {
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }

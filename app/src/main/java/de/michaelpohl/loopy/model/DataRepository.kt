@@ -7,36 +7,36 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import de.michaelpohl.loopy.common.*
-import de.michaelpohl.loopy.model.DataRepository.settings
 import timber.log.Timber
 
+@Deprecated("This must go")
 object DataRepository {
 
-    private const val PREFS_LOOPY_KEY = "loops_list"
+//    private const val PREFS_LOOPY_KEY = "loops_list"
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var savedAppData: AppData
 
     var currentSelectedAudioModels = listOf<AudioModel>()
         private set
     private var newSelectedAudioModels = listOf<AudioModel>()
-    var settings = Settings()
+//    var settings = Settings()
 
     /**
      * initializes the DataRepository by fetching the saved selectedState from sharedPreferences
      */
     fun init(sharedPrefs: SharedPreferences) {
         this.sharedPrefs = sharedPrefs
-        this.savedAppData = loadSavedAppData()
+//        this.savedAppData = loadSavedAppData()
         currentSelectedAudioModels = savedAppData.audioModels
-        this.settings = savedAppData.settings
+//        this.settings = savedAppData.settings
 
         currentSelectedAudioModels.forEach { Timber.d("Loading: %s", it.name) }
     }
 
     fun saveCurrentState(
 
-        selectedLoops: List<AudioModel> = this.currentSelectedAudioModels,
-        settings: Settings = this.settings
+//        selectedLoops: List<AudioModel> = this.currentSelectedAudioModels,
+//        settings: Settings = this.settings
     ) {
 //        Timber.d("Current selected Models when saving:")
 //        selectedLoops.forEach { Timber.d("%s", it.name) }
@@ -106,33 +106,30 @@ object DataRepository {
      * If there is no selectedState, an AppData object is created with the standard settings
      * @return The AppData object from SharedPreferences or a new one, if none exists
      */
-    private fun loadSavedAppData(): AppData {
-//        val warnString = "warning" //TODO this can be done better :-)
-//        val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
+//    private fun loadSavedAppData(): AppData {
+//        //        val warnString = "warning" //TODO this can be done better :-)
+//        //        val jsonString = sharedPrefs.getString(PREFS_LOOPY_KEY, warnString)
+//        //
 //
+//        //        return if (jsonString != "warning") {
+//        //            appDataFromJson(jsonString)
+//        //        } else {
+//        //            // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
+//        return AppData(settings = Settings(acceptedFileTypes = AppStateRepository.Companion.AudioFileType.values()))
+//        //        }
+//    }
 
-//        return if (jsonString != "warning") {
-//            appDataFromJson(jsonString)
-//        } else {
-//            // if we have no saved selectedState, we start up with an empty list of loops and allow all audio file types
-        return AppData(settings = Settings(allowedFileTypes = ValidAudioFileType.values()))
-//        }
-    }
-
-    fun getAllowedFileTypes(): Array<ValidAudioFileType> {
-        return settings.allowedFileTypes
-    }
 
     fun getAllowedFileTypeListAsString(): String {
 
         val builder = StringBuilder()
-        val allowedFileTypes = settings.allowedFileTypes
-        allowedFileTypes.forEach {
-            builder.append(it.name)
-            if (allowedFileTypes.indexOf(it) != allowedFileTypes.size - 1) {
-                builder.append(", ")
-            }
-        }
+//        val allowedFileTypes = settings.acceptedFileTypes
+//        allowedFileTypes.forEach {
+//            builder.append(it.name)
+//            if (allowedFileTypes.indexOf(it) != allowedFileTypes.size - 1) {
+//                builder.append(", ")
+//            }
+//        }
         return builder.toString()
 }
     fun testIntegrity(audioModels: List<AudioModel>): List<AudioModel> {

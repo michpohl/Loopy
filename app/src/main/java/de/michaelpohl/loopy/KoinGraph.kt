@@ -31,7 +31,7 @@ object KoinGraph {
         single { SharedPreferencesManager(get()) }
         single { AudioFilesRepository(get(), get()) }
         single { ExternalStorageManager(get()) }
-        single { AppStateRepository() }
+        single { AppStateRepository(get()) }
     }
 
     private val viewModelModule = module {

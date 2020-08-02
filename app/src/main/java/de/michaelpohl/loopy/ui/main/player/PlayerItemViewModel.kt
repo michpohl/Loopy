@@ -1,104 +1,89 @@
 package de.michaelpohl.loopy.ui.main.player
 
 import android.view.View
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
+import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.lifecycle.MutableLiveData
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.ui.main.BaseViewModel
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel.SelectionState.*
 import timber.log.Timber
+import kotlin.reflect.KFunction0
 
 class PlayerItemViewModel(
-    private val position: Int,
     val audioModel: AudioModel,
-    private val onItemClickedListener: (Int, SelectionState) -> Unit,
+    private val onItemClickedListener: (AudioModel) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
-    private val onRemoveItemClickedListener: (Int) -> Unit
+    private val onRemoveItemClickedListener: KFunction0<Unit>
 ) : BaseViewModel() {
 
-    val blockUpdatesFromPlayer = ObservableBoolean(false)
-    var backgroundColor: Int = 0
-    val progress = ObservableField<Float>(0F)
-    val loopsCount = ObservableField<String>("0")
-    val loopsCountVisibility = ObservableInt(View.VISIBLE)
-    val name = audioModel.name
+    private val _progress = MutableLiveData(0F)
+    val progress = _progress.immutable()
 
-    var selectedState = NOT_SELECTED
-        set (state) {
-            //TODO change background colors here
-            if (state == NOT_SELECTED) {
-                removeButtonVisibility.set(View.VISIBLE)
-            } else {
-                removeButtonVisibility.set(View.INVISIBLE)
+    private val _backgroundColor = MutableLiveData(resources.getColor(R.color.content_background))
+    val backgroundColor = _backgroundColor.immutable()
+
+    private val _loopsCount = MutableLiveData("0")
+    val loopsCount = _loopsCount.immutable()
+
+    private val _loopsCountVisibility = MutableLiveData(View.INVISIBLE)
+    val loopsCountVisibility = _loopsCountVisibility.immutable()
+
+    private val _removeButtonVisibility = MutableLiveData(View.VISIBLE)
+    val removeButtonVisibility = _removeButtonVisibility.immutable()
+
+    val displayName = getFilenameFromFullPath(audioModel.name)
+    val fullPath = audioModel.name
+    val canSeekAudio = false
+
+    var selectionState = PlayerAdapter.Companion.SelectionState.NOT_SELECTED
+        set(state) {
+            when (state) {
+                PlayerAdapter.Companion.SelectionState.NOT_SELECTED -> {
+                    _backgroundColor.postValue(resources.getColor(R.color.content_background))
+                    _removeButtonVisibility.postValue(View.VISIBLE)
+                }
+                PlayerAdapter.Companion.SelectionState.PRESELECTED -> {
+                    _removeButtonVisibility.postValue(View.GONE)
+                    _backgroundColor.postValue(resources.getColor(R.color.item_selected_background))
+                    _progress.postValue(50F)
+                }
+                PlayerAdapter.Companion.SelectionState.PLAYING -> {
+                    _removeButtonVisibility.postValue(View.GONE)
+                    _backgroundColor.postValue(getColor(resources, R.color.active, null))
+
+                }
             }
             field = state
         }
 
-    val canSeekAudio = ObservableBoolean(false)
-    val removeButtonVisibility = ObservableInt(View.VISIBLE)
-
     fun onItemClicked(view: View) {
-        //TODO add ability to remove preselection again
-            Timber.d("Are we in waiting mode? ${isWaitingMode()}")
-        if (isWaitingMode()) {
-            if (selectedState != PRESELECTED) selectedState = PRESELECTED
-        } else {
-            selectedState = PLAYING
-            canSeekAudio.set(true)
-        }
-        Timber.d("Selected state is now: $selectedState")
-        onItemClickedListener.invoke(position, selectedState)
+        onItemClickedListener.invoke((audioModel))
     }
 
     fun onRemoveItemClicked(view: View) {
-        onRemoveItemClickedListener.invoke(position)
     }
 
-    fun updateProgress(newProgress: Float) {
-        var safeProgress = newProgress
-//        since we only want values in between 0 and 100, we're safeguarding the value here
-        when (newProgress) {
-            in Float.MIN_VALUE..0F -> safeProgress = 0F
-            in 100F..Float.MAX_VALUE -> safeProgress = 100F
-        }
-
-        if (selectedState == NOT_SELECTED) {
-            this.progress.set(0F)
-            return
-        }
-        if (!blockUpdatesFromPlayer.get()) {
-            this.progress.set(safeProgress)
-        }
+    private fun updateLoopsCount(count: Int) {
+        Timber.d("updating count with: $count")
+        _loopsCount.postValue(count.toString())
     }
 
-    fun updateLoopsCount(count: Int) {
-        if (!DataRepository.settings.showLoopCount) {
-            loopsCountVisibility.set(View.INVISIBLE)
-            return
-        }
+    fun updateProgress(newProgress: Int) {
+        // safeguarding crazy values so we stay between 0 and 100
+        if (newProgress < progress.value?: 0F) updateLoopsCount((loopsCount.value?.toInt() ?: 0) + 1)
 
-        if (selectedState != PLAYING) {
-            loopsCountVisibility.set(View.INVISIBLE)
-        } else {
-            loopsCount.set(count.toString())
-            if (selectedState == PLAYING) {
-                loopsCountVisibility.set(View.VISIBLE)
+        _progress.postValue(
+            when (newProgress) {
+                in Float.MIN_VALUE..0F -> 0F
+                in 99F..Float.MAX_VALUE -> 100F
+                else -> newProgress.toFloat()
             }
-        }
+        )
     }
 
-    fun onProgressChangedByUserTouch(progress: Float) {
-        onProgressChangedByUserTouchListener.invoke(progress)
-    }
-
-    private fun isWaitingMode(): Boolean {
-        return DataRepository.settings.switchingLoopsBehaviour == SwitchingLoopsBehaviour.WAIT
-    }
-
-    enum class SelectionState {
-        NOT_SELECTED, PRESELECTED, PLAYING
+    private fun getFilenameFromFullPath(path: String) : String {
+        val filename = path.subSequence(path.lastIndexOf("/") +1, path.lastIndex)
+        return filename.substring(0, filename.lastIndexOf("."))
     }
 }
