@@ -80,10 +80,10 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     fun onPausePlaybackClicked(view: View) {
         uiJob {
-
             when (looper.getState()) {
                 PlayerState.PLAYING -> looper.pause()
-                else -> looper.play()
+                PlayerState.PAUSED -> looper.resume()
+                else -> { /* do nothing */ }
             }
 
         }
@@ -128,7 +128,6 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
                 PlayerState.STOPPED -> startLooper()
                 PlayerState.UNKNOWN -> startLooper()
                 PlayerState.READY -> _filePreselected.postValue(filename)
-                null -> TODO()
             }
         } else {
             startLooper()
@@ -136,7 +135,6 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     }
 
     private fun startLooper() {
-
         uiJob {
             with(looper.play()) {
                 if (this.isSuccess()) {

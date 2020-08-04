@@ -105,9 +105,19 @@ bool AudioEngine::stop() {
 bool AudioEngine::pause() {
     LOGD("Trying to pause");
     if (mAudioStream != nullptr) {
-        mAudioStream->pause();
+        mAudioStream->requestPause();
     }
     mAudioEngineState = AudioEngineState::Paused;
+    return true;
+}
+
+bool AudioEngine::resume() {
+    LOGD("Trying to resume");
+    if (mAudioStream != nullptr) {
+        LOGD("Requesting start");
+        mAudioStream->requestStart();
+    }
+    mAudioEngineState = AudioEngineState::Playing;
     return true;
 }
 

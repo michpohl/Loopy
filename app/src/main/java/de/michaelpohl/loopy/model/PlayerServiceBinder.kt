@@ -13,6 +13,10 @@ class PlayerServiceBinder : Binder(),
         return looper.pause()
     }
 
+    override suspend fun resume(): JniResult<Nothing> {
+        return looper.resume()
+    }
+
     override suspend fun stop(): JniResult<Nothing> {
         return looper.stop()
     }

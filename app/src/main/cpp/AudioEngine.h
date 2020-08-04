@@ -56,6 +56,8 @@ public:
 
     bool pause();
 
+    bool resume();
+
     bool setWaitMode(bool value);
     bool getWaitMode();
 
@@ -92,7 +94,6 @@ private:
     void prepare();
 
     bool openStream();
-
 
     bool isPrepared = false;
 

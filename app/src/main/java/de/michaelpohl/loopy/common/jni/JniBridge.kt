@@ -51,6 +51,12 @@ object JniBridge {
         }
     }
 
+    suspend fun resume(): JniResult<Nothing> = suspendCoroutine { job ->
+        with(resumePlaybackNative()) {
+            job.resume(this.toJniResult())
+        }
+    }
+
     suspend fun stop(): JniResult<Nothing> = suspendCoroutine { job ->
         with(stopPlaybackNative()) {
             job.resume(this.toJniResult())
@@ -95,5 +101,7 @@ object JniBridge {
     private external fun startPlaybackNative()
     private external fun stopPlaybackNative() : Boolean
     private external fun pausePlaybackNative(): Boolean
+    private external fun resumePlaybackNative(): Boolean
+
 }
 

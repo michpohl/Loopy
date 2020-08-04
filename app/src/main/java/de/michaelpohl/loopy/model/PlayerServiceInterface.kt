@@ -7,6 +7,7 @@ interface PlayerServiceInterface {
     suspend fun select(path: String) : JniResult<String>
     suspend fun play(): JniResult<String>
     suspend fun pause() : JniResult<Nothing>
+    suspend fun resume() : JniResult<Nothing>
     suspend fun stop() : JniResult<Nothing>
     suspend fun setWaitMode(shouldWait: Boolean) : JniResult<Boolean>
 
