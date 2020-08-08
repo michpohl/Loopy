@@ -1,34 +1,38 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileHelper
+import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
+import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.model.DataRepository
 
-class FileBrowserViewModel : BrowserViewModel() {
+class FileBrowserViewModel(private val repo: StorageRepository) : BrowserViewModel() {
 
     private var adapter =
         FileBrowserAdapter(this::onSelectedItemsChanged, this::onItemClicked)
-
     lateinit var path: String
 
-    fun getAdapter(): FileBrowserAdapter {
-        return adapter
+    private val _currentFiles = MutableLiveData<List<FileModel>>()
+    val currentFiles = _currentFiles.immutable()
+
+    init {
+
     }
 
-    fun updateAdapter() {
-        val files = FileHelper.getFileModelsFromFiles(FileHelper.getPathContent(path))
+    fun getFolderContent() {
+        val files = repo.getFileModelsFromFiles(repo.getPathContent(path))
         if (files.isEmpty()) {
             emptyFolderLayoutVisibility.set(View.VISIBLE)
         } else {
             emptyFolderLayoutVisibility.set(View.INVISIBLE)
         }
-        if (FileHelper.containsAudioFiles(path)) {
+        if (repo.containsAudioFiles(path)) {
             bottomBarVisibility.set(View.VISIBLE)
         } else bottomBarVisibility.set(View.INVISIBLE)
-        adapter.updateData(files)
+        _currentFiles.postValue(files)
     }
 
     override fun onSelectButtonClicked(view: View) {

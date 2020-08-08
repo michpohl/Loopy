@@ -66,9 +66,9 @@ object DataRepository {
     }
 
     fun onFileModelSelectionUpdated(newFileModelSelection: List<FileModel>) {
-        val audioModels = mutableListOf<AudioModel>()
-        newFileModelSelection.forEach { it -> audioModels.add(FileHelper.fileModelToAudioModel(it)) }
-        onAudioFileSelectionUpdated(audioModels)
+//        val audioModels = mutableListOf<AudioModel>()
+//        newFileModelSelection.forEach { it -> audioModels.add(StorageRepository.fileModelToAudioModel(it)) }
+//        onAudioFileSelectionUpdated(audioModels)
     }
 
     fun onAudioFileSelectionUpdated(newSelection: List<AudioModel>) {

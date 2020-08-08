@@ -1,11 +1,12 @@
 package de.michaelpohl.loopy.ui.main
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
 
 open class BaseFragment : Fragment() {
-
 
     override fun onResume() {
         super.onResume()
@@ -31,5 +32,21 @@ open class BaseFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         clearFindViewByIdCache()
+    }
+
+    /**
+     * Convenience method for Navigation
+     */
+    protected open fun navigateTo(destination: Int, arguments: Bundle? = null) {
+        if (!isDestinationSameAsCurrentDestination(destination)) {
+            findNavController().navigate(destination, arguments)
+        }
+    }
+
+    /* https://stackoverflow.com/questions/51060762/
+ * Added the if check to prevent crashes, especially while testing (e.g. monkey)
+ */
+    private fun isDestinationSameAsCurrentDestination(destination: Int): Boolean {
+        return findNavController().currentDestination?.id == destination
     }
 }

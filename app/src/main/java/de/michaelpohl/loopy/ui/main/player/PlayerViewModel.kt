@@ -105,10 +105,8 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     // TODO make nicer
     fun onLoopClicked(audioModel: AudioModel) {
-        Timber.d("Clicked on: ${audioModel.name}")
         uiJob {
             with(looper.select(audioModel.path)) {
-                Timber.d("Updating with: ${this?.data}")
                 if (this.isSuccess()) {
                     this.data?.let {
                         onFileSelected(it)

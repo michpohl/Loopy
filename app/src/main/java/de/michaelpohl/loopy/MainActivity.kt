@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -31,7 +32,6 @@ import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -52,12 +52,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private lateinit var drawer: DrawerLayout
     private lateinit var currentFragment: BaseFragment
+    private lateinit var container: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-
+        container = findViewById(R.id.outer_layout)
         if (savedInstanceState == null) {
             val permissionHelper = PermissionHelper(this)
             permissionHelper.checkPermissions()
@@ -277,16 +278,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun showPlayerFragmentWithFreshSelection() {
-        val didUpdate = DataRepository.updateAndSaveFileSelection()
-        if (didUpdate) {
-            clearBackStack()
-            showPlayerFragment(DataRepository.currentSelectedAudioModels)
-            true
-        } else {
-            showSnackbar(container, R.string.snackbar_text_no_new_files_selected)
-        }
+        clearBackStack()
+        showPlayerFragment(DataRepository.currentSelectedAudioModels)
     }
-    //    TODO refactor all the show() methods into something generic
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
         nav_host_fragment.findNavController().navigate(

@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy
 
+import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.ExternalStorageManager
@@ -32,10 +33,11 @@ object KoinGraph {
         single { AudioFilesRepository(get(), get()) }
         single { ExternalStorageManager(get()) }
         single { AppStateRepository(get()) }
+        single { StorageRepository(get()) }
     }
 
     private val viewModelModule = module {
-        viewModel { FileBrowserViewModel() }
+        viewModel { FileBrowserViewModel(get()) }
         viewModel { PlayerViewModel(get(), get()) }
         viewModel { AlbumBrowserViewModel() }
         viewModel { MusicBrowserViewModel() }

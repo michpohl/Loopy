@@ -2,42 +2,32 @@ package de.michaelpohl.loopy.common
 
 import android.content.Context
 import android.net.Uri
+import de.michaelpohl.loopy.model.AppStateRepository
+import de.michaelpohl.loopy.model.ExternalStorageManager
 import timber.log.Timber
 import java.io.File
 
-object FileHelper {
+class StorageRepository(val storage: ExternalStorageManager) {
 
-    val excludedFolders = listOf("Android", "DCIM")
-
-    fun isValidAudioFile(name: String): Boolean {
-        //TODO turn extensions into CONSTs somewhere
-        return name.endsWith(".mp3") || name.endsWith(".ogg") || name.endsWith(".wav")
-    }
+    private val excludedFolders = listOf("Android", "DCIM")
 
     fun getPathContent(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
-        val file = File(path)
-
-        if (file.listFiles() == null) {
-            return arrayListOf()
-        }
-
-        return file.listFiles()
-            .filter { showHiddenFiles || !it.name.startsWith(".") }
-            .filter { !onlyFolders || it.isDirectory }
-            .toList()
+        return storage.getPathContent(path, showHiddenFiles, onlyFolders)
     }
 
     fun getFileModelsFromFiles(files: List<File>): List<FileModel> {
         var filesToReturn: List<FileModel>
         val allFiles: List<FileModel> = files.map {
+            val subFiles = it.listFiles()
             FileModel(
                 it.path,
                 FileType.getFileType(it),
                 it.name,
-                convertFileSizeToMB(it.length()),
+                it.length().convertFileSizeToMB(),
                 it.extension,
-                it.listFiles()?.size
-                    ?: 0
+                subFiles.size,
+                subFiles.any { it.isDirectory },
+                subFiles.any { it.isValidAudioFile() }
             )
         }
         filesToReturn = allFiles.filter { it.isValidFileType() }
@@ -94,16 +84,16 @@ object FileHelper {
         return containsAudio
     }
 
-    private fun convertFileSizeToMB(sizeInBytes: Long): Double {
-        return (sizeInBytes.toDouble()) / (1024 * 1024)
-    }
-
     fun isExcludedFolderName(path: String): Boolean {
         var result = false
         excludedFolders.forEach {
             if (path.endsWith(it)) result = true
         }
         return result
+    }
+
+    fun getSubFilesFor(model: FileModel, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+        return getPathContent(model.path, showHiddenFiles, onlyFolders)
     }
 
     fun getPath(context: Context, uri: Uri): String? {
@@ -124,23 +114,30 @@ object FileHelper {
         )
         return filePath
     }
+}
 
-    fun fileModelToAudioModel(fileModel: FileModel) : AudioModel {
+fun FileModel.toAudioModel(): AudioModel {
 
-        // this just takes the last containing folder and assumes it is the album name
-        // this might be wrong if there is metainformation stored in the file. We'll see
-        val albumNameFromFolder: () -> String = {
-            val pathPieces = fileModel.path.split("/")
-            val length = pathPieces.size
-            pathPieces[length - 2]
-        }
-
-        return AudioModel(
-            name = fileModel.path, //throw away file extension from name
-            album = albumNameFromFolder(),
-            path = fileModel.path,
-            fileExtension = fileModel.extension,
-            isMediaStoreItem = false
-        )
+    // this just takes the last containing folder and assumes it is the album name
+    // this might be wrong if there is metainformation stored in the file. We'll see
+    val albumNameFromFolder: () -> String = {
+        val pathPieces = this.path.split("/")
+        val length = pathPieces.size
+        pathPieces[length - 2]
     }
+    return AudioModel(
+        name = this.path, //throw away file extension from name
+        album = albumNameFromFolder(),
+        path = this.path,
+        fileExtension = this.extension,
+        isMediaStoreItem = false
+    )
+}
+
+fun File.isValidAudioFile(): Boolean {
+    val extension = this.extension
+    AppStateRepository.Companion.AudioFileType.values().forEach {
+        if (it.suffix == extension) return true
+    }
+    return false
 }

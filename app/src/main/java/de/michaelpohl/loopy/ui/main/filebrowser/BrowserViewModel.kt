@@ -5,9 +5,12 @@ import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 
-open class BrowserViewModel : BaseViewModel() {
+open class BrowserViewModel() : BaseViewModel() {
+
+    lateinit var onSelectionSubmitted: (List<FileModel>) -> Unit
 
     var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE) //override if interested
     var bottomBarVisibility = ObservableInt(View.INVISIBLE)
@@ -21,7 +24,7 @@ open class BrowserViewModel : BaseViewModel() {
     }
 
     open fun onSubmitButtonClicked(view: View) {
-        listener.acceptSubmittedSelection()
+//       onSelectionSubmitted()
     }
 
     interface OnBrowserActionListener {

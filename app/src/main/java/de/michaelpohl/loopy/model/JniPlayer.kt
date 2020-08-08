@@ -23,7 +23,6 @@ class JniPlayer : KoinComponent {
 
     suspend fun start(): JniResult<String> {
         with(JniBridge.start()) {
-            Timber.d("Trying to start playback: ${this.isSuccess()}")
             if (this.isSuccess()) state = PLAYING
             return@start this
         }
@@ -31,7 +30,6 @@ class JniPlayer : KoinComponent {
 
     suspend fun pause(): JniResult<Nothing> {
         with(JniBridge.pause()) {
-            Timber.d("Trying to pause playback: ${this.isSuccess()}")
             if (this.isSuccess()) state = PAUSED
             return@pause this
         }
@@ -39,7 +37,6 @@ class JniPlayer : KoinComponent {
 
     suspend fun resume(): JniResult<Nothing> {
         with(JniBridge.resume()) {
-            Timber.d("Trying to resume playback: ${this.isSuccess()}")
             if (this.isSuccess()) state = PLAYING
             return@resume this
         }

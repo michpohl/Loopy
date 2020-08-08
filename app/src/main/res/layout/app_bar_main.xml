@@ -25,7 +25,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+<!--    <include layout="@layout/content_main"/>-->
 
+    <FrameLayout
+        android:id="@+id/overlay_container"
+        style="@style/MatchParent"
+        tools:context=".MainActivity" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

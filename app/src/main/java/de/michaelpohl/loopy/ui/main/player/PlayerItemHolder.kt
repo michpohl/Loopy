@@ -4,7 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.RecyclerView
-import de.michaelpohl.loopy.common.FileHelper
+import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
 import kotlinx.android.synthetic.main.item_loop.view.*
 import rm.com.audiowave.AudioWaveView
@@ -39,8 +39,8 @@ class PlayerItemHolder(
         binding.lifecycleOwner = this
         //        TODO inflate wave from audio model
         //prevent directories from trying to get rendered should they show up here.
-        if (!FileHelper.getSingleFile(model.audioModel.path).isDirectory) {
-            inflateWave(itemView.wave, FileHelper.getSingleFile(model.audioModel.path).readBytes())
+        if (!StorageRepository.getSingleFile(model.audioModel.path).isDirectory) {
+            inflateWave(itemView.wave, StorageRepository.getSingleFile(model.audioModel.path).readBytes())
         }
         binding.executePendingBindings()
     }

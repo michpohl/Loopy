@@ -5,16 +5,20 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import de.michaelpohl.loopy.common.FileHelper
+import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class FileBrowserItemViewModel(
     private val position: Int,
     private val fileModel: FileModel,
     private val selectedListener: ((Boolean, Int) -> Unit),
     private val onItemClickedListener: ((FileModel) -> Unit)
-) : ViewModel() {
+) : ViewModel(), KoinComponent {
+
+    private val repo : StorageRepository by inject()
 
     val folderLabelVisibility = ObservableField(INVISIBLE)
     val sizeLabelVisibility = ObservableField(INVISIBLE)
@@ -47,7 +51,7 @@ class FileBrowserItemViewModel(
         }
         if (fileModel.hasSubFolders()) {
 
-            if (FileHelper.isExcludedFolderName(fileModel.path)) {
+            if (StorageRepository.isExcludedFolderName(fileModel.path)) {
                 subFolderIndicatorVisibility.set(INVISIBLE)
                 forbiddenSignVisibility.set(VISIBLE)
             } else {
@@ -61,7 +65,7 @@ class FileBrowserItemViewModel(
     fun onItemClicked(view: View) {
         if (fileModel.fileType == FileType.FILE) {
             onCheckBoxClicked(view)
-        } else if (!FileHelper.isExcludedFolderName(fileModel.path)) {
+        } else if (!StorageRepository.isExcludedFolderName(fileModel.path)) {
             onItemClickedListener.invoke(fileModel)
         }
     }

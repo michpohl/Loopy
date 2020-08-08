@@ -3,7 +3,9 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.os.Environment
 import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.FileHelper
+import de.michaelpohl.loopy.common.isValidAudioFile
+import de.michaelpohl.loopy.common.toAudioModel
+import de.michaelpohl.loopy.common.toFileModels
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -28,15 +30,15 @@ class ExternalStorageManager(val context: Context) {
         }
 
     fun listSets(): List<File> {
-        return FileHelper.getPathContent(path = appStorageFolder.path, onlyFolders = true)
+        return getPathContent(path = appStorageFolder.path, onlyFolders = true)
     }
 
     fun listSetContents(setFolderName: String): List<AudioModel> {
         val audioModels = mutableListOf<AudioModel>()
-        with(FileHelper) {
-            getFileModelsFromFiles(getPathContent("${appStorageFolder.path}/$setFolderName")).forEach {
-                audioModels.add(fileModelToAudioModel(it))
-            }
+
+        getPathContent("${appStorageFolder.path}/$setFolderName").toFileModels().forEach {
+            audioModels.add(it.toAudioModel())
+
         }
         return audioModels
     }
@@ -52,6 +54,19 @@ class ExternalStorageManager(val context: Context) {
             e.printStackTrace()
             false
         }
+    }
+
+    fun getPathContent(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+        val file = File(path)
+
+        if (file.listFiles() == null) {
+            return arrayListOf()
+        }
+
+        return file.listFiles()
+            .filter { showHiddenFiles || !it.name.startsWith(".") }
+            .filter { !onlyFolders || it.isDirectory }
+            .toList()
     }
 
     //    fun readFile(): File {
@@ -115,15 +130,13 @@ class ExternalStorageManager(val context: Context) {
         }
     }
 
-    fun listAssetFiles(): Set<String> {
+    private fun listAssetFiles(): Set<String> {
         val list = mutableSetOf<String>()
         try {
             context.assets.list("")?.let { filesList ->
-                filesList.filter { FileHelper.isValidAudioFile(it) }.forEach { fileName ->
-                    if (FileHelper.isValidAudioFile(fileName)) {
-                        Timber.d("Found this file: $fileName")
-                        list.add(fileName)
-                    }
+                filesList.filter { it.isValidAudioFile() }.forEach { fileName ->
+                    Timber.d("Found this file: $fileName")
+                    list.add(fileName)
                 }
 
             }

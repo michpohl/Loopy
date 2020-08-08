@@ -9,6 +9,7 @@
     tools:openDrawer="start">
 
     <LinearLayout
+        android:id="@+id/outer_layout"
         style="@style/MatchParent"
         android:orientation="vertical"
         tools:context="de.michaelpohl.loopy.MainActivity">

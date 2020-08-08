@@ -18,7 +18,11 @@
     <fragment
         android:id="@+id/fileBrowserFragment"
         android:name="de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserFragment"
-        android:label="FileBrowserFragment" />
+        android:label="FileBrowserFragment" >
+        <action
+            android:id="@+id/action_fileBrowserFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsDialogFragment"
         android:name="de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment"

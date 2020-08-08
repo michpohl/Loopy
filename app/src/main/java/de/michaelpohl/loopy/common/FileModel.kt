@@ -2,7 +2,6 @@ package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
 import de.michaelpohl.loopy.model.AppStateRepository
-import de.michaelpohl.loopy.model.DataRepository
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
@@ -13,27 +12,21 @@ data class FileModel(
     val name: String,
     val sizeInMB: Double,
     val extension: String = "",
-    val subFiles: Int = 0
+    val subFiles: Int = 0,
+    val hasSubFolders: Boolean,
+    val containsAudioFiles: Boolean
 ) : Parcelable {
-
-    //TODO beautify this into an Enum or so
-    private var supportedFileTypes = listOf("wav", "mp3", "ogg")
-
-    fun getSubFiles(showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
-        return FileHelper.getPathContent(path, showHiddenFiles, onlyFolders)
-    }
 
     fun isValidFileType(): Boolean {
         if (fileType == FileType.FILE) {
             var isValid = false
 
             AppStateRepository.Companion.AudioFileType.values().forEach {
-//                Timber.d("Testing for: %s", it.suffix)
                 if (name.endsWith(it.suffix)) {
                     isValid = true
-//                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
+                    //                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
                 } else {
-//                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
+                    //                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
                 }
             }
             return isValid
@@ -41,24 +34,20 @@ data class FileModel(
         // Folders stay in the list
         return true
     }
-
-    fun hasSubFolders(): Boolean {
-        var hasSubFolders = false
-        val filesToCheck: List<File> = getSubFiles()
-
-        val foundFolderModels: List<FileModel> =
-            FileHelper.getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FOLDER }
-
-        if (!foundFolderModels.isEmpty()) hasSubFolders = true
-
-        return hasSubFolders
-    }
-
-    fun containsAudioFiles(): Boolean {
-        val filesToCheck: List<File> = getSubFiles()
-        if (FileHelper.getFileModelsFromFiles(filesToCheck).isEmpty()) {
-            return false
-        }
-        return true
-    }
 }
+
+fun List<File>.toFileModels(): List<FileModel> {
+    val allFiles: List<FileModel> = this.map {
+        FileModel(
+            it.path,
+            FileType.getFileType(it),
+            it.name,
+            it.length().convertFileSizeToMB(),
+            it.extension,
+            it.listFiles()?.size
+                ?: 0
+        )
+    }
+    return allFiles.filter { it.isValidFileType() }
+}
+

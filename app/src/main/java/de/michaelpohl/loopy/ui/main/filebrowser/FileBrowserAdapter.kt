@@ -1,13 +1,14 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import androidx.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
+import java.util.*
 
 class FileBrowserAdapter(
     private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),
@@ -15,10 +16,12 @@ class FileBrowserAdapter(
 ) : RecyclerView.Adapter<FileBrowserItem>() {
 
     private var filesList = listOf<FileModel>()
-        set (newList) {
+        set(newList) {
             //sort them: first the folders, a-z, then the files, a-z
-            field = newList.filter { it.fileType == FileType.FOLDER }.sortedWith(compareBy { it.name.toLowerCase() }) +
-                    newList.filter { it.fileType == FileType.FILE }.sortedWith(compareBy { it.name.toLowerCase() })
+            field = newList.filter { it.fileType == FileType.FOLDER }
+                .sortedWith(compareBy { it.name.toLowerCase(Locale.getDefault()) }) +
+                newList.filter { it.fileType == FileType.FILE }
+                    .sortedWith(compareBy { it.name.toLowerCase(Locale.getDefault()) })
         }
 
     var selectedItems = mutableListOf<FileModel>()
@@ -62,7 +65,7 @@ class FileBrowserAdapter(
     fun selectAll() {
 
         //filtering folders out because this adds everything that is displayed which is wrong
-        selectedItems.addAll(filesList.filter {it.fileType == FileType.FILE})
+        selectedItems.addAll(filesList.filter { it.fileType == FileType.FILE })
         notifyDataSetChanged()
     }
 

@@ -1,6 +1,17 @@
 package de.michaelpohl.loopy.common
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,5 +65,171 @@ fun RecyclerView.ViewHolder.getString(resourceId: Int): String {
 
 fun <T : View> View.find(id: Int): T {
     return this.findViewById(id)
+}
+
+
+/*************************************
+ * Extension functions for Views     *
+ *************************************/
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    this.visibility = View.INVISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
+
+fun View.getScreenWidth(): Int {
+    return context.resources.displayMetrics.widthPixels
+}
+
+fun View.getColor(resource: Int): Int {
+    return ContextCompat.getColor(context, resource)
+}
+
+/**
+ * Gets a drawable from a resource and executes the ContextCompat call internally.
+ */
+fun View.getDrawableFromResource(resource: Int): Drawable? {
+    return ContextCompat.getDrawable(context, resource)
+}
+
+/**
+ * Gets a drawable from a resource and executes the ContextCompat call internally.
+ * In addition, the drawable gets tinted in the color passed to the method.
+ */
+fun View.getColoredDrawable(resource: Int, tintColor: Int): Drawable? {
+    val drawable = getDrawableFromResource(resource)
+    drawable?.setColorFilter(getColor(tintColor), PorterDuff.Mode.SRC_IN)
+    return drawable
+}
+
+/**
+ * Remember that you can only change the height if the view is already measured,
+ * so this function will crash the app if you use it before measuring, since no
+ * LayoutParams exist yet.
+ */
+fun View.setHeight(newHeight: Int) {
+    val params = this.layoutParams
+    params.height = newHeight
+    this.layoutParams = params
+}
+
+fun View.setHeight(newHeight: Float) {
+    val params = this.layoutParams
+    params.height = Math.round(newHeight)
+    this.layoutParams = params
+}
+
+fun View.setWidth(newWidth: Float) {
+    val params = this.layoutParams
+    params.width = Math.round(newWidth)
+    this.layoutParams = params
+}
+
+fun View.setWidth(newWidth: Int) {
+    val params = this.layoutParams
+    params.width = newWidth
+    this.layoutParams = params
+}
+
+fun View.setWidthInDp(newDpWidth: Float) {
+    setWidth(dpToPx(newDpWidth))
+}
+
+fun View.dpToPx(dp: Float): Float {
+    return dp * resources.displayMetrics.density
+}
+
+fun View.pxToDp(pixelValue: Int): Float {
+    return pixelValue.toFloat() / resources.displayMetrics.density
+}
+
+fun View.animateAlpha(
+    startAlpha: Float = this.alpha,
+    endAlpha: Float,
+    duration: Long = 100
+) {
+    val animator = ValueAnimator.ofFloat(startAlpha, endAlpha)
+    animator.addUpdateListener { animation ->
+        val value = animation.animatedValue as Float
+        this.alpha = value
+    }
+    animator.duration = duration
+    animator.start()
+}
+
+fun View.animateBackgroundColor(oldColor: Int, newColor: Int, duration: Long? = null) {
+    val colorAnimator =
+        ObjectAnimator.ofObject(this, "backgroundColor", ArgbEvaluator(), oldColor, newColor)
+    colorAnimator.target = this
+    colorAnimator.duration = duration ?: 1000L
+    colorAnimator.start()
+}
+
+fun View.getResInt(resource: Int): Int {
+    return this.context.resources.getInteger(resource)
+}
+
+/**
+ * Returns if a view is currently displayed on the device's screen
+ */
+fun View.isCurrentlyVisible(): Boolean {
+    if (!this.isShown) {
+        return false
+    }
+    val scrollBounds = Rect()
+    return this.getGlobalVisibleRect(scrollBounds) && height == scrollBounds.height() && width == scrollBounds.width()
+}
+
+/*************************************
+ * Extension functions for ViewGroups*
+ *************************************/
+
+/**
+ * Animates a [ViewGroup]'s height change.
+ * @param startHeight the starting height (default value is this view's height)
+ * @param endHeight the desired end height of the view. No default value!
+ * @param duration the duration of the animation. Default value is 100ms
+ */
+fun ViewGroup.animateHeightChange(
+    startHeight: Int = this.height,
+    endHeight: Int,
+    duration: Long = 100
+) {
+    val animator = ValueAnimator.ofInt(startHeight, endHeight)
+    animator.addUpdateListener { animation ->
+        val value = animation.animatedValue as Int
+        val params = this.layoutParams as ViewGroup.LayoutParams
+        params.height = value
+        this.layoutParams = params
+    }
+    animator.duration = duration
+    animator.start()
+}
+
+fun View.getString(resourceId: Int): String {
+    return this.resources.getString(resourceId)
+}
+
+/**
+ * Convenience method for getting Drawables easily inside a View
+ * @param resourceId id of the desired Drawable
+ */
+fun View.getDrawable(resourceId: Int): Drawable? {
+    return ContextCompat.getDrawable(this.context, resourceId)
+}
+
+fun TextView.underline() {
+    paintFlags = paintFlags or Paint.UNDERLINE_TEXT_FLAG
+}
+
+fun Long.convertFileSizeToMB(): Double {
+    return (this.toDouble()) / (1024 * 1024)
 }
 
