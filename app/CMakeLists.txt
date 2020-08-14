@@ -35,7 +35,7 @@ target_link_libraries( native-lib ${TARGET_LIBS} )
 #set(CMAKE_CXX_STANDARD 14)
 
 # Set the path to the Oboe directory.
-set(OBOE_DIR /Users/michaelpohl/Development/misc/oboe)
+set(OBOE_DIR /volumes/work/repos/android/oboe)
 
 # Add the Oboe library as a subdirectory.
 add_subdirectory(${OBOE_DIR} ./oboe)
@@ -45,4 +45,3 @@ include_directories(${OBOE_DIR}/include)
 
 #target_compile_options(native-lib
 #        PRIVATE -std=c++14 -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")
-

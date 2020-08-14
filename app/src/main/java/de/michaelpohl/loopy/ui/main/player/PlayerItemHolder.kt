@@ -37,11 +37,12 @@ class PlayerItemHolder(
         viewModel = model
         binding.model = viewModel
         binding.lifecycleOwner = this
+
         //        TODO inflate wave from audio model
         //prevent directories from trying to get rendered should they show up here.
-        if (!StorageRepository.getSingleFile(model.audioModel.path).isDirectory) {
-            inflateWave(itemView.wave, StorageRepository.getSingleFile(model.audioModel.path).readBytes())
-        }
+//        if (!StorageRepository.getSingleFile(model.audioModel.path).isDirectory) {
+//            inflateWave(itemView.wave, StorageRepository.getSingleFile(model.audioModel.path).readBytes())
+//        }
         binding.executePendingBindings()
     }
 

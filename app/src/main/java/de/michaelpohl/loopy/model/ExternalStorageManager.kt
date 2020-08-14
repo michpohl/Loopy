@@ -2,10 +2,7 @@ package de.michaelpohl.loopy.model
 
 import android.content.Context
 import android.os.Environment
-import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.isValidAudioFile
-import de.michaelpohl.loopy.common.toAudioModel
-import de.michaelpohl.loopy.common.toFileModels
+import de.michaelpohl.loopy.common.*
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -134,7 +131,7 @@ class ExternalStorageManager(val context: Context) {
         val list = mutableSetOf<String>()
         try {
             context.assets.list("")?.let { filesList ->
-                filesList.filter { it.isValidAudioFile() }.forEach { fileName ->
+                filesList.filter { it.isValidAudioFileName() }.forEach { fileName ->
                     Timber.d("Found this file: $fileName")
                     list.add(fileName)
                 }

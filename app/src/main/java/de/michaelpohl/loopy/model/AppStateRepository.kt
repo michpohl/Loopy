@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.model
 
 import de.michaelpohl.loopy.common.Settings
 
-class AppStateRepository(val sharedPrefs: SharedPreferencesManager) {
+class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 
     var settings: Settings
         get() {
@@ -40,6 +40,11 @@ class AppStateRepository(val sharedPrefs: SharedPreferencesManager) {
             WAVE("wav"),
             MP3("mp3"),
             OGG("ogg")
+        }
+
+        enum class ForbiddenFolder(val folderName: String) {
+            ANDROID("Android,"),
+            DCIM("DCIM")
         }
     }
 }

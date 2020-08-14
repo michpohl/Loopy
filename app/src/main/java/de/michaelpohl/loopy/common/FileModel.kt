@@ -3,6 +3,7 @@ package de.michaelpohl.loopy.common
 import android.os.Parcelable
 import de.michaelpohl.loopy.model.AppStateRepository
 import kotlinx.android.parcel.Parcelize
+import timber.log.Timber
 import java.io.File
 
 @Parcelize
@@ -18,36 +19,28 @@ data class FileModel(
 ) : Parcelable {
 
     fun isValidFileType(): Boolean {
-        if (fileType == FileType.FILE) {
-            var isValid = false
-
-            AppStateRepository.Companion.AudioFileType.values().forEach {
-                if (name.endsWith(it.suffix)) {
-                    isValid = true
-                    //                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
-                } else {
-                    //                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
-                }
-            }
-            return isValid
+        return if (fileType == FileType.FILE) {
+            AppStateRepository.Companion.AudioFileType.values().any { name.endsWith(it.suffix) }
         }
         // Folders stay in the list
-        return true
+        else true
     }
 }
 
 fun List<File>.toFileModels(): List<FileModel> {
-    val allFiles: List<FileModel> = this.map {
+    return this.map { file ->
+        val subFiles = file.listFiles() ?: arrayOf()
+        Timber.d("Subfiles: $subFiles")
         FileModel(
-            it.path,
-            FileType.getFileType(it),
-            it.name,
-            it.length().convertFileSizeToMB(),
-            it.extension,
-            it.listFiles()?.size
-                ?: 0
+            file.path,
+            FileType.getFileType(file),
+            file.name,
+            file.length().convertFileSizeToMB(),
+            file.extension,
+            subFiles.size,
+            subFiles.any { it.isDirectory },
+            subFiles.any { it.isValidAudioFile() }
         )
-    }
-    return allFiles.filter { it.isValidFileType() }
+    }.filter { it.isValidFileType() }
 }
 

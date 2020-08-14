@@ -1,20 +1,24 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.view.View
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
+import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.model.AppStateRepository
+import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 
-open class BrowserViewModel() : BaseViewModel() {
+open class BrowserViewModel : BaseViewModel() {
 
     lateinit var onSelectionSubmitted: (List<FileModel>) -> Unit
 
-    var emptyFolderLayoutVisibility = ObservableField<Int>(View.INVISIBLE) //override if interested
-    var bottomBarVisibility = ObservableInt(View.INVISIBLE)
-    var selectButtonText = ObservableField(getString(R.string.btn_select_all))
+    protected var _emptyFolderLayoutVisibility = MutableLiveData(View.INVISIBLE) //override if interested
+    var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
+
+    protected var _bottomBarVisibility = MutableLiveData(View.INVISIBLE)
+    var bottomBarVisibility = _bottomBarVisibility.immutable()
+
+    var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
+    var selectButtonText = _selectButtonText.immutable()
 
     lateinit var listener: OnBrowserActionListener
 

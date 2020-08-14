@@ -3,11 +3,9 @@ package de.michaelpohl.loopy.ui.main.filebrowser
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.StorageRepository
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.DataRepository
+import timber.log.Timber
 
 class FileBrowserViewModel(private val repo: StorageRepository) : BrowserViewModel() {
 
@@ -18,20 +16,18 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BrowserViewMod
     private val _currentFiles = MutableLiveData<List<FileModel>>()
     val currentFiles = _currentFiles.immutable()
 
-    init {
-
-    }
-
     fun getFolderContent() {
-        val files = repo.getFileModelsFromFiles(repo.getPathContent(path))
+        val files = repo.getPathContent(path).toFileModels()
         if (files.isEmpty()) {
-            emptyFolderLayoutVisibility.set(View.VISIBLE)
+            Timber.d("Files is empty")
+            _emptyFolderLayoutVisibility.postValue(View.VISIBLE)
         } else {
-            emptyFolderLayoutVisibility.set(View.INVISIBLE)
+            Timber.d("Files is not empty")
+            _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
         if (repo.containsAudioFiles(path)) {
-            bottomBarVisibility.set(View.VISIBLE)
-        } else bottomBarVisibility.set(View.INVISIBLE)
+            _bottomBarVisibility.postValue(View.VISIBLE)
+        } else _bottomBarVisibility.postValue(View.INVISIBLE)
         _currentFiles.postValue(files)
     }
 
@@ -45,9 +41,9 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BrowserViewMod
 
     private fun onSelectedItemsChanged(selectedItems: List<FileModel>) {
         if (selectedItems.isNotEmpty()) {
-            selectButtonText.set(getString(R.string.btn_deselect_all))
+            _selectButtonText.postValue(getString(R.string.btn_deselect_all))
         } else {
-            selectButtonText.set(getString(R.string.btn_select_all))
+            _selectButtonText.postValue(getString(R.string.btn_select_all))
         }
         DataRepository.onFileModelSelectionUpdated(selectedItems)
     }

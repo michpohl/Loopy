@@ -15,27 +15,6 @@ class StorageRepository(val storage: ExternalStorageManager) {
         return storage.getPathContent(path, showHiddenFiles, onlyFolders)
     }
 
-    fun getFileModelsFromFiles(files: List<File>): List<FileModel> {
-        var filesToReturn: List<FileModel>
-        val allFiles: List<FileModel> = files.map {
-            val subFiles = it.listFiles()
-            FileModel(
-                it.path,
-                FileType.getFileType(it),
-                it.name,
-                it.length().convertFileSizeToMB(),
-                it.extension,
-                subFiles.size,
-                subFiles.any { it.isDirectory },
-                subFiles.any { it.isValidAudioFile() }
-            )
-        }
-        filesToReturn = allFiles.filter { it.isValidFileType() }
-
-
-        return filesToReturn
-    }
-
     fun getSingleFile(path: String): File {
         return File(path)
     }
@@ -46,7 +25,7 @@ class StorageRepository(val storage: ExternalStorageManager) {
         if (!isExcludedFolderName(path)) {
             val filesToCheck: List<File> = getPathContent(path)
             val foundFileModels: List<FileModel> =
-                getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FILE }
+                filesToCheck.toFileModels().filter { it.fileType == FileType.FILE }
 
             foundFileModels.forEach {
                 if (it.isValidFileType()) containsAudio = true
@@ -64,11 +43,11 @@ class StorageRepository(val storage: ExternalStorageManager) {
             val filesToCheck: List<File> = getPathContent(path)
 
             val foundFolderModels: List<FileModel> =
-                getFileModelsFromFiles(filesToCheck)
+                filesToCheck.toFileModels()
                     .filter { it.fileType == FileType.FOLDER }
                     .filter { !isExcludedFolderName(it.path) }
             val foundFileModels: List<FileModel> =
-                getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FILE }
+                filesToCheck.toFileModels().filter { it.fileType == FileType.FILE }
 
             for (fileModel in foundFileModels) {
                 if (fileModel.isValidFileType()) containsAudio = true
@@ -138,6 +117,14 @@ fun File.isValidAudioFile(): Boolean {
     val extension = this.extension
     AppStateRepository.Companion.AudioFileType.values().forEach {
         if (it.suffix == extension) return true
+    }
+    return false
+}
+
+fun String.isValidAudioFileName(): Boolean {
+    val suffix = this.substringAfterLast(".")
+    AppStateRepository.Companion.AudioFileType.values().forEach {
+        if (it.suffix == suffix) return true
     }
     return false
 }

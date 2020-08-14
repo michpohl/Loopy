@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.ui.main.mediabrowser
 
-import android.app.Application
 import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
@@ -20,13 +19,13 @@ class MusicBrowserViewModel : BrowserViewModel() {
 
     fun updateAdapter() {
         if (audioModels.isEmpty()) {
-            emptyFolderLayoutVisibility.set(View.VISIBLE)
+            _emptyFolderLayoutVisibility.postValue(View.VISIBLE)
         } else {
-            emptyFolderLayoutVisibility.set(View.INVISIBLE)
+            _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
         if (audioModels.size > 0) {
-            bottomBarVisibility.set(View.VISIBLE)
-        } else bottomBarVisibility.set(View.INVISIBLE)
+            _bottomBarVisibility.postValue(View.VISIBLE)
+        } else _bottomBarVisibility.postValue(View.INVISIBLE)
         adapter.updateData(audioModels)
     }
 
@@ -40,9 +39,9 @@ class MusicBrowserViewModel : BrowserViewModel() {
 
     private fun onSelectedItemsChanged(selectedItems: List<AudioModel>) {
         if (selectedItems.isNotEmpty()) {
-            selectButtonText.set(getString(R.string.btn_deselect_all))
+            _selectButtonText.postValue(getString(R.string.btn_deselect_all))
         } else {
-            selectButtonText.set(getString(R.string.btn_select_all))
+            _selectButtonText.postValue(getString(R.string.btn_select_all))
         }
         DataRepository.onAudioFileSelectionUpdated(selectedItems)
     }

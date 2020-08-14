@@ -18,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import de.michaelpohl.loopy.model.AppStateRepository
 import timber.log.Timber
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -231,5 +232,9 @@ fun TextView.underline() {
 
 fun Long.convertFileSizeToMB(): Double {
     return (this.toDouble()) / (1024 * 1024)
+}
+
+fun String.isForbiddenFolderName() : Boolean {
+    return AppStateRepository.Companion.ForbiddenFolder.values().any { it.folderName == this }
 }
 

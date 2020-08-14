@@ -17,7 +17,6 @@ class FileBrowserFragment : BaseFragment() {
 
     private val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
-    private lateinit var path: String
     private lateinit var recycler: RecyclerView
     private lateinit var browserAdapter: FileBrowserAdapter
 
@@ -25,7 +24,8 @@ class FileBrowserFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             requireArguments().getString("string")?.let {
-                path = it
+                viewModel.path = it
+                viewModel.getFolderContent()
             } ?: error("No path provided to FileBrowser. This is an error!")
         }
     }

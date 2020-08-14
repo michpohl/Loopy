@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
+import de.michaelpohl.loopy.common.isForbiddenFolderName
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -49,9 +50,9 @@ class FileBrowserItemViewModel(
             checkBoxVisibility.set(VISIBLE)
             sizeLabelVisibility.set(VISIBLE)
         }
-        if (fileModel.hasSubFolders()) {
+        if (fileModel.hasSubFolders) {
 
-            if (StorageRepository.isExcludedFolderName(fileModel.path)) {
+            if (fileModel.path.isForbiddenFolderName()) {
                 subFolderIndicatorVisibility.set(INVISIBLE)
                 forbiddenSignVisibility.set(VISIBLE)
             } else {
@@ -65,7 +66,7 @@ class FileBrowserItemViewModel(
     fun onItemClicked(view: View) {
         if (fileModel.fileType == FileType.FILE) {
             onCheckBoxClicked(view)
-        } else if (!StorageRepository.isExcludedFolderName(fileModel.path)) {
+        } else if (!fileModel.path.isForbiddenFolderName()) {
             onItemClickedListener.invoke(fileModel)
         }
     }
