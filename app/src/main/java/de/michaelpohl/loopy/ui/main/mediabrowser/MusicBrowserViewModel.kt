@@ -23,9 +23,9 @@ class MusicBrowserViewModel : BrowserViewModel() {
         } else {
             _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
-        if (audioModels.size > 0) {
-            _bottomBarVisibility.postValue(View.VISIBLE)
-        } else _bottomBarVisibility.postValue(View.INVISIBLE)
+//        if (audioModels.size > 0) {
+//            _bottomBarVisibility.postValue(View.VISIBLE)
+//        } else _bottomBarVisibility.postValue(View.INVISIBLE)
         adapter.updateData(audioModels)
     }
 

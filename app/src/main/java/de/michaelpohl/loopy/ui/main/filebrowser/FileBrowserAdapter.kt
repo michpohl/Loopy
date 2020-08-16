@@ -8,6 +8,8 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.FileType
 import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
+import kotlinx.coroutines.selects.select
+import timber.log.Timber
 import java.util.*
 
 class FileBrowserAdapter(
@@ -75,7 +77,13 @@ class FileBrowserAdapter(
     }
 
     private fun onItemClicked(fileModel: FileModel) {
-        onItemClickedListener.invoke(fileModel)
+        Timber.d("On item clicked: $fileModel")
+        if (selectedItems.contains(fileModel)) {
+            selectedItems.remove(fileModel)
+        } else {
+            selectedItems.add(fileModel)
+        }
+        onSelectedItemsChangedListener.invoke(selectedItems)
     }
 
     private fun onItemSelectedChanged(isSelected: Boolean, position: Int) {

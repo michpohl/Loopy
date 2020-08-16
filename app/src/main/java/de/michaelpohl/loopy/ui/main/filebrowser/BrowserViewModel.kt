@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
 import android.view.View
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
@@ -14,14 +15,12 @@ open class BrowserViewModel : BaseViewModel() {
     protected var _emptyFolderLayoutVisibility = MutableLiveData(View.INVISIBLE) //override if interested
     var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
 
-    protected var _bottomBarVisibility = MutableLiveData(View.INVISIBLE)
-    var bottomBarVisibility = _bottomBarVisibility.immutable()
+    var bottomBarVisibility = MediatorLiveData<Int>()
 
     var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
     var selectButtonText = _selectButtonText.immutable()
 
     lateinit var listener: OnBrowserActionListener
-
 
     open fun onSelectButtonClicked(view: View) {
         //override if action is needed

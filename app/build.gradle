@@ -51,6 +51,8 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(":adapter")
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
@@ -62,7 +64,7 @@ dependencies {
     implementation 'com.github.franmontiel:AttributionPresenter:1.0.1'
 
     // AndroidX
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.core:core-ktx:1.5.0-alpha01'

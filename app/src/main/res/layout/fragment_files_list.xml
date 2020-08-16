@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel" />
+            type="de.michaelpohl.loopy.ui.main.filebrowser.NewFileBrowserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

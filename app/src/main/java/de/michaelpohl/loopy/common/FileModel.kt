@@ -30,7 +30,6 @@ data class FileModel(
 fun List<File>.toFileModels(): List<FileModel> {
     return this.map { file ->
         val subFiles = file.listFiles() ?: arrayOf()
-        Timber.d("Subfiles: $subFiles")
         FileModel(
             file.path,
             FileType.getFileType(file),

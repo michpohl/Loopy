@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
+import android.opengl.Visibility
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
@@ -16,19 +17,30 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BrowserViewMod
     private val _currentFiles = MutableLiveData<List<FileModel>>()
     val currentFiles = _currentFiles.immutable()
 
+    private val selectedFiles = MutableLiveData<List<FileModel>>()
+
+    init {
+        bottomBarVisibility.addSource(selectedFiles) {
+            bottomBarVisibility.value =  if (it.isEmpty()) View.GONE else View.VISIBLE
+            Timber.d("Selected: ${selectedFiles.value}")
+        }
+    }
+
     fun getFolderContent() {
         val files = repo.getPathContent(path).toFileModels()
         if (files.isEmpty()) {
-            Timber.d("Files is empty")
             _emptyFolderLayoutVisibility.postValue(View.VISIBLE)
         } else {
-            Timber.d("Files is not empty")
             _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
-        if (repo.containsAudioFiles(path)) {
-            _bottomBarVisibility.postValue(View.VISIBLE)
-        } else _bottomBarVisibility.postValue(View.INVISIBLE)
+//        if (repo.containsAudioFiles(path)) {
+//            _bottomBarVisibility.postValue(View.VISIBLE)
+//        } else _bottomBarVisibility.postValue(View.INVISIBLE)
         _currentFiles.postValue(files)
+    }
+
+    fun updateSelectedFiles(files: List<FileModel>) {
+        selectedFiles.postValue(files)
     }
 
     override fun onSelectButtonClicked(view: View) {
