@@ -17,7 +17,7 @@
         android:label="MusicBrowserFragment" />
     <fragment
         android:id="@+id/fileBrowserFragment"
-        android:name="de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserFragment"
+        android:name="de.michaelpohl.loopy.ui.main.filebrowser.NewFileBrowserFragment"
         android:label="FileBrowserFragment" >
         <action
             android:id="@+id/action_fileBrowserFragment_to_playerFragment"

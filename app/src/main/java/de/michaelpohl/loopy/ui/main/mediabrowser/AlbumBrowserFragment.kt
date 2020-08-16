@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.adapter.adapter.util.inflateLayout
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
@@ -16,7 +17,7 @@ import org.koin.android.ext.android.inject
 class AlbumBrowserFragment : BaseFragment() {
 
     private val viewModel: AlbumBrowserViewModel by inject()
-    private lateinit var binding: FragmentFilesListBinding
+//    private lateinit var binding: FragmentFilesListBinding
     private lateinit var albums: List<String>
 
     companion object {
@@ -30,7 +31,7 @@ class AlbumBrowserFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO examine non-null assertion!
-        this.albums = DataRepository.getAlbumTitles(context!!)
+        this.albums = DataRepository.getAlbumTitles(requireContext())
 
     }
 
@@ -45,10 +46,10 @@ class AlbumBrowserFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_files_list, container, false)
-        binding.model = viewModel
-
-        return binding.root
+        return inflateLayout(R.layout.fragment_files_list, container!!, false)
+//        binding.model = viewModel
+//
+//        return binding.root
     }
 
     override fun onStart() {

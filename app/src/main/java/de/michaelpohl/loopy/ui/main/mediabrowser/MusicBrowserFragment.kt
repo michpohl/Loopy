@@ -46,7 +46,7 @@ class MusicBrowserFragment : BaseFragment() {
         } catch (e: Exception) {
             throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
         }
-        binding.model = viewModel
+//        binding.model = viewModel
         initViews()
     }
 

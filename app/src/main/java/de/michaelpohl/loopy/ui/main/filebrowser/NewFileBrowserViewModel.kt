@@ -43,4 +43,12 @@ class NewFileBrowserViewModel(private val repo: StorageRepository) : BaseViewMod
     fun onItemClicked(fileModel: FileModel) {
         Timber.d("Clicked on item")
     }
+
+    fun onSelectButtonClicked(v: View) {
+
+    }
+
+    fun onSubmitButtonClicked(v: View) {
+
+    }
 }
