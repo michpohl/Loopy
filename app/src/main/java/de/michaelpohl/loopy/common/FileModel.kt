@@ -1,12 +1,16 @@
 package de.michaelpohl.loopy.common
 
+import android.os.Parcelable
+import androidx.versionedparcelable.ParcelField
+import kotlinx.android.parcel.Parcelize
 import java.io.File
 
-sealed class FileModel {
+sealed class FileModel: Parcelable {
 
     abstract val path: String
     abstract val name: String
 
+    @Parcelize
     data class File(
         override val path: String,
         override val name: String,
@@ -14,6 +18,7 @@ sealed class FileModel {
         val extension: String = ""
     ) : FileModel()
 
+    @Parcelize
     data class AudioFile(
         override val path: String,
         override val name: String,
@@ -21,6 +26,7 @@ sealed class FileModel {
         val extension: String = ""
     ) : FileModel()
 
+    @Parcelize
     data class Folder(
         override val path: String,
         override val name: String,

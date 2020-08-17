@@ -18,6 +18,8 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel(
 
     var bottomBarVisibility = MediatorLiveData<Int>()
 
+    lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
+
     protected var _emptyFolderLayoutVisibility =
         MutableLiveData(View.INVISIBLE) //override if interested
     var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
@@ -25,7 +27,7 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel(
     var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
     var selectButtonText = _selectButtonText.immutable()
 
-    private val selectedFiles = MutableLiveData<List<FileModel>>()
+    private val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>()
 
     fun getFolderContent(path: String) {
         val files = repo.getPathContent(path).toFileModels()
@@ -45,7 +47,7 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel(
         getFolderContent(folder.path)
     }
 
-    fun onFileSelectionChanged(fileModel: FileModel, isSelected: Boolean) {
+    fun onFileSelectionChanged(fileModel: FileModel.AudioFile, isSelected: Boolean) {
         val currentList = selectedFiles.value.orEmpty().toMutableList()
         if (isSelected) {
             currentList.add(fileModel)
@@ -56,8 +58,8 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel(
         Timber.d("Currently selected: ${currentList.map { it.name }}")
     }
 
-    fun onSelectButtonClicked(v: View) {
-
+    fun onOpenSelectionClicked(v: View) {
+        onSelectionSubmittedListener(selectedFiles.value.orEmpty())
     }
 
     fun onSubmitButtonClicked(v: View) {

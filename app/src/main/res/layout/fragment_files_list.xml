@@ -56,7 +56,7 @@
             android:id="@+id/btn_select_all"
             style="@style/Button.Borderless"
             android:layout_marginEnd="16dp"
-            android:onClick="@{model::onSelectButtonClicked}"
+            android:onClick="@{model::onOpenSelectionClicked}"
             android:text="@{model.selectButtonText}"
             android:visibility="@{model.bottomBarVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +65,7 @@
         <Button
             android:id="@+id/btn_submit"
             style="@style/Button.Borderless"
-            android:onClick="@{model::onSubmitButtonClicked}"
+            android:onClick="@{model::onOpenSelectionClicked}"
             android:text="@string/btn_open_selection"
             android:visibility="@{model.bottomBarVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -40,7 +40,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
-    BrowserViewModel.OnBrowserActionListener,
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
     private val audioFilesRepo: AudioFilesRepository by inject()
@@ -137,11 +136,11 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         return true
     }
 
-    override fun onFolderClicked(fileModel: FileModel) {
-        if (fileModel is FileModel.Folder) {
-            showFileBrowserFragment(fileModel.path)
-        }
-    }
+//    override fun onFolderClicked(fileModel: FileModel) {
+//        if (fileModel is FileModel.Folder) {
+//            showFileBrowserFragment(fileModel.path)
+//        }
+//    }
 
     override fun onOpenFileBrowserClicked() {
         showFileBrowserFragment()
@@ -153,11 +152,11 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         mediaStoreItems.forEach { it -> Timber.d("Item: %s", it.name) }
         showAlbumBrowserFragment()
     }
-
-    override fun onAlbumClicked(albumTitle: String) {
-        Timber.d("Clicked on this one: %s", albumTitle)
-        showMusicBrowserFragment(albumTitle)
-    }
+//
+//    override fun onAlbumClicked(albumTitle: String) {
+//        Timber.d("Clicked on this one: %s", albumTitle)
+//        showMusicBrowserFragment(albumTitle)
+//    }
 
     override fun onBackPressed() {
 
@@ -212,10 +211,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         return false
     }
 
-    override fun acceptSubmittedSelection() {
-        showPlayerFragmentWithFreshSelection()
-    }
-
     fun showSnackbar(
         view: View,
         messageResource: Int,
@@ -262,7 +257,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun showPlayerFragment(
-        loops: List<AudioModel> = emptyList()
+        loops: List<FileModel.AudioFile> = emptyList()
     ) {
 
         //        //TODO this method can be better - handling what's in AppData should completely move into AppStateRepository
@@ -277,9 +272,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         //            .commit()
     }
 
-    private fun showPlayerFragmentWithFreshSelection() {
+    fun showPlayerFragmentWithFreshSelection(models: List<FileModel.AudioFile>) {
         clearBackStack()
-        showPlayerFragment(DataRepository.currentSelectedAudioModels)
+        showPlayerFragment(models)
     }
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {

@@ -243,7 +243,7 @@ fun String.isForbiddenFolderName() : Boolean {
 
 fun List<File>.toFileModels(): List<FileModel> {
     return this.map {
-        val subFiles = it.listFiles() ?: arrayOf()
+        val subFiles = it.listFiles() ?: arrayOf<File>()
         when {
             it.isFolder() -> {
                 FileModel.Folder(

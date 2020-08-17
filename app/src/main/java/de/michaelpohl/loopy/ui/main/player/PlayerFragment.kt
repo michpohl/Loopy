@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.DialogHelper
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.PlayerService
@@ -40,8 +41,8 @@ class PlayerFragment : BaseFragment() {
     private var playerServiceBinder: PlayerServiceBinder? = null
         set(value) {
             value?.let {
-            field = value
-            viewModel.setPlayer(value)
+                field = value
+                viewModel.setPlayer(value)
             }
         }
 
@@ -58,12 +59,15 @@ class PlayerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        if (arguments != null) {
 
-        //        TODO Reinstate arguments or do it differently
-        //        if (arguments != null) {
-        //            val appData: AppData = requireArguments().getParcelable("appData")!!
-        //            Timber.d("Loops when starting player: %s", loopsList)
-        //        }
+            Timber.d("This: ${requireArguments().getParcelableArrayList<FileModel>("models")}")
+            //        TODO Reinstate arguments or do it differently
+            //        if (arguments != null) {
+            //            val appData: AppData = requireArguments().getParcelable("appData")!!
+            //            Timber.d("Loops when starting player: %s", loopsList)
+            //        }
+        }
     }
 
     override fun onCreateView(
@@ -139,7 +143,9 @@ class PlayerFragment : BaseFragment() {
             it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
 
         }.apply {
-            selected.observe(viewLifecycleOwner, androidx.lifecycle.Observer { viewModel.currentlySelected = it })
+            selected.observe(
+                viewLifecycleOwner,
+                androidx.lifecycle.Observer { viewModel.currentlySelected = it })
         }
 
         // todo sort recycler and adapter code blocks better
@@ -150,9 +156,15 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun observe() {
-        viewModel.fileCurrentlyPlayed.observe(viewLifecycleOwner, Observer { adapter.updateFileCurrentlyPlayed(it) })
-        viewModel.filePreselected.observe(viewLifecycleOwner, Observer { adapter.updateFilePreselected(it) })
-        viewModel.playbackProgress.observe(viewLifecycleOwner, Observer { adapter.updatePlaybackProgress(it)})
+        viewModel.fileCurrentlyPlayed.observe(
+            viewLifecycleOwner,
+            Observer { adapter.updateFileCurrentlyPlayed(it) })
+        viewModel.filePreselected.observe(
+            viewLifecycleOwner,
+            Observer { adapter.updateFilePreselected(it) })
+        viewModel.playbackProgress.observe(
+            viewLifecycleOwner,
+            Observer { adapter.updatePlaybackProgress(it) })
 
     }
 

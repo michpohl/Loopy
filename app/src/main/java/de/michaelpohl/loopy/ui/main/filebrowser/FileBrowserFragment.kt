@@ -4,16 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.deutschebahn.streckenagent2.ui.common.recycler.AnyDiffCallback
 import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapter
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class FileBrowserFragment : BaseFragment() {
 
@@ -41,6 +45,7 @@ class FileBrowserFragment : BaseFragment() {
                 viewModel.getFolderContent(it)
             } ?: error("No path provided to FileBrowser. This is an error!")
         }
+        viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
     }
 
     override fun onCreateView(
@@ -65,4 +70,11 @@ class FileBrowserFragment : BaseFragment() {
     override fun getTitle(): String {
         return getString(R.string.appbar_title_file_browser)
     }
+
+    private fun addSelectionToPlayer(models: List<FileModel.AudioFile>) {
+        val arguments = bundleOf(Pair("models", models))
+        Timber.d("Navigating")
+        navigateTo(R.id.action_fileBrowserFragment_to_playerFragment, arguments)
+    }
 }
+
