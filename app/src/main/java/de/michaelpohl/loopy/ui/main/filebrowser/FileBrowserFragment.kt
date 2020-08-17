@@ -17,14 +17,19 @@ import org.koin.android.ext.android.inject
 
 class FileBrowserFragment : BaseFragment() {
 
-    private val viewModel: NewFileBrowserViewModel by inject()
+    private val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var recycler: RecyclerView
     private var browserAdapter = DelegationAdapter(
         AnyDiffCallback(),
-        FileItemDelegate { viewModel.onItemClicked(it) },
-        FolderItemDelegate { viewModel.onItemClicked(it) },
-        AudioItemDelegate { viewModel.onItemClicked(it) }
+        FileItemDelegate(),
+        FolderItemDelegate { viewModel.onFolderClicked(it) },
+        AudioItemDelegate { model, isSelected ->
+            viewModel.onFileSelectionChanged(
+                model,
+                isSelected
+            )
+        }
     ).also {
         it.sorting = FileBrowserSorting()
     }

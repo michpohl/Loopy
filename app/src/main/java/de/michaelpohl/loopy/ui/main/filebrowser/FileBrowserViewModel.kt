@@ -4,11 +4,14 @@ import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.StorageRepository
+import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.common.toFileModels
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
 
-class NewFileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {
+class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {
 
     private val _currentFiles = MutableLiveData<List<FileModel>>()
     val currentFiles = _currentFiles.immutable()
@@ -38,8 +41,19 @@ class NewFileBrowserViewModel(private val repo: StorageRepository) : BaseViewMod
 
     }
 
-    fun onItemClicked(fileModel: FileModel) {
-        Timber.d("Clicked on item")
+    fun onFolderClicked(folder: FileModel.Folder) {
+        getFolderContent(folder.path)
+    }
+
+    fun onFileSelectionChanged(fileModel: FileModel, isSelected: Boolean) {
+        val currentList = selectedFiles.value.orEmpty().toMutableList()
+        if (isSelected) {
+            currentList.add(fileModel)
+        } else {
+            currentList.remove(fileModel)
+        }
+        selectedFiles.postValue(currentList)
+        Timber.d("Currently selected: ${currentList.map { it.name }}")
     }
 
     fun onSelectButtonClicked(v: View) {

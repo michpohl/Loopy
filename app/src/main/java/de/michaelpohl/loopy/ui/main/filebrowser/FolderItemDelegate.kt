@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
+import android.view.View
 import android.view.ViewGroup
 import com.deutschebahn.streckenagent2.ui.common.recycler.ClickableAdapterItemDelegate
 import com.example.adapter.adapter.util.inflateLayout
@@ -14,5 +15,9 @@ class FolderItemDelegate(override val receiver: (FileModel.Folder) -> Unit) :
 
     override fun isForItemType(item: Any): Boolean {
         return item is FileModel.Folder
+    }
+
+    override fun mapToReceiverPayload(view: View, item: FileModel.Folder): FileModel.Folder? {
+        return item
     }
 }
