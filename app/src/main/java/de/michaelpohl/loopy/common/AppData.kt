@@ -13,7 +13,7 @@ import kotlinx.android.parcel.RawValue
 @Deprecated("in this form we won't use this anymore")
 @Parcelize
 data class AppData(
-    @JvmField val fileModels: List<FileModel> = listOf(),
+    @JvmField val fileModels: @RawValue() List<FileModel> = listOf(),
     @JvmField val audioModels: List<AudioModel> = listOf(),
     @JvmField val settings: @RawValue() Settings
 ) : Parcelable

@@ -7,9 +7,9 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 
-class NewFileBroserItemHolder(itemView: View) : DelegationAdapterItemHolder<FileModel>(itemView) {
-    override fun bind(item: FileModel) {
-        (itemView.find(R.id.tv_name) as TextView).setText(item.name)
+class FolderItemHolder(itemView: View) : DelegationAdapterItemHolder<FileModel.Folder>(itemView) {
+    override fun bind(item: FileModel.Folder) {
+        (itemView.find(R.id.tv_name) as TextView).setText(item.name + "Folder")
     }
 
 }

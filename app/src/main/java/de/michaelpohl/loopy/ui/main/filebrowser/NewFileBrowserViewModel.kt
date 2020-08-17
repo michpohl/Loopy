@@ -1,12 +1,10 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.opengl.Visibility
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.*
-import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
 

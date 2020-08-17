@@ -1,17 +1,5 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
-import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.FileType
-import de.michaelpohl.loopy.databinding.ItemFileBrowserBinding
-import kotlinx.coroutines.selects.select
-import timber.log.Timber
-import java.util.*
-
 //class FileBrowserAdapter(
 //    private val onSelectedItemsChangedListener: ((List<FileModel>) -> Unit),
 //    private val onItemClickedListener: ((FileModel) -> Unit)

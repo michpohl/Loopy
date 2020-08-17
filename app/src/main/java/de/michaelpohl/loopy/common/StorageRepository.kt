@@ -11,7 +11,11 @@ class StorageRepository(val storage: ExternalStorageManager) {
 
     private val excludedFolders = listOf("Android", "DCIM")
 
-    fun getPathContent(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+    fun getPathContent(
+        path: String,
+        showHiddenFiles: Boolean = false,
+        onlyFolders: Boolean = false
+    ): List<File> {
         return storage.getPathContent(path, showHiddenFiles, onlyFolders)
     }
 
@@ -19,61 +23,46 @@ class StorageRepository(val storage: ExternalStorageManager) {
         return File(path)
     }
 
-    fun containsAudioFiles(path: String): Boolean {
-        var containsAudio = false
+//    fun containsAudioFiles(path: String): Boolean {
+//        var containsAudio = false
+//
+//        if (!isExcludedFolderName(path)) {
+//            val filesToCheck: List<File> = getPathContent(path)
+//            val foundFileModels: List<FileModel> =
+//                filesToCheck.toFileModels().filter { it.fileType == FileType.FILE }
+//
+//            foundFileModels.forEach {
+//                if (it.isValidFileType()) containsAudio = true
+//            }
+//        }
+//        return containsAudio
+//    }
 
-        if (!isExcludedFolderName(path)) {
-            val filesToCheck: List<File> = getPathContent(path)
-            val foundFileModels: List<FileModel> =
-                filesToCheck.toFileModels().filter { it.fileType == FileType.FILE }
-
-            foundFileModels.forEach {
-                if (it.isValidFileType()) containsAudio = true
-            }
-        }
-        return containsAudio
-    }
-
-    //TODO this method is slooow with large file numbers. Do something about it (or limit its use)
+    //TODO this method might still be slow with large file numbers. Do something about it (or limit its use)
     //TODO also it should be in FileModel, but I couldn't get it to work
     fun containsAudioFilesInAnySubFolders(path: String): Boolean {
-        var containsAudio = false
-
-        if (!isExcludedFolderName(path)) {
-            val filesToCheck: List<File> = getPathContent(path)
-
-            val foundFolderModels: List<FileModel> =
-                filesToCheck.toFileModels()
-                    .filter { it.fileType == FileType.FOLDER }
-                    .filter { !isExcludedFolderName(it.path) }
-            val foundFileModels: List<FileModel> =
-                filesToCheck.toFileModels().filter { it.fileType == FileType.FILE }
-
-            for (fileModel in foundFileModels) {
-                if (fileModel.isValidFileType()) containsAudio = true
-                return containsAudio
-            }
-            if (!foundFolderModels.isEmpty()) {
-                for (fileModel in foundFolderModels) {
-                    if (containsAudioFilesInAnySubFolders(fileModel.path)) containsAudio = true
-                }
+        if (!path.isForbiddenFolderName()) {
+            val modelsToCheck = getPathContent(path).toFileModels()
+            return if (modelsToCheck.any { it is FileModel.AudioFile }) {
+                true
+            } else {
+                modelsToCheck
+                    .filter { it is FileModel.Folder }
+                    .map { containsAudioFilesInAnySubFolders((it as FileModel.Folder).path) }
+                    .contains(true)
             }
         }
-
-        return containsAudio
+        return false
     }
 
-    fun isExcludedFolderName(path: String): Boolean {
-        var result = false
-        excludedFolders.forEach {
-            if (path.endsWith(it)) result = true
-        }
-        return result
-    }
 
-    fun getSubFilesFor(model: FileModel, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
-        return getPathContent(model.path, showHiddenFiles, onlyFolders)
-    }
+//    fun getSubFilesFor(
+//        model: FileModel,
+//        showHiddenFiles: Boolean = false,
+//        onlyFolders: Boolean = false
+//    ): List<File> {
+//        return getPathContent(model.path, showHiddenFiles, onlyFolders)
+//    }
 
     fun getPath(context: Context, uri: Uri): String? {
 
@@ -81,7 +70,13 @@ class StorageRepository(val storage: ExternalStorageManager) {
         Timber.d("URI = %s", uri)
         if (uri != null && "content" == uri.scheme) {
             val cursor = context.contentResolver
-                .query(uri, arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA), null, null, null)
+                .query(
+                    uri,
+                    arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA),
+                    null,
+                    null,
+                    null
+                )
             cursor.moveToFirst()
             filePath = cursor.getString(0)
             cursor.close()
@@ -95,7 +90,7 @@ class StorageRepository(val storage: ExternalStorageManager) {
     }
 }
 
-fun FileModel.toAudioModel(): AudioModel {
+fun FileModel.AudioFile.toAudioModel(): AudioModel {
 
     // this just takes the last containing folder and assumes it is the album name
     // this might be wrong if there is metainformation stored in the file. We'll see
@@ -128,3 +123,4 @@ fun String.isValidAudioFileName(): Boolean {
     }
     return false
 }
+

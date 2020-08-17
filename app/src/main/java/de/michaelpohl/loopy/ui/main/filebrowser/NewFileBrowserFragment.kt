@@ -21,8 +21,11 @@ class NewFileBrowserFragment : BaseFragment() {
     private val viewModel: NewFileBrowserViewModel by inject()
     private lateinit var binding:FragmentFilesListBinding
     private lateinit var recycler: RecyclerView
-    private  var browserAdapter= DelegationAdapter<FileModel>(
-        AnyDiffCallback<FileModel>(), FileBrowserItemDelegate {viewModel.onItemClicked(it) }
+    private  var browserAdapter= DelegationAdapter(
+        AnyDiffCallback(),
+        FileItemDelegate {viewModel.onItemClicked(it) },
+        FolderItemDelegate {viewModel.onItemClicked(it)},
+        AudioItemDelegate {viewModel.onItemClicked(it)}
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.model.AppStateRepository
 import timber.log.Timber
+import java.io.File
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
@@ -237,4 +238,38 @@ fun Long.convertFileSizeToMB(): Double {
 fun String.isForbiddenFolderName() : Boolean {
     return AppStateRepository.Companion.ForbiddenFolder.values().any { it.folderName == this }
 }
+
+fun List<File>.toFileModels(): List<FileModel> {
+    return this.map {
+        val subFiles = it.listFiles() ?: arrayOf()
+        when {
+            it.isFolder() -> {
+                FileModel.Folder(
+                    it.path,
+                    it.name,
+                    subFiles.size,
+                    subFiles.any { file -> file.isDirectory },
+                    subFiles.any { file -> file.isValidAudioFile() }
+                )
+            }
+            it.isValidAudioFile() -> {
+                FileModel.AudioFile(
+                    it.path,
+                    it.name,
+                    it.length().convertFileSizeToMB(),
+                    it.extension
+                )
+            }
+            else -> {
+                FileModel.File(
+                    it.path,
+                    it.name,
+                    it.length().convertFileSizeToMB(),
+                    it.extension
+                )
+            }
+        }
+    }
+}
+
 

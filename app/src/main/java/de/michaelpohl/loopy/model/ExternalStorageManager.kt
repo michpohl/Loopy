@@ -33,9 +33,11 @@ class ExternalStorageManager(val context: Context) {
     fun listSetContents(setFolderName: String): List<AudioModel> {
         val audioModels = mutableListOf<AudioModel>()
 
-        getPathContent("${appStorageFolder.path}/$setFolderName").toFileModels().forEach {
+        getPathContent("${appStorageFolder.path}/$setFolderName")
+            .toFileModels()
+            .filterIsInstance<FileModel.AudioFile>()
+            .forEach {
             audioModels.add(it.toAudioModel())
-
         }
         return audioModels
     }
@@ -53,7 +55,11 @@ class ExternalStorageManager(val context: Context) {
         }
     }
 
-    fun getPathContent(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+    fun getPathContent(
+        path: String,
+        showHiddenFiles: Boolean = false,
+        onlyFolders: Boolean = false
+    ): List<File> {
         val file = File(path)
 
         if (file.listFiles() == null) {
