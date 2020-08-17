@@ -7,23 +7,26 @@ import java.io.File
 
 sealed class FileModel {
 
+    abstract val path: String
+    abstract val name: String
+
     data class File(
-        val path: String,
-        val name: String,
+        override val path: String,
+        override val name: String,
         val sizeInMB: Double,
         val extension: String = ""
     ) : FileModel()
 
     data class AudioFile(
-        val path: String,
-        val name: String,
+        override val path: String,
+        override val name: String,
         val sizeInMB: Double,
         val extension: String = ""
     ) : FileModel()
 
     data class Folder(
-        val path: String,
-        val name: String,
+        override val path: String,
+        override val name: String,
         val subFiles: Int = 0,
         val hasSubFolders: Boolean,
         val containsAudioFiles: Boolean

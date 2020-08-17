@@ -24,7 +24,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/tv_name"
+            android:id="@+id/tv_label"
             style="@style/MatchWidth"
             android:paddingStart="8dp"
             android:text="@{model.displayName}"
@@ -43,8 +43,8 @@
             android:text="@string/loop_count_prefix"
             android:textAppearance="@style/Text.Standard"
             android:visibility="@{model.loopsCountVisibility}"
-            app:layout_constraintStart_toStartOf="@id/tv_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+            app:layout_constraintStart_toStartOf="@id/tv_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_label" />
 
         <TextView
             android:id="@+id/tv_loop_count"
@@ -63,7 +63,7 @@
             android:textAppearance="@style/Text.Standard"
             android:visibility="@{model.loopsCountVisibility}"
             app:layout_constraintStart_toEndOf="@id/tv_loop_count"
-            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_label" />
 
         <rm.com.audiowave.AudioWaveView
             android:id="@+id/wave"
@@ -75,7 +75,7 @@
             app:chunkRadius="0dp"
             app:chunkSpacing="1dp"
             app:chunkWidth="1dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_label"
             app:minChunkHeight="2dp"
             app:progress="@{model.progress}"
             app:touchable="@{model.canSeekAudio}"
@@ -90,7 +90,7 @@
             android:tint="@color/action"
             android:visibility="@{model.removeButtonVisibility}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_name" />
+            app:layout_constraintTop_toTopOf="@id/tv_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

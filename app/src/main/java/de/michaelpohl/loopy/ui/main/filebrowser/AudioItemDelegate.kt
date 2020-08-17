@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.common.FileModel
 class AudioItemDelegate(override val receiver: (FileModel.AudioFile) -> Unit) :
     ClickableAdapterItemDelegate<FileModel.AudioFile, FileModel.AudioFile, AudioItemHolder>() {
     override fun createViewHolder(parent: ViewGroup): AudioItemHolder {
-        return AudioItemHolder(inflateLayout(R.layout.item_file_browser, parent))
+        return AudioItemHolder(inflateLayout(R.layout.item_browser, parent))
     }
 
     override fun isForItemType(item: Any): Boolean {

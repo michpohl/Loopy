@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.adapter.adapter.Sorting
 
 /**
  * A [RecyclerView.Adapter] that uses delegates to handle its internal logic, to make it more simple to have complex
@@ -14,10 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
  */
 open class DelegationAdapter<T : Any>(
     diffCallback: DiffUtil.ItemCallback<T>?,
-    vararg delegates: AdapterItemDelegate<out T, *>) :
+    vararg delegates: AdapterItemDelegate<out T, *>
+) :
     ListAdapter<T, DelegationAdapterItemHolder<*>>(diffCallback ?: AnyDiffCallback()) {
 
     private val delegates = delegates.toList()
+    var sorting: Sorting<T>? = null
 
     /**
      * The integer returned here is the responsible delegate's index in the delegate list, for view at the given position.
@@ -31,7 +34,10 @@ open class DelegationAdapter<T : Any>(
     /**
      * ViewHolder creation gets delegated to the - wait for it - delegate.
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DelegationAdapterItemHolder<*> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): DelegationAdapterItemHolder<*> {
         if (viewType == -1) error("A viewType was requested for an item type that couldn't be found!")
         return delegates[viewType].createViewHolder(parent)
     }
@@ -45,4 +51,11 @@ open class DelegationAdapter<T : Any>(
         val correctDelegate = delegates.find { it.isForItemType(item) }
         correctDelegate?.doBinding(item, holder)
     }
+
+    fun update(list: List<T>) {
+        sorting?.let {
+            super.submitList(it.sort(list.toMutableList()))
+        } ?: super.submitList(list)
+    }
+
 }

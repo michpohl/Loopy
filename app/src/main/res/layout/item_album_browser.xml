@@ -33,7 +33,7 @@
                 />
 
         <TextView
-                android:id="@+id/tv_name"
+                android:id="@+id/tv_label"
                 style="@style/MatchWidth"
                 android:layout_width="0dp"
                 android:text="@{model.name}"
@@ -50,12 +50,12 @@
                 android:layout_marginEnd="8dp"
                 android:textColor="@color/action"
                 android:textAppearance="@style/Text.Standard"
-                app:layout_constraintStart_toStartOf="@id/tv_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
+                app:layout_constraintStart_toStartOf="@id/tv_label"
+                app:layout_constraintTop_toBottomOf="@id/tv_label"/>
 
         <CheckBox
                 style="@style/WrapContent"
-                android:id="@+id/cb_select"
+                android:id="@+id/cb_checkbox"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -23,6 +23,8 @@ import timber.log.Timber
 import java.io.File
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 fun <T : Any> MutableLiveData<T>.immutable(): LiveData<T> {
     return this
@@ -272,4 +274,11 @@ fun List<File>.toFileModels(): List<FileModel> {
     }
 }
 
+fun RecyclerView.ViewHolder.getDrawable(resourceId: Int): Drawable? {
+    return ContextCompat.getDrawable(this.itemView.context, resourceId)
+}
 
+fun Double.roundTo(numFractionDigits: Int): Double {
+    val factor = 10.0.pow(numFractionDigits.toDouble())
+    return (this * factor).roundToInt() / factor
+}

@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.common.FileModel
 class FolderItemDelegate(override val receiver: (FileModel.Folder) -> Unit) :
     ClickableAdapterItemDelegate<FileModel.Folder, FileModel.Folder, FolderItemHolder>() {
     override fun createViewHolder(parent: ViewGroup): FolderItemHolder {
-        return FolderItemHolder(inflateLayout(R.layout.item_file_browser, parent))
+        return FolderItemHolder(inflateLayout(R.layout.item_browser, parent))
     }
 
     override fun isForItemType(item: Any): Boolean {
