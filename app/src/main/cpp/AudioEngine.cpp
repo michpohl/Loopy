@@ -17,6 +17,8 @@
 #include <utils/logging.h>
 #include <inttypes.h>
 
+//#include "MultiChannelResampler.h"
+
 #include "oboe/Oboe.h"
 #include "AudioEngine.h"
 
@@ -203,6 +205,8 @@ bool AudioEngine::openStream() {
     builder.setCallback(this);
     builder.setPerformanceMode(PerformanceMode::LowLatency);
     builder.setSharingMode(SharingMode::Exclusive);
+//    builder.setSampleRate(48000);
+//    builder.setSampleRateConversionQuality(SampleRateConversionQuality::Best);
 
     Result result = builder.openStream(&mAudioStream);
     if (result != Result::OK) {

@@ -15,10 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.DialogHelper
-import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.find
+import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
@@ -59,15 +56,7 @@ class PlayerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        if (arguments != null) {
 
-            Timber.d("This: ${requireArguments().getParcelableArrayList<FileModel>("models")}")
-            //        TODO Reinstate arguments or do it differently
-            //        if (arguments != null) {
-            //            val appData: AppData = requireArguments().getParcelable("appData")!!
-            //            Timber.d("Loops when starting player: %s", loopsList)
-            //        }
-        }
     }
 
     override fun onCreateView(
@@ -100,13 +89,21 @@ class PlayerFragment : BaseFragment() {
         observe()
         Timber.d("onResume in fragment")
 
-        // TODO change that to lose reflection here
-        if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
 
-        try {
-            viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
-        } catch (e: Exception) {
-            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
+        if (arguments != null) {
+            val newAudioFiles = requireArguments().getParcelableArrayList<FileModel>("models")
+            viewModel.addNewLoops(
+                newAudioFiles.filterIsInstance<FileModel.AudioFile>().map { it.toAudioModel() })
+
+
+            // TODO change that to lose reflection here
+            if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
+
+            try {
+                viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
+            } catch (e: Exception) {
+                throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
+            }
         }
     }
 

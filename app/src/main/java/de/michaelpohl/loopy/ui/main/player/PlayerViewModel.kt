@@ -16,7 +16,7 @@ import timber.log.Timber
 class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) :
     BaseViewModel() {
 
-    val loopsList: List<AudioModel> = repository.getSingleSet() //TODO LiveData?
+    val loopsList: MutableList<AudioModel> = repository.getSingleSet().toMutableList() //TODO LiveData?
 
     private val _isPlaying = MutableLiveData(false)
     val isPlaying = _isPlaying.immutable()
@@ -166,6 +166,13 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     private fun onPlaybackStopped() {
         _isPlaying.value = false
+    }
+
+    fun addNewLoops(newLoops: List<AudioModel>) {
+        // TODO ask the user if adding or replacing is desired
+        repository.addLoopsToSet(newLoops)
+        loopsList.addAll(newLoops)
+        repository.saveLoopSelection(loopsList)
     }
 
     interface PlayerActionsListener {

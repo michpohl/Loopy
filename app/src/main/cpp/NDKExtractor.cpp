@@ -21,13 +21,49 @@
 #include <media/NdkMediaExtractor.h>
 #include <utils/logging.h>
 #include <cinttypes>
+#include <MultiChannelResampler.h>
 
 #include "NDKExtractor.h"
 #include "Constants.h"
 
+int32_t NDKExtractor::getSampleRate(AMediaExtractor &extractor) {
+    LOGD("Get sample rate");
+    AMediaFormat *format = AMediaExtractor_getTrackFormat(&extractor, 0);
+    int32_t sampleRate;
+    if (AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_SAMPLE_RATE, &sampleRate)) {
+        LOGD("Source sample rate %d", sampleRate);
+        return sampleRate;
+    } else {
+        return 0;
+    }
+}
+
+int32_t NDKExtractor::getBitRate(AMediaExtractor &extractor) {
+    LOGD("Get bit rate");
+    AMediaFormat *format = AMediaExtractor_getTrackFormat(&extractor, 0);
+    int32_t bitRate;
+    if (AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_BIT_RATE, &bitRate)) {
+        LOGD("Source bit rate %d", bitRate);
+        return bitRate;
+    } else {
+        return 0;
+    }
+}
+
+ int32_t NDKExtractor::getChannelCount(AMediaExtractor &extractor) {
+    LOGD("Get channel count");
+    AMediaFormat *format = AMediaExtractor_getTrackFormat(&extractor, 0);
+    int32_t channelCount;
+    if (AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_CHANNEL_COUNT, &channelCount)) {
+        LOGD("Source channel count %d", channelCount);
+        return channelCount;
+    } else {
+        return 0;
+    }
+}
+
 int32_t NDKExtractor::decode(AMediaExtractor &extractor, uint8_t *targetData,
                              AudioProperties targetProperties) {
-
     LOGD("Using NDK decoder");
 
     // Specify our desired output format by creating it from our source
@@ -41,26 +77,16 @@ int32_t NDKExtractor::decode(AMediaExtractor &extractor, uint8_t *targetData,
                  "NDK decoder does not support resampling.",
                  sampleRate,
                  targetProperties.sampleRate);
-            return 0;
+//            return 0;
+
+
         }
     } else {
         LOGE("Failed to get sample rate");
         return 0;
     };
 
-    int32_t channelCount;
-    if (AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_CHANNEL_COUNT, &channelCount)) {
-        LOGD("Got channel count %d", channelCount);
-        if (channelCount != targetProperties.channelCount) {
-            LOGE("NDK decoder does not support different "
-                 "input (%d) and output (%d) channel counts",
-                 channelCount,
-                 targetProperties.channelCount);
-        }
-    } else {
-        LOGE("Failed to get channel count");
-        return 0;
-    }
+    int32_t channelCount = getChannelCount(extractor);
 
     const char *formatStr = AMediaFormat_toString(format);
     LOGD("Output format %s", formatStr);
@@ -81,7 +107,6 @@ int32_t NDKExtractor::decode(AMediaExtractor &extractor, uint8_t *targetData,
     AMediaCodec_start(codec);
 
     // DECODE
-
     bool isExtracting = true;
     bool isDecoding = true;
     int32_t bytesWritten = 0;

@@ -3,7 +3,6 @@ package de.michaelpohl.loopy.common
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.Rect
@@ -21,8 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.model.AppStateRepository
 import timber.log.Timber
 import java.io.File
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -41,7 +38,8 @@ fun RecyclerView.setDivider(dividerDrawable: Int) {
             setDrawable(it)
         }
         this.addItemDecoration(divider)
-    } ?: Timber.w("Tried to add DividerItemDecoration to a RecyclerView, but the drawable was not found!")
+    }
+        ?: Timber.w("Tried to add DividerItemDecoration to a RecyclerView, but the drawable was not found!")
 }
 
 /**
@@ -237,39 +235,41 @@ fun Long.convertFileSizeToMB(): Double {
     return (this.toDouble()) / (1024 * 1024)
 }
 
-fun String.isForbiddenFolderName() : Boolean {
+fun String.isForbiddenFolderName(): Boolean {
     return AppStateRepository.Companion.ForbiddenFolder.values().any { it.folderName == this }
 }
 
 fun List<File>.toFileModels(): List<FileModel> {
-    return this.map {
-        val subFiles = it.listFiles() ?: arrayOf<File>()
-        when {
-            it.isFolder() -> {
-                FileModel.Folder(
-                    it.path,
-                    it.name,
-                    subFiles.size,
-                    subFiles.any { file -> file.isDirectory },
-                    subFiles.any { file -> file.isValidAudioFile() }
-                )
-            }
-            it.isValidAudioFile() -> {
-                FileModel.AudioFile(
-                    it.path,
-                    it.name,
-                    it.length().convertFileSizeToMB(),
-                    it.extension
-                )
-            }
-            else -> {
-                FileModel.File(
-                    it.path,
-                    it.name,
-                    it.length().convertFileSizeToMB(),
-                    it.extension
-                )
-            }
+    return this.map { it.toFileModel() }
+}
+
+fun File.toFileModel(): FileModel {
+    val subFiles = this.listFiles() ?: arrayOf<File>()
+    return when {
+        this.isFolder() -> {
+            FileModel.Folder(
+                this.path,
+                this.name,
+                subFiles.size,
+                subFiles.any { file -> file.isDirectory },
+                subFiles.any { file -> file.isValidAudioFile() }
+            )
+        }
+        this.isValidAudioFile() -> {
+            FileModel.AudioFile(
+                this.path,
+                this.name,
+                this.length().convertFileSizeToMB(),
+                this.extension
+            )
+        }
+        else -> {
+            FileModel.File(
+                this.path,
+                this.name,
+                this.length().convertFileSizeToMB(),
+                this.extension
+            )
         }
     }
 }

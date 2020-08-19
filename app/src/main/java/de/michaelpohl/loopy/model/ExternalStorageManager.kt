@@ -37,8 +37,8 @@ class ExternalStorageManager(val context: Context) {
             .toFileModels()
             .filterIsInstance<FileModel.AudioFile>()
             .forEach {
-            audioModels.add(it.toAudioModel())
-        }
+                audioModels.add(it.toAudioModel())
+            }
         return audioModels
     }
 
@@ -141,7 +141,6 @@ class ExternalStorageManager(val context: Context) {
                     Timber.d("Found this file: $fileName")
                     list.add(fileName)
                 }
-
             }
         } catch (e: IOException) {
             e.printStackTrace()

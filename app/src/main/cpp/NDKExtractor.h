@@ -26,10 +26,14 @@
 class NDKExtractor {
 
 public:
-    static int32_t decode(AAsset *asset, uint8_t *targetData, AudioProperties targetProperties);
+    static int32_t getSampleRate(AMediaExtractor &extractor);
+
     static int32_t decode(AMediaExtractor &extractor, uint8_t *targetData,
                           AudioProperties targetProperties);
 
+    static int32_t getBitRate(AMediaExtractor &extractor);
+
+    static int32_t getChannelCount(AMediaExtractor &extractor);
 };
 
 

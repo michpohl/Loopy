@@ -35,4 +35,11 @@ class AudioFilesRepository(
             true
         } else false
     }
+
+    fun addLoopsToSet(newLoops: List<AudioModel>) {
+    }
+
+    fun saveLoopSelection(loopsList: MutableList<AudioModel>) {
+        sharedPrefsManager.saveLoopSelection(loopsList)
+    }
 }

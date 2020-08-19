@@ -3,6 +3,7 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.JsonDataClass
 import de.michaelpohl.loopy.common.Settings
 import timber.log.Timber
@@ -77,10 +78,18 @@ class SharedPreferencesManager(context: Context) {
         saveLoopSets(Sets(sets))
     }
 
+    /**
+     * Save the selected loops the player currently displays, not a Set!. These loops can be anywhere.
+     */
+    fun saveLoopSelection(loopsList: MutableList<AudioModel>) {
+//        putString(SELECTED_LOOPS, loopsList.toJson)
+    }
+
     companion object {
         const val SHARED_PREFS_KEY = "loopy"
         const val SETS = "sets"
         const val SELECTED_SET = "selectedset"
+        const val SELECTED_LOOPS = "selectedloop"
 
         const val SETTINGS_KEY = "settings"
     }

@@ -42,6 +42,8 @@ add_subdirectory(${OBOE_DIR} ./oboe)
 
 # Specify the path to the Oboe header files.
 include_directories(${OBOE_DIR}/include)
+include_directories(${OBOE_DIR}/src/flowgraph/resampler)
+
 
 #target_compile_options(native-lib
 #        PRIVATE -std=c++14 -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")
