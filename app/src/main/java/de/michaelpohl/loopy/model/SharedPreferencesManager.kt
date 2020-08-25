@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
 import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.JsonDataClass
 import de.michaelpohl.loopy.common.Settings
 import timber.log.Timber
 
@@ -28,12 +27,13 @@ class SharedPreferencesManager(context: Context) {
 
     fun loadLoopSets(): Sets {
         return getString(SETS)?.let {
-            JsonDataClass.fromJsonString<Sets>(it)
+            moshi.adapter(Sets::class.java).fromJson(it)
         } ?: Sets(listOf())
     }
 
     fun saveLoopSets(sets: Sets) {
-        return putString(sets.toJsonString(), Sets(listOf()).toJsonString())
+
+        return putString(moshi.adapter(Sets::class.java).toJson(sets), "")
     }
 
     fun getSettings(): Settings? {
@@ -82,7 +82,14 @@ class SharedPreferencesManager(context: Context) {
      * Save the selected loops the player currently displays, not a Set!. These loops can be anywhere.
      */
     fun saveLoopSelection(loopsList: MutableList<AudioModel>) {
-//        putString(SELECTED_LOOPS, loopsList.toJson)
+        val loopSet = LoopSet(LAST_OPENEND_LOOPS_SET, loopsList.map { Loop(it.path) })
+        putString(SELECTED_LOOPS, moshi.adapter(LoopSet::class.java).toJson(loopSet))
+    }
+
+    fun loadLastLoopSelection(): LoopSet? {
+        return getString(SELECTED_LOOPS)?.let {
+            moshi.adapter(LoopSet::class.java).fromJson(it)
+        }
     }
 
     companion object {
@@ -90,6 +97,7 @@ class SharedPreferencesManager(context: Context) {
         const val SETS = "sets"
         const val SELECTED_SET = "selectedset"
         const val SELECTED_LOOPS = "selectedloop"
+        const val LAST_OPENEND_LOOPS_SET = "lastopenend"
 
         const val SETTINGS_KEY = "settings"
     }

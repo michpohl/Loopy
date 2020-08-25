@@ -1,10 +1,25 @@
 package de.michaelpohl.loopy.model
 
-import de.michaelpohl.loopy.common.JsonDataClass
+import com.squareup.moshi.JsonClass
+import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.toAudioModel
+import de.michaelpohl.loopy.common.toFileModel
+import java.io.File
 
-data class Sets(val loopSets: List<LoopSet>) : JsonDataClass()
+@JsonClass(generateAdapter = true)
+data class Sets(val loopSets: List<LoopSet>)
 
-data class LoopSet(val name: String, val loops: List<Loop>) : JsonDataClass()
+@JsonClass(generateAdapter = true)
+data class LoopSet(val name: String, val loops: List<Loop>) {
+    fun toAudioModels(): List<AudioModel> {
+        return loops
+            .map { File(it.fileName).toFileModel() }
+            .filterIsInstance<FileModel.AudioFile>()
+            .map { it.toAudioModel() }
+    }
+}
 
-data class Loop(val fileName: String) : JsonDataClass()
+@JsonClass(generateAdapter = true)
+data class Loop(val fileName: String)
 

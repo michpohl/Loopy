@@ -134,7 +134,7 @@ StorageDataSource *StorageDataSource::newFromStorageAsset(AMediaExtractor &extra
 //                                     targetProperties);
     }
     LOGD("Before return");
-//    return new StorageDataSource(std::move(outputBuffer),
-//                                 numSamples,
-//                                 targetProperties);
+    return new StorageDataSource(std::move(outputBuffer),
+                                 numSamples,
+                                 targetProperties);
 }
