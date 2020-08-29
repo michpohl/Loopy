@@ -1,6 +1,7 @@
-package com.deutschebahn.streckenagent2.ui.common.recycler
+package com.example.adapter.adapter
 
 import android.view.ViewGroup
+import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
 import timber.log.Timber
 
 abstract class AdapterItemDelegate<I : Any, H : DelegationAdapterItemHolder<I>> {

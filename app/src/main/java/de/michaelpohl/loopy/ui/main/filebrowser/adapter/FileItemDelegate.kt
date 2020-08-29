@@ -1,14 +1,13 @@
-package de.michaelpohl.loopy.ui.main.filebrowser
+package de.michaelpohl.loopy.ui.main.filebrowser.adapter
 
 import android.view.ViewGroup
-import com.deutschebahn.streckenagent2.ui.common.recycler.AdapterItemDelegate
-import com.deutschebahn.streckenagent2.ui.common.recycler.ClickableAdapterItemDelegate
+import com.example.adapter.adapter.AdapterItemDelegate
 import com.example.adapter.adapter.util.inflateLayout
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 
 class FileItemDelegate() :
-    AdapterItemDelegate<FileModel.File,FileItemHolder>() {
+    AdapterItemDelegate<FileModel.File, FileItemHolder>() {
     override fun createViewHolder(parent: ViewGroup): FileItemHolder {
         return FileItemHolder(inflateLayout(R.layout.item_browser, parent))
     }

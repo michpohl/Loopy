@@ -1,12 +1,8 @@
-package de.michaelpohl.loopy.ui.main.filebrowser
+package de.michaelpohl.loopy.ui.main.filebrowser.adapter
 
 import android.view.View
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.common.getDrawable
 import de.michaelpohl.loopy.common.gone
 

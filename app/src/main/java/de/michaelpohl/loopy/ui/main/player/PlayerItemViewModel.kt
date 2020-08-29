@@ -7,14 +7,15 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter
 import timber.log.Timber
 import kotlin.reflect.KFunction0
 
 class PlayerItemViewModel(
-    val audioModel: AudioModel,
+    private val audioModel: AudioModel,
     private val onItemClickedListener: (AudioModel) -> Unit,
     private val onProgressChangedByUserTouchListener: (Float) -> Unit,
-    private val onRemoveItemClickedListener: KFunction0<Unit>
+    private val onRemoveItemClickedListener: (AudioModel) -> Unit
 ) : BaseViewModel() {
 
     private val _progress = MutableLiveData(0F)
@@ -36,21 +37,21 @@ class PlayerItemViewModel(
     val fullPath = audioModel.name
     val canSeekAudio = false
 
-    var selectionState = PlayerAdapter.Companion.SelectionState.NOT_SELECTED
+    var selectionState = PlayerDelegationAdapter.Companion.SelectionState.NOT_SELECTED
         set(state) {
                 Timber.d("State: $state")
             when (state) {
-                PlayerAdapter.Companion.SelectionState.NOT_SELECTED -> {
+                PlayerDelegationAdapter.Companion.SelectionState.NOT_SELECTED -> {
                     _backgroundColor.postValue(resources.getColor(R.color.content_background))
                     _progress.postValue(0F)
                     _removeButtonVisibility.postValue(View.VISIBLE)
                 }
-                PlayerAdapter.Companion.SelectionState.PRESELECTED -> {
+                PlayerDelegationAdapter.Companion.SelectionState.PRESELECTED -> {
                     _removeButtonVisibility.postValue(View.GONE)
                     _backgroundColor.postValue(resources.getColor(R.color.item_selected_background))
                     _progress.postValue(0F)
                 }
-                PlayerAdapter.Companion.SelectionState.PLAYING -> {
+                PlayerDelegationAdapter.Companion.SelectionState.PLAYING -> {
                     _removeButtonVisibility.postValue(View.GONE)
                     _backgroundColor.postValue(getColor(resources, R.color.active, null))
 
@@ -63,7 +64,8 @@ class PlayerItemViewModel(
         onItemClickedListener.invoke((audioModel))
     }
 
-    fun onRemoveItemClicked(view: View) {
+    fun onDeleteIconClicked(view: View) {
+        onRemoveItemClickedListener(audioModel)
     }
 
     private fun updateLoopsCount(count: Int) {

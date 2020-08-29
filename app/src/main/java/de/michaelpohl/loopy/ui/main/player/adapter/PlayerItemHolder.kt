@@ -1,24 +1,44 @@
-package de.michaelpohl.loopy.ui.main.player
+package de.michaelpohl.loopy.ui.main.player.adapter
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.recyclerview.widget.RecyclerView
-import de.michaelpohl.loopy.common.StorageRepository
+import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
+import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.databinding.ItemLoopBinding
-import kotlinx.android.synthetic.main.item_loop.view.*
+import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel
 import rm.com.audiowave.AudioWaveView
 
 class PlayerItemHolder(
     var binding: ItemLoopBinding
-) : RecyclerView.ViewHolder(binding.root), LifecycleOwner {
-
-    private lateinit var viewModel: PlayerItemViewModel
+) : DelegationAdapterItemHolder<AudioModel>(binding.root), LifecycleOwner {
 
     private val lifecycleRegistry = LifecycleRegistry(this)
+    private lateinit var viewModel: PlayerItemViewModel
+
+    lateinit var clickReceiver: (AudioModel) -> Unit
+    lateinit var deleteReceiver: (AudioModel) -> Unit
 
     init {
         lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+    }
+
+    override fun bind(item: AudioModel) {
+        viewModel = PlayerItemViewModel(
+            item,
+            clickReceiver,
+            {}, // TODO onProgressChangedByUser
+            deleteReceiver
+        )
+        binding.model = viewModel
+        binding.lifecycleOwner = this
+
+        //        TODO inflate wave from audio model
+        //prevent directories from trying to get rendered should they show up here.
+//        if (!StorageRepository.getSingleFile(model.audioModel.path).isDirectory) {
+//            inflateWave(itemView.wave, StorageRepository.getSingleFile(model.audioModel.path).readBytes())
+//        }
+        binding.executePendingBindings()
     }
 
     fun onAppear() {
@@ -33,19 +53,6 @@ class PlayerItemHolder(
         return lifecycleRegistry
     }
 
-    fun bind(model: PlayerItemViewModel) {
-        viewModel = model
-        binding.model = viewModel
-        binding.lifecycleOwner = this
-
-        //        TODO inflate wave from audio model
-        //prevent directories from trying to get rendered should they show up here.
-//        if (!StorageRepository.getSingleFile(model.audioModel.path).isDirectory) {
-//            inflateWave(itemView.wave, StorageRepository.getSingleFile(model.audioModel.path).readBytes())
-//        }
-        binding.executePendingBindings()
-    }
-
     fun getName(): String {
         return viewModel.fullPath
     }
@@ -54,7 +61,8 @@ class PlayerItemHolder(
         viewModel.updateProgress(percentage)
     }
 
-    var state: PlayerAdapter.Companion.SelectionState = PlayerAdapter.Companion.SelectionState.NOT_SELECTED
+    var state: PlayerDelegationAdapter.Companion.SelectionState =
+        PlayerDelegationAdapter.Companion.SelectionState.NOT_SELECTED
         set(value) {
             viewModel.selectionState = value
             field = value
@@ -76,4 +84,5 @@ class PlayerItemHolder(
         //        view.onProgressChanged = { progress, byUser ->
         //        }
     }
+
 }

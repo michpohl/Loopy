@@ -84,7 +84,7 @@
         <ImageButton
             android:id="@+id/btn_remove"
             style="@style/Button.SmallIcon.NoPadding"
-            android:onClick="@{model::onRemoveItemClicked}"
+            android:onClick="@{model::onDeleteIconClicked}"
             android:paddingLeft="16dp"
             android:src="@drawable/ic_delete"
             android:tint="@color/action"
