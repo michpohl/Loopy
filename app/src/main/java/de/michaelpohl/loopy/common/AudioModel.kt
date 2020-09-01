@@ -16,12 +16,11 @@ data class AudioModel(
     val isMediaStoreItem: Boolean = true
 ) : Parcelable {
 
-    @IgnoredOnParcel
-    val displayName = {
-        val pieces = name.split("/")
-        val length = pieces.size
-        pieces[length - 2]
-    }
+    val displayName: String
+        get() {
+            val filename = path.subSequence(path.lastIndexOf("/") + 1, path.lastIndex)
+            return filename.substring(0, filename.lastIndexOf("."))
+        }
 }
 
 //fileModel.name.split(".")[0]

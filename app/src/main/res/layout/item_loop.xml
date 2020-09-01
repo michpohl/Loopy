@@ -35,35 +35,18 @@
             tools:ignore="RtlSymmetry"
             tools:text="item" />
 
-        <TextView
-            android:id="@+id/tv_loop_count_prefix"
-            style="@style/WrapContent"
-            android:paddingStart="8dp"
-            android:paddingEnd="4dp"
-            android:text="@string/loop_count_prefix"
-            android:textAppearance="@style/Text.Standard"
-            android:visibility="@{model.loopsCountVisibility}"
-            app:layout_constraintStart_toStartOf="@id/tv_label"
-            app:layout_constraintTop_toBottomOf="@id/tv_label" />
 
         <TextView
             android:id="@+id/tv_loop_count"
             style="@style/WrapContent"
             android:text="@{model.loopsCount}"
+            android:paddingStart="8dp"
             android:textAppearance="@style/Text.Standard"
             android:visibility="@{model.loopsCountVisibility}"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_loop_count_prefix"
-            app:layout_constraintStart_toEndOf="@id/tv_loop_count_prefix" />
+            app:layout_constraintStart_toStartOf="@id/tv_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_label"
+ />
 
-        <TextView
-            android:id="@+id/tv_loop_count_postfix"
-            style="@style/WrapContent"
-            android:paddingStart="4dp"
-            android:text="@string/loop_count_postfix"
-            android:textAppearance="@style/Text.Standard"
-            android:visibility="@{model.loopsCountVisibility}"
-            app:layout_constraintStart_toEndOf="@id/tv_loop_count"
-            app:layout_constraintTop_toBottomOf="@id/tv_label" />
 
         <rm.com.audiowave.AudioWaveView
             android:id="@+id/wave"

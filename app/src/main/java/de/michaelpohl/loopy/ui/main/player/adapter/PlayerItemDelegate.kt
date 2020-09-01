@@ -1,14 +1,11 @@
 package de.michaelpohl.loopy.ui.main.player.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import com.example.adapter.adapter.AdapterItemDelegate
-import com.example.adapter.adapter.ClickableAdapterItemDelegate
+import com.example.adapter.adapter.util.inflateLayout
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.databinding.ItemLoopBinding
-import de.michaelpohl.loopy.ui.main.player.PlayerAdapter
+import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 import timber.log.Timber
 
 class PlayerItemDelegate(
@@ -19,9 +16,7 @@ class PlayerItemDelegate(
     private val holders = mutableListOf<PlayerItemHolder>()
 
     override fun createViewHolder(parent: ViewGroup): PlayerItemHolder {
-        val binding: ItemLoopBinding =
-            DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_loop, parent, false)
-        return PlayerItemHolder(binding).also {
+        return PlayerItemHolder(inflateLayout(R.layout.item_loop, parent)).also {
             it.clickReceiver = clickReceiver
             it.deleteReceiver = deleteReceiver
             holders.add(it)
@@ -34,13 +29,15 @@ class PlayerItemDelegate(
 
     fun updateFileCurrentlyPlayed(name: String) {
         holders.forEach {
-            it.state = if (it.getName() == name) PlayerAdapter.Companion.SelectionState.PLAYING else PlayerAdapter.Companion.SelectionState.NOT_SELECTED
+            it.state =
+                if (it.getName() == name) SelectionState.PLAYING else SelectionState.NOT_SELECTED
         }
     }
 
     fun updateFilePreselected(name: String) {
-        holders.filter { it.state != PlayerAdapter.Companion.SelectionState.PLAYING }.forEach {
-            it.state = if (it.getName() == name) PlayerAdapter.Companion.SelectionState.PRESELECTED else PlayerAdapter.Companion.SelectionState.NOT_SELECTED
+        holders.filter { it.state != SelectionState.PLAYING }.forEach {
+            it.state =
+                if (it.getName() == name) SelectionState.PRESELECTED else SelectionState.NOT_SELECTED
             Timber.d("Setting ${it.getName()} to ${it.state}")
         }
     }

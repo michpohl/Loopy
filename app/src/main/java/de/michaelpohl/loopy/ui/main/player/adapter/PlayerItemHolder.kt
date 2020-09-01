@@ -1,72 +1,92 @@
 package de.michaelpohl.loopy.ui.main.player.adapter
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
+import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
 import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
-import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.databinding.ItemLoopBinding
-import de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel
+import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 import rm.com.audiowave.AudioWaveView
+import timber.log.Timber
 
 class PlayerItemHolder(
-    var binding: ItemLoopBinding
-) : DelegationAdapterItemHolder<AudioModel>(binding.root), LifecycleOwner {
+    itemView: View
+) : DelegationAdapterItemHolder<AudioModel>(itemView) {
 
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    private lateinit var viewModel: PlayerItemViewModel
+    private var backgroundColor: Int = R.color.content_background
+        set(value) {
+            field = value
+            this.itemView.background = getDrawable(value)
+        }
 
+    private var loopsCount: Int = 0
+        set(value) {
+            Timber.d("updating count with: $value")
+            loopCounter.text = if (value != 0) {
+                getString(R.string.loop_count_prefix) + " ${value} " + getString(R.string.loop_count_postfix)
+            } else ""
+            field = value
+        }
+
+    var progress: Float = 0F
+        set(value) {
+            field = value
+            wave.progress = if (state == SelectionState.PLAYING) value else 0F
+        }
+
+    private val label: TextView = itemView.find(R.id.tv_label)
+    private val loopCounter: TextView = itemView.find(R.id.tv_loop_count)
+    private val wave: AudioWaveView = itemView.find(R.id.wave)
+    private val deleteIcon: ImageButton = itemView.find(R.id.btn_remove)
+
+    lateinit var model: AudioModel
     lateinit var clickReceiver: (AudioModel) -> Unit
     lateinit var deleteReceiver: (AudioModel) -> Unit
 
-    init {
-        lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
-    }
-
     override fun bind(item: AudioModel) {
-        viewModel = PlayerItemViewModel(
-            item,
-            clickReceiver,
-            {}, // TODO onProgressChangedByUser
-            deleteReceiver
-        )
-        binding.model = viewModel
-        binding.lifecycleOwner = this
-
-        //        TODO inflate wave from audio model
-        //prevent directories from trying to get rendered should they show up here.
-//        if (!StorageRepository.getSingleFile(model.audioModel.path).isDirectory) {
-//            inflateWave(itemView.wave, StorageRepository.getSingleFile(model.audioModel.path).readBytes())
-//        }
-        binding.executePendingBindings()
-    }
-
-    fun onAppear() {
-        lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-    }
-
-    fun onDisappear() {
-        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
+        model = item
+        label.text = model.displayName
+        this.itemView.setOnClickListener { clickReceiver(model) }
+        deleteIcon.setOnClickListener { deleteReceiver(model) }
     }
 
     fun getName(): String {
-        return viewModel.fullPath
+        return model.name
     }
 
     fun updateProgress(percentage: Int) {
-        viewModel.updateProgress(percentage)
+        if (percentage < progress ?: 0F) loopsCount += 1
+
+        progress = when (percentage.toFloat()) {
+            in Float.MIN_VALUE..0F -> 0F
+            in 99F..Float.MAX_VALUE -> 100F
+            else -> percentage.toFloat()
+        }
     }
 
-    var state: PlayerDelegationAdapter.Companion.SelectionState =
-        PlayerDelegationAdapter.Companion.SelectionState.NOT_SELECTED
+    var state: SelectionState =
+        SelectionState.NOT_SELECTED
         set(value) {
-            viewModel.selectionState = value
+            Timber.d("State: $state")
+            when (value) {
+                SelectionState.NOT_SELECTED -> {
+                    backgroundColor = R.color.content_background
+                    progress = 0F
+                    deleteIcon.show()
+                }
+                SelectionState.PRESELECTED -> {
+                    backgroundColor = R.color.item_selected_background
+                    progress = 0F
+                }
+                SelectionState.PLAYING -> {
+                    deleteIcon.gone()
+                    backgroundColor = R.color.active
+                }
+            }
             field = value
         }
+
 
     private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
 
