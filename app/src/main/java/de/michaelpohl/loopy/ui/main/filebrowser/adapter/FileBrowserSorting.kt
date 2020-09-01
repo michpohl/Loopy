@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main.filebrowser
+package de.michaelpohl.loopy.ui.main.filebrowser.adapter
 
 import com.example.adapter.adapter.Sorting
 import de.michaelpohl.loopy.common.FileModel

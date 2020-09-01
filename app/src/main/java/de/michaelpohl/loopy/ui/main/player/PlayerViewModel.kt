@@ -16,7 +16,8 @@ import timber.log.Timber
 class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) :
     BaseViewModel() {
 
-    val loopsList: MutableList<AudioModel> = repository.getSingleSet().toMutableList() //TODO LiveData?
+    private val _loopsList = MutableLiveData(repository.getSingleSet().toMutableList())
+    val loopsList = _loopsList.immutable()
 
     private val _isPlaying = MutableLiveData(false)
     val isPlaying = _isPlaying.immutable()
@@ -43,6 +44,10 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
 
     private fun onPlayerSwitchedToNextFile(filename: String) {
         _fileCurrentlyPlayed.postValue(filename)
+    }
+
+    init {
+        showEmptyState(loopsList.value?.isEmpty() ?: true)
     }
 
     private fun setPlayerWaitModeTo(shouldWait: Boolean) {
@@ -137,7 +142,6 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
             with(looper.play()) {
                 if (this.isSuccess()) {
                     this.data?.let {
-                        Timber.d("Started: $it")
                         _fileCurrentlyPlayed.postValue(this.data)
                     }
                 }
@@ -171,12 +175,17 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     fun addNewLoops(newLoops: List<AudioModel>) {
         // TODO ask the user if adding or replacing is desired
         repository.addLoopsToSet(newLoops)
-        loopsList.addAll(newLoops)
-        repository.saveLoopSelection(loopsList)
+        var currentLoops = _loopsList.value.orEmpty().toMutableList()
+        currentLoops.addAll(newLoops)
+        _loopsList.postValue(currentLoops)
+        repository.saveLoopSelection(currentLoops)
     }
 
     fun onDeleteLoopClicked(audioModel: AudioModel) {
-        TODO("Not yet implemented")
+        var currentLoops = _loopsList.value.orEmpty().toMutableList()
+        currentLoops.remove(audioModel)
+        _loopsList.postValue(currentLoops)
+        repository.saveLoopSelection(currentLoops)
     }
 
     interface PlayerActionsListener {

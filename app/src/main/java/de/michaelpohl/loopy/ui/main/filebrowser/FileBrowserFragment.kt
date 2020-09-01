@@ -16,6 +16,7 @@ import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.AudioItemDelegate
+import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileBrowserSorting
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileItemDelegate
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FolderItemDelegate
 import org.koin.android.ext.android.inject

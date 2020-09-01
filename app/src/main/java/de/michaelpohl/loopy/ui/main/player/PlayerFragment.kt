@@ -24,6 +24,7 @@ import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.ui.main.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemDelegate
+import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemSorting
 import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
@@ -35,7 +36,6 @@ class PlayerFragment : BaseFragment() {
     private lateinit var binding: FragmentPlayerBinding
     private lateinit var recycler: RecyclerView
 
-    private lateinit var loopsList: List<AudioModel>
     private lateinit var playerService: PlayerService
     lateinit var onResumeListener: (PlayerFragment) -> Unit
 
@@ -78,7 +78,7 @@ class PlayerFragment : BaseFragment() {
         binding.model = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         recycler = binding.root.find(R.id.rv_loops)
-        initAdapter(viewModel.loopsList)
+        initAdapter()
         return binding.root
     }
 
@@ -125,56 +125,34 @@ class PlayerFragment : BaseFragment() {
         unBindAudioService()
     }
 
-    fun updateViewModel() {
-        //TODO this should be handled differently
-        //        loopsList = DataRepository.currentSelectedAudioModels
-        //        //        viewModel.loopsList = DataRepository.currentSelectedAudioModels
-        //        viewModel.showEmptyState()
-    }
-
     fun pausePlayback() {
 //        playerServiceBinder?.pause()
     }
 
-    private fun initAdapter(loopsList: List<AudioModel>) {
+    private fun initAdapter() {
         adapter = PlayerDelegationAdapter(
             PlayerItemDelegate(
                 clickReceiver = { viewModel.onLoopClicked(it) },
                 deleteReceiver = { viewModel.onDeleteLoopClicked(it) })
         ).also {
-            it.update(loopsList)
+            it.sorting = PlayerItemSorting()
             recycler.adapter = it
         }
-
-//        adapter = PlayerAdapter({
-//            viewModel.onProgressChangedByUser(it)
-//        }, { viewModel.onLoopClicked(it) }).also {
-//            it.items = loopsList
-//            it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
-//
-//        }.apply {
-//            selected.observe(
-//                viewLifecycleOwner,
-//                androidx.lifecycle.Observer { viewModel.currentlySelected = it })
-//        }
-//
-//        // todo sort recycler and adapter code blocks better
-//        recycler.layoutManager = LinearLayoutManager(context)
-//        recycler.adapter = adapter
-//        // TODO this could get handled better
-//        viewModel.showEmptyState(loopsList.isEmpty())
     }
 
     private fun observe() {
-        viewModel.fileCurrentlyPlayed.observe(
-            viewLifecycleOwner,
-            Observer { adapter.updateFileCurrentlyPlayed(it) })
-        viewModel.filePreselected.observe(
-            viewLifecycleOwner,
-            Observer { adapter.updateFilePreselected(it) })
-        viewModel.playbackProgress.observe(
-            viewLifecycleOwner,
-            Observer { adapter.updatePlaybackProgress(it) })
+        with(viewModel) {
+            loopsList.observe(viewLifecycleOwner, Observer { adapter.update(it) })
+            fileCurrentlyPlayed.observe(
+                viewLifecycleOwner,
+                Observer { adapter.updateFileCurrentlyPlayed(it) })
+            filePreselected.observe(
+                viewLifecycleOwner,
+                Observer { adapter.updateFilePreselected(it) })
+            playbackProgress.observe(
+                viewLifecycleOwner,
+                Observer { adapter.updatePlaybackProgress(it) })
+        }
 
     }
 

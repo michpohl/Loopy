@@ -28,7 +28,6 @@ import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
@@ -36,8 +35,6 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
@@ -306,10 +303,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         dialog.resultListener = {
             Timber.d("Resultlistener was invoked")
             keepScreenOnIfDesired(it)
-
-            // if we're currently in the player we need to update
-            // immediately for the settings to take effect
-            updatePlayerIfCurrentlyShowing()
         }
         dialog.show(supportFragmentManager, "settings-dialog")
     }
@@ -327,17 +320,10 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 getString(R.string.dialog_clear_list_content)
             ) {
                 DataRepository.clearLoopsList()
-                updatePlayerIfCurrentlyShowing()
             }
         } else {
 
             showSnackbar(container, R.string.snackbar_cant_clear_loops)
-        }
-    }
-
-    private fun updatePlayerIfCurrentlyShowing() {
-        if (currentFragment is PlayerFragment) {
-            (currentFragment as PlayerFragment).updateViewModel()
         }
     }
 
@@ -367,9 +353,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 
     private fun isPermitted(): Boolean {
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_GRANTED) &&
-            (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED)
+                == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED)
     }
 
     private fun buildStringArgs(string: String): Bundle {

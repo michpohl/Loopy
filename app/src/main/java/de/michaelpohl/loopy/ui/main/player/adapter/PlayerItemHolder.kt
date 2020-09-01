@@ -73,6 +73,7 @@ class PlayerItemHolder(
                 SelectionState.NOT_SELECTED -> {
                     backgroundColor = R.color.content_background
                     progress = 0F
+                    loopsCount = 0
                     deleteIcon.show()
                 }
                 SelectionState.PRESELECTED -> {
