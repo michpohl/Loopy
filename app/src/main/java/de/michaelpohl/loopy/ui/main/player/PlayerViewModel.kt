@@ -175,6 +175,10 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
         repository.saveLoopSelection(loopsList)
     }
 
+    fun onDeleteLoopClicked(audioModel: AudioModel) {
+        TODO("Not yet implemented")
+    }
+
     interface PlayerActionsListener {
         fun onOpenFileBrowserClicked()
         fun onBrowseMediaStoreClicked()

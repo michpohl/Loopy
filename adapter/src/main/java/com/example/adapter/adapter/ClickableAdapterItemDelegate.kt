@@ -1,10 +1,11 @@
-package com.deutschebahn.streckenagent2.ui.common.recycler
+package com.example.adapter.adapter
 
 import android.view.View
+import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
 import timber.log.Timber
 
 abstract class ClickableAdapterItemDelegate<ItemType : Any, PayloadType : Any?, ItemHolder : DelegationAdapterItemHolder<ItemType>> :
-    AdapterItemDelegate<ItemType,ItemHolder>() {
+    AdapterItemDelegate<ItemType, ItemHolder>() {
 
     /**
      * Set this to define a function taking [PayloadType] that is called when an item belonging to this delegate triggers something

@@ -12,20 +12,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.find
+import de.michaelpohl.loopy.common.toAudioModel
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter
+import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemDelegate
 import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
-    private lateinit var adapter: PlayerAdapter
+    private lateinit var adapter: PlayerDelegationAdapter
 
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: FragmentPlayerBinding
@@ -133,23 +137,32 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun initAdapter(loopsList: List<AudioModel>) {
-        adapter = PlayerAdapter({
-            viewModel.onProgressChangedByUser(it)
-        }, { viewModel.onLoopClicked(it) }).also {
-            it.items = loopsList
-            it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
-
-        }.apply {
-            selected.observe(
-                viewLifecycleOwner,
-                androidx.lifecycle.Observer { viewModel.currentlySelected = it })
+        adapter = PlayerDelegationAdapter(
+            PlayerItemDelegate(
+                clickReceiver = { viewModel.onLoopClicked(it) },
+                deleteReceiver = { viewModel.onDeleteLoopClicked(it) })
+        ).also {
+            it.update(loopsList)
+            recycler.adapter = it
         }
 
-        // todo sort recycler and adapter code blocks better
-        recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = adapter
-        // TODO this could get handled better
-        viewModel.showEmptyState(loopsList.isEmpty())
+//        adapter = PlayerAdapter({
+//            viewModel.onProgressChangedByUser(it)
+//        }, { viewModel.onLoopClicked(it) }).also {
+//            it.items = loopsList
+//            it.dialogHelper = DialogHelper(requireActivity()) //TODO can it be injected?
+//
+//        }.apply {
+//            selected.observe(
+//                viewLifecycleOwner,
+//                androidx.lifecycle.Observer { viewModel.currentlySelected = it })
+//        }
+//
+//        // todo sort recycler and adapter code blocks better
+//        recycler.layoutManager = LinearLayoutManager(context)
+//        recycler.adapter = adapter
+//        // TODO this could get handled better
+//        viewModel.showEmptyState(loopsList.isEmpty())
     }
 
     private fun observe() {
@@ -181,7 +194,6 @@ class PlayerFragment : BaseFragment() {
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
             )
-//            Timber.d("Does viewModel have a binder now? ${viewModel.looper != null}")
         }
     }
 
