@@ -31,4 +31,12 @@
         android:id="@+id/markupViewerFragment"
         android:name="de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment"
         android:label="MarkupViewerFragment" />
+    <fragment
+        android:id="@+id/mediaStoreBrowserFragment"
+        android:name="de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserFragment"
+        android:label="MediaStoreBrowserFragment" >
+        <action
+            android:id="@+id/action_mediaStoreBrowserFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 </navigation>

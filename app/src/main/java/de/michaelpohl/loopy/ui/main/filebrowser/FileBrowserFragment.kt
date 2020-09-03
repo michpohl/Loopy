@@ -22,7 +22,7 @@ import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FolderItemDelegate
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class FileBrowserFragment : BaseFragment() {
+open class FileBrowserFragment : BaseFragment() {
 
     private val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding

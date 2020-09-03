@@ -144,10 +144,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     override fun onBrowseMediaStoreClicked() {
-        Timber.d("Browsing media store...")
-        val mediaStoreItems = DataRepository.getMediaStoreEntries(this)
-        mediaStoreItems.forEach { it -> Timber.d("Item: %s", it.name) }
-        showAlbumBrowserFragment()
+        showMediaStoreBrowserFragment()
     }
 //
 //    override fun onAlbumClicked(albumTitle: String) {
@@ -183,7 +180,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         when (item.itemId) {
             R.id.nav_browse_media -> {
                 clearBackStack()
-                if (isPermitted()) showAlbumBrowserFragment() else PermissionHelper(this).checkPermissions()
+                if (isPermitted()) showMediaStoreBrowserFragment() else PermissionHelper(this).checkPermissions()
             }
             R.id.nav_browse_storage -> {
                 clearBackStack()
@@ -269,20 +266,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         //            .commit()
     }
 
-    fun showPlayerFragmentWithFreshSelection(models: List<FileModel.AudioFile>) {
-        clearBackStack()
-        showPlayerFragment(models)
-    }
-
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
         nav_host_fragment.findNavController().navigate(
             R.id.fileBrowserFragment, buildStringArgs(path)
         )
     }
 
-    private fun showAlbumBrowserFragment() {
+    private fun showMediaStoreBrowserFragment() {
         nav_host_fragment.findNavController().navigate(
-            R.id.albumBrowserFragment
+            R.id.mediaStoreBrowserFragment
         )
     }
 

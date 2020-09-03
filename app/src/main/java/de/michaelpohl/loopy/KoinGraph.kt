@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy
 
+import de.michaelpohl.loopy.common.MediaStoreRepository
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
@@ -9,6 +10,7 @@ import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel
 import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel
 import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserViewModel
+import de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
@@ -32,10 +34,12 @@ object KoinGraph {
         single { ExternalStorageManager(get()) }
         single { AppStateRepository(get()) }
         single { StorageRepository(get()) }
+        single { MediaStoreRepository(androidApplication())}
     }
 
     private val viewModelModule = module {
         viewModel { FileBrowserViewModel(get()) }
+        viewModel { MediaStoreBrowserViewModel(get()) }
         viewModel { PlayerViewModel(get(), get()) }
         viewModel { AlbumBrowserViewModel() }
         viewModel { MusicBrowserViewModel() }

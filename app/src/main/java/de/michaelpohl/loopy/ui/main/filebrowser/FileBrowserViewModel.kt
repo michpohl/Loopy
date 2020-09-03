@@ -11,20 +11,21 @@ import de.michaelpohl.loopy.common.toFileModels
 import de.michaelpohl.loopy.ui.main.BaseViewModel
 import timber.log.Timber
 
-class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {
+open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {
 
     private val _currentFiles = MutableLiveData<List<FileModel>>()
     val currentFiles = _currentFiles.immutable()
 
+    // TODO this doesn't seem to be properly connected yet
     var bottomBarVisibility = MediatorLiveData<Int>()
 
     lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
 
-    protected var _emptyFolderLayoutVisibility =
+    private var _emptyFolderLayoutVisibility =
         MutableLiveData(View.INVISIBLE) //override if interested
     var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
 
-    var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
+    private var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
     var selectButtonText = _selectButtonText.immutable()
 
     private val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>()
@@ -36,9 +37,6 @@ class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel(
         } else {
             _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
-//        if (repo.containsAudioFiles(path)) {
-//            _bottomBarVisibility.postValue(View.VISIBLE)
-//        } else _bottomBarVisibility.postValue(View.INVISIBLE)
         _currentFiles.postValue(files)
 
     }

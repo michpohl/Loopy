@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 
-abstract class ItemHolder<T : FileModel>(itemView: View) :
+abstract class BrowserItemHolder<T : FileModel>(itemView: View) :
     DelegationAdapterItemHolder<T>(itemView) {
     val label: TextView = itemView.find(R.id.tv_label)
     val subLabel: TextView = itemView.find(R.id.tv_sublabel)

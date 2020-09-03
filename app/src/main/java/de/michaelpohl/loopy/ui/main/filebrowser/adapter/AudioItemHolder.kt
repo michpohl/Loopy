@@ -6,7 +6,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.getDrawable
 import de.michaelpohl.loopy.common.roundTo
 
-class AudioItemHolder(itemView: View) : ItemHolder<FileModel.AudioFile>(itemView) {
+class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(itemView) {
 
     lateinit var item: FileModel.File
     lateinit var onCheckedChangedReceiver: (FileModel.AudioFile, Boolean) -> Unit

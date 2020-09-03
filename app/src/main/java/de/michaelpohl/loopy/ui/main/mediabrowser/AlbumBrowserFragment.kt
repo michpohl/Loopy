@@ -37,11 +37,11 @@ class AlbumBrowserFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        try {
-            viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
-        } catch (e: Exception) {
-            throw Exception("${context} should implement AlbumBrowserFragment.OnItemCLickListener")
-        }
+//        try {
+//            viewModel.listener = context as BrowserViewModel.OnBrowserActionListener
+//        } catch (e: Exception) {
+//            throw Exception("${context} should implement AlbumBrowserFragment.OnItemCLickListener")
+//        }
         initViews()
     }
 
