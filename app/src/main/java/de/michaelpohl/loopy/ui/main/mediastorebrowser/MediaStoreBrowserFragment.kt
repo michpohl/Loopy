@@ -12,10 +12,8 @@ import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.find
-import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.databinding.FragmentMediastoreListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileBrowserSorting
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.AlbumDelegate
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.ArtistDelegate
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreBrowserSorting
@@ -33,42 +31,43 @@ open class MediaStoreBrowserFragment : BaseFragment() {
         AlbumDelegate(),
         TrackDelegate()
     ).also {
-    it.sorting = MediaStoreBrowserSorting()
-}
+        it.sorting = MediaStoreBrowserSorting()
+    }
 
-override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
 //    viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
-}
+    }
 
-override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-): View? {
-    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mediastore_list, container, false)
-    binding.model = viewModel
-    recycler = binding.root.find(R.id.rv_files)
-    recycler.adapter = browserAdapter
-    observe()
-    return binding.root
-}
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_mediastore_list, container, false)
+        binding.model = viewModel
+        recycler = binding.root.find(R.id.rv_files)
+        recycler.adapter = browserAdapter
+        observe()
+        return binding.root
+    }
 
-private fun observe() {
-    viewModel.getMediaStoreEntries().observe(
-        viewLifecycleOwner,
-        Observer { browserAdapter.update(it.toMutableList()) })
-}
+    private fun observe() {
+        viewModel.entriesToDisplay.observe(
+            viewLifecycleOwner,
+            Observer { browserAdapter.update(it.toMutableList()) })
+    }
 
-override fun getTitle(): String {
-    return getString(R.string.appbar_title_file_browser)
-}
+    override fun getTitle(): String {
+        return getString(R.string.appbar_title_file_browser)
+    }
 
-private fun addSelectionToPlayer(models: List<AudioModel>) {
+    private fun addSelectionToPlayer(models: List<AudioModel>) {
 //        val arguments = bundleOf(Pair("models", models))
 //        Timber.d("Navigating")
 //        navigateTo(R.id.action_fileBrowserFragment_to_playerFragment, arguments)
-}
+    }
 }
 

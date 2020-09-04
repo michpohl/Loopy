@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 
 abstract class MediaStoreItemHolder<T : MediaStoreItemModel>(itemView: View) :
