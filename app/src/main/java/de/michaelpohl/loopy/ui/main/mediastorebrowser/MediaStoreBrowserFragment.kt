@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +12,7 @@ import com.deutschebahn.streckenagent2.ui.common.recycler.AnyDiffCallback
 import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentMediastoreListBinding
 import de.michaelpohl.loopy.ui.main.BaseFragment
@@ -31,7 +32,7 @@ open class MediaStoreBrowserFragment : BaseFragment() {
         AnyDiffCallback(),
         ArtistDelegate(),
         AlbumDelegate { viewModel.onAlbumClicked(it) },
-        TrackDelegate()
+        TrackDelegate {model, selected -> viewModel.onTrackSelectionChanged(model, selected)}
     ).also {
         it.sorting = MediaStoreBrowserSorting()
     }
@@ -39,7 +40,7 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//    viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
+    viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
     }
 
     override fun onCreateView(
@@ -71,10 +72,10 @@ open class MediaStoreBrowserFragment : BaseFragment() {
         return getString(R.string.appbar_title_file_browser)
     }
 
-    private fun addSelectionToPlayer(models: List<AudioModel>) {
-//        val arguments = bundleOf(Pair("models", models))
-//        Timber.d("Navigating")
-//        navigateTo(R.id.action_fileBrowserFragment_to_playerFragment, arguments)
+    private fun addSelectionToPlayer(models: List<FileModel.AudioFile>) {
+        val arguments = bundleOf(Pair("models", models))
+        Timber.d("Navigating")
+        navigateTo(R.id.action_mediaStoreBrowserFragment_to_playerFragment, arguments)
     }
 }
 

@@ -19,7 +19,4 @@ class AudioItemDelegate( val receiver: (FileModel.AudioFile, Boolean) -> Unit) :
         return item is FileModel.AudioFile
     }
 
-    fun mapToReceiverPayload(view: View, item: FileModel.AudioFile): FileModel.AudioFile? {
-        return item
-    }
 }

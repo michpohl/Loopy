@@ -63,10 +63,6 @@ open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewM
         onSelectionSubmittedListener(selectedFiles.value.orEmpty())
     }
 
-    fun onSubmitButtonClicked(v: View) {
-
-    }
-
     fun onBackPressed(): Boolean {
         with(lastDisplayedFiles) {
             return if (this.isNotEmpty()) {
