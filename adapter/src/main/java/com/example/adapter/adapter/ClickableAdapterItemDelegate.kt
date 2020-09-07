@@ -4,31 +4,23 @@ import android.view.View
 import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
 import timber.log.Timber
 
-abstract class ClickableAdapterItemDelegate<ItemType : Any, PayloadType : Any?, ItemHolder : DelegationAdapterItemHolder<ItemType>> :
+abstract class ClickableAdapterItemDelegate<ItemType : Any, ItemHolder : DelegationAdapterItemHolder<ItemType>> :
     AdapterItemDelegate<ItemType, ItemHolder>() {
 
     /**
      * Set this to define a function taking [PayloadType] that is called when an item belonging to this delegate triggers something
      * (e.g. as a result of a click).
      */
-    protected open val receiver: ((PayloadType) -> Unit)? = null
+    protected open val receiver: ((ItemType) -> Unit)? = null
 
     /**
      * Override this if necessary. If not overriden, it forwards click events (when [isItemClickable] is true)
-     * vial [mapToReceiverPayload] to the [receiver].
+     * to the [receiver].
      */
     protected open fun doOnClick(view: View, item: ItemType) {
-        mapToReceiverPayload(view, item)?.let {
-            receiver?.invoke(it) ?: Timber.w(
-                "ClickReceiver not set. Swallowing this click event")
-        } ?: Timber.e("Could not map RecyclerItem to receiver payload properly!")
-    }
-
-    /**
-     * Override to return something else than null!
-     */
-    protected open fun mapToReceiverPayload(view: View, item: ItemType): PayloadType? {
-        return null
+        receiver?.invoke(item) ?: Timber.w(
+            "ClickReceiver not set. Swallowing this click event"
+        )
     }
 
     /**

@@ -18,7 +18,6 @@ class MediaStoreBrowserSorting : Sorting<MediaStoreItemModel>() {
         return numberedTracks.sortedBy { it.trackNo } + otherTracks.sortedBy { it.name }
     }
 
-
     private inline fun <reified T> List<MediaStoreItemModel>.containsOnly(): Boolean {
         var result = true
         this.forEach { if (it !is T) result = false }

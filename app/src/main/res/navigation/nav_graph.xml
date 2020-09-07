@@ -6,7 +6,14 @@
     <fragment
         android:id="@+id/playerFragment"
         android:name="de.michaelpohl.loopy.ui.main.player.PlayerFragment"
-        android:label="PlayerFragment" />
+        android:label="PlayerFragment" >
+        <action
+            android:id="@+id/action_playerFragment_to_fileBrowserFragment"
+            app:destination="@id/fileBrowserFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_mediaStoreBrowserFragment"
+            app:destination="@id/mediaStoreBrowserFragment" />
+    </fragment>
     <fragment
         android:id="@+id/albumBrowserFragment"
         android:name="de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserFragment"

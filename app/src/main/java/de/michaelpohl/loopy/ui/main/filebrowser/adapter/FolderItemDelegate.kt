@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.ui.main.filebrowser.adapter
 
-import android.view.View
 import android.view.ViewGroup
 import com.example.adapter.adapter.ClickableAdapterItemDelegate
 import com.example.adapter.adapter.util.inflateLayout
@@ -8,16 +7,12 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 
 class FolderItemDelegate(override val receiver: (FileModel.Folder) -> Unit) :
-    ClickableAdapterItemDelegate<FileModel.Folder, FileModel.Folder, FolderItemHolder>() {
+    ClickableAdapterItemDelegate<FileModel.Folder, FolderItemHolder>() {
     override fun createViewHolder(parent: ViewGroup): FolderItemHolder {
         return FolderItemHolder(inflateLayout(R.layout.item_browser, parent))
     }
 
     override fun isForItemType(item: Any): Boolean {
         return item is FileModel.Folder
-    }
-
-    override fun mapToReceiverPayload(view: View, item: FileModel.Folder): FileModel.Folder? {
-        return item
     }
 }

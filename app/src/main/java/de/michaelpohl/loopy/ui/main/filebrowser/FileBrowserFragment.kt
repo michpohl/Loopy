@@ -64,14 +64,18 @@ open class FileBrowserFragment : BaseFragment() {
         return binding.root
     }
 
-    private fun observe() {
-        viewModel.currentFiles.observe(
-            viewLifecycleOwner,
-            Observer { browserAdapter.update(it.toMutableList()) })
-    }
-
     override fun getTitle(): String {
         return getString(R.string.appbar_title_file_browser)
+    }
+
+    override fun onBackPressed(): Boolean {
+        return viewModel.onBackPressed()
+    }
+
+    private fun observe() {
+        viewModel.filesToDisplay.observe(
+            viewLifecycleOwner,
+            Observer { browserAdapter.update(it.toMutableList()) })
     }
 
     private fun addSelectionToPlayer(models: List<FileModel.AudioFile>) {

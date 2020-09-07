@@ -133,36 +133,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         return true
     }
 
-//    override fun onFolderClicked(fileModel: FileModel) {
-//        if (fileModel is FileModel.Folder) {
-//            showFileBrowserFragment(fileModel.path)
-//        }
-//    }
-
     override fun onOpenFileBrowserClicked() {
         showFileBrowserFragment()
     }
 
     override fun onBrowseMediaStoreClicked() {
         showMediaStoreBrowserFragment()
-    }
-//
-//    override fun onAlbumClicked(albumTitle: String) {
-//        Timber.d("Clicked on this one: %s", albumTitle)
-//        showMusicBrowserFragment(albumTitle)
-//    }
-
-    override fun onBackPressed() {
-
-        //apparently it is possible to come by here with currentFragment not being initialized
-        //TODO: investigate
-        if (::currentFragment.isInitialized && !currentFragment.onBackPressed()) {
-            super.onBackPressed()
-        }
-        supportFragmentManager.popBackStack()
-        if (supportFragmentManager.backStackEntryCount == 0) {
-            //            finish()
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -200,6 +176,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             } // do nothing
         }
         drawer.closeDrawers()
+        currentFragment = nav_host_fragment.childFragmentManager.fragments[0] as BaseFragment
 
         // returning false suppresses the visual checking of clicked items. We don't need it so we return false
         return false
@@ -219,15 +196,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         )
         snackbar.view.setBackgroundColor(ContextCompat.getColor(this, backgroundColorResource!!))
         snackbar.show()
-    }
-
-    /**
-     * this gets called in PlayerFragment's onResume() to make sure it always is the currentFragment
-     * when it is open. That is necessary for some functionality and this way is a convenient shortcut
-     */
-    fun updateCurrentFragment(fragment: PlayerFragment) {
-        Timber.d("Putting Playerfragment back into place")
-        currentFragment = fragment
     }
 
     private fun handleIntent() {
@@ -250,31 +218,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 //        showPlayerFragmentWithFreshSelection()
     }
 
-    private fun showPlayerFragment(
-        loops: List<FileModel.AudioFile> = emptyList()
-    ) {
-
-        //        //TODO this method can be better - handling what's in AppData should completely move into AppStateRepository
-        //        val appData = AppData(audioModels = loops, settings = settings)
-        //        val playerFragment = PlayerFragment.newInstance(appData)
-        //        Timber.d("currentFragment should get assigned")
-        //        currentFragment = playerFragment
-        //        StateHelper.currentFragment = currentFragment
-        //        playerFragment.onResumeListener = this::updateCurrentFragment
-        //        supportFragmentManager.beginTransaction()
-        //            .replace(R.id.container, playerFragment, "player")
-        //            .commit()
-    }
-
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
         nav_host_fragment.findNavController().navigate(
-            R.id.fileBrowserFragment, buildStringArgs(path)
+            R.id.action_playerFragment_to_fileBrowserFragment, buildStringArgs(path)
         )
     }
 
     private fun showMediaStoreBrowserFragment() {
         nav_host_fragment.findNavController().navigate(
-            R.id.mediaStoreBrowserFragment
+            R.id.action_playerFragment_to_mediaStoreBrowserFragment
         )
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.ArtistDelegate
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreBrowserSorting
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.TrackDelegate
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 open class MediaStoreBrowserFragment : BaseFragment() {
 
@@ -28,7 +30,7 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     private var browserAdapter = DelegationAdapter(
         AnyDiffCallback(),
         ArtistDelegate(),
-        AlbumDelegate(),
+        AlbumDelegate { viewModel.onAlbumClicked(it) },
         TrackDelegate()
     ).also {
         it.sorting = MediaStoreBrowserSorting()
@@ -52,6 +54,11 @@ open class MediaStoreBrowserFragment : BaseFragment() {
         recycler.adapter = browserAdapter
         observe()
         return binding.root
+    }
+
+    override fun onBackPressed(): Boolean {
+        Timber.d("Pressing")
+        return viewModel.onBackPressed()
     }
 
     private fun observe() {

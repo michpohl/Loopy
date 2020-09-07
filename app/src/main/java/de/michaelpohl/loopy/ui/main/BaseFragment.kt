@@ -1,29 +1,46 @@
 package de.michaelpohl.loopy.ui.main
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
+import timber.log.Timber
 
 open class BaseFragment : Fragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        addOnBackPressedCallback()
+    }
+
+    private fun addOnBackPressedCallback() {
+        requireActivity().onBackPressedDispatcher.addCallback(object :
+            OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (!onBackPressed()) {
+                    findNavController().navigateUp()
+                }
+            }
+
+        })
+    }
 
     override fun onResume() {
         super.onResume()
         activity?.title = getTitle()
     }
 
-    /**
-     *do something when the back button is pressed
-     *Override if interested
-     *Return true to prevent activity from executing its onBackPressed
-     */
-    open fun onBackPressed(): Boolean {
-        return false
-    }
-
     open fun getTitle(): String {
         return getString(R.string.appbar_title_player)
+    }
+
+    /**
+     * Override and return true if you want to do something else than navigate back
+     */
+    open fun onBackPressed() : Boolean {
+        return false
     }
 
     /**
@@ -33,6 +50,7 @@ open class BaseFragment : Fragment() {
         super.onDestroyView()
         clearFindViewByIdCache()
     }
+
 
     /**
      * Convenience method for Navigation

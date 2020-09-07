@@ -13,8 +13,10 @@ import timber.log.Timber
 
 open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {
 
-    private val _currentFiles = MutableLiveData<List<FileModel>>()
-    val currentFiles = _currentFiles.immutable()
+    private val _filesToDisplay = MutableLiveData<List<FileModel>>()
+    val filesToDisplay = _filesToDisplay.immutable()
+
+    private val lastDisplayedFiles = mutableListOf<List<FileModel>>()
 
     // TODO this doesn't seem to be properly connected yet
     var bottomBarVisibility = MediatorLiveData<Int>()
@@ -37,7 +39,8 @@ open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewM
         } else {
             _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
-        _currentFiles.postValue(files)
+        lastDisplayedFiles.add(filesToDisplay.value.orEmpty())
+        _filesToDisplay.postValue(files)
 
     }
 
@@ -62,5 +65,15 @@ open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewM
 
     fun onSubmitButtonClicked(v: View) {
 
+    }
+
+    fun onBackPressed(): Boolean {
+        with(lastDisplayedFiles) {
+            return if (this.isNotEmpty()) {
+                _filesToDisplay.postValue(this.last())
+                remove(this.last())
+                true
+            } else false
+        }
     }
 }
