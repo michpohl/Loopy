@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_playerFragment_to_mediaStoreBrowserFragment"
             app:destination="@id/mediaStoreBrowserFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/albumBrowserFragment"
@@ -46,4 +49,8 @@
             android:id="@+id/action_mediaStoreBrowserFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="de.michaelpohl.loopy.ui.main.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

@@ -8,13 +8,12 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import com.deutschebahn.streckenagent2.ui.common.recycler.AnyDiffCallback
-import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapter
+import com.example.adapter.adapter.adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
-import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.AudioItemDelegate
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileBrowserSorting
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileItemDelegate
@@ -27,18 +26,18 @@ open class FileBrowserFragment : BaseFragment() {
     private val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var recycler: RecyclerView
-    private var browserAdapter = DelegationAdapter(
-        AnyDiffCallback(),
-        FileItemDelegate(),
-        FolderItemDelegate { viewModel.onFolderClicked(it) },
-        AudioItemDelegate { model, isSelected ->
-            viewModel.onFileSelectionChanged(
-                model,
-                isSelected
-            )
-        }
-    ).also {
-        it.sorting = FileBrowserSorting()
+
+    private var browserAdapter = adapter<FileModel> {
+        delegates = listOf(
+            FileItemDelegate(),
+            FolderItemDelegate { viewModel.onFolderClicked(it) },
+            AudioItemDelegate { model, isSelected ->
+                viewModel.onFileSelectionChanged(
+                    model,
+                    isSelected
+                )
+            })
+        sorting = FileBrowserSorting()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

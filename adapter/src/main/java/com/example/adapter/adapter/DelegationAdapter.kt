@@ -1,11 +1,10 @@
-package com.deutschebahn.streckenagent2.ui.common.recycler
+package com.example.adapter.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.adapter.adapter.AdapterItemDelegate
-import com.example.adapter.adapter.Sorting
+import timber.log.Timber
 
 /**
  * A [RecyclerView.Adapter] that uses delegates to handle its internal logic, to make it more simple to have complex
@@ -14,14 +13,14 @@ import com.example.adapter.adapter.Sorting
  * @param delegates A number of delegate classes that extend [AdapterItemDelegate]. Normally there is one delegate for
  * each view type the [RecyclerView] is supposed to be able to present.
  */
-open class DelegationAdapter<T : Any>(
-    diffCallback: DiffUtil.ItemCallback<T>?,
-    vararg delegates: AdapterItemDelegate<out T, *>
+open class DelegationAdapter<ItemType : Any>(
+    diffCallback: DiffUtil.ItemCallback<ItemType>? = AnyDiffCallback(),
+    private val sorting: Sorting.Basic<ItemType>? = null,
+    private val delegates: List<AdapterItemDelegate<out ItemType, *>>
 ) :
-    ListAdapter<T, DelegationAdapterItemHolder<*>>(diffCallback ?: AnyDiffCallback()) {
+    ListAdapter<ItemType, DelegationAdapterItemHolder<*>>(diffCallback ?: AnyDiffCallback()) {
 
-    private val delegates = delegates.toList()
-    var sorting: Sorting<T>? = null
+    protected lateinit var recyclerView: RecyclerView
 
     /**
      * The integer returned here is the responsible delegate's index in the delegate list, for view at the given position.
@@ -29,6 +28,7 @@ open class DelegationAdapter<T : Any>(
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
         val chosen = delegates.find { it.isForItemType(item) }
+        if (chosen == null) Timber.e("No delegate found for item of this type: ${item.javaClass.canonicalName}")
         return delegates.indexOf(chosen)
     }
 
@@ -40,7 +40,7 @@ open class DelegationAdapter<T : Any>(
         viewType: Int
     ): DelegationAdapterItemHolder<*> {
         if (viewType == -1) error("A viewType was requested for an item type that couldn't be found!")
-        return delegates[viewType].createViewHolder(parent)
+        return delegates[viewType].createViewHolder(parent).apply { onCreated() }
     }
 
     /**
@@ -53,10 +53,18 @@ open class DelegationAdapter<T : Any>(
         correctDelegate?.doBinding(item, holder)
     }
 
-    fun update(list: List<T>) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    /**
+     * Use this to update the adapter's current items. If a [Sorting] is registered, it will be used to check and
+     * adjust the order of the items.
+     */
+    fun update(list: List<ItemType>) {
         sorting?.let {
             super.submitList(it.sort(list.toMutableList()))
         } ?: super.submitList(list)
     }
-
 }

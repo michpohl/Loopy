@@ -3,7 +3,7 @@ package de.michaelpohl.loopy.ui.main.player.adapter
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
+import com.example.adapter.adapter.DelegationAdapterItemHolder
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState

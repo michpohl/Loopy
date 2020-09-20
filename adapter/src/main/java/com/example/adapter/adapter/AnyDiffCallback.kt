@@ -1,4 +1,4 @@
-package com.deutschebahn.streckenagent2.ui.common.recycler
+package com.example.adapter.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
  * Fallback Callback for [DiffUtil] that compares two objects.
  * Note that this is the most basic implementation and might not lead to
  * correct results in all cases. If in doubt, create a callback class for
- * your specific use case!
+ * your specific use case (in 99% of cases you want your own)!
  */
 class AnyDiffCallback<T : Any> : DiffUtil.ItemCallback<T>() {
 

@@ -14,17 +14,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.common.toAudioModel
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
-import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemDelegate
-import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemSorting
 import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
@@ -37,6 +35,9 @@ class PlayerFragment : BaseFragment() {
     private lateinit var recycler: RecyclerView
 
     private lateinit var playerService: PlayerService
+
+    override val showOptionsMenu = true
+
     lateinit var onResumeListener: (PlayerFragment) -> Unit
 
     private var playerServiceBinder: PlayerServiceBinder? = null
@@ -59,8 +60,6 @@ class PlayerFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-
     }
 
     override fun onCreateView(
@@ -130,12 +129,13 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun initAdapter() {
+
+
         adapter = PlayerDelegationAdapter(
             PlayerItemDelegate(
                 clickReceiver = { viewModel.onLoopClicked(it) },
                 deleteReceiver = { viewModel.onDeleteLoopClicked(it) })
         ).also {
-            it.sorting = PlayerItemSorting()
             recycler.adapter = it
         }
     }

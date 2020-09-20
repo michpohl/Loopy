@@ -8,7 +8,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.MediaStoreRepository
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.common.toFileModel
-import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
 import java.io.File

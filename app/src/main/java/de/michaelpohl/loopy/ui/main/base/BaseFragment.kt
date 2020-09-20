@@ -1,18 +1,22 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.base
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
-import timber.log.Timber
 
 open class BaseFragment : Fragment() {
+
+    open val showOptionsMenu = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addOnBackPressedCallback()
+        setHasOptionsMenu(showOptionsMenu)
     }
 
     private fun addOnBackPressedCallback() {
@@ -39,7 +43,7 @@ open class BaseFragment : Fragment() {
     /**
      * Override and return true if you want to do something else than navigate back
      */
-    open fun onBackPressed() : Boolean {
+    open fun onBackPressed(): Boolean {
         return false
     }
 
@@ -59,6 +63,15 @@ open class BaseFragment : Fragment() {
         if (!isDestinationSameAsCurrentDestination(destination)) {
             findNavController().navigate(destination, arguments)
         }
+    }
+
+    /**
+     * Observe with Kotlin higher order functions and let the framework do lifecycle management
+     */
+    protected infix fun <T> LiveData<T>.observeWith(callback: (T) -> Unit) {
+        observe(viewLifecycleOwner, Observer {
+            callback(it)
+        })
     }
 
     /* https://stackoverflow.com/questions/51060762/

@@ -8,7 +8,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.common.toFileModels
-import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import timber.log.Timber
 
 open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {

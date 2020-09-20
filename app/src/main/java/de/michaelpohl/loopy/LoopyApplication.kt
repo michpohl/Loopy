@@ -17,7 +17,7 @@ class LoopyApplication : Application() {
 
     private fun initKoin() {
         startKoin {
-            androidLogger(Level.DEBUG)
+            androidLogger(Level.ERROR)
             androidContext(this@LoopyApplication)
             modules(KoinGraph.get())
         }

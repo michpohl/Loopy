@@ -27,7 +27,7 @@ import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.SharedPreferencesManager
-import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 clearBackStack()
                 if (isPermitted()) showFileBrowserFragment() else PermissionHelper(this).checkPermissions()
             }
-            R.id.nav_open_settings -> showSettingsDialog()
+            R.id.nav_open_settings -> showSettings()
             R.id.nav_clear_player -> clearLoopsList()
             R.id.nav_help -> {
                 val am = AssetManager()
@@ -242,13 +242,16 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         )
     }
 
-    private fun showSettingsDialog() {
-        val dialog = SettingsDialogFragment()
-        dialog.resultListener = {
-            Timber.d("Resultlistener was invoked")
-            keepScreenOnIfDesired(it)
-        }
-        dialog.show(supportFragmentManager, "settings-dialog")
+    private fun showSettings() {
+//        val dialog = SettingsDialogFragment()
+//        dialog.resultListener = {
+//            Timber.d("Resultlistener was invoked")
+//            keepScreenOnIfDesired(it)
+//        }
+//        dialog.show(supportFragmentManager, "settings-dialog")
+        nav_host_fragment.findNavController().navigate(
+            R.id.action_playerFragment_to_settingsFragment)
+
     }
 
     private fun clearLoopsList() {

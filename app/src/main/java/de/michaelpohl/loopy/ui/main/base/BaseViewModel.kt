@@ -1,4 +1,4 @@
-package de.michaelpohl.loopy.ui.main
+package de.michaelpohl.loopy.ui.main.base
 
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel

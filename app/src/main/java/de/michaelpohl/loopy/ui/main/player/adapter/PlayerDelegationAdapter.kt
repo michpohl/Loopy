@@ -1,11 +1,15 @@
 package de.michaelpohl.loopy.ui.main.player.adapter
 
-import com.deutschebahn.streckenagent2.ui.common.recycler.AnyDiffCallback
-import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapter
+import com.example.adapter.adapter.AnyDiffCallback
+import com.example.adapter.adapter.DelegationAdapter
 import de.michaelpohl.loopy.common.AudioModel
 
+// TODO refactor with custom Sorting
 class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :
-    DelegationAdapter<AudioModel>(AnyDiffCallback(), delegate) {
+    DelegationAdapter<AudioModel>(
+        AnyDiffCallback(), PlayerItemSorting(),
+        listOf(delegate)
+    ) {
     fun updateFileCurrentlyPlayed(name: String) {
         delegate.updateFileCurrentlyPlayed(name)
     }

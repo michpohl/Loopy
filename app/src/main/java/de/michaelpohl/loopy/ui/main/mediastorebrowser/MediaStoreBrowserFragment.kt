@@ -8,18 +8,13 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import com.deutschebahn.streckenagent2.ui.common.recycler.AnyDiffCallback
-import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapter
+import com.example.adapter.adapter.adapter
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentMediastoreListBinding
-import de.michaelpohl.loopy.ui.main.BaseFragment
-import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.AlbumDelegate
-import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.ArtistDelegate
-import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreBrowserSorting
-import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.TrackDelegate
+import de.michaelpohl.loopy.ui.main.base.BaseFragment
+import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -28,19 +23,18 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     private val viewModel: MediaStoreBrowserViewModel by inject()
     private lateinit var binding: FragmentMediastoreListBinding
     private lateinit var recycler: RecyclerView
-    private var browserAdapter = DelegationAdapter(
-        AnyDiffCallback(),
-        ArtistDelegate(),
-        AlbumDelegate { viewModel.onAlbumClicked(it) },
-        TrackDelegate {model, selected -> viewModel.onTrackSelectionChanged(model, selected)}
-    ).also {
-        it.sorting = MediaStoreBrowserSorting()
+
+    private val browserAdapter = adapter<MediaStoreItemModel> {
+        delegates = listOf(ArtistDelegate(),
+            AlbumDelegate { viewModel.onAlbumClicked(it) },
+            TrackDelegate { model, selected -> viewModel.onTrackSelectionChanged(model, selected) })
+        sorting = MediaStoreBrowserSorting()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-    viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
+        viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
     }
 
     override fun onCreateView(

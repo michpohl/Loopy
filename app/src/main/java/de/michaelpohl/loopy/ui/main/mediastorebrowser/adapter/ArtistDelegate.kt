@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter
 
 import android.view.ViewGroup
 import com.example.adapter.adapter.AdapterItemDelegate
-import com.example.adapter.adapter.util.inflateLayout
+import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 
 class ArtistDelegate : AdapterItemDelegate<MediaStoreItemModel.Artist, ArtistItemHolder>() {

@@ -10,7 +10,7 @@ import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
-import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import timber.log.Timber
 
 class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) :

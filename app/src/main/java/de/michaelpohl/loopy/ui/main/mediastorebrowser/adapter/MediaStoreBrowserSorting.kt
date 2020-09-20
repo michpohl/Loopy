@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter
 
 import com.example.adapter.adapter.Sorting
 
-class MediaStoreBrowserSorting : Sorting<MediaStoreItemModel>() {
+class MediaStoreBrowserSorting : Sorting.Basic<MediaStoreItemModel>() {
     override fun sort(input: List<MediaStoreItemModel>): List<MediaStoreItemModel> {
         return when {
             input.containsOnly<MediaStoreItemModel.Album>() -> input.sortedBy { it.name }

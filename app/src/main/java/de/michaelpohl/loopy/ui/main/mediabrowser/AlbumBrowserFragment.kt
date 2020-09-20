@@ -1,16 +1,14 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.adapter.adapter.util.inflateLayout
+import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_files_list.*
 import org.koin.android.ext.android.inject
 

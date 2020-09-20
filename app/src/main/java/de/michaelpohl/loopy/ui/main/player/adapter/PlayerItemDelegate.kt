@@ -2,7 +2,7 @@ package de.michaelpohl.loopy.ui.main.player.adapter
 
 import android.view.ViewGroup
 import com.example.adapter.adapter.AdapterItemDelegate
-import com.example.adapter.adapter.util.inflateLayout
+import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState

@@ -3,7 +3,7 @@ package de.michaelpohl.loopy.ui.main.filebrowser.adapter
 import com.example.adapter.adapter.Sorting
 import de.michaelpohl.loopy.common.FileModel
 
-class FileBrowserSorting : Sorting<FileModel>() {
+class FileBrowserSorting : Sorting.Basic<FileModel>() {
     override fun sort(input: List<FileModel>): List<FileModel> {
         val folders = input
             .filterIsInstance<FileModel.Folder>()

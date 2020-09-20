@@ -1,24 +1,31 @@
 package com.example.adapter.adapter
 
 import android.view.View
-import com.deutschebahn.streckenagent2.ui.common.recycler.DelegationAdapterItemHolder
 import timber.log.Timber
 
-abstract class ClickableAdapterItemDelegate<ItemType : Any, ItemHolder : DelegationAdapterItemHolder<ItemType>> :
-    AdapterItemDelegate<ItemType, ItemHolder>() {
+/**
+ * Delegate base class for recycler items that should be clickable (as in: click the entire item to trigger something).
+ * Just set the clickListener, and it will automatically be connected to the item. If you need more complicated actions,
+ * it's better to unse a regular [AdapterItemDelegate] and do the binding yourself in the [DelegationAdapterItemHolder]'s
+ * [bind] method.
+ */
+abstract class ClickableAdapterItemDelegate<ItemType : Any, HolderType : DelegationAdapterItemHolder<ItemType>> :
+    AdapterItemDelegate<ItemType, HolderType>() {
 
     /**
-     * Set this to define a function taking [PayloadType] that is called when an item belonging to this delegate triggers something
-     * (e.g. as a result of a click).
+     * Set this to define a function taking [ItemType] that is called when an item belonging to this delegate triggers
+     * something (e.g. as a result of a click).
+     *
+     * If you need to run any logic on the data sent to the listener, it's best applied in the delegate.
      */
-    protected open val receiver: ((ItemType) -> Unit)? = null
+    abstract val clickListener: ((ItemType) -> Unit)?
 
     /**
      * Override this if necessary. If not overriden, it forwards click events (when [isItemClickable] is true)
-     * to the [receiver].
+     * to the [clickListener].
      */
     protected open fun doOnClick(view: View, item: ItemType) {
-        receiver?.invoke(item) ?: Timber.w(
+        clickListener?.invoke(item) ?: Timber.w(
             "ClickReceiver not set. Swallowing this click event"
         )
     }
@@ -33,7 +40,7 @@ abstract class ClickableAdapterItemDelegate<ItemType : Any, ItemHolder : Delegat
     override fun doBinding(item: Any, holder: DelegationAdapterItemHolder<*>) {
         if (this.isForItemType(item)) {
             holder.itemView.setOnClickListener { view -> doOnClick(view, item as ItemType) }
-            bindViewHolder(item as ItemType, holder as ItemHolder)
+            bindViewHolder(item as ItemType, holder as HolderType)
         } else {
             onBindViewHolderFailed(item, holder)
         }

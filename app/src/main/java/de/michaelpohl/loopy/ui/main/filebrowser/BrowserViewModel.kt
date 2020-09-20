@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.immutable
-import de.michaelpohl.loopy.ui.main.BaseViewModel
+import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 
 open class BrowserViewModel : BaseViewModel() {
 

@@ -12,6 +12,7 @@ import de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel
 import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
+import de.michaelpohl.loopy.ui.main.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -44,5 +45,6 @@ object KoinGraph {
         viewModel { AlbumBrowserViewModel() }
         viewModel { MusicBrowserViewModel() }
         viewModel { MarkupViewerViewModel() }
+        viewModel { SettingsViewModel(get()) }
     }
 }

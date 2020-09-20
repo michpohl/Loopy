@@ -12,9 +12,8 @@ import com.franmontiel.attributionpresenter.entities.License
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.Library
 import de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
-import de.michaelpohl.loopy.ui.main.BaseFragment
+import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_markup_viewer.*
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.getViewModel
 import ru.noties.markwon.Markwon
 
