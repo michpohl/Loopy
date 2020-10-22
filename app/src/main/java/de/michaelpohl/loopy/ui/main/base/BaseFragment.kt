@@ -1,22 +1,34 @@
 package de.michaelpohl.loopy.ui.main.base
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
 
 open class BaseFragment : Fragment() {
 
     open val showOptionsMenu = false
+    open val screenTitle: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addOnBackPressedCallback()
         setHasOptionsMenu(showOptionsMenu)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).setupActionBar(
+            !showOptionsMenu,
+            screenTitle ?: getString(R.string.appbar_title_player)
+        )
+
     }
 
     private fun addOnBackPressedCallback() {

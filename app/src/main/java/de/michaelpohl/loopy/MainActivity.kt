@@ -12,8 +12,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -30,7 +30,6 @@ import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
-import de.michaelpohl.loopy.ui.main.player.SettingsDialogFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -51,7 +50,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     private lateinit var container: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         container = findViewById(R.id.outer_layout)
@@ -63,7 +61,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         setupNavigation()
         initDataRepository()
         handlePossibleIntents()
-        setupActionBar()
         setupDrawer()
         keepScreenOnIfDesired(appState.settings)
     }
@@ -110,13 +107,24 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         navigationView.setNavigationItemSelectedListener(this)
     }
 
-    private fun setupActionBar() {
-        val toolBar = tb_toolbar
-        setSupportActionBar(toolBar)
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_settings)
+    fun setupActionBar(
+        withBackButton: Boolean = false,
+        titleString: String = getString(R.string.appbar_title_player)
+    ) {
+        val toolBar = findViewById<Toolbar>(R.id.tb_toolbar)
+        toolBar.apply {
+            title = titleString
+            setSupportActionBar(toolBar)
+            navigationIcon =
+                getDrawable(if (withBackButton) R.drawable.ic_back else R.drawable.ic_settings)
+            setNavigationOnClickListener {
+                if (withBackButton) {
+                    onBackPressed()
+                } else {
+                    drawer.openDrawer(GravityCompat.START)
+                }
+            }
+
         }
     }
 
@@ -250,7 +258,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
 //        }
 //        dialog.show(supportFragmentManager, "settings-dialog")
         nav_host_fragment.findNavController().navigate(
-            R.id.action_playerFragment_to_settingsFragment)
+            R.id.action_playerFragment_to_settingsFragment
+        )
 
     }
 
