@@ -10,19 +10,23 @@ import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel
 
 class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewModel() {
 
-    private val _state = MutableLiveData<UIState>(UIState(stateRepo.settings.toItemModels()))
+    private val _state = MutableLiveData(UIState(stateRepo.settings.toItemModels()))
     val state = _state.immutable()
 
-    data class UIState(
-        val settings: List<SettingsItemModel>
-    )
+    private val currentState: UIState
+        get() {
+            return state.value ?: UIState(stateRepo.settings.toItemModels())
+        }
+
 
     // TODO this is ugly
     private fun Settings.toItemModels(): List<SettingsItemModel> {
         val list = mutableListOf<SettingsItemModel>()
-        list.add(SettingsItemModel.Header(
-            label = getString(R.string.settings_label_loop_switching_behaviour)
-        ))
+        list.add(
+            SettingsItemModel.Header(
+                label = getString(R.string.settings_label_loop_switching_behaviour)
+            )
+        )
         list.add(
             SettingsItemModel.ToggleableSetting(
                 label = getString(R.string.settings_item_switch_immediately),
@@ -33,9 +37,11 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewMod
                     SettingsItemModel.ToggleableSetting.Companion.ToggleState.FIRST
             )
         )
-        list.add(SettingsItemModel.Header(
-            label = getString(R.string.settings_label_accepted_file_types)
-        ))
+        list.add(
+            SettingsItemModel.Header(
+                label = getString(R.string.settings_label_accepted_file_types)
+            )
+        )
         list.add(
             SettingsItemModel.CheckableSetting(
                 label = getString(R.string.settings_item_allow_wav),
@@ -57,14 +63,9 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewMod
                 isChecked = this.acceptedFileTypes.contains(AppStateRepository.Companion.AudioFileType.OGG)
             )
         )
-        list.add(SettingsItemModel.Header(
-            label = getString(R.string.settings_label_other_settings)
-        ))
         list.add(
-            SettingsItemModel.CheckableSetting(
-                label = getString(R.string.settings_item_show_loop_count),
-                setting = AppSetting.COUNT_LOOPS,
-                isChecked = this.showLoopCount
+            SettingsItemModel.Header(
+                label = getString(R.string.settings_label_other_settings)
             )
         )
         list.add(
@@ -90,5 +91,21 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewMod
         )
         return list.toList()
     }
+
+    fun onSettingsItemClicked(setting: SettingsItemModel) {
+        val newSetting = setting.flip()
+        val currentSettings = state.value?.settings
+        currentSettings?.let { settings ->
+            val index = settings.indexOf(settings.find { it.label == newSetting.label })
+            val mutable = settings.toMutableList()
+            mutable.removeAt(index)
+            mutable.add(index, newSetting)
+            _state.postValue(currentState.copy(settings = mutable))
+        }
+    }
+
+    data class UIState(
+        val settings: List<SettingsItemModel>
+    )
 }
 

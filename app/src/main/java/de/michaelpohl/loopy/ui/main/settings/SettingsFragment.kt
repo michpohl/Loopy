@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adapter.adapter.adapter
+import com.example.adapter.adapter.clickableDelegate
 import com.example.adapter.adapter.delegate
+import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.R.id.rv_settings_recycler
 import de.michaelpohl.loopy.common.find
@@ -27,12 +29,19 @@ class SettingsFragment : BaseFragment() {
 
     private val adapter = adapter<SettingsItemModel> {
         delegates = listOf(
-            delegate<SettingsItemModel.CheckableSetting, SettingsCheckableViewHolder>(R.layout.item_settings_checkable),
             delegate<SettingsItemModel.Header, SettingsHeaderViewHolder>(R.layout.item_settings_header),
-            delegate<SettingsItemModel.ToggleableSetting, SettingsToggleableViewHolder>(R.layout.item_settings_toggleable)
+            clickableDelegate<SettingsItemModel.CheckableSetting, SettingsCheckableViewHolder>
+                (R.layout.item_settings_checkable) { viewModel.onSettingsItemClicked(it)},
+            clickableDelegate<SettingsItemModel.ToggleableSetting, SettingsToggleableViewHolder>
+                (R.layout.item_settings_toggleable) {viewModel.onSettingsItemClicked(it)}
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+//        (requireActivity() as MainActivity).setupActionBar(withBackButton = true, titleString = "vagina")
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
