@@ -39,12 +39,13 @@ open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewM
         } else {
             _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
-        lastDisplayedFiles.add(filesToDisplay.value.orEmpty())
         _filesToDisplay.postValue(files)
 
     }
 
     fun onFolderClicked(folder: FileModel.Folder) {
+        // keeping the items just diplayed so the backbutton can work properly
+        lastDisplayedFiles.add(filesToDisplay.value.orEmpty())
         getFolderContent(folder.path)
     }
 
@@ -56,7 +57,6 @@ open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewM
             currentList.remove(fileModel)
         }
         selectedFiles.postValue(currentList)
-        Timber.d("Currently selected: ${currentList.map { it.name }}")
     }
 
     fun onOpenSelectionClicked(v: View) {
