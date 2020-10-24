@@ -11,9 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
@@ -142,17 +140,21 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun observe() {
-        with(viewModel) {
-            loopsList.observe(viewLifecycleOwner, Observer { adapter.update(it) })
-            fileCurrentlyPlayed.observe(
-                viewLifecycleOwner,
-                Observer { adapter.updateFileCurrentlyPlayed(it) })
-            filePreselected.observe(
-                viewLifecycleOwner,
-                Observer { adapter.updateFilePreselected(it) })
-            playbackProgress.observe(
-                viewLifecycleOwner,
-                Observer { adapter.updatePlaybackProgress(it) })
+
+        // FIXME adapter needs to take nullable values
+        viewModel.state.observeWith {
+            with(it) {
+                adapter.update(loopsList)
+                fileInFocus?.let { file ->
+                    adapter.updateFileCurrentlyPlayed(file)
+                }
+                filePreselected?.let { file ->
+                    adapter.updateFilePreselected(file)
+                }
+                playbackProgress?.let { progress ->
+                    adapter.updatePlaybackProgress(progress)
+                }
+            }
         }
 
     }
