@@ -15,10 +15,7 @@ import de.michaelpohl.loopy.R.id.rv_settings_recycler
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentSettingsBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
-import de.michaelpohl.loopy.ui.main.settings.items.SettingsCheckableViewHolder
-import de.michaelpohl.loopy.ui.main.settings.items.SettingsHeaderViewHolder
-import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel
-import de.michaelpohl.loopy.ui.main.settings.items.SettingsToggleableViewHolder
+import de.michaelpohl.loopy.ui.main.settings.items.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -33,14 +30,10 @@ class SettingsFragment : BaseFragment() {
             clickableDelegate<SettingsItemModel.CheckableSetting, SettingsCheckableViewHolder>
                 (R.layout.item_settings_checkable) { viewModel.onSettingsItemClicked(it)},
             clickableDelegate<SettingsItemModel.ToggleableSetting, SettingsToggleableViewHolder>
-                (R.layout.item_settings_toggleable) {viewModel.onSettingsItemClicked(it)}
+                (R.layout.item_settings_toggleable) {viewModel.onSettingsItemClicked(it)},
+                    clickableDelegate<SettingsItemModel.FileTypeSetting, SettingsFileTypeViewHolder>
+                    (R.layout.item_settings_checkable) {viewModel.onSettingsItemClicked(it)}
         )
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        (requireActivity() as MainActivity).setupActionBar(withBackButton = true, titleString = "vagina")
-
     }
 
     override fun onCreateView(
@@ -60,8 +53,12 @@ class SettingsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.root.find<RecyclerView>(rv_settings_recycler).adapter = this.adapter
         viewModel.state.observeWith {
-            Timber.d("UIState: $it")
             adapter.update(it.settings)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.save()
     }
 }

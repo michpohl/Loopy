@@ -22,6 +22,8 @@
         style="@style/WrapContent"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
+        android:clickable="false"
+        android:focusable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/guide_right"
         app:layout_constraintEnd_toEndOf="parent"
