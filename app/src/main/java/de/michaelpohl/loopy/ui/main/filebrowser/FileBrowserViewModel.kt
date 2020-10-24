@@ -8,10 +8,11 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.common.toFileModels
+import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
-import timber.log.Timber
 
-open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewModel() {
+open class FileBrowserViewModel(private val repo: StorageRepository) :
+    BaseViewModel<BaseUIState>() {
 
     private val _filesToDisplay = MutableLiveData<List<FileModel>>()
     val filesToDisplay = _filesToDisplay.immutable()
@@ -31,6 +32,11 @@ open class FileBrowserViewModel(private val repo: StorageRepository) : BaseViewM
     var selectButtonText = _selectButtonText.immutable()
 
     private val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>()
+
+    override fun initUIState(): BaseUIState {
+        // TODO refactor
+        return object : BaseUIState() {}
+    }
 
     fun getFolderContent(path: String) {
         val files = repo.getPathContent(path).toFileModels()

@@ -23,6 +23,10 @@ import java.io.File
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+fun Boolean.toVisibility(hideInsteadGone: Boolean = false): Int {
+    return if (this) View.VISIBLE else if (hideInsteadGone) View.INVISIBLE else View.GONE
+}
+
 fun <T : Any> MutableLiveData<T>.immutable(): LiveData<T> {
     return this
 }

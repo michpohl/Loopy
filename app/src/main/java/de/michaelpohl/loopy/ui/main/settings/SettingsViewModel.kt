@@ -1,27 +1,22 @@
 package de.michaelpohl.loopy.ui.main.settings
 
-import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.SettingsBuilder
-import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.model.AppStateRepository
+import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import de.michaelpohl.loopy.ui.main.settings.AppSetting.*
 import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel
 import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel.ToggleableSetting.Companion.ToggleState.FIRST
 import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel.ToggleableSetting.Companion.ToggleState.SECOND
 
-class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewModel() {
+class SettingsViewModel(private val stateRepo: AppStateRepository) :
+    BaseViewModel<SettingsViewModel.UIState>() {
 
-    private val _state = MutableLiveData(UIState(stateRepo.settings.toItemModels()))
-    val state = _state.immutable()
-
-    private val currentState: UIState
-        get() {
-            return state.value ?: UIState(stateRepo.settings.toItemModels())
-        }
-
+    init {
+        _state.postValue(initUIState())
+    }
 
     fun onSettingsItemClicked(setting: SettingsItemModel) {
 
@@ -63,6 +58,10 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewMod
         }
         stateRepo.settings = builder.build()
 
+    }
+
+    override fun initUIState(): UIState {
+        return UIState(stateRepo.settings.toItemModels())
     }
 
     // TODO this is ugly
@@ -145,6 +144,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) : BaseViewMod
 
     data class UIState(
         val settings: List<SettingsItemModel>
-    )
+    ) : BaseUIState()
 }
 

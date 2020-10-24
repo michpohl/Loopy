@@ -10,11 +10,29 @@ import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.DataRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
+import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import timber.log.Timber
 
-class PlayerViewModel(private val repository: AudioFilesRepository, private val appState: AppStateRepository) :
-    BaseViewModel() {
+class PlayerViewModel(
+    private val repository: AudioFilesRepository,
+    private val appState: AppStateRepository
+) :
+    BaseViewModel<PlayerViewModel.UIState>() {
+
+    data class UIState(
+        val loopsList: MutableList<AudioModel>,
+        val isPlaying: Boolean,
+        val fileInFocus: String,
+        val filePreselected: String,
+        val playbackProgress: Pair<String, Int>,
+        val emptyMessageVisibility: Int,
+        val clearButtonVisibility: Int
+    ) : BaseUIState()
+
+    override fun initUIState(): UIState {
+        return UIState(mutableListOf(), false, "", "", Pair("", 5), 0, 0)
+    }
 
     private val _loopsList = MutableLiveData(repository.getSingleSet().toMutableList())
     val loopsList = _loopsList.immutable()
@@ -37,7 +55,8 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     private val _clearListButtonVisibility = MutableLiveData(View.GONE)
     val clearListButtonVisibility = _clearListButtonVisibility.immutable()
 
-    private val _acceptedFileTypesAsString = MutableLiveData(DataRepository.getAllowedFileTypeListAsString())
+    private val _acceptedFileTypesAsString =
+        MutableLiveData(DataRepository.getAllowedFileTypeListAsString())
     val acceptedFileTypesAsString = _acceptedFileTypesAsString.immutable()
 
     lateinit var looper: PlayerServiceInterface
@@ -50,9 +69,10 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
         showEmptyState(loopsList.value?.isEmpty() ?: true)
     }
 
-    private fun setPlayerWaitModeTo(shouldWait: Boolean) {
+    private fun setPlayerWaitModeTo(shouldWait: Boolean = appState.settings.isWaitMode) {
         uiJob {
-            if (looper.setWaitMode(appState.settings.isWaitMode).isSuccess()) {
+            if (looper.setWaitMode(shouldWait).isSuccess()) {
+                Timber.v("Looper waitmode set to $shouldWait")
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
@@ -66,7 +86,14 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
     fun setPlayer(player: PlayerServiceInterface) {
         looper = player.apply {
             setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
-            setPlaybackProgressListener { name, value -> _playbackProgress.postValue(Pair(name, value)) }
+            setPlaybackProgressListener { name, value ->
+                _playbackProgress.postValue(
+                    Pair(
+                        name,
+                        value
+                    )
+                )
+            }
         }
         setPlayerWaitModeTo(appState.settings.isWaitMode)
     }
@@ -88,7 +115,8 @@ class PlayerViewModel(private val repository: AudioFilesRepository, private val 
             when (looper.getState()) {
                 PlayerState.PLAYING -> looper.pause()
                 PlayerState.PAUSED -> looper.resume()
-                else -> { /* do nothing */ }
+                else -> { /* do nothing */
+                }
             }
 
         }

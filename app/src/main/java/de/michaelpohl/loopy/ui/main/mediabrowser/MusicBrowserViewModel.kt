@@ -4,6 +4,7 @@ import android.view.View
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.model.DataRepository
+import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 
 class MusicBrowserViewModel : BrowserViewModel() {
@@ -28,6 +29,7 @@ class MusicBrowserViewModel : BrowserViewModel() {
 //        } else _bottomBarVisibility.postValue(View.INVISIBLE)
         adapter.updateData(audioModels)
     }
+
 
     override fun onSelectButtonClicked(view: View) {
         if (adapter.selectedItems.size > 0) {

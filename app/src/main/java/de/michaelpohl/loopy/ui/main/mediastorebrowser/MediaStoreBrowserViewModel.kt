@@ -8,12 +8,13 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.MediaStoreRepository
 import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.common.toFileModel
+import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
 import java.io.File
 
-open class MediaStoreBrowserViewModel(private val repo: MediaStoreRepository) : BaseViewModel() {
+open class MediaStoreBrowserViewModel(private val repo: MediaStoreRepository) : BaseViewModel<BaseUIState>() {
 
     private val mediaStoreEntries = repo.getMediaStoreEntries()
     private val _entriesToDisplay = MutableLiveData<List<MediaStoreItemModel>>()
@@ -34,6 +35,11 @@ open class MediaStoreBrowserViewModel(private val repo: MediaStoreRepository) : 
     init {
         // initially, we want to show a list of all Albums
         _entriesToDisplay.value = filterAllAlbums()
+    }
+
+    override fun initUIState(): BaseUIState {
+        // TODO refactor
+        return object : BaseUIState() {}
     }
 
     fun onOpenSelectionClicked(view: View) {

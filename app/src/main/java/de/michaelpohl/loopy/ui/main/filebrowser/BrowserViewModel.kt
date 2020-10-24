@@ -6,9 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 
-open class BrowserViewModel : BaseViewModel() {
+open class BrowserViewModel : BaseViewModel<BaseUIState>() {
 
     lateinit var onSelectionSubmitted: (List<FileModel>) -> Unit
 
@@ -21,6 +22,11 @@ open class BrowserViewModel : BaseViewModel() {
     var selectButtonText = _selectButtonText.immutable()
 
     lateinit var listener: OnBrowserActionListener
+
+    override fun initUIState(): BaseUIState {
+        // TODO refactor
+        return object : BaseUIState() {}
+    }
 
     open fun onSelectButtonClicked(view: View) {
         //override if action is needed
