@@ -14,7 +14,7 @@ class PlayerItemHolder(
     itemView: View
 ) : DelegationAdapterItemHolder<AudioModel>(itemView) {
 
-    private var backgroundColor: Int = R.color.content_background
+    private var backgroundDrawable: Int = R.drawable.background_item_rounded_stroke
         set(value) {
             field = value
             this.itemView.background = getDrawable(value)
@@ -56,7 +56,7 @@ class PlayerItemHolder(
     }
 
     fun updateProgress(percentage: Int) {
-        if (percentage < progress ?: 0F) loopsCount += 1
+        if (percentage < progress) loopsCount += 1
 
         progress = when (percentage.toFloat()) {
             in Float.MIN_VALUE..0F -> 0F
@@ -71,18 +71,18 @@ class PlayerItemHolder(
             Timber.d("State: $state")
             when (value) {
                 SelectionState.NOT_SELECTED -> {
-                    backgroundColor = R.color.content_background
+                    backgroundDrawable = R.drawable.background_item_rounded_stroke
                     progress = 0F
                     loopsCount = 0
                     deleteIcon.show()
                 }
                 SelectionState.PRESELECTED -> {
-                    backgroundColor = R.color.item_selected_background
+                    backgroundDrawable = R.drawable.background_item_rounded_filled_green
                     progress = 0F
                 }
                 SelectionState.PLAYING -> {
                     deleteIcon.gone()
-                    backgroundColor = R.color.active
+                    backgroundDrawable = R.drawable.background_item_rounded_filled
                 }
             }
             field = value
