@@ -10,37 +10,33 @@ import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
-import de.michaelpohl.loopy.ui.main.settings.SettingsViewModel
 import timber.log.Timber
 
 class PlayerViewModel(
     private val repository: AudioFilesRepository,
-    private val appState: AppStateRepository
+    private val appStateRepo: AppStateRepository
 ) :
     BaseViewModel<PlayerViewModel.UIState>() {
 
+    private lateinit var looper: PlayerServiceInterface
+
+    lateinit var playerActionsListener: PlayerActionsListener
+
     override fun initUIState(): UIState {
-        val s = UIState(
+        return UIState(
             loopsList = repository.getSingleSet().toMutableList(),
             isPlaying = false,
             clearButtonVisibility = 0
         )
-        Timber.d("uistate: $s")
-        return s
-
     }
 
     init {
         _state.value = initUIState()
     }
 
-    private lateinit var looper: PlayerServiceInterface
-
-    private fun onPlayerSwitchedToNextFile(filename: String) {
-        _state.postValue(currentState.copy(fileInFocus = filename))
-    }
-
-    private fun setPlayerWaitModeTo(shouldWait: Boolean = appState.settings.isWaitMode) {
+    fun setPlayerWaitMode() {
+        val shouldWait: Boolean = appStateRepo.settings.isWaitMode
+        if (!::looper.isInitialized || looper.getWaitMode() == shouldWait) return
         uiJob {
             if (looper.setWaitMode(shouldWait).isSuccess()) {
                 Timber.v("Looper waitmode set to $shouldWait")
@@ -50,10 +46,6 @@ class PlayerViewModel(
         }
     }
 
-    lateinit var playerActionsListener: PlayerActionsListener
-
-    var currentlySelected: String? = null
-
     fun setPlayer(player: PlayerServiceInterface) {
         looper = player.apply {
             setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
@@ -61,8 +53,8 @@ class PlayerViewModel(
                 _state.postValue(currentState.copy(playbackProgress = Pair(name, value)))
             }
         }
-        setPlayerWaitModeTo(appState.settings.isWaitMode)
     }
+
 
     fun onStartPlaybackClicked(view: View) {
         if (looper.hasLoopFile()) startLooper()
@@ -101,6 +93,44 @@ class PlayerViewModel(
         }
     }
 
+    fun stopLooper() {
+        uiJob {
+            if (looper.stop().isSuccess()) {
+                _state.postValue(
+                    currentState.copy(
+                        playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
+                        fileInFocus = "",
+                        filePreselected = ""
+                    )
+                )
+            }
+        }
+    }
+
+    fun addNewLoops(newLoops: List<AudioModel>) {
+        // TODO ask the user if adding or replacing is desired
+        repository.addLoopsToSet(newLoops)
+        val currentLoops = currentState.loopsList.toMutableList()
+        currentLoops.addAll(newLoops)
+        _state.postValue(currentState.copy(loopsList = currentLoops))
+        repository.saveLoopSelection(currentLoops)
+    }
+
+    fun onDeleteLoopClicked(audioModel: AudioModel) {
+        val currentLoops = currentState.loopsList.toMutableList()
+        currentLoops.remove(audioModel)
+        _state.postValue(currentState.copy(loopsList = currentLoops))
+        repository.saveLoopSelection(currentLoops)
+    }
+
+    fun onProgressChangedByUser(newProgress: Float) {
+        looper.changePlaybackPosition(newProgress)
+    }
+
+    private fun onPlayerSwitchedToNextFile(filename: String) {
+        _state.postValue(currentState.copy(fileInFocus = filename))
+    }
+
     private fun onFileSelected(filename: String) {
         if (looper.getWaitMode()) {
             when (looper.getState()) {
@@ -124,52 +154,15 @@ class PlayerViewModel(
         }
     }
 
-    fun stopLooper() {
-        uiJob {
-            if (looper.stop().isSuccess()) {
-                _state.postValue(
-                    currentState.copy(
-                        playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
-                        fileInFocus = "",
-                        filePreselected = ""
-                    )
-                )
-            }
-        }
-    }
-
-    fun onProgressChangedByUser(newProgress: Float) {
-        looper.changePlaybackPosition(newProgress)
-    }
-
-    private fun resetPreSelection() {
-        //        adapter.resetPreSelection()
-        looper.resetPreSelection()
-    }
-
+    @Deprecated("I assume?")
     private fun onPlaybackStopped() {
         _state.postValue(currentState.copy(isPlaying = false))
-    }
-
-    fun addNewLoops(newLoops: List<AudioModel>) {
-        // TODO ask the user if adding or replacing is desired
-        repository.addLoopsToSet(newLoops)
-        val currentLoops = currentState.loopsList.toMutableList()
-        currentLoops.addAll(newLoops)
-        _state.postValue(currentState.copy(loopsList = currentLoops))
-        repository.saveLoopSelection(currentLoops)
-    }
-
-    fun onDeleteLoopClicked(audioModel: AudioModel) {
-        val currentLoops = currentState.loopsList.toMutableList()
-        currentLoops.remove(audioModel)
-        _state.postValue(currentState.copy(loopsList = currentLoops))
-        repository.saveLoopSelection(currentLoops)
     }
 
     data class UIState(
         val loopsList: MutableList<AudioModel>,
         val isPlaying: Boolean,
+        val isWaitMode: Boolean = false,
         val fileInFocus: String? = null,
         val filePreselected: String? = null,
         val playbackProgress: Pair<String, Int>? = null,

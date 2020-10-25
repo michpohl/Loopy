@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
@@ -57,10 +58,6 @@ class PlayerFragment : BaseFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,15 +79,13 @@ class PlayerFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         requireActivity().startService(Intent(activity, playerService::class.java))
     }
 
     override fun onResume() {
         super.onResume()
+        findNavController().popBackStack(R.id.playerFragment, false)
         observe()
-        Timber.d("onResume in fragment")
-
 
         if (arguments != null) {
             val newAudioFiles = requireArguments().getParcelableArrayList<FileModel>("models")
@@ -144,6 +139,7 @@ class PlayerFragment : BaseFragment() {
         // FIXME adapter needs to take nullable values
         viewModel.state.observeWith {
             with(it) {
+                Timber.d("uistate: $this")
                 adapter.update(loopsList)
                 fileInFocus?.let { file ->
                     adapter.updateFileCurrentlyPlayed(file)
@@ -154,6 +150,7 @@ class PlayerFragment : BaseFragment() {
                 playbackProgress?.let { progress ->
                     adapter.updatePlaybackProgress(progress)
                 }
+                viewModel.setPlayerWaitMode()
             }
         }
 

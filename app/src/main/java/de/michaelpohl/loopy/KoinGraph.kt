@@ -6,10 +6,8 @@ import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.ExternalStorageManager
 import de.michaelpohl.loopy.model.SharedPreferencesManager
-import de.michaelpohl.loopy.ui.main.filebrowser.AlbumBrowserViewModel
 import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel
-import de.michaelpohl.loopy.ui.main.mediabrowser.MusicBrowserViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.settings.SettingsViewModel
@@ -42,8 +40,6 @@ object KoinGraph {
         viewModel { FileBrowserViewModel(get()) }
         viewModel { MediaStoreBrowserViewModel(get()) }
         viewModel { PlayerViewModel(get(), get()) }
-        viewModel { AlbumBrowserViewModel() }
-        viewModel { MusicBrowserViewModel() }
         viewModel { MarkupViewerViewModel() }
         viewModel { SettingsViewModel(get()) }
     }

@@ -238,12 +238,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         )
     }
 
-    private fun showMusicBrowserFragment(albumTitle: String) {
-        nav_host_fragment.findNavController().navigate(
-            R.id.musicBrowserFragment, buildStringArgs(albumTitle)
-        )
-    }
-
     private fun showMarkupViewerFragment(markupFileName: String) {
         nav_host_fragment.findNavController().navigate(
             R.id.markupViewerFragment, buildStringArgs(markupFileName)
@@ -251,12 +245,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun showSettings() {
-//        val dialog = SettingsDialogFragment()
-//        dialog.resultListener = {
-//            Timber.d("Resultlistener was invoked")
-//            keepScreenOnIfDesired(it)
-//        }
-//        dialog.show(supportFragmentManager, "settings-dialog")
         nav_host_fragment.findNavController().navigate(
             R.id.action_playerFragment_to_settingsFragment
         )
