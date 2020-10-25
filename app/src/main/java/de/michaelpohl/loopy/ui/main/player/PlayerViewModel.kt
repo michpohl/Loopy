@@ -43,6 +43,7 @@ class PlayerViewModel(
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
+            if (!looper.getWaitMode()) _state.postValue(currentState.copy(filePreselected = ""))
         }
     }
 
