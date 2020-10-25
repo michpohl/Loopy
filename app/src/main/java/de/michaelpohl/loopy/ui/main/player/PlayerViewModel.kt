@@ -55,9 +55,15 @@ class PlayerViewModel(
         }
     }
 
-
     fun onStartPlaybackClicked(view: View) {
-        if (looper.hasLoopFile()) startLooper()
+        uiJob {
+            when (looper.getState()) {
+                PLAYING -> { /* do nothing */
+                }
+                PAUSED -> looper.resume()
+                else -> if (looper.hasLoopFile()) startLooper()
+            }
+        }
     }
 
     fun onStopPlaybackClicked(view: View) {
