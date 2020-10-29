@@ -42,9 +42,9 @@ class PlayerItemDelegate(
         }
     }
 
-    fun updatePlaybackProgress(payload: Pair<String, Int>) {
+    fun updatePlaybackProgress(payload: Pair<String, Int>, showLoopCount: Boolean) {
         payload?.let { payload ->
-            holders.find { it.getName() == payload.first }?.updateProgress(payload.second)
+            holders.find { it.getName() == payload.first }?.updateProgress(payload.second, showLoopCount)
         }
     }
 }

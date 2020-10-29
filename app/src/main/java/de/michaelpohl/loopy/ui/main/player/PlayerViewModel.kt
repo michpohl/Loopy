@@ -3,6 +3,7 @@ package de.michaelpohl.loopy.ui.main.player
 import android.view.View
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState.*
+import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.toVisibility
 import de.michaelpohl.loopy.common.util.coroutines.uiJob
 import de.michaelpohl.loopy.model.AppStateRepository
@@ -17,23 +18,22 @@ class PlayerViewModel(
     private val appStateRepo: AppStateRepository
 ) :
     BaseViewModel<PlayerViewModel.UIState>() {
-
+    private lateinit var settings: Settings
     private lateinit var looper: PlayerServiceInterface
-
     lateinit var playerActionsListener: PlayerActionsListener
 
     override fun initUIState(): UIState {
-        val settings = appStateRepo.settings
         return UIState(
-            loopsList = audioFilesRepository.getSingleSet()
-                .map { it.copy(settings = settings) }
-                .toMutableList(),
+            loopsList = audioFilesRepository.getSingleSet().toMutableList(),
             isPlaying = false,
-            clearButtonVisibility = 0
+            clearButtonVisibility = 0,
+            settings = settings
         )
     }
 
     override fun onFragmentResumed() {
+        settings = appStateRepo.settings
+        Timber.d("settings: $settings")
         _state.value = initUIState()
     }
 
@@ -176,7 +176,8 @@ class PlayerViewModel(
         val fileInFocus: String? = null,
         val filePreselected: String? = null,
         val playbackProgress: Pair<String, Int>? = null,
-        val clearButtonVisibility: Int = View.GONE
+        val clearButtonVisibility: Int = View.GONE,
+        val settings: Settings
     ) : BaseUIState() {
         val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
     }

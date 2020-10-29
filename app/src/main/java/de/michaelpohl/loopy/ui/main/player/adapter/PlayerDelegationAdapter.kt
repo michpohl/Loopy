@@ -18,8 +18,8 @@ class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :
         delegate.updateFilePreselected(name)
     }
 
-    fun updatePlaybackProgress(payload: Pair<String, Int>) {
-        delegate.updatePlaybackProgress(payload)
+    fun updatePlaybackProgress(payload: Pair<String, Int>, showLoopCount: Boolean) {
+        delegate.updatePlaybackProgress(payload, showLoopCount)
     }
 
     companion object {

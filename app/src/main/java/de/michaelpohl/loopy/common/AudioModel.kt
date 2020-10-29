@@ -13,8 +13,7 @@ data class AudioModel(
     val album: String,
     val path: String,
     val fileExtension: String = "unknown",
-    val isMediaStoreItem: Boolean = true,
-    val settings: Settings? = null
+    val isMediaStoreItem: Boolean = true
 ) : Parcelable {
 
     val displayName: String

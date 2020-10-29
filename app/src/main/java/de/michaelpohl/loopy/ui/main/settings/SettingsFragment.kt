@@ -60,6 +60,6 @@ class SettingsFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.save()
+//        viewModel.save()
     }
 }

@@ -1,14 +1,17 @@
 package de.michaelpohl.loopy.model
 
 import de.michaelpohl.loopy.common.Settings
+import timber.log.Timber
 
 class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 
     var settings: Settings
         get() {
+            Timber.d("Getting the settings: ${sharedPrefs.getSettings()?.showLoopCount}")
             return sharedPrefs.getSettings() ?: createDefaultSettings()
         }
         set(value) {
+            Timber.d("Setting the settings! ${value.showLoopCount}")
             sharedPrefs.saveSettings(value)
         }
 

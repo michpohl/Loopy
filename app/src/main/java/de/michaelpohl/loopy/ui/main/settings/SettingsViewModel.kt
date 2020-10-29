@@ -10,6 +10,7 @@ import de.michaelpohl.loopy.ui.main.settings.AppSetting.*
 import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel
 import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel.ToggleableSetting.Companion.ToggleState.FIRST
 import de.michaelpohl.loopy.ui.main.settings.items.SettingsItemModel.ToggleableSetting.Companion.ToggleState.SECOND
+import timber.log.Timber
 
 class SettingsViewModel(private val stateRepo: AppStateRepository) :
     BaseViewModel<SettingsViewModel.UIState>() {
@@ -24,15 +25,18 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
         val currentSettings = state.value?.settings
         currentSettings?.let { settings ->
             val index = settings.indexOf(settings.find { it.label == newSetting.label })
-            val mutable = settings.toMutableList()
-            mutable.removeAt(index)
-            mutable.add(index, newSetting)
-            _state.postValue(currentState.copy(settings = mutable))
+
+            with(settings.toMutableList()) {
+                removeAt(index)
+                add(index, newSetting)
+                _state.value = currentState.copy(settings = this)
+            }
         }
+        save()
     }
 
     // TODO this is less sexy than it could be
-    fun save() {
+    private fun save() {
         val models = currentState.settings
         val builder = SettingsBuilder()
         models.forEach {
@@ -57,7 +61,7 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
             }
         }
         stateRepo.settings = builder.build()
-
+        Timber.d("Done saving\n")
     }
 
     override fun initUIState(): UIState {

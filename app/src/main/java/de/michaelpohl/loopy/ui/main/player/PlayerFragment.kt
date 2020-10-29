@@ -24,7 +24,6 @@ import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemDelegate
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
@@ -64,7 +63,6 @@ class PlayerFragment : BaseFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-//        viewModel = getViewModel()
         playerService = PlayerService()
         bindAudioService()
 
@@ -144,7 +142,7 @@ class PlayerFragment : BaseFragment() {
                     adapter.updateFilePreselected(file)
                 }
                 playbackProgress?.let { progress ->
-                    adapter.updatePlaybackProgress(progress)
+                    adapter.updatePlaybackProgress(progress, this.settings.showLoopCount)
                 }
                 viewModel.setPlayerWaitMode()
             }
