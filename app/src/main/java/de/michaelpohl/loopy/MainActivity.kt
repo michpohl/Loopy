@@ -131,9 +131,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     override fun onResume() {
         super.onResume()
         Timber.d("onResume in activity")
-        if (!::currentFragment.isInitialized) {
-            currentFragment = StateHelper.currentFragment ?: BaseFragment() //why this?
-        }
+//        if (!::currentFragment.isInitialized) {
+//            currentFragment = StateHelper.currentFragment!! // TODO what is this for, do we need it?
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

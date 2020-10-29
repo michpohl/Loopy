@@ -1,18 +1,21 @@
 package de.michaelpohl.loopy.common
 
+import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import de.michaelpohl.loopy.model.AppStateRepository
+import kotlinx.android.parcel.Parcelize
 import kotlin.properties.Delegates
 
 // TODO replace with immutable concept
 @JsonClass(generateAdapter = true)
+@Parcelize
 data class Settings(
     var acceptedFileTypes: MutableList<AppStateRepository.Companion.AudioFileType>,
     var isWaitMode: Boolean,
     var showLoopCount: Boolean = true,
     var keepScreenOn: Boolean = false,
     var playInBackground: Boolean = true
-)
+) : Parcelable
 
 class SettingsBuilder {
     var acceptedFileTypes: MutableList<AppStateRepository.Companion.AudioFileType> = mutableListOf()

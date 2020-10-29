@@ -20,7 +20,7 @@ import timber.log.Timber
 
 open class MediaStoreBrowserFragment : BaseFragment() {
 
-    private val viewModel: MediaStoreBrowserViewModel by inject()
+    override val viewModel: MediaStoreBrowserViewModel by inject()
     private lateinit var binding: FragmentMediastoreListBinding
     private lateinit var recycler: RecyclerView
 

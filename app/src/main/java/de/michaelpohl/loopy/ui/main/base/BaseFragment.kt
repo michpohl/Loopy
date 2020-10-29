@@ -11,10 +11,12 @@ import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
 
-open class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment() {
 
     open val showOptionsMenu = false
     open val screenTitle: String? = null
+
+    abstract val viewModel: BaseViewModel<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +48,7 @@ open class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.title = getTitle()
+        viewModel.onFragmentResumed()
     }
 
     open fun getTitle(): String {
@@ -57,6 +60,11 @@ open class BaseFragment : Fragment() {
      */
     open fun onBackPressed(): Boolean {
         return false
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onFragmentPaused()
     }
 
     /**

@@ -17,8 +17,8 @@ class PlayerItemDelegate(
 
     override fun createViewHolder(parent: ViewGroup): PlayerItemHolder {
         return PlayerItemHolder(inflateLayout(R.layout.item_loop, parent)).also {
-            it.clickReceiver = clickReceiver
-            it.deleteReceiver = deleteReceiver
+            it.clickListener = clickReceiver
+            it.deleteListener = deleteReceiver
             holders.add(it)
         }
     }

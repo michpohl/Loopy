@@ -9,6 +9,7 @@ import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 import rm.com.audiowave.AudioWaveView
 import timber.log.Timber
+import java.io.File
 
 class PlayerItemHolder(
     itemView: View
@@ -22,14 +23,13 @@ class PlayerItemHolder(
 
     private var loopsCount: Int = 0
         set(value) {
-            Timber.d("updating count with: $value")
             loopCounter.text = if (value != 0) {
-                getString(R.string.loop_count_prefix) + " ${value} " + getString(R.string.loop_count_postfix)
+                getString(R.string.loop_count_prefix) + " $value " + getString(R.string.loop_count_postfix) // TODO this can be one string
             } else ""
             field = value
         }
 
-    var progress: Float = 0F
+    private var progress: Float = 0F
         set(value) {
             field = value
             wave.progress = if (state == SelectionState.PLAYING) value else 0F
@@ -39,16 +39,22 @@ class PlayerItemHolder(
     private val loopCounter: TextView = itemView.find(R.id.tv_loop_count)
     private val wave: AudioWaveView = itemView.find(R.id.wave)
     private val deleteIcon: ImageButton = itemView.find(R.id.btn_remove)
+    private val waveBlocker: View = itemView.find(R.id.wave_blocker)
 
     lateinit var model: AudioModel
-    lateinit var clickReceiver: (AudioModel) -> Unit
-    lateinit var deleteReceiver: (AudioModel) -> Unit
+    lateinit var clickListener: (AudioModel) -> Unit
+    lateinit var deleteListener: (AudioModel) -> Unit
 
     override fun bind(item: AudioModel) {
         model = item
         label.text = model.displayName
-        this.itemView.setOnClickListener { clickReceiver(model) }
-        deleteIcon.setOnClickListener { deleteReceiver(model) }
+        itemView.setOnClickListener { clickListener(model) }
+        waveBlocker.setOnClickListener {clickListener(model)}
+        deleteIcon.setOnClickListener { deleteListener(model) }
+        inflateWave()
+
+        loopCounter.visibility = (item.settings?.showLoopCount == true).toVisibility()
+
     }
 
     fun getName(): String {
@@ -68,42 +74,45 @@ class PlayerItemHolder(
     var state: SelectionState =
         SelectionState.NOT_SELECTED
         set(value) {
-            Timber.d("State: $state")
             when (value) {
                 SelectionState.NOT_SELECTED -> {
                     backgroundDrawable = R.drawable.background_item_rounded_stroke
-                    progress = 0F
-                    loopsCount = 0
                     deleteIcon.show()
+                    loopsCount = 0
+                    progress = 0F
+                    waveBlocker.show()
                 }
                 SelectionState.PRESELECTED -> {
                     backgroundDrawable = R.drawable.background_item_rounded_filled_green
                     progress = 0F
+                    deleteIcon.gone()
+                    waveBlocker.show()
                 }
                 SelectionState.PLAYING -> {
                     deleteIcon.gone()
                     backgroundDrawable = R.drawable.background_item_rounded_filled
+                    waveBlocker.gone()
                 }
             }
             field = value
         }
 
 
-    private fun inflateWave(view: AudioWaveView, bytes: ByteArray) {
-
-        //TODO revisit if this is all cool
-        //        view.setRawData(bytes)
-        //        view.onStopTracking = {
-        //            viewModel.onProgressChangedByUserTouch(it)
-        //            viewModel.blockUpdatesFromPlayer.set(false)
-        //        }
-        //
-        //        view.onStartTracking = {
-        //            viewModel.blockUpdatesFromPlayer.set(true)
-        //        }
-        //
-        //        view.onProgressChanged = { progress, byUser ->
-        //        }
+    private fun inflateWave() {
+        val file = File(model.path)
+        val bytes = file.readBytes()
+        wave.setRawData(bytes)
+//        view.onStopTracking = {
+////                    viewModel.onProgressChangedByUserTouch(it)
+////                    viewModel.blockUpdatesFromPlayer.set(false)
+//        }
+//
+//        view.onStartTracking = {
+////                    viewModel.blockUpdatesFromPlayer.set(true)
+//        }
+//
+//        view.onProgressChanged = { progress, byUser ->
+//        }
     }
 
 }

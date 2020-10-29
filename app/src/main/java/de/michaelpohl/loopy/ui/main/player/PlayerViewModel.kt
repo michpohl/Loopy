@@ -13,7 +13,7 @@ import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import timber.log.Timber
 
 class PlayerViewModel(
-    private val repository: AudioFilesRepository,
+    private val audioFilesRepository: AudioFilesRepository,
     private val appStateRepo: AppStateRepository
 ) :
     BaseViewModel<PlayerViewModel.UIState>() {
@@ -23,14 +23,17 @@ class PlayerViewModel(
     lateinit var playerActionsListener: PlayerActionsListener
 
     override fun initUIState(): UIState {
+        val settings = appStateRepo.settings
         return UIState(
-            loopsList = repository.getSingleSet().toMutableList(),
+            loopsList = audioFilesRepository.getSingleSet()
+                .map { it.copy(settings = settings) }
+                .toMutableList(),
             isPlaying = false,
             clearButtonVisibility = 0
         )
     }
 
-    init {
+    override fun onFragmentResumed() {
         _state.value = initUIState()
     }
 
@@ -116,18 +119,18 @@ class PlayerViewModel(
 
     fun addNewLoops(newLoops: List<AudioModel>) {
         // TODO ask the user if adding or replacing is desired
-        repository.addLoopsToSet(newLoops)
+        audioFilesRepository.addLoopsToSet(newLoops)
         val currentLoops = currentState.loopsList.toMutableList()
         currentLoops.addAll(newLoops)
         _state.postValue(currentState.copy(loopsList = currentLoops))
-        repository.saveLoopSelection(currentLoops)
+        audioFilesRepository.saveLoopSelection(currentLoops)
     }
 
     fun onDeleteLoopClicked(audioModel: AudioModel) {
         val currentLoops = currentState.loopsList.toMutableList()
         currentLoops.remove(audioModel)
         _state.postValue(currentState.copy(loopsList = currentLoops))
-        repository.saveLoopSelection(currentLoops)
+        audioFilesRepository.saveLoopSelection(currentLoops)
     }
 
     fun onProgressChangedByUser(newProgress: Float) {

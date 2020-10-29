@@ -13,7 +13,8 @@ data class AudioModel(
     val album: String,
     val path: String,
     val fileExtension: String = "unknown",
-    val isMediaStoreItem: Boolean = true
+    val isMediaStoreItem: Boolean = true,
+    val settings: Settings? = null
 ) : Parcelable {
 
     val displayName: String
@@ -22,5 +23,3 @@ data class AudioModel(
             return filename.substring(0, filename.lastIndexOf("."))
         }
 }
-
-//fileModel.name.split(".")[0]

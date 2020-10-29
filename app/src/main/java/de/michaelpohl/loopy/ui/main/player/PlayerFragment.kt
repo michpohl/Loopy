@@ -23,6 +23,7 @@ import de.michaelpohl.loopy.model.PlayerServiceBinder
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerItemDelegate
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
@@ -30,15 +31,13 @@ class PlayerFragment : BaseFragment() {
 
     private lateinit var adapter: PlayerDelegationAdapter
 
-    private lateinit var viewModel: PlayerViewModel
+    override val viewModel: PlayerViewModel by inject()
     private lateinit var binding: FragmentPlayerBinding
     private lateinit var recycler: RecyclerView
 
     private lateinit var playerService: PlayerService
 
     override val showOptionsMenu = true
-
-    lateinit var onResumeListener: (PlayerFragment) -> Unit
 
     private var playerServiceBinder: PlayerServiceBinder? = null
         set(value) {
@@ -65,7 +64,7 @@ class PlayerFragment : BaseFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        viewModel = getViewModel()
+//        viewModel = getViewModel()
         playerService = PlayerService()
         bindAudioService()
 
@@ -92,16 +91,13 @@ class PlayerFragment : BaseFragment() {
             viewModel.addNewLoops(
                 newAudioFiles.filterIsInstance<FileModel.AudioFile>().map { it.toAudioModel() })
 
-
-            // TODO change that to lose reflection here
-            if (::onResumeListener.isInitialized) onResumeListener.invoke(this)
-
             try {
                 viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
             } catch (e: Exception) {
                 throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
             }
         }
+        viewModel.onFragmentResumed()
     }
 
     override fun onPause() {

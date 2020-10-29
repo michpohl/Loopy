@@ -26,6 +26,11 @@ abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
 
     abstract fun initUIState(): T
 
+    open fun onFragmentResumed() {
+    }
+
+    open fun onFragmentPaused() {
+    }
 }
 
 abstract class BaseUIState : Any()

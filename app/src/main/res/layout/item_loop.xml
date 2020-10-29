@@ -48,9 +48,23 @@
             app:chunkRadius="0dp"
             app:chunkSpacing="1dp"
             app:chunkWidth="1dp"
+            android:focusable="false"
+            android:clickable="false"
             app:layout_constraintTop_toBottomOf="@id/tv_label"
             app:minChunkHeight="2dp"
             app:waveColor="@android:color/white" />
+        
+        <View
+            android:id="@+id/wave_blocker"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/wave"
+            app:layout_constraintTop_toTopOf="@id/wave"
+            app:layout_constraintBottom_toBottomOf="@id/wave"
+            app:layout_constraintEnd_toEndOf="@id/wave"
+            android:focusable="true"
+            android:clickable="true"
+            />
 
         <ImageButton
             android:id="@+id/btn_remove"

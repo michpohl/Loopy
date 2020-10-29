@@ -22,7 +22,7 @@ import timber.log.Timber
 
 class SettingsFragment : BaseFragment() {
 
-    private val viewModel: SettingsViewModel by inject()
+    override val viewModel: SettingsViewModel by inject()
     private lateinit var binding: FragmentSettingsBinding
 
     private val adapter = adapter<SettingsItemModel> {

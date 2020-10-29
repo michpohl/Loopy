@@ -22,7 +22,7 @@ import timber.log.Timber
 
 open class FileBrowserFragment : BaseFragment() {
 
-    private val viewModel: FileBrowserViewModel by inject()
+    override val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var recycler: RecyclerView
 
