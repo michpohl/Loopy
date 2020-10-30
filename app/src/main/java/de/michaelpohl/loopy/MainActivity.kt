@@ -286,7 +286,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
+    // TODO check if this is still needed
     private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
+        Timber.d("Reminder! stopPlaybackIfDesired was called!")
         playerFragment.pausePlayback()
     }
 

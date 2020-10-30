@@ -37,6 +37,13 @@ class PlayerViewModel(
         _state.value = initUIState()
     }
 
+    override fun onFragmentPaused() {
+        super.onFragmentPaused()
+        uiJob {
+            if (!currentState.settings.playInBackground) looper.pause()
+        }
+    }
+
     fun setPlayerWaitMode() {
         val shouldWait: Boolean = appStateRepo.settings.isWaitMode
         if (!::looper.isInitialized || looper.getWaitMode() == shouldWait) return
@@ -59,7 +66,7 @@ class PlayerViewModel(
         }
     }
 
-    fun onStartPlaybackClicked(view: View) {
+    fun onStartPlaybackClicked() {
         uiJob {
             when (looper.getState()) {
                 PLAYING -> { /* do nothing */
@@ -70,7 +77,7 @@ class PlayerViewModel(
         }
     }
 
-    fun onStopPlaybackClicked(view: View) {
+    fun onStopPlaybackClicked() {
         when (looper.getState()) {
             PLAYING, PAUSED -> stopLooper()
             else -> { /* do nothing */
@@ -78,7 +85,7 @@ class PlayerViewModel(
         }
     }
 
-    fun onPausePlaybackClicked(view: View) {
+    fun onPausePlaybackClicked() {
         uiJob {
             when (looper.getState()) {
                 PLAYING -> looper.pause()

@@ -98,22 +98,14 @@ class PlayerFragment : BaseFragment() {
         viewModel.onFragmentResumed()
     }
 
-    override fun onPause() {
-        super.onPause()
-//        if (!DataRepository.settings.playInBackground) {
-//            pausePlayback()
-//        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopLooper()
-//        DataRepository.saveCurrentState(viewModel.loopsList)
         unBindAudioService()
     }
 
     fun pausePlayback() {
-//        playerServiceBinder?.pause()
+        viewModel.onPausePlaybackClicked()
     }
 
     private fun initAdapter() {
