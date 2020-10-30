@@ -278,11 +278,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun changeActionBar(resourceID: Int) {
-        menuResourceID = resourceID
-        invalidateOptionsMenu()
-    }
-
     private fun keepScreenOnIfDesired(settings: Settings) {
         if (settings.keepScreenOn) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
