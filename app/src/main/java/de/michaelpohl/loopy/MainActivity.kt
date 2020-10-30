@@ -207,23 +207,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun handleIntent() {
-//        Timber.d("Handling intent, maybe...")
-//        val uri = intent.data
-//        Timber.d("My intent's Uri: %s", uri)
-//        Timber.d("My intent's path: %s", uri?.path)
-//
-//        val inputStream = contentResolver.openInputStream(uri)
-//        val outputFile = File(this.cacheDir, "output.wav")
-//        val outputStream = FileOutputStream(outputFile)
-//        inputStream.use { input ->
-//            outputStream.use { output ->
-//                input.copyTo(output)
-//            }
-//        }
-//        DataRepository.onAudioFileSelectionUpdated(
-//            DataRepository.getMediaStoreEntries(this).filter { it.path == uri.path })
-//
-//        showPlayerFragmentWithFreshSelection()
+        // TODO
     }
 
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {

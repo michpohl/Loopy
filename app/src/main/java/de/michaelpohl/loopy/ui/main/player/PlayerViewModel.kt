@@ -34,7 +34,7 @@ class PlayerViewModel(
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
         Timber.d("settings: $settings")
-        _state.value = initUIState()
+        _state.value = currentState.copy(settings = settings)
     }
 
     override fun onFragmentPaused() {
