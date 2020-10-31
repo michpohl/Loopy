@@ -256,7 +256,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun clearBackStack() {
-        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
+//        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
         while (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStackImmediate()
         }

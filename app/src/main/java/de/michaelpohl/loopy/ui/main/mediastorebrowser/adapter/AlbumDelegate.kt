@@ -11,7 +11,7 @@ class AlbumDelegate(override val clickListener: ((MediaStoreItemModel.Album) -> 
     }
 
     override fun isForItemType(item: Any): Boolean {
-        return item is MediaStoreItemModel
+        return item is MediaStoreItemModel.Album
     }
 
 }
