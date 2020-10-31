@@ -125,7 +125,6 @@ class PlayerFragment : BaseFragment() {
         // FIXME adapter needs to take nullable values
         viewModel.state.observeWith {
             with(it) {
-                Timber.d("uistate: $this")
                 adapter.update(loopsList)
                 fileInFocus?.let { file ->
                     adapter.updateFileCurrentlyPlayed(file)

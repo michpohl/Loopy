@@ -33,7 +33,6 @@ class PlayerViewModel(
 
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
-        Timber.d("settings: $settings")
         _state.value = currentState.copy(settings = settings)
     }
 
@@ -44,8 +43,7 @@ class PlayerViewModel(
         }
     }
 
-    fun setPlayerWaitMode() {
-        val shouldWait: Boolean = appStateRepo.settings.isWaitMode
+    fun setPlayerWaitMode(shouldWait: Boolean = appStateRepo.settings.isWaitMode) {
         if (!::looper.isInitialized || looper.getWaitMode() == shouldWait) return
         uiJob {
             if (looper.setWaitMode(shouldWait).isSuccess()) {

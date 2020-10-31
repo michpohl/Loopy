@@ -8,6 +8,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 import rm.com.audiowave.AudioWaveView
+import timber.log.Timber
 import java.io.File
 
 class PlayerItemHolder(
@@ -48,7 +49,7 @@ class PlayerItemHolder(
         model = item
         label.text = model.displayName
         itemView.setOnClickListener { clickListener(model) }
-        waveBlocker.setOnClickListener {clickListener(model)}
+        waveBlocker.setOnClickListener { clickListener(model) }
         deleteIcon.setOnClickListener { deleteListener(model) }
         inflateWave()
     }
@@ -57,8 +58,13 @@ class PlayerItemHolder(
         return model.name
     }
 
-    fun updateProgress(percentage: Int, showLoopCount: Boolean) {
-        if (showLoopCount && percentage < progress) loopsCount += 1
+    fun showLoopCount(shouldShow: Boolean) {
+        loopCounter.visibility = shouldShow.toVisibility()
+        Timber.d("Is loop counter visible? ${loopCounter.visibility == View.VISIBLE}, shouldShow: $shouldShow")
+    }
+
+    fun updateProgress(percentage: Int) {
+            if (percentage < progress) loopsCount += 1
 
         progress = when (percentage.toFloat()) {
             in Float.MIN_VALUE..0F -> 0F

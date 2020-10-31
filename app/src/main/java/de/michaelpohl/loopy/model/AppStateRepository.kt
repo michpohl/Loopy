@@ -1,18 +1,14 @@
 package de.michaelpohl.loopy.model
 
 import de.michaelpohl.loopy.common.Settings
-import timber.log.Timber
 
 class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 
-    var settings: Settings
-        get() {
-            Timber.d("Getting the settings: ${sharedPrefs.getSettings()?.showLoopCount}")
-            return sharedPrefs.getSettings() ?: createDefaultSettings()
-        }
+    var settings: Settings = sharedPrefs.getSettings() ?: createDefaultSettings()
         set(value) {
-            Timber.d("Setting the settings! ${value.showLoopCount}")
-            sharedPrefs.saveSettings(value)
+            if (field != value)
+                sharedPrefs.saveSettings(value)
+            field = value
         }
 
     var isSetupComplete: Boolean
@@ -25,12 +21,12 @@ class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 
     private fun createDefaultSettings(): Settings {
         settings = Settings(
-                acceptedFileTypes = mutableListOf(AudioFileType.WAVE, AudioFileType.MP3),
-                isWaitMode = false,
-                showLoopCount = true,
-                keepScreenOn = true,
-                playInBackground = true
-            )
+            acceptedFileTypes = mutableListOf(AudioFileType.WAVE, AudioFileType.MP3),
+            isWaitMode = false,
+            showLoopCount = true,
+            keepScreenOn = true,
+            playInBackground = true
+        )
         return settings
     }
 

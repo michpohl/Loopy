@@ -6,7 +6,6 @@ import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
-import timber.log.Timber
 
 class PlayerItemDelegate(
     private val clickReceiver: (AudioModel) -> Unit, // use the standard auto click receiver feature
@@ -38,13 +37,15 @@ class PlayerItemDelegate(
         holders.filter { it.state != SelectionState.PLAYING }.forEach {
             it.state =
                 if (it.getName() == name) SelectionState.PRESELECTED else SelectionState.NOT_SELECTED
-            Timber.d("Setting ${it.getName()} to ${it.state}")
         }
     }
 
     fun updatePlaybackProgress(payload: Pair<String, Int>, showLoopCount: Boolean) {
+        val targetHolder = holders.find { it.getName() == payload.first }
+        targetHolder?.showLoopCount(showLoopCount)
+
         payload?.let { payload ->
-            holders.find { it.getName() == payload.first }?.updateProgress(payload.second, showLoopCount)
+            targetHolder?.updateProgress(payload.second)
         }
     }
 }
