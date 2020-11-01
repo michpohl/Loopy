@@ -15,7 +15,7 @@
             style="@style/MatchParent"
             android:scrollbars="vertical"
             android:padding="8dp"
-            android:background="@color/content_background"
+            android:background="@color/black"
 
             >
 

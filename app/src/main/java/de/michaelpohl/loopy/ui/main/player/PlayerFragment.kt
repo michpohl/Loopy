@@ -104,10 +104,6 @@ class PlayerFragment : BaseFragment() {
         unBindAudioService()
     }
 
-    fun pausePlayback() {
-        viewModel.onPausePlaybackClicked()
-    }
-
     private fun initAdapter() {
 
 

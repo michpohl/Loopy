@@ -39,11 +39,9 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
     private val audioFilesRepo: AudioFilesRepository by inject()
-    private val prefs: SharedPreferencesManager by inject()
     private val appState: AppStateRepository by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
-    private var menuResourceID = R.menu.menu_main
 
     private lateinit var drawer: DrawerLayout
     private lateinit var currentFragment: BaseFragment
@@ -268,12 +266,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
-    }
-
-    // TODO check if this is still needed
-    private fun stopPlaybackIfDesired(playerFragment: PlayerFragment) {
-        Timber.d("Reminder! stopPlaybackIfDesired was called!")
-        playerFragment.pausePlayback()
     }
 
     private fun isPermitted(): Boolean {

@@ -11,6 +11,8 @@ import com.example.adapter.adapter.adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
+import de.michaelpohl.loopy.common.getDrawable
+import de.michaelpohl.loopy.common.setDivider
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.AudioItemDelegate
@@ -56,8 +58,11 @@ open class FileBrowserFragment : BaseFragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_files_list, container, false)
         binding.model = viewModel
-        recycler = binding.root.find(R.id.rv_files)
-        recycler.adapter = browserAdapter
+        recycler = binding.root.find<RecyclerView>(R.id.rv_files).apply {
+            adapter = browserAdapter
+            setDivider(R.drawable.divider)
+
+        }
         observe()
         return binding.root
     }

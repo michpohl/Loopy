@@ -12,6 +12,7 @@ import com.example.adapter.adapter.adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
+import de.michaelpohl.loopy.common.setDivider
 import de.michaelpohl.loopy.databinding.FragmentMediastoreListBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.*
@@ -47,12 +48,12 @@ open class MediaStoreBrowserFragment : BaseFragment() {
         binding.model = viewModel
         recycler = binding.root.find(R.id.rv_files)
         recycler.adapter = browserAdapter
+        recycler.setDivider(R.drawable.divider)
         observe()
         return binding.root
     }
 
     override fun onBackPressed(): Boolean {
-        Timber.d("Pressing")
         return viewModel.onBackPressed()
     }
 

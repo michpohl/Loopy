@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.main.player
 
 import android.view.View
+import androidx.lifecycle.MediatorLiveData
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.PlayerState.*
 import de.michaelpohl.loopy.common.Settings
@@ -18,6 +19,13 @@ class PlayerViewModel(
     private val appStateRepo: AppStateRepository
 ) :
     BaseViewModel<PlayerViewModel.UIState>() {
+
+    val isPlaying =  MediatorLiveData<Boolean>().apply{
+        addSource(_state) {
+          this.value = it.isPlaying
+        }
+    }
+
     private lateinit var settings: Settings
     private lateinit var looper: PlayerServiceInterface
     lateinit var playerActionsListener: PlayerActionsListener
@@ -51,7 +59,7 @@ class PlayerViewModel(
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
-            if (!looper.getWaitMode()) _state.postValue(currentState.copy(filePreselected = ""))
+            if (!looper.getWaitMode()) _state.value = currentState.copy(filePreselected = "")
         }
     }
 
@@ -69,7 +77,10 @@ class PlayerViewModel(
             when (looper.getState()) {
                 PLAYING -> { /* do nothing */
                 }
-                PAUSED -> looper.resume()
+                PAUSED -> {
+                    looper.resume()
+                    _state.value = (currentState.copy(isPlaying = true))
+                }
                 else -> if (looper.hasLoopFile()) startLooper()
             }
         }
@@ -85,9 +96,17 @@ class PlayerViewModel(
 
     fun onPausePlaybackClicked() {
         uiJob {
+            Timber.d("State: ${looper.getState()}")
             when (looper.getState()) {
-                PLAYING -> looper.pause()
-                PAUSED -> looper.resume()
+                PLAYING -> {
+                    looper.pause()
+                    _state.value = (currentState.copy(isPlaying = false))
+                }
+                PAUSED -> {
+                    looper.resume()
+                    _state.value = (currentState.copy(isPlaying = true))
+
+                }
                 else -> { /* do nothing */
                 }
             }
@@ -111,11 +130,12 @@ class PlayerViewModel(
     fun stopLooper() {
         uiJob {
             if (looper.stop().isSuccess()) {
-                _state.postValue(
+                _state.value = (
                     currentState.copy(
                         playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
                         fileInFocus = "",
-                        filePreselected = ""
+                        filePreselected = "",
+                        isPlaying = false
                     )
                 )
             }
@@ -127,14 +147,14 @@ class PlayerViewModel(
         audioFilesRepository.addLoopsToSet(newLoops)
         val currentLoops = currentState.loopsList.toMutableList()
         currentLoops.addAll(newLoops)
-        _state.postValue(currentState.copy(loopsList = currentLoops))
+        _state.value = currentState.copy(loopsList = currentLoops)
         audioFilesRepository.saveLoopSelection(currentLoops)
     }
 
     fun onDeleteLoopClicked(audioModel: AudioModel) {
         val currentLoops = currentState.loopsList.toMutableList()
         currentLoops.remove(audioModel)
-        _state.postValue(currentState.copy(loopsList = currentLoops))
+        _state.value = currentState.copy(loopsList = currentLoops)
         audioFilesRepository.saveLoopSelection(currentLoops)
     }
 
@@ -143,13 +163,13 @@ class PlayerViewModel(
     }
 
     private fun onPlayerSwitchedToNextFile(filename: String) {
-        _state.postValue(currentState.copy(fileInFocus = filename))
+        _state.value = (currentState.copy(fileInFocus = filename))
     }
 
     private fun onFileSelected(filename: String) {
         if (looper.getWaitMode()) {
             when (looper.getState()) {
-                PLAYING, PAUSED, READY -> _state.postValue(currentState.copy(filePreselected = filename))
+                PLAYING, PAUSED, READY -> _state.value = currentState.copy(filePreselected = filename)
                 STOPPED, UNKNOWN -> startLooper()
             }
         } else {
@@ -162,7 +182,7 @@ class PlayerViewModel(
             with(looper.play()) {
                 if (this.isSuccess()) {
                     this.data?.let {
-                        _state.postValue(currentState.copy(fileInFocus = this.data))
+                        _state.value = currentState.copy(fileInFocus = this.data, isPlaying = true)
                     }
                 }
             }
@@ -171,7 +191,7 @@ class PlayerViewModel(
 
     @Deprecated("I assume?")
     private fun onPlaybackStopped() {
-        _state.postValue(currentState.copy(isPlaying = false))
+        _state.value = currentState.copy(isPlaying = false)
     }
 
     data class UIState(
