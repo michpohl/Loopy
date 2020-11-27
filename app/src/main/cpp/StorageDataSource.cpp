@@ -17,19 +17,19 @@
 
 #include <utils/logging.h>
 #include <oboe/Oboe.h>
-#include <inttypes.h>
+#include <cinttypes>
 
 #include "StorageDataSource.h"
 #include <fstream>
 #include <MultiChannelResampler.h>
-
-
+#include <utils/AudioFile.h>
 #include "NDKExtractor.h"
+
 
 StorageDataSource *StorageDataSource::newFromStorageAsset(AMediaExtractor &extractor,
                                                           const char *fileName,
                                                           AudioProperties targetProperties) {
-
+    LOGD("Start newFromStorageAsset");
     std::ifstream stream;
     stream.open(fileName, std::ifstream::in | std::ifstream::binary);
 
@@ -75,29 +75,7 @@ StorageDataSource *StorageDataSource::newFromStorageAsset(AMediaExtractor &extra
                                      targetProperties);
     } else {
         LOGD("SampleRate is off");
-//
-//
-//        float *inputBuffer;
-//        LOGD("Casting");
-//        inputBuffer = reinterpret_cast<float *>(decodedData);
-//        LOGD("Size of inputBuffer: %zu\n", sizeof(inputBuffer));
-//        LOGD("Divide by this to get the number of samples: %i", sizeof(int16_t));
-//        auto numSamples2 = bytesDecoded / sizeof(int16_t);
-//
-////
-//        float *outputBuffer2;    // multi-channel buffer to be filled
-//        int numInputFrames;  // number of frames of input
-////
-////        // TODO is this correct?
-////        numInputFrames = numSamples2/16;
-//        numInputFrames = 192;
-//        LOGD("numInputFrames: %i", numInputFrames);
-//        LOGD("numSamples: %i", numSamples);
-//        auto outputBuffer3 = std::make_unique<float[]>(numSamples2);
-//
-//
-//        int numOutputFrames = 0;
-//        int channelCount = 2;    // 1 for mono, 2 for stereo // TODO needs to be collected from file too
+
 //
 //        resampler::MultiChannelResampler *mResampler = resampler::MultiChannelResampler::make(
 //                2, // channel count
@@ -134,6 +112,49 @@ StorageDataSource *StorageDataSource::newFromStorageAsset(AMediaExtractor &extra
 //                                     targetProperties);
     }
     LOGD("Before return");
+    return new StorageDataSource(std::move(outputBuffer),
+                                 numSamples,
+                                 targetProperties);
+}
+
+StorageDataSource *
+StorageDataSource::openFromSet(const char *fileName, AudioProperties targetProperties) {
+    LOGD("Start openFromset");
+
+    long bufferSize;
+    char * inputBuffer;
+
+    std::ifstream stream;
+    stream.open(fileName, std::ifstream::in | std::ifstream::binary);
+
+    if (!stream.is_open()) {
+        LOGE("Opening stream failed! %s", fileName);
+    } else {
+        LOGD("Opened %s", fileName);
+
+    }
+
+    stream.seekg (0, std::ios::end);
+    bufferSize = stream.tellg();
+    LOGD("size %ld", bufferSize);
+    stream.seekg (0, std::ios::beg);
+
+    inputBuffer = new char [bufferSize];
+
+    stream.read(inputBuffer, bufferSize);
+    LOGD("Successfully read: %i", stream.gcount());
+    stream.close();
+    auto numSamples = bufferSize / sizeof(int16_t);
+    LOGD("NumSamples: %i", numSamples);
+
+    auto outputBuffer = std::make_unique<float[]>(numSamples);
+
+//    // The NDK decoder can only decode to int16, we need to convert to floats
+    oboe::convertPcm16ToFloat(
+            reinterpret_cast<int16_t *>(inputBuffer),
+            outputBuffer.get(),
+            bufferSize / sizeof(int16_t));
+
     return new StorageDataSource(std::move(outputBuffer),
                                  numSamples,
                                  targetProperties);

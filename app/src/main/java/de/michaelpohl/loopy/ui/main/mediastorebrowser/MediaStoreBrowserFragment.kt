@@ -58,9 +58,7 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     }
 
     private fun observe() {
-        viewModel.entriesToDisplay.observe(
-            viewLifecycleOwner,
-            Observer { browserAdapter.update(it.toMutableList()) })
+        viewModel.entriesToDisplay.observeWith { browserAdapter.update(it.toMutableList()) }
     }
 
     override fun getTitle(): String {

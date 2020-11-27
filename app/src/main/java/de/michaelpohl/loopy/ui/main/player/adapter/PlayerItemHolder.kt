@@ -60,7 +60,6 @@ class PlayerItemHolder(
 
     fun showLoopCount(shouldShow: Boolean) {
         loopCounter.visibility = shouldShow.toVisibility()
-        Timber.d("Is loop counter visible? ${loopCounter.visibility == View.VISIBLE}, shouldShow: $shouldShow")
     }
 
     fun updateProgress(percentage: Int) {

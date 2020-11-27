@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.immutable
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 
 abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
 
@@ -21,6 +22,7 @@ abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
 
     protected val currentState: T
         get() {
+            Timber.d("is there an original value: ${state.value}")
             return state.value ?: initUIState()
         }
 

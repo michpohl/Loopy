@@ -1,44 +1,24 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.view.View
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
+import org.koin.core.inject
 
-open class BrowserViewModel : BaseViewModel<BaseUIState>() {
+abstract class BrowserViewModel() : BaseViewModel<BaseUIState>() {
 
-    lateinit var onSelectionSubmitted: (List<FileModel>) -> Unit
+    protected val audioRepo: AudioFilesRepository by inject()
 
-    protected var _emptyFolderLayoutVisibility = MutableLiveData(View.INVISIBLE) //override if interested
-    var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
+    protected abstract val selectedFiles: MutableLiveData<List<FileModel.AudioFile>>
 
-    var bottomBarVisibility = MediatorLiveData<Int>()
+    lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
 
-    var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
-    var selectButtonText = _selectButtonText.immutable()
-
-    lateinit var listener: OnBrowserActionListener
-
-    override fun initUIState(): BaseUIState {
-        // TODO refactor
-        return object : BaseUIState() {}
+    protected fun submitSelection(selection: List<FileModel.AudioFile>) {
+        // TODO remove I guess
+//        audioRepo.addLoopsToSet(selection)
     }
 
-    open fun onSelectButtonClicked(view: View) {
-        //override if action is needed
-    }
-
-    open fun onSubmitButtonClicked(view: View) {
-//       onSelectionSubmitted()
-    }
-
-    interface OnBrowserActionListener {
-        fun onFolderClicked(fileModel: FileModel)
-        fun onAlbumClicked(albumTitle: String)
-        fun acceptSubmittedSelection()
-    }
+    abstract fun selectAll()
 }

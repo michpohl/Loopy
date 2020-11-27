@@ -3,16 +3,21 @@ package de.michaelpohl.loopy.ui.main.player
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.PlayerState.*
 import de.michaelpohl.loopy.common.Settings
+import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.common.toVisibility
+import de.michaelpohl.loopy.common.util.coroutines.ioJob
 import de.michaelpohl.loopy.common.util.coroutines.uiJob
+import de.michaelpohl.loopy.common.util.coroutines.withUI
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import timber.log.Timber
+import kotlin.system.measureTimeMillis
 
 class PlayerViewModel(
     private val audioFilesRepository: AudioFilesRepository,
@@ -20,9 +25,9 @@ class PlayerViewModel(
 ) :
     BaseViewModel<PlayerViewModel.UIState>() {
 
-    val isPlaying =  MediatorLiveData<Boolean>().apply{
+    val isPlaying = MediatorLiveData<Boolean>().apply {
         addSource(_state) {
-          this.value = it.isPlaying
+            this.value = it.isPlaying
         }
     }
 
@@ -32,17 +37,20 @@ class PlayerViewModel(
 
     override fun initUIState(): UIState {
         return UIState(
-            loopsList = audioFilesRepository.getSingleSet().toMutableList(),
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet()
+                .toMutableList(), // TODO should not be mutable
             isPlaying = false,
             clearButtonVisibility = 0,
-            settings = settings
+            settings = settings,
+            processingOverlayVisibility = false.toVisibility()
         )
     }
 
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
-        _state.value = currentState.copy(settings = settings)
+        _state.value = initUIState() // TODO check if this works right - it doesn't :-)
     }
+
 
     override fun onFragmentPaused() {
         super.onFragmentPaused()
@@ -96,7 +104,7 @@ class PlayerViewModel(
 
     fun onPausePlaybackClicked() {
         uiJob {
-            Timber.d("State: ${looper.getState()}")
+            Timber.d("xxx State: ${looper.getState()}")
             when (looper.getState()) {
                 PLAYING -> {
                     looper.pause()
@@ -131,31 +139,58 @@ class PlayerViewModel(
         uiJob {
             if (looper.stop().isSuccess()) {
                 _state.value = (
-                    currentState.copy(
-                        playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
-                        fileInFocus = "",
-                        filePreselected = "",
-                        isPlaying = false
-                    )
-                )
+                        currentState.copy(
+                            playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
+                            fileInFocus = "",
+                            filePreselected = "",
+                            isPlaying = false
+                        )
+                        )
             }
         }
     }
 
-    fun addNewLoops(newLoops: List<AudioModel>) {
+    fun addNewLoops(newLoops: List<FileModel.AudioFile>) {
         // TODO ask the user if adding or replacing is desired
-        audioFilesRepository.addLoopsToSet(newLoops)
-        val currentLoops = currentState.loopsList.toMutableList()
-        currentLoops.addAll(newLoops)
-        _state.value = currentState.copy(loopsList = currentLoops)
-        audioFilesRepository.saveLoopSelection(currentLoops)
+        _state.value = (currentState.copy(processingOverlayVisibility = true.toVisibility()))
+        ioJob {
+            val elapsed = measureTimeMillis {
+                val result = audioFilesRepository.addLoopsToSet(newLoops)
+
+                // TODO set handling is a total work in progress
+                if (result != JniBridge.ConversionResult.ALL_FAILED) { // if at least one from the conversion succeeded, update UI
+                    val loops = audioFilesRepository.getSingleSetOrStandardSet()
+
+                    withUI {
+                        _state.postValue(
+                            currentState.copy(
+                                loopsList = loops.toMutableList(),
+                            )
+                        )
+                    }
+                }
+            }
+        }.invokeOnCompletion {
+            _state.postValue(
+                currentState.copy(
+                    processingOverlayVisibility = false.toVisibility()
+                )
+            )
+        }
+
     }
 
     fun onDeleteLoopClicked(audioModel: AudioModel) {
         val currentLoops = currentState.loopsList.toMutableList()
+
         currentLoops.remove(audioModel)
-        _state.value = currentState.copy(loopsList = currentLoops)
-        audioFilesRepository.saveLoopSelection(currentLoops)
+        audioFilesRepository.saveLoopSelectionToSet(
+            null,
+            currentLoops
+        ) // TODO set name needs to be properly connected
+        _state.value = currentState.copy(
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet().toMutableList()
+        )
     }
 
     fun onProgressChangedByUser(newProgress: Float) {
@@ -163,13 +198,13 @@ class PlayerViewModel(
     }
 
     private fun onPlayerSwitchedToNextFile(filename: String) {
-        _state.value = (currentState.copy(fileInFocus = filename))
+        _state.postValue(currentState.copy(fileInFocus = filename))
     }
 
     private fun onFileSelected(filename: String) {
         if (looper.getWaitMode()) {
             when (looper.getState()) {
-                PLAYING, PAUSED, READY -> _state.value = currentState.copy(filePreselected = filename)
+                PLAYING, PAUSED, READY -> _state.postValue(currentState.copy(filePreselected = filename))
                 STOPPED, UNKNOWN -> startLooper()
             }
         } else {
@@ -182,7 +217,12 @@ class PlayerViewModel(
             with(looper.play()) {
                 if (this.isSuccess()) {
                     this.data?.let {
-                        _state.value = currentState.copy(fileInFocus = this.data, isPlaying = true)
+                        _state.postValue(
+                            currentState.copy(
+                                fileInFocus = this.data,
+                                isPlaying = true
+                            )
+                        )
                     }
                 }
             }
@@ -202,7 +242,8 @@ class PlayerViewModel(
         val filePreselected: String? = null,
         val playbackProgress: Pair<String, Int>? = null,
         val clearButtonVisibility: Int = View.GONE,
-        val settings: Settings
+        val settings: Settings,
+        val processingOverlayVisibility: Int
     ) : BaseUIState() {
         val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
     }

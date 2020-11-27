@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
-import de.michaelpohl.loopy.common.toAudioModel
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
 import de.michaelpohl.loopy.model.PlayerService
 import de.michaelpohl.loopy.model.PlayerServiceBinder
@@ -83,25 +82,31 @@ class PlayerFragment : BaseFragment() {
         super.onResume()
         findNavController().popBackStack(R.id.playerFragment, false)
         observe()
+        viewModel.onFragmentResumed()
 
         if (arguments != null) {
-            val newAudioFiles = requireArguments().getParcelableArrayList<FileModel>("models")
-            viewModel.addNewLoops(
-                newAudioFiles.filterIsInstance<FileModel.AudioFile>().map { it.toAudioModel() })
-
-            try {
-                viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
-            } catch (e: Exception) {
-                throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
-            }
+            handleArguments()
         }
-        viewModel.onFragmentResumed()
+
+        // TODO what is this? Is it still needed?
+        try {
+            viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
+        } catch (e: Exception) {
+            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopLooper()
         unBindAudioService()
+    }
+
+    private fun handleArguments() {
+        val newAudioFiles = requireArguments().getParcelableArrayList<FileModel>("models")
+        viewModel.addNewLoops(
+            newAudioFiles.filterIsInstance<FileModel.AudioFile>()
+        )
     }
 
     private fun initAdapter() {
@@ -138,7 +143,6 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun bindAudioService() {
-        Timber.d("bindAudioService")
         if (playerServiceBinder == null) {
             val intent = Intent(activity, PlayerService::class.java)
 

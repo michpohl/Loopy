@@ -2,6 +2,8 @@ package de.michaelpohl.loopy.model
 
 import android.content.res.AssetManager
 import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.jni.JniBridge
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -19,13 +21,12 @@ class AudioFilesRepository(
     /**
      * Load a) the set from the specified folder, b) the saved last selected loops, c) the standard set
      */
-    fun getSingleSet(setFolderName: String? = null): List<AudioModel> {
-        return if (setFolderName != null) {
-            storage.listSetContents(setFolderName)
-        } else {
-            sharedPrefsManager.loadLastLoopSelection()?.toAudioModels() ?: storage.listSetContents(
-                STANDARD_SET_FOLDER_NAME)
-        }
+    fun getSingleSetOrStandardSet(setFolderName: String? = null): List<AudioModel> {
+        return storage.getAudioModelsInSet(setFolderName ?: STANDARD_SET_FOLDER_NAME)
+    }
+
+    suspend fun convertFilesInSet(setFolderName: String = STANDARD_SET_FOLDER_NAME): Boolean {
+        return JniBridge.convertFilesInFolder(storage.getFullPath(setFolderName))
     }
 
     // TODO move the whole standard loop set stuff into a separate class.
@@ -42,10 +43,24 @@ class AudioFilesRepository(
         } else false
     }
 
-    fun addLoopsToSet(newLoops: List<AudioModel>) {
+    suspend fun addLoopsToSet(
+        newLoops: List<FileModel.AudioFile>,
+        setName: String? = null
+    ): JniBridge.ConversionResult {
+
+        return JniBridge.convertAndAddToSet(
+            newLoops, storage.getFullPath(setName ?: STANDARD_SET_FOLDER_NAME)
+        )
+
+
     }
 
-    fun saveLoopSelection(loopsList: MutableList<AudioModel>) {
-        sharedPrefsManager.saveLoopSelection(loopsList)
+    fun saveLoopSelectionToSet(setFolderName: String? = null, loopsList: MutableList<AudioModel>) {
+        val currentlyInSet =
+            storage.getAudioModelsInSet(setFolderName ?: STANDARD_SET_FOLDER_NAME).toMutableSet()
+currentlyInSet.forEach {
+    if (!loopsList.contains(it)) storage.deleteFromSet(setFolderName ?: STANDARD_SET_FOLDER_NAME, it)
+}
+
     }
 }

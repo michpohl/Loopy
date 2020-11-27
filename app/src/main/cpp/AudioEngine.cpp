@@ -131,6 +131,7 @@ bool AudioEngine::prepareNextPlayer(const char *fileName, AMediaExtractor &extra
         LOGD("Engine is already prepared. Skipping...");
     }
 
+
     LOGD("Creating new player");
     std::unique_ptr<Player> newPlayer = std::make_unique<Player>(fileName, mCallback, extractor,
                                                                  audioProperties, std::bind(
@@ -205,8 +206,9 @@ bool AudioEngine::openStream() {
     builder.setCallback(this);
     builder.setPerformanceMode(PerformanceMode::LowLatency);
     builder.setSharingMode(SharingMode::Exclusive);
-//    builder.setSampleRate(48000);
-//    builder.setSampleRateConversionQuality(SampleRateConversionQuality::Best);
+    // TODO add variable sample rate here
+    builder.setSampleRate(44100);
+    builder.setSampleRateConversionQuality(SampleRateConversionQuality::Best);
 
     Result result = builder.openStream(&mAudioStream);
     if (result != Result::OK) {
