@@ -16,6 +16,7 @@ import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
+import kotlinx.coroutines.delay
 import timber.log.Timber
 import kotlin.system.measureTimeMillis
 
@@ -170,6 +171,7 @@ class PlayerViewModel(
                 }
             }
             Timber.d("Conversion took: $elapsed")
+            delay(300) // wait for a moment so the user sees the complete progress bar :-)
         }.invokeOnCompletion {
             _state.postValue(
                 currentState.copy(
@@ -180,18 +182,25 @@ class PlayerViewModel(
 
     }
 
+    var lastPercentage: Float = 0F
+
     private fun onConversionProgressUpdated(newLoops: List<FileModel.AudioFile>, name: String, steps: Int) {
         val loops = newLoops.withIndex()
-        var totalFiles = newLoops.size
-        val currentFile = (loops.find { it.value.name == name }?.index ?: 0) + 1
-        val percentage = if (currentFile == 0) 0F else (currentFile.toFloat() / totalFiles.toFloat()) * 100
+        var totalFiles = newLoops.size.toFloat()
+        var indices = 1F / totalFiles
+        var currentIndex = (loops.find { it.value.name == name }?.index ?: 0).toFloat()
+        if (currentIndex > totalFiles / 2) currentIndex += 1
+        val percentage = ((if (currentIndex == 0F) 0F else currentIndex) + indices) / totalFiles * 100
 
-        val stepsPercentage = (if (steps == 0) 1 else steps)/ 6 * 10
-        val actualPercentage = percentage + stepsPercentage
+//        val stepsPercentage = 100 - ((if (steps == 0) 1 else steps)/ 6 * 100)
+        var range = percentage - lastPercentage
+//        var deductThis = (range * 100 - stepsPercentage) / 100
+        val actualPercentage = lastPercentage + (range/6 * steps)
         Timber.d("loops: $newLoops")
         Timber.d("number of files: $totalFiles")
-        Timber.d("index of current file: $currentFile")
-        Timber.d("percentage: $percentage, stepsPercentage: $stepsPercentage, actualPercentage: $actualPercentage")
+        Timber.d("index of current file: $currentIndex")
+        Timber.d("percentage: $percentage, indices: $indices, actualPercentage: $actualPercentage")
+        lastPercentage = percentage
         _state.postValue(currentState.copy(conversionProgress = actualPercentage.toInt()))
     }
 
