@@ -6,15 +6,18 @@
 #define LOOPY_CONVERTER_H
 
 
+#include "AudioCallback.h"
+
 class Converter {
 public:
 
-    explicit  Converter();
+    explicit  Converter(AudioCallback &);
     bool setDestinationFolder(const char *folderName);
     bool convertFolder();
     bool convertSingleFile(const char *filePath, const char *fileName);
 
 private:
+    AudioCallback &mCallback;
     const char *mFolder;
     bool doConversion(const std::string& fullPath, const std::string& name);
     std::string wav = ".wav";
@@ -27,6 +30,9 @@ private:
         if (ending.size() > value.size()) return false;
         return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
     }
+
+    static void
+    interleave(const uint16_t *in_L, const uint16_t *in_R, uint16_t *out, const size_t num_samples);
 };
 
 #endif //LOOPY_CONVERTER_H

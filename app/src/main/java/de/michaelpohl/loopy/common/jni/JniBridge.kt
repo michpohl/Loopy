@@ -14,12 +14,10 @@ object JniBridge {
     var waitMode = false // TODO later the waitmode should come from settings
         private set
 
-    var currentlySelectedFile: String? = null
-
-    var progressListener: ((Int) -> Unit)? = null
     var filePreselectedListener: ((String) -> Unit)? = null
     lateinit var fileStartedByPlayerListener: ((String) -> Unit)
     lateinit var playbackProgressListener: (String, Int) -> Unit
+    lateinit var conversionProgressListener: (String, Int) -> Unit
 
     init {
         System.loadLibrary("native-lib")
@@ -85,6 +83,10 @@ object JniBridge {
 
     fun onPlaybackProgressChanged(filename: String, percentage: Int) {
         playbackProgressListener(filename, percentage)
+    }
+
+    fun onConversionProgressChanged(filename: String, steps: Int) {
+        conversionProgressListener(filename, steps)
     }
 
     fun onFileSelected(value: String) {

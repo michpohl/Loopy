@@ -58,17 +58,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject
 
 
     const char *uri = env->GetStringUTFChars(URI, NULL);
-    // TODO extractor could be removed eventually
     AMediaExtractor *extractor = AMediaExtractor_new();
-//    if (extractor == nullptr) {
-//        LOGE("Could not obtain AMediaExtractor");
-//        return false;
-//    }
-//    media_status_t amresult = AMediaExtractor_setDataSource(extractor, uri);
-//    if (amresult != AMEDIA_OK) {
-//        LOGE("Error setting extractor data source, err %d", amresult);
-//    }
-    // end extractor block
 
     if (audioEngineExists(env, instance)) {
         return audioEngine->prepareNextPlayer(uri, *extractor);
@@ -130,9 +120,15 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_setWaitModeNative(JNIEnv *env, jo
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_convertFolder(JNIEnv *env, jobject thiz,
+Java_de_michaelpohl_loopy_common_jni_JniBridge_convertFolder(JNIEnv *env, jobject instance,
                                                              jstring folder_name) {
-    if (converter == nullptr) converter = std::__ndk1::make_unique<Converter>();
+
+    if (callback == nullptr) {
+        myJNIClass = env->NewGlobalRef(instance);
+        callback = std::make_unique<AudioCallback>(*g_jvm, myJNIClass);
+    }
+
+    if (converter == nullptr) converter = std::__ndk1::make_unique<Converter>(*callback);
     const char *folder = env->GetStringUTFChars(folder_name, nullptr);
 
     if (converter->setDestinationFolder(folder)) {
@@ -143,14 +139,21 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_convertFolder(JNIEnv *env, jobjec
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_convertSingleFile(JNIEnv *env, jobject thiz,
+Java_de_michaelpohl_loopy_common_jni_JniBridge_convertSingleFile(JNIEnv *env, jobject instance,
                                                                  jstring file_name,
                                                                  jstring file_path,
                                                                  jstring set_path) {
-    if (converter == nullptr) converter = std::__ndk1::make_unique<Converter>();
+
+    if (callback == nullptr) {
+        myJNIClass = env->NewGlobalRef(instance);
+        callback = std::make_unique<AudioCallback>(*g_jvm, myJNIClass);
+    }
+
+    if (converter == nullptr) converter = std::__ndk1::make_unique<Converter>(*callback);
     const char *folder = env->GetStringUTFChars(set_path, nullptr);
     const char *path = env->GetStringUTFChars(file_path, nullptr);
     const char *name = env->GetStringUTFChars(file_name, nullptr);
+
 
 
     if (converter->setDestinationFolder(folder)) {

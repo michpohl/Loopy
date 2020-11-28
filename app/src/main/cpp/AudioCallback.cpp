@@ -4,12 +4,14 @@
 
 #include <jni.h>>
 #include <utils/logging.h>
+#include <string>
 #include "AudioCallback.h"
 
 
 jmethodID progressChangedMethod;
 jmethodID fileStartedMethod;
 jmethodID filePreselectedMethod;
+jmethodID conversionProgressMethod;
 const char *mFileName;
 
 AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object(object) {
@@ -25,23 +27,14 @@ AudioCallback::AudioCallback(JavaVM &jvm, jobject object) : g_jvm(jvm), g_object
                                                "(Ljava/lang/String;)V");
         filePreselectedMethod = g_env->GetMethodID(target, "onSelected",
                                                    "(Ljava/lang/String;)V");
+        conversionProgressMethod = g_env->GetMethodID(target, "onConversionProgressChanged",
+                                                      "(Ljava/lang/String;I)V");
     }
 }
 
 void AudioCallback::onFileStartsPlaying(const char *fileName) {
     JNIEnv *g_env;
-    int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
-    if (getEnvStat == JNI_EDETACHED) {
-        LOGD("GetEnv: not attached - attaching");
-        int result = g_jvm.AttachCurrentThread(reinterpret_cast<JNIEnv **>(&g_env), NULL);
-        if (result != 0) {
-            LOGD("GetEnv: Failed to attach");
-        }
-    } else if (getEnvStat == JNI_OK) {
-//        LOGD("GetEnv: JNI_OK");
-    } else if (getEnvStat == JNI_EVERSION) {
-        LOGD("GetEnv: version not supported");
-    }
+    g_env = getEnv(g_env);
     if (mFileName != fileName || mFileName == NULL) {
         mFileName = fileName;
         jstring callbackString = g_env->NewStringUTF(mFileName);
@@ -52,22 +45,27 @@ void AudioCallback::onFileStartsPlaying(const char *fileName) {
     }
 }
 
+JNIEnv *AudioCallback::getEnv(JNIEnv *&g_env) const {
+    int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
+    if (getEnvStat == JNI_EDETACHED) {
+        LOGD("GetEnv: not attached - attaching");
+        int result = g_jvm.AttachCurrentThread(reinterpret_cast<JNIEnv **>(&g_env), NULL);
+        if (result != 0) {
+            LOGD("GetEnv: Failed to attach");
+        }
+    } else if (getEnvStat == JNI_EVERSION) {
+        LOGD("GetEnv: version not supported");
+    }
+    return g_env;
+}
+
 void AudioCallback::onFilePreselected(const char *fileName) {
     if (mFileName != fileName || mFileName == NULL) {
         mFileName = fileName;
+
         JNIEnv *g_env;
-        int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
-        // TODO there is duplicated code here. Maybe refactor
-        if (getEnvStat == JNI_EDETACHED) {
-            LOGD("GetEnv: not attached - attaching");
-            if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
-                LOGD("GetEnv: Failed to attach");
-            }
-        } else if (getEnvStat == JNI_OK) {
-//            LOGD("GetEnv: JNI_OK");
-        } else if (getEnvStat == JNI_EVERSION) {
-            LOGD("GetEnv: version not supported");
-        }
+        getEnv(g_env);
+
         jstring callbackString = g_env->NewStringUTF(mFileName);
         g_env->CallVoidMethod(g_object, filePreselectedMethod, callbackString);
         g_env->DeleteLocalRef(callbackString);
@@ -78,22 +76,21 @@ void AudioCallback::onFilePreselected(const char *fileName) {
 
 void AudioCallback::updatePlaybackProgress(const char *filename, int progressPercentage) {
     JNIEnv *g_env;
-    int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
+    getEnv(g_env);
 
-    if (getEnvStat == JNI_EDETACHED) {
-        LOGD("GetEnv: not attached - attaching");
-        if (g_jvm.AttachCurrentThread(&g_env, NULL) != 0) {
-            LOGD("GetEnv: Failed to attach");
-        }
-    } else if (getEnvStat == JNI_OK) {
-//        LOGD("GetEnv: JNI_OK");
-    } else if (getEnvStat == JNI_EVERSION) {
-        LOGD("GetEnv: version not supported");
-    }
     jstring callbackString = g_env->NewStringUTF(filename);
-    g_env->CallVoidMethod(g_object, progressChangedMethod, callbackString, (jint) progressPercentage);
+    g_env->CallVoidMethod(g_object, progressChangedMethod, callbackString,
+                          (jint) progressPercentage);
     g_env->DeleteLocalRef(callbackString);
 //    mJvm.DetachCurrentThread();
+}
+
+void AudioCallback::updateConversionProgress(const char* filename, int steps) {
+    JNIEnv *g_env;
+    getEnv(g_env);
+    jstring callbackString = g_env->NewStringUTF(filename);
+    g_env->CallVoidMethod(g_object, conversionProgressMethod, callbackString, (jint) steps);
+    g_env->DeleteLocalRef(callbackString);
 }
 
 

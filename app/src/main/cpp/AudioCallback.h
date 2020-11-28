@@ -17,11 +17,15 @@ public:
 
     void onFileStartsPlaying(const char *fileName);
 
+    void updateConversionProgress(const char *filename, int steps);
+
     void onFilePreselected(const char *fileName);
 
 private:
     JavaVM &g_jvm;
     jobject g_object;
+
+    JNIEnv *getEnv(JNIEnv *&g_env) const;
 
 };
 

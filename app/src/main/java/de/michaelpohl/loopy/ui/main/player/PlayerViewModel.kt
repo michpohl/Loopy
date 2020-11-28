@@ -151,6 +151,7 @@ class PlayerViewModel(
     }
 
     fun addNewLoops(newLoops: List<FileModel.AudioFile>) {
+        JniBridge.conversionProgressListener = {name, steps -> onConversionProgressUpdated(newLoops, name, steps)}
         // TODO ask the user if adding or replacing is desired
         _state.value = (currentState.copy(processingOverlayVisibility = true.toVisibility()))
         ioJob {
@@ -177,6 +178,21 @@ class PlayerViewModel(
             )
         }
 
+    }
+
+    private fun onConversionProgressUpdated(newLoops: List<FileModel.AudioFile>, name: String, steps: Int) {
+        val loops = newLoops.withIndex()
+        var totalFiles = newLoops.size
+        val currentFile = (loops.find { it.value.name == name }?.index ?: 0) + 1
+        val percentage = if (currentFile == 0) 0F else (currentFile.toFloat() / totalFiles.toFloat()) * 100
+
+        val stepsPercentage = (if (steps == 0) 1 else steps)/ 6 * 10
+        val actualPercentage = percentage + stepsPercentage
+        Timber.d("loops: $newLoops")
+        Timber.d("number of files: $totalFiles")
+        Timber.d("index of current file: $currentFile")
+        Timber.d("percentage: $percentage, stepsPercentage: $stepsPercentage, actualPercentage: $actualPercentage")
+        _state.postValue(currentState.copy(conversionProgress = actualPercentage.toInt()))
     }
 
     fun onDeleteLoopClicked(audioModel: AudioModel) {
@@ -242,7 +258,8 @@ class PlayerViewModel(
         val playbackProgress: Pair<String, Int>? = null,
         val clearButtonVisibility: Int = View.GONE,
         val settings: Settings,
-        val processingOverlayVisibility: Int
+        val processingOverlayVisibility: Int,
+        val conversionProgress: Int? = 0
     ) : BaseUIState() {
         val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
     }

@@ -13,20 +13,21 @@
 #include "Converter.h"
 #include "utils/logging.h"
 #include "NDKExtractor.h"
+#include "AudioCallback.h"
 #include <utils/AudioFile.h>
 
 namespace fs = std::__fs::filesystem;
 
-Converter::Converter() = default;
+Converter::Converter(AudioCallback &callback) : mCallback(callback) {
 
-//constexpr float kScaleI16ToFloat = (1.0f / 32768.0f);
-constexpr float kScaleI16ToFloat = (1.0f / 16384.0f);
+}
 
+constexpr float kScaleI16ToFloat = (1.0f / 32768.0f);
 
-void interleave(const uint16_t *in_L,     // mono input buffer (left channel)
-                const uint16_t *in_R,     // mono input buffer (right channel)
-                uint16_t *out,            // stereo output buffer
-                const size_t num_samples)  // number of samples
+void Converter::interleave(const uint16_t *in_L,     // mono input buffer (left channel)
+                           const uint16_t *in_R,     // mono input buffer (right channel)
+                           uint16_t *out,            // stereo output buffer
+                           const size_t num_samples)  // number of samples
 {
     for (size_t i = 0; i < num_samples; ++i) {
         out[i * 2] = in_L[i];
@@ -92,7 +93,8 @@ bool Converter::convertFolder() {
 }
 
 bool Converter::doConversion(const std::string &fullPath, const std::string &name) {
-
+    LOGD("Before callback");
+    mCallback.updateConversionProgress(name.c_str(), 1);
     AMediaExtractor *extractor = AMediaExtractor_new();
     if (extractor == nullptr) {
         LOGE("Could not obtain AMediaExtractor");
@@ -105,12 +107,6 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
     } else {
         LOGD("amresult ok");
     }
-//    AMediaFormat *format = AMediaExtractor_getTrackFormat(extractor, 0);
-//    int32_t channelCount;
-//    if (!AMediaFormat_getInt32(format, AMEDIAFORMAT_KEY_CHANNEL_COUNT, &channelCount)) {
-//        return false;
-//    }
-//    LOGD("Source channel count %d", channelCount);
 
     std::ifstream stream;
     stream.open(fullPath, std::ifstream::in | std::ifstream::binary);
@@ -119,39 +115,42 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
         LOGE("Opening stream failed! %s", fullPath.c_str());
         return false;
     }
+
     stream.seekg(0, std::ios::end);
     long size = stream.tellg();
     stream.close();
+    mCallback.updateConversionProgress(name.c_str(), 2);
 
     constexpr int kMaxCompressionRatio{12};
-    const long maximumDataSizeInBytes =
-            kMaxCompressionRatio * (size) * sizeof(int16_t);
+    const long maximumDataSizeInBytes = kMaxCompressionRatio * (size) * sizeof(int16_t);
     auto decodedData = new uint8_t[maximumDataSizeInBytes];
 
     int numChannels = NDKExtractor::getChannelCount(*extractor);
     int64_t bytesDecoded = NDKExtractor::decode(*extractor, decodedData);
+    mCallback.updateConversionProgress(name.c_str(), 3);
     auto numSamples = bytesDecoded / sizeof(int16_t);
-    LOGD("Number channels: %i", numChannels);
+
+    std::string outputName = std::string(mFolder) + "/" + name + ".pcm";
+    LOGD("outputName: %s", outputName.c_str());
+    std::ofstream outfile(outputName.c_str(), std::ios::out | std::ios::binary);
+    mCallback.updateConversionProgress(name.c_str(), 4);
     if (numChannels == 1) {
+        mCallback.updateConversionProgress(name.c_str(), 5);
         auto outData = new uint16_t[maximumDataSizeInBytes * 2];
         interleave(reinterpret_cast<uint16_t *>(decodedData),
                    reinterpret_cast<uint16_t *>(decodedData), outData, numSamples);
 
-        std::string outputName = std::string(mFolder) + "/" + name + ".pcm";
-        LOGD("outputName: %s", outputName.c_str());
-
-        std::ofstream outfile(outputName.c_str(), std::ios::out | std::ios::binary);
+        mCallback.updateConversionProgress(name.c_str(), 6);
         outfile.write((char *) outData, numSamples * sizeof(int16_t) * 2);
         return true;
+    } else if (numChannels > 2) {
+        LOGE("Only mono and stereo files can be processed. Skipping %s", name.c_str());
+        return false;
     }
-    LOGD("Stereo");
-
-    std::string outputName = std::string(mFolder) + "/" + name + ".pcm";
-    LOGD("outputName: %s", outputName.c_str());
-
-    std::ofstream outfile(outputName.c_str(), std::ios::out | std::ios::binary);
+    mCallback.updateConversionProgress(name.c_str(), 6);
     outfile.write((char *) decodedData, numSamples * sizeof(int16_t));
     return true;
+
 }
 
 bool Converter::convertSingleFile(const char *filePath, const char *fileName) {
