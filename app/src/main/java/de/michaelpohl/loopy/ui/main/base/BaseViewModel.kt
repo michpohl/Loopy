@@ -22,7 +22,6 @@ abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
 
     protected val currentState: T
         get() {
-            Timber.d("is there an original value: ${state.value}")
             return state.value ?: initUIState()
         }
 

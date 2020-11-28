@@ -163,13 +163,12 @@ class PlayerViewModel(
 
                     withUI {
                         _state.postValue(
-                            currentState.copy(
-                                loopsList = loops.toMutableList(),
-                            )
+                            currentState.copy(loopsList = loops.toMutableList())
                         )
                     }
                 }
             }
+            Timber.d("Conversion took: $elapsed")
         }.invokeOnCompletion {
             _state.postValue(
                 currentState.copy(

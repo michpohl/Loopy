@@ -85,6 +85,7 @@ class PlayerFragment : BaseFragment() {
         viewModel.onFragmentResumed()
 
         if (arguments != null) {
+            Timber.d("We have arguments")
             handleArguments()
         }
 
@@ -107,6 +108,7 @@ class PlayerFragment : BaseFragment() {
         viewModel.addNewLoops(
             newAudioFiles.filterIsInstance<FileModel.AudioFile>()
         )
+        arguments = null
     }
 
     private fun initAdapter() {
