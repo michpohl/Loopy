@@ -2,6 +2,7 @@ package de.michaelpohl.loopy.ui.main.player
 
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.PlayerState.*
@@ -16,6 +17,7 @@ import de.michaelpohl.loopy.model.AudioFilesRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
+import de.michaelpohl.loopy.ui.util.calculateConversionProgress
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import kotlin.system.measureTimeMillis
@@ -30,6 +32,10 @@ class PlayerViewModel(
         addSource(_state) {
             this.value = it.isPlaying
         }
+    }
+
+    val processingText = MediatorLiveData<String>().apply {
+        addSource(state) {this.value = resources.getString(R.string.processing, it.conversionProgress) + "%"}
     }
 
     private lateinit var settings: Settings
@@ -152,7 +158,8 @@ class PlayerViewModel(
     }
 
     fun addNewLoops(newLoops: List<FileModel.AudioFile>) {
-        JniBridge.conversionProgressListener = {name, steps -> onConversionProgressUpdated(newLoops, name, steps)}
+        JniBridge.conversionProgressListener =
+            { name, steps -> onConversionProgressUpdated(newLoops, name, steps) }
         // TODO ask the user if adding or replacing is desired
         _state.value = (currentState.copy(processingOverlayVisibility = true.toVisibility()))
         ioJob {
@@ -182,26 +189,16 @@ class PlayerViewModel(
 
     }
 
-    var lastPercentage: Float = 0F
 
-    private fun onConversionProgressUpdated(newLoops: List<FileModel.AudioFile>, name: String, steps: Int) {
-        val loops = newLoops.withIndex()
-        var totalFiles = newLoops.size.toFloat()
-        var indices = 1F / totalFiles
-        var currentIndex = (loops.find { it.value.name == name }?.index ?: 0).toFloat()
-        if (currentIndex > totalFiles / 2) currentIndex += 1
-        val percentage = ((if (currentIndex == 0F) 0F else currentIndex) + indices) / totalFiles * 100
-
-//        val stepsPercentage = 100 - ((if (steps == 0) 1 else steps)/ 6 * 100)
-        var range = percentage - lastPercentage
-//        var deductThis = (range * 100 - stepsPercentage) / 100
-        val actualPercentage = lastPercentage + (range/6 * steps)
-        Timber.d("loops: $newLoops")
-        Timber.d("number of files: $totalFiles")
-        Timber.d("index of current file: $currentIndex")
-        Timber.d("percentage: $percentage, indices: $indices, actualPercentage: $actualPercentage")
-        lastPercentage = percentage
-        _state.postValue(currentState.copy(conversionProgress = actualPercentage.toInt()))
+    private fun onConversionProgressUpdated(
+        newLoops: List<FileModel.AudioFile>,
+        name: String,
+        currentSteps: Int
+    ) {
+        var currentIndex = (newLoops.withIndex().find { it.value.name == name }?.index ?: 0)
+        val conversionPercentage =
+            calculateConversionProgress(newLoops.size, currentIndex, currentSteps)
+        _state.postValue(currentState.copy(conversionProgress = conversionPercentage))
     }
 
     fun onDeleteLoopClicked(audioModel: AudioModel) {
