@@ -2,14 +2,15 @@ package de.michaelpohl.loopy.ui.main.filebrowser
 
 import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.model.AudioFilesRepository
+import de.michaelpohl.loopy.common.convertFileSizeToMB
+import de.michaelpohl.loopy.common.isFolder
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
-import org.koin.core.inject
+import timber.log.Timber
+import java.io.File
 
-abstract class BrowserViewModel() : BaseViewModel<BaseUIState>() {
-
-    protected val audioRepo: AudioFilesRepository by inject()
+abstract class BrowserViewModel(private val appStateRepository: AppStateRepository) : BaseViewModel<BaseUIState>() {
 
     protected abstract val selectedFiles: MutableLiveData<List<FileModel.AudioFile>>
 

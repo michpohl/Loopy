@@ -138,7 +138,7 @@ class PlayerFragment : BaseFragment() {
                 playbackProgress?.let { progress ->
                     adapter.updatePlaybackProgress(progress, this.settings.showLoopCount)
                 }
-                viewModel.setPlayerWaitMode()
+                viewModel.setPlayerWaitMode(it.settings.isWaitMode)
             }
         }
 

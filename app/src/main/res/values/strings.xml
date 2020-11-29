@@ -59,6 +59,6 @@
     <string name="save">Save</string>
     <string name="settings_item_keep_screen_on">Keep Screen On</string>
     <string name="settings_item_play_in_background">Play in Background</string>
-    <string name="processing">Processing…%1$s</string>
+    <string name="processing">Processing…%1$d</string>
 
 </resources>

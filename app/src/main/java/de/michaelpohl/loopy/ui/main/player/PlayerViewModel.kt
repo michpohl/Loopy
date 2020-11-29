@@ -35,10 +35,17 @@ class PlayerViewModel(
     }
 
     val processingText = MediatorLiveData<String>().apply {
-        addSource(state) {this.value = resources.getString(R.string.processing, it.conversionProgress) + "%"}
+        addSource(state) {
+            this.value =
+                "${resources.getString(R.string.processing, it.conversionProgress)}%"
+        }
     }
 
-    private lateinit var settings: Settings
+    private var settings: Settings = appStateRepo.settings
+
+    // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
+    private var waitmode: Boolean? = null
+
     private lateinit var looper: PlayerServiceInterface
     lateinit var playerActionsListener: PlayerActionsListener
 
@@ -55,7 +62,9 @@ class PlayerViewModel(
 
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
-        _state.value = initUIState() // TODO check if this works right - it doesn't :-)
+        Timber.d("Settings: $settings")
+        _state.value = initUIState()
+//        setPlayerWaitMode(settings.isWaitMode)
     }
 
 
@@ -66,15 +75,20 @@ class PlayerViewModel(
         }
     }
 
-    fun setPlayerWaitMode(shouldWait: Boolean = appStateRepo.settings.isWaitMode) {
-        if (!::looper.isInitialized || looper.getWaitMode() == shouldWait) return
+
+    fun setPlayerWaitMode(shouldWait: Boolean) {
+        if (!::looper.isInitialized || waitmode == shouldWait) return
         uiJob {
             if (looper.setWaitMode(shouldWait).isSuccess()) {
-                Timber.v("Looper waitmode set to $shouldWait")
+                waitmode = shouldWait
             } else {
                 error("Failed to set wait mode. This is a program error.")
             }
-            if (!looper.getWaitMode()) _state.value = currentState.copy(filePreselected = "")
+
+            // unselect if waitmode was turned off
+            if (!looper.getWaitMode()) {
+                _state.value = currentState.copy(filePreselected = "")
+            }
         }
     }
 
@@ -111,7 +125,6 @@ class PlayerViewModel(
 
     fun onPausePlaybackClicked() {
         uiJob {
-            Timber.d("xxx State: ${looper.getState()}")
             when (looper.getState()) {
                 PLAYING -> {
                     looper.pause()
@@ -129,7 +142,6 @@ class PlayerViewModel(
         }
     }
 
-    // TODO make nicer
     fun onLoopClicked(audioModel: AudioModel) {
         uiJob {
             with(looper.select(audioModel.path)) {

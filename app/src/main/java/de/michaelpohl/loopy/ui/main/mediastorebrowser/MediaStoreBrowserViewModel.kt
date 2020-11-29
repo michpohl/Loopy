@@ -7,15 +7,14 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.MediaStoreRepository
 import de.michaelpohl.loopy.common.immutable
-import de.michaelpohl.loopy.common.toFileModel
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
-import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
 import java.io.File
 
-open class MediaStoreBrowserViewModel(private val repo: MediaStoreRepository) : BrowserViewModel() {
+open class MediaStoreBrowserViewModel(private val repo: MediaStoreRepository, private val appStateRepository: AppStateRepository) : BrowserViewModel(appStateRepository) {
 
     private val mediaStoreEntries = repo.getMediaStoreEntries()
     private val _entriesToDisplay = MutableLiveData<List<MediaStoreItemModel>>()

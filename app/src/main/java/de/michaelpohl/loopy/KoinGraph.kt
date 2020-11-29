@@ -37,8 +37,8 @@ object KoinGraph {
     }
 
     private val viewModelModule = module {
-        viewModel { FileBrowserViewModel(get()) }
-        viewModel { MediaStoreBrowserViewModel(get()) }
+        viewModel { FileBrowserViewModel(get(), get()) }
+        viewModel { MediaStoreBrowserViewModel(get(), get()) }
         viewModel { PlayerViewModel(get(), get()) }
         viewModel { MarkupViewerViewModel() }
         viewModel { SettingsViewModel(get()) }

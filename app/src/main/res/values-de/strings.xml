@@ -57,5 +57,5 @@
     <string name="settings_item_play_in_background">Im Hintergrund spielen</string>
     <string name="snackbar_cant_clear_loops">Dies geht von hier aus nicht.</string>
     <string name="snackbar_error_message">Ein Fehler ist aufgetreten. Großes Sorry!!</string>
-    <string name="processing">Verarbeite… %1$s</string>
+    <string name="processing">Verarbeite… %1$d</string>
 </resources>

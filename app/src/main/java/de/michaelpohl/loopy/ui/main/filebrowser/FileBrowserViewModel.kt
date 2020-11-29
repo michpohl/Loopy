@@ -7,12 +7,11 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.immutable
-import de.michaelpohl.loopy.common.toFileModels
+import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
-import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 
-open class FileBrowserViewModel(private val repo: StorageRepository) :
-    BrowserViewModel() {
+open class FileBrowserViewModel(private val repo: StorageRepository, private val appStateRepository: AppStateRepository) :
+    BrowserViewModel(appStateRepository) {
 
     private val _filesToDisplay = MutableLiveData<List<FileModel>>()
     val filesToDisplay = _filesToDisplay.immutable()

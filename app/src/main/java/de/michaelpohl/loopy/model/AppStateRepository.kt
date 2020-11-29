@@ -21,7 +21,7 @@ class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 
     private fun createDefaultSettings(): Settings {
         settings = Settings(
-            acceptedFileTypes = mutableListOf(AudioFileType.WAVE, AudioFileType.MP3),
+            acceptedFileTypes = mutableListOf(AudioFileType.WAVE, AudioFileType.MP3, AudioFileType.OGG),
             isWaitMode = false,
             showLoopCount = true,
             keepScreenOn = true,
