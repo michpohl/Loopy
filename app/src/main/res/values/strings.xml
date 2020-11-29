@@ -60,5 +60,6 @@
     <string name="settings_item_keep_screen_on">Keep Screen On</string>
     <string name="settings_item_play_in_background">Play in Background</string>
     <string name="processing">Processing…%1$d</string>
+    <string name="settings_item_sample_rate">Sample rate</string>
 
 </resources>

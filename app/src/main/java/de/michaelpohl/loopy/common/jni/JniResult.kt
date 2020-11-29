@@ -3,7 +3,6 @@ package de.michaelpohl.loopy.common.jni
 sealed class JniResult<out T> {
     abstract val data: T?
     abstract fun <T> copy(data: T): JniResult<T>
-
     data class Success<out T>(override val data: T?) : JniResult<T>() {
         override fun <T> copy(data: T): JniResult<T> {
             return Success<T>(data)
@@ -45,7 +44,6 @@ fun <T> successResult(data: T?) = JniResult.Success(data)
  * Creates a [JniResult.Error] with no further content
  */
 fun errorResult() = JniResult.Error(null)
-
 fun Boolean.toJniResult(): JniResult<Nothing> {
     return if (this) successResult() else errorResult()
 }

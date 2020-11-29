@@ -10,5 +10,4 @@ class FileItemHolder(itemView: View) : BrowserItemHolder<FileModel.File>(itemVie
         label.text = item.name
         checkBox.gone()
     }
-
 }

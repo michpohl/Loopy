@@ -1,11 +1,9 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
-import androidx.versionedparcelable.ParcelField
 import kotlinx.android.parcel.Parcelize
-import java.io.File
 
-sealed class FileModel: Parcelable {
+sealed class FileModel : Parcelable {
 
     abstract val path: String
     abstract val name: String

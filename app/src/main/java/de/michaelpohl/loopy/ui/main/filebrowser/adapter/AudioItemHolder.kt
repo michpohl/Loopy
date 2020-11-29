@@ -8,9 +8,8 @@ import de.michaelpohl.loopy.common.roundTo
 
 class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(itemView) {
 
-    lateinit var item: FileModel.File
+//    lateinit var item: FileModel.File
     lateinit var onCheckedChangedReceiver: (FileModel.AudioFile, Boolean) -> Unit
-
     override fun bind(item: FileModel.AudioFile) {
         label.text = item.name
         subLabel.text = "${item.sizeInMB.roundTo(2)} MB" //TODO turn into string resource
@@ -25,5 +24,4 @@ class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(i
             )
         }
     }
-
 }

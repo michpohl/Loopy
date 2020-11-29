@@ -33,7 +33,7 @@ object KoinGraph {
         single { ExternalStorageManager(get()) }
         single { AppStateRepository(get()) }
         single { StorageRepository(get()) }
-        single { MediaStoreRepository(androidApplication())}
+        single { MediaStoreRepository(androidApplication()) }
     }
 
     private val viewModelModule = module {

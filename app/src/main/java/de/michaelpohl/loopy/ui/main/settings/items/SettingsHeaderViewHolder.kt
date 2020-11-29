@@ -8,8 +8,8 @@ import de.michaelpohl.loopy.common.find
 
 class SettingsHeaderViewHolder(itemView: View) :
     DelegationAdapterItemHolder<SettingsItemModel.Header>(itemView) {
-    private lateinit var label: TextView
 
+    private lateinit var label: TextView
     override fun onCreated() {
         super.onCreated()
         label = itemView.find(R.id.tv_header_label)

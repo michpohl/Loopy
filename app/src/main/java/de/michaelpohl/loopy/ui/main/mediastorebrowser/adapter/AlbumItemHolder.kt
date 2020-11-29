@@ -12,5 +12,4 @@ class AlbumItemHolder(itemView: View) : MediaStoreItemHolder<MediaStoreItemModel
         icon.setImageDrawable(getDrawable(R.drawable.ic_album))
         checkBox.gone()
     }
-
 }

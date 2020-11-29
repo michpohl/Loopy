@@ -13,7 +13,6 @@ class SettingsFileTypeViewHolder(itemView: View) :
 
     private lateinit var label: TextView
     private lateinit var checkBox: CheckBox
-
     override fun onCreated() {
         super.onCreated()
         label = itemView.find(R.id.tv_label)

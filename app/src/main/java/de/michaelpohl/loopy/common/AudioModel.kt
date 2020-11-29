@@ -1,8 +1,6 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
-import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 //@JsonClass(generateAdapter = true)

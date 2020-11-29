@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adapter.adapter.adapter
 import com.example.adapter.adapter.clickableDelegate
+import com.example.adapter.adapter.customAdapter
 import com.example.adapter.adapter.delegate
-import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.R.id.rv_settings_recycler
 import de.michaelpohl.loopy.common.find
@@ -25,16 +24,17 @@ class SettingsFragment : BaseFragment() {
     override val viewModel: SettingsViewModel by inject()
     private lateinit var binding: FragmentSettingsBinding
 
-    private val adapter = adapter<SettingsItemModel> {
+    private val adapter = customAdapter<SettingsItemModel, SettingsViewModel.UIState> {
         delegates = listOf(
             delegate<SettingsItemModel.Header, SettingsHeaderViewHolder>(R.layout.item_settings_header),
             clickableDelegate<SettingsItemModel.CheckableSetting, SettingsCheckableViewHolder>
-                (R.layout.item_settings_checkable) { viewModel.onSettingsItemClicked(it)},
-            clickableDelegate<SettingsItemModel.ToggleableSetting, SettingsToggleableViewHolder>
-                (R.layout.item_settings_toggleable) {viewModel.onSettingsItemClicked(it)},
-                    clickableDelegate<SettingsItemModel.FileTypeSetting, SettingsFileTypeViewHolder>
-                    (R.layout.item_settings_checkable) {viewModel.onSettingsItemClicked(it)}
+                (R.layout.item_settings_checkable) { viewModel.onSettingsItemClicked(it) },
+            clickableDelegate<SettingsItemModel.MultipleChoiceSetting, SettingsMultipleChoiceViewHolder>
+                (R.layout.item_settings_multiplechoice) { viewModel.onSettingsItemClicked(it) },
+            clickableDelegate<SettingsItemModel.FileTypeSetting, SettingsFileTypeViewHolder>
+                (R.layout.item_settings_checkable) { viewModel.onSettingsItemClicked(it) }
         )
+        sorting = SettingsItemSorting()
     }
 
     override fun onCreateView(
@@ -54,12 +54,8 @@ class SettingsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.root.find<RecyclerView>(rv_settings_recycler).adapter = this.adapter
         viewModel.state.observeWith {
-            adapter.update(it.settings)
+            Timber.d("Updating with: ${it.settings}")
+            adapter.update(it)
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        viewModel.save()
     }
 }

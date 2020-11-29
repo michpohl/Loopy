@@ -8,5 +8,4 @@ class ArtistItemHolder(itemView: View) : MediaStoreItemHolder<MediaStoreItemMode
         label.text = item.name
         checkBox.gone()
     }
-
 }

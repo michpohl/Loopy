@@ -10,6 +10,7 @@ class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :
         AnyDiffCallback(), PlayerItemSorting(),
         listOf(delegate)
     ) {
+
     fun updateFileCurrentlyPlayed(name: String) {
         delegate.updateFileCurrentlyPlayed(name)
     }

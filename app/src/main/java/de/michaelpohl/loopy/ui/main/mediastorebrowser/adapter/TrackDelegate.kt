@@ -5,9 +5,11 @@ import com.example.adapter.adapter.AdapterItemDelegate
 import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 
-class TrackDelegate(private val receiver: (MediaStoreItemModel.Track, Boolean) -> Unit) : AdapterItemDelegate<MediaStoreItemModel.Track, TrackItemHolder>() {
+class TrackDelegate(private val receiver: (MediaStoreItemModel.Track, Boolean) -> Unit) :
+    AdapterItemDelegate<MediaStoreItemModel.Track, TrackItemHolder>() {
+
     override fun createViewHolder(parent: ViewGroup): TrackItemHolder {
-        val holder =  TrackItemHolder(inflateLayout(R.layout.item_browser, parent))
+        val holder = TrackItemHolder(inflateLayout(R.layout.item_browser, parent))
         holder.onCheckedChangedReceiver = this.receiver
         return holder
     }

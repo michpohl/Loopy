@@ -7,11 +7,17 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.immutable
+import de.michaelpohl.loopy.common.toFileModels
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 
-open class FileBrowserViewModel(private val repo: StorageRepository, private val appStateRepository: AppStateRepository) :
-    BrowserViewModel(appStateRepository) {
+open class FileBrowserViewModel(
+    private val storage: StorageRepository,
+    appStateRepository: AppStateRepository
+) :
+    BrowserViewModel() {
+
+    private val acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet()
 
     private val _filesToDisplay = MutableLiveData<List<FileModel>>()
     val filesToDisplay = _filesToDisplay.immutable()
@@ -21,7 +27,6 @@ open class FileBrowserViewModel(private val repo: StorageRepository, private val
     // TODO this doesn't seem to be properly connected yet
     var bottomBarVisibility = MediatorLiveData<Int>()
 
-
     private var _emptyFolderLayoutVisibility =
         MutableLiveData(View.INVISIBLE) //override if interested
     var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
@@ -30,21 +35,20 @@ open class FileBrowserViewModel(private val repo: StorageRepository, private val
     var selectButtonText = _selectButtonText.immutable()
 
     override val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>()
-
     override fun initUIState(): BaseUIState {
         // TODO refactor
         return object : BaseUIState() {}
     }
 
     fun getFolderContent(path: String) {
-        val files = repo.getPathContent(path).toFileModels()
+        val files = storage.getPathContent(path)
+            .toFileModels(acceptedTypes)
         if (files.isEmpty()) {
             _emptyFolderLayoutVisibility.postValue(View.VISIBLE)
         } else {
             _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
         }
         _filesToDisplay.postValue(files)
-
     }
 
     fun onFolderClicked(folder: FileModel.Folder) {
@@ -65,7 +69,6 @@ open class FileBrowserViewModel(private val repo: StorageRepository, private val
 
     fun onSubmitClicked() {
         onSelectionSubmittedListener(selectedFiles.value.orEmpty())
-//        submitSelection(selectedFiles.value.orEmpty())
     }
 
     override fun selectAll() {

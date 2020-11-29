@@ -6,7 +6,7 @@ import androidx.annotation.LayoutRes
 
 import kotlin.reflect.KClass
 
-class GenericDelegationAdapterItemHolder<Model : Any, VH : DelegationAdapterItemHolder<Model>>(
+class GenericAdapterItemDelegate<Model : Any, VH : DelegationAdapterItemHolder<Model>>(
     @LayoutRes val layoutId: Int, private val modelClass: KClass<Model>, private val vhClass: KClass<VH>,
     val clickListener: ((Model) -> Unit)?) :
     AdapterItemDelegate<Model, VH>() {
@@ -22,7 +22,9 @@ class GenericDelegationAdapterItemHolder<Model : Any, VH : DelegationAdapterItem
     override fun doBinding(item: Any, holder: DelegationAdapterItemHolder<*>) {
         if (this.isForItemType(item)) {
             if (clickListener != null) {
-                holder.itemView.setOnClickListener { _ -> clickListener.invoke(item as Model) }
+                holder.itemView.setOnClickListener {
+                        val itemToSend = holder.item ?: item
+                         clickListener.invoke(itemToSend as Model) }
             }
             bindViewHolder(item as Model, holder as VH)
         } else {
@@ -38,14 +40,14 @@ class GenericDelegationAdapterItemHolder<Model : Any, VH : DelegationAdapterItem
 }
 
 inline fun <reified Model : Any, reified VH : DelegationAdapterItemHolder<Model>> delegate(
-    @LayoutRes layoutRes: Int): GenericDelegationAdapterItemHolder<Model, VH> {
-    return GenericDelegationAdapterItemHolder(layoutRes, Model::class, VH::class, null)
+    @LayoutRes layoutRes: Int): GenericAdapterItemDelegate<Model, VH> {
+    return GenericAdapterItemDelegate(layoutRes, Model::class, VH::class, null)
 }
 
 inline fun <reified Model : Any, reified VH : DelegationAdapterItemHolder<Model>> clickableDelegate(
     @LayoutRes layoutRes: Int,
-    noinline clickListener: ((Model) -> Unit)): GenericDelegationAdapterItemHolder<Model, VH> {
-    return GenericDelegationAdapterItemHolder(layoutRes,
+    noinline clickListener: ((Model) -> Unit)): GenericAdapterItemDelegate<Model, VH> {
+    return GenericAdapterItemDelegate(layoutRes,
         Model::class, VH::class, clickListener)
 }
 

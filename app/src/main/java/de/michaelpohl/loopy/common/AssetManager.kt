@@ -9,7 +9,6 @@ class AssetManager {
     val HELP_FILE_NAME = "help_"
     val POST_FIX = ".md"
     val DEFAULT_LOCALE = "default"
-
     fun getHelpTextResource(): String {
         val locale = getLocale()
         if (locale == "de") {

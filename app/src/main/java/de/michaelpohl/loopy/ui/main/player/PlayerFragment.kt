@@ -113,7 +113,6 @@ class PlayerFragment : BaseFragment() {
 
     private fun initAdapter() {
 
-
         adapter = PlayerDelegationAdapter(
             PlayerItemDelegate(
                 clickReceiver = { viewModel.onLoopClicked(it) },
@@ -141,7 +140,6 @@ class PlayerFragment : BaseFragment() {
                 viewModel.setPlayerWaitMode(it.settings.isWaitMode)
             }
         }
-
     }
 
     private fun bindAudioService() {

@@ -9,7 +9,7 @@ import de.michaelpohl.loopy.ui.main.base.BaseFragment
  * It's pretty stupid and can easily be solved differently but I needed
  * to get this out of the way quick. I'll come back to this
  */
-object StateHelper{
+object StateHelper {
 
     var currentFragment: BaseFragment? = null
 }

@@ -25,8 +25,6 @@ import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.AudioFilesRepository
-import de.michaelpohl.loopy.model.DataRepository
-import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
@@ -46,7 +44,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     private lateinit var drawer: DrawerLayout
     private lateinit var currentFragment: BaseFragment
     private lateinit var container: LinearLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         setupAppData()
         setupNavigation()
-        initDataRepository()
+//        initDataRepository()
         handlePossibleIntents()
         setupDrawer()
         keepScreenOnIfDesired(appState.settings)
@@ -67,7 +64,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         Timber.d("is App set up? ${appState.isSetupComplete}")
         // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
         // on Failure, whatever the reason might be, it stays false and will run again next startup
-        if (!appState.isSetupComplete) {
+//        if (!appState.isSetupComplete) {
+        if (true) {
             val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
             Timber.d("Setup complete? $setupComplete")
             appState.isSetupComplete = setupComplete
@@ -84,14 +82,14 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    private fun initDataRepository() {
-        DataRepository.init(
-            getSharedPreferences(
-                resources.getString(R.string.preference_file_key),
-                Context.MODE_PRIVATE
-            )
-        )
-    }
+//    private fun initDataRepository() {
+//        DataRepository.init(
+//            getSharedPreferences(
+//                resources.getString(R.string.preference_file_key),
+//                Context.MODE_PRIVATE
+//            )
+//        )
+//    }
 
     private fun setupNavigation() {
         val navigationView: NavigationView = findViewById(R.id.nav_view)
@@ -230,7 +228,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         nav_host_fragment.findNavController().navigate(
             R.id.action_playerFragment_to_settingsFragment
         )
-
     }
 
     private fun clearLoopsList() {
@@ -245,7 +242,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 getString(R.string.dialog_clear_list_header),
                 getString(R.string.dialog_clear_list_content)
             ) {
-                DataRepository.clearLoopsList()
+//                DataRepository.clearLoopsList()
             }
         } else {
 

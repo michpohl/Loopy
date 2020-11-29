@@ -277,6 +277,17 @@
         <item name="android:layout_height">96dp</item>
     </style>
 
+    <style name="RadioButton">
+        <item name="android:button">@null</item>
+        <item name="android:drawableRight">?android:attr/listChoiceIndicatorSingle</item>
+        <item name="background">?android:selectableItemBackground</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:textColorHint">@color/action</item>
+
+    </style>
+
+
     <style name="Row" parent="MatchWidth">
         <item name="android:background">@color/content_background</item>
         <item name="android:paddingLeft">16dp</item>

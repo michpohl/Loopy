@@ -17,7 +17,6 @@ abstract class BaseFragment : Fragment() {
     open val screenTitle: String? = null
 
     abstract val viewModel: BaseViewModel<*>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addOnBackPressedCallback()
@@ -30,7 +29,6 @@ abstract class BaseFragment : Fragment() {
             !showOptionsMenu,
             screenTitle ?: getString(R.string.appbar_title_player)
         )
-
     }
 
     private fun addOnBackPressedCallback() {
@@ -41,7 +39,6 @@ abstract class BaseFragment : Fragment() {
                     findNavController().navigateUp()
                 }
             }
-
         })
     }
 
@@ -74,7 +71,6 @@ abstract class BaseFragment : Fragment() {
         super.onDestroyView()
         clearFindViewByIdCache()
     }
-
 
     /**
      * Convenience method for Navigation

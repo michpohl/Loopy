@@ -8,7 +8,6 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.ui.main.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 import rm.com.audiowave.AudioWaveView
-import timber.log.Timber
 import java.io.File
 
 class PlayerItemHolder(
@@ -44,7 +43,6 @@ class PlayerItemHolder(
     lateinit var model: AudioModel
     lateinit var clickListener: (AudioModel) -> Unit
     lateinit var deleteListener: (AudioModel) -> Unit
-
     override fun bind(item: AudioModel) {
         model = item
         label.text = model.displayName
@@ -63,7 +61,7 @@ class PlayerItemHolder(
     }
 
     fun updateProgress(percentage: Int) {
-            if (percentage < progress) loopsCount += 1
+        if (percentage < progress) loopsCount += 1
 
         progress = when (percentage.toFloat()) {
             in Float.MIN_VALUE..0F -> 0F
@@ -98,7 +96,6 @@ class PlayerItemHolder(
             field = value
         }
 
-
     private fun inflateWave() {
         val file = File(model.path)
         val bytes = file.readBytes()
@@ -115,5 +112,4 @@ class PlayerItemHolder(
 //        view.onProgressChanged = { progress, byUser ->
 //        }
     }
-
 }

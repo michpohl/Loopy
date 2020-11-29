@@ -6,15 +6,15 @@ import de.michaelpohl.loopy.model.AppStateRepository
 import kotlinx.android.parcel.Parcelize
 import kotlin.properties.Delegates
 
-// TODO replace with immutable concept
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class Settings(
-    var acceptedFileTypes: MutableList<AppStateRepository.Companion.AudioFileType>,
-    var isWaitMode: Boolean,
-    var showLoopCount: Boolean = true,
-    var keepScreenOn: Boolean = false,
-    var playInBackground: Boolean = true
+    val acceptedFileTypes: MutableList<AppStateRepository.Companion.AudioFileType>,
+    val isWaitMode: Boolean,
+    val sampleRate: SampleRate,
+    val showLoopCount: Boolean = true,
+    val keepScreenOn: Boolean = false,
+    val playInBackground: Boolean = true
 ) : Parcelable
 
 class SettingsBuilder {
@@ -23,7 +23,7 @@ class SettingsBuilder {
     var showLoopCount by Delegates.notNull<Boolean>()
     var keepScreenOn by Delegates.notNull<Boolean>()
     var playInBackground by Delegates.notNull<Boolean>()
-
+    var sampleRate by Delegates.notNull<SampleRate>()
     fun addFileType(type: AppStateRepository.Companion.AudioFileType) {
         if (!acceptedFileTypes.contains(type)) acceptedFileTypes.add(type)
     }
@@ -32,8 +32,8 @@ class SettingsBuilder {
         acceptedFileTypes.remove(type)
     }
 
-    fun build() : Settings {
-        return Settings(acceptedFileTypes, isWaitMode, showLoopCount, keepScreenOn, playInBackground)
+    fun build(): Settings {
+        return Settings(acceptedFileTypes, isWaitMode, sampleRate, showLoopCount, keepScreenOn, playInBackground)
     }
 }
 

@@ -8,7 +8,6 @@ class PlayerServiceBinder : Binder(),
     PlayerServiceInterface {
 
     private var looper = JniPlayer()
-
     override suspend fun pause(): JniResult<Nothing> {
         return looper.pause()
     }
@@ -37,7 +36,6 @@ class PlayerServiceBinder : Binder(),
         looper.changePlaybackPosition(newPosition)
 
     override fun resetPreSelection() = looper.resetPreSelection()
-
     override fun isReady(): Boolean {
         return looper.isReady
     }
@@ -59,7 +57,6 @@ class PlayerServiceBinder : Binder(),
     }
 
     override fun getCurrentPosition() = looper.getCurrentPosition()
-
     override fun hasLoopFile(): Boolean {
         return looper.hasLoopFile
     }

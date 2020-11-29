@@ -1,18 +1,15 @@
 package de.michaelpohl.loopy.ui.main.base
 
-
 import android.content.res.Resources
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.immutable
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 
 abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
 
     protected val resources: Resources by inject()
-
     protected fun getString(stringID: Int): String {
         return resources.getString(stringID)
     }
@@ -26,7 +23,6 @@ abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
         }
 
     abstract fun initUIState(): T
-
     open fun onFragmentResumed() {
     }
 

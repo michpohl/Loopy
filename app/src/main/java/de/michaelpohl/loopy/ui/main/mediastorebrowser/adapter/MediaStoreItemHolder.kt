@@ -11,9 +11,9 @@ import de.michaelpohl.loopy.common.find
 abstract class MediaStoreItemHolder<T : MediaStoreItemModel>(itemView: View) :
 
     DelegationAdapterItemHolder<T>(itemView) {
+
     val label: TextView = itemView.find(R.id.tv_label)
     val subLabel: TextView = itemView.find(R.id.tv_sublabel)
     val icon: ImageView = itemView.find(R.id.iv_icon)
     val checkBox: CheckBox = itemView.find(R.id.cb_checkbox)
-
 }

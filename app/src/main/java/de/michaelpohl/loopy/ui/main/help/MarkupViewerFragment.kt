@@ -1,11 +1,11 @@
 package de.michaelpohl.loopy.ui.main.help
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import com.franmontiel.attributionpresenter.AttributionPresenter.Builder
 import com.franmontiel.attributionpresenter.entities.Attribution
 import com.franmontiel.attributionpresenter.entities.License
@@ -15,7 +15,6 @@ import de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_markup_viewer.*
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.getViewModel
 import ru.noties.markwon.Markwon
 
 class MarkupViewerFragment : BaseFragment() {
@@ -25,7 +24,6 @@ class MarkupViewerFragment : BaseFragment() {
     private lateinit var binding: FragmentMarkupViewerBinding
     private lateinit var markupString: String
     private lateinit var textView: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -54,14 +52,12 @@ class MarkupViewerFragment : BaseFragment() {
         binding.model = viewModel
         if (showButtons) {
 
-        btn_show_app_license.setOnClickListener{onShowAppInfoClicked()}
-        btn_show_licenses.setOnClickListener{onShowDependencyLicensesClicked()}
-
+            btn_show_app_license.setOnClickListener { onShowAppInfoClicked() }
+            btn_show_licenses.setOnClickListener { onShowDependencyLicensesClicked() }
         } else {
             btn_show_app_license.visibility = View.GONE
             btn_show_licenses.visibility = View.GONE
         }
-
     }
 
     override fun getTitle(): String {
@@ -72,7 +68,7 @@ class MarkupViewerFragment : BaseFragment() {
         Markwon.setMarkdown(textView, textContent)
     }
 
-    fun onShowAppInfoClicked(){
+    fun onShowAppInfoClicked() {
         val attributionPresenter = Builder(context)
 
             .addAttributions(
@@ -86,7 +82,7 @@ class MarkupViewerFragment : BaseFragment() {
         attributionPresenter.showDialog(getString(R.string.dialog_loopy_license_title))
     }
 
-     fun onShowDependencyLicensesClicked(){
+    fun onShowDependencyLicensesClicked() {
         val attributionPresenter = Builder(context)
             .addAttributions(
                 Library.AUDIOGRAM.attribution,
@@ -101,6 +97,6 @@ class MarkupViewerFragment : BaseFragment() {
                     .build()
             )
             .build()
-            attributionPresenter.showDialog(getString(R.string.dialog_licenses_title))
+        attributionPresenter.showDialog(getString(R.string.dialog_licenses_title))
     }
 }

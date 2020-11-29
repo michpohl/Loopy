@@ -48,7 +48,6 @@ class PlayerViewModel(
 
     private lateinit var looper: PlayerServiceInterface
     lateinit var playerActionsListener: PlayerActionsListener
-
     override fun initUIState(): UIState {
         return UIState(
             loopsList = audioFilesRepository.getSingleSetOrStandardSet()
@@ -64,9 +63,7 @@ class PlayerViewModel(
         settings = appStateRepo.settings
         Timber.d("Settings: $settings")
         _state.value = initUIState()
-//        setPlayerWaitMode(settings.isWaitMode)
     }
-
 
     override fun onFragmentPaused() {
         super.onFragmentPaused()
@@ -74,7 +71,6 @@ class PlayerViewModel(
             if (!currentState.settings.playInBackground) looper.pause()
         }
     }
-
 
     fun setPlayerWaitMode(shouldWait: Boolean) {
         if (!::looper.isInitialized || waitmode == shouldWait) return
@@ -133,7 +129,6 @@ class PlayerViewModel(
                 PAUSED -> {
                     looper.resume()
                     _state.value = (currentState.copy(isPlaying = true))
-
                 }
                 else -> { /* do nothing */
                 }
@@ -198,9 +193,7 @@ class PlayerViewModel(
                 )
             )
         }
-
     }
-
 
     private fun onConversionProgressUpdated(
         newLoops: List<FileModel.AudioFile>,
@@ -279,6 +272,7 @@ class PlayerViewModel(
         val processingOverlayVisibility: Int,
         val conversionProgress: Int? = 0
     ) : BaseUIState() {
+
         val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
     }
 

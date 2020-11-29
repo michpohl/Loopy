@@ -13,7 +13,6 @@ class AudioFilesRepository(
 ) : KoinComponent {
 
     private val assets: AssetManager by inject()
-
     fun saveSet(set: LoopSet) {
         sharedPrefsManager.saveSingleSet(set)
     }
@@ -37,6 +36,8 @@ class AudioFilesRepository(
      * @return true if everything was successful
      */
     fun autoCreateStandardLoopSet(): Boolean {
+        val a =
+
         return if (storage.createSetFolder() && storage.copyStandardFilesToSdCard()) {
             sharedPrefsManager.selectedSetName = STANDARD_SET_FOLDER_NAME
             true
@@ -51,16 +52,13 @@ class AudioFilesRepository(
         return JniBridge.convertAndAddToSet(
             newLoops, storage.getFullPath(setName ?: STANDARD_SET_FOLDER_NAME)
         )
-
-
     }
 
     fun saveLoopSelectionToSet(setFolderName: String? = null, loopsList: MutableList<AudioModel>) {
         val currentlyInSet =
             storage.getAudioModelsInSet(setFolderName ?: STANDARD_SET_FOLDER_NAME).toMutableSet()
-currentlyInSet.forEach {
-    if (!loopsList.contains(it)) storage.deleteFromSet(setFolderName ?: STANDARD_SET_FOLDER_NAME, it)
-}
-
+        currentlyInSet.forEach {
+            if (!loopsList.contains(it)) storage.deleteFromSet(setFolderName ?: STANDARD_SET_FOLDER_NAME, it)
+        }
     }
 }

@@ -2,7 +2,6 @@ package de.michaelpohl.loopy.common
 
 import android.content.Context
 import android.net.Uri
-import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.ExternalStorageManager
 import timber.log.Timber
 import java.io.File
@@ -10,7 +9,6 @@ import java.io.File
 class StorageRepository(val storage: ExternalStorageManager) {
 
     private val excludedFolders = listOf("Android", "DCIM")
-
     fun getPathContent(
         path: String,
         showHiddenFiles: Boolean = false,
@@ -40,21 +38,20 @@ class StorageRepository(val storage: ExternalStorageManager) {
 
     //TODO this method might still be slow with large file numbers. Do something about it (or limit its use)
     //TODO also it should be in FileModel, but I couldn't get it to work
-    fun containsAudioFilesInAnySubFolders(path: String): Boolean {
-        if (!path.isForbiddenFolderName()) {
-            val modelsToCheck = getPathContent(path).toFileModels()
-            return if (modelsToCheck.any { it is FileModel.AudioFile }) {
-                true
-            } else {
-                modelsToCheck
-                    .filter { it is FileModel.Folder }
-                    .map { containsAudioFilesInAnySubFolders((it as FileModel.Folder).path) }
-                    .contains(true)
-            }
-        }
-        return false
-    }
-
+//    fun containsAudioFilesInAnySubFolders(path: String): Boolean {
+//        if (!path.isForbiddenFolderName()) {
+//            val modelsToCheck = getPathContent(path).toFileModels()
+//            return if (modelsToCheck.any { it is FileModel.AudioFile }) {
+//                true
+//            } else {
+//                modelsToCheck
+//                    .filter { it is FileModel.Folder }
+//                    .map { containsAudioFilesInAnySubFolders((it as FileModel.Folder).path) }
+//                    .contains(true)
+//            }
+//        }
+//        return false
+//    }
 
 //    fun getSubFilesFor(
 //        model: FileModel,
@@ -106,23 +103,5 @@ fun FileModel.AudioFile.toAudioModel(): AudioModel {
         fileExtension = this.extension,
         isMediaStoreItem = false
     )
-}
-
-fun File.isValidAudioFile(): Boolean {
-    val extension = this.extension
-    // TODO clean up -> pcm is a valid audio file too, or should bve checked through a different method
-    AppStateRepository.Companion.AudioFileType.values().forEach {
-        if (it.suffix == extension) return true
-    }
-    Timber.d("Checking validity")
-    return this.extension == "pcm" // TODO move to a const
-}
-
-fun String.isValidAudioFileName(): Boolean {
-    val suffix = this.substringAfterLast(".")
-    AppStateRepository.Companion.AudioFileType.values().forEach {
-        if (it.suffix == suffix) return true
-    }
-    return false
 }
 

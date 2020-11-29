@@ -8,6 +8,7 @@ import de.michaelpohl.loopy.common.FileModel
 
 class FileItemDelegate :
     AdapterItemDelegate<FileModel.File, FileItemHolder>() {
+
     override fun createViewHolder(parent: ViewGroup): FileItemHolder {
         return FileItemHolder(inflateLayout(R.layout.item_browser, parent))
     }

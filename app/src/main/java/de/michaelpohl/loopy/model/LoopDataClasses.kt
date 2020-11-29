@@ -12,6 +12,7 @@ data class Sets(val loopSets: List<LoopSet>)
 
 @JsonClass(generateAdapter = true)
 data class LoopSet(val name: String, val loops: List<Loop>) {
+
     fun toAudioModels(): List<AudioModel> {
         return loops
             .map { File(it.fileName).toFileModel() }

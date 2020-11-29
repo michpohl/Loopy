@@ -11,7 +11,6 @@ import timber.log.Timber
 class PermissionHelper(private val activity: Activity) {
 
     private val REQUEST_CODE = 999 // chosen randomly. What is the rule which number to pick?
-
     fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,

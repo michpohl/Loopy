@@ -3,6 +3,7 @@ package de.michaelpohl.loopy.model
 import android.content.Context
 import android.os.Environment
 import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.common.jni.JniBridge
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -34,7 +35,7 @@ class ExternalStorageManager(val context: Context) {
         val audioModels = mutableListOf<AudioModel>()
 
         getPathContent("${appStorageFolder.path}/$setFolderName")
-            .toFileModels()
+            .toFileModels(setOf(AppStateRepository.Companion.AudioFileType.PCM)) // we store only pcm in the set folders
             .filterIsInstance<FileModel.AudioFile>()
             .forEach {
                 audioModels.add(it.toAudioModel())
@@ -113,9 +114,11 @@ class ExternalStorageManager(val context: Context) {
 
         return try {
 
-            listAssetFiles().forEach {
-                copySingleFileFromAssetsToStandardSet(outputPath, context.assets.open(it), it)
-            }
+//            listAssetFiles().forEach {
+                val conversionResult = JniBridge.convertFilesInFolder(outputPath);
+                Timber.d("conversion result: $conversionResult")
+//                copySingleFileFromAssetsToStandardSet(outputPath, context.assets.open(it), it)
+//            }
             true
         } catch (e: IOException) {
             Timber.e("Copying of files to SD card (Location: ${appStorageFolder.path}/$STANDARD_SET_FOLDER_NAME) failed")
@@ -134,7 +137,6 @@ class ExternalStorageManager(val context: Context) {
                 it.copyTo(out)
             }
             out.close()
-
         }
     }
 
@@ -142,7 +144,10 @@ class ExternalStorageManager(val context: Context) {
         val list = mutableSetOf<String>()
         try {
             context.assets.list("")?.let { filesList ->
-                filesList.filter { it.isValidAudioFileName() }.forEach { fileName ->
+                filesList.filter {
+                    it.hasAcceptedAudioFileExtension(
+                        AppStateRepository.Companion.AudioFileType.values().toSet())
+                }.forEach { fileName ->
                     Timber.d("Found this file: $fileName")
                     list.add(fileName)
                 }

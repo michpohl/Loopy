@@ -73,7 +73,6 @@ fun <T : View> View.find(id: Int): T {
     return this.findViewById(id)
 }
 
-
 /*************************************
  * Extension functions for Views     *
  *************************************/
@@ -243,11 +242,11 @@ fun String.isForbiddenFolderName(): Boolean {
     return AppStateRepository.Companion.ForbiddenFolder.values().any { it.folderName == this }
 }
 
-fun List<File>.toFileModels(): List<FileModel> {
-    return this.map { it.toFileModel() }
+fun List<File>.toFileModels(types: Set<AppStateRepository.Companion.AudioFileType>? = null): List<FileModel> {
+    return this.map { it.toFileModel(types) }.filter { it !is FileModel.File }
 }
 
-fun File.toFileModel(): FileModel {
+fun File.toFileModel(allowedTypes: Set<AppStateRepository.Companion.AudioFileType>? = null): FileModel {
     val subFiles = this.listFiles() ?: arrayOf<File>()
     return when {
         this.isFolder() -> {
@@ -256,10 +255,14 @@ fun File.toFileModel(): FileModel {
                 this.name,
                 subFiles.size,
                 subFiles.any { file -> file.isDirectory },
-                subFiles.any { file -> file.isValidAudioFile() }
+                subFiles.any { file ->
+                    if (allowedTypes != null) file.isAcceptedAudioType(
+                        allowedTypes
+                    ) else true
+                }
             )
         }
-        this.isValidAudioFile() -> {
+        this.isAcceptedAudioType(allowedTypes) -> {
             FileModel.AudioFile(
                 this.path,
                 this.name,
@@ -278,6 +281,22 @@ fun File.toFileModel(): FileModel {
     }
 }
 
+fun File.isAcceptedAudioType(types: Set<AppStateRepository.Companion.AudioFileType>? = null): Boolean {
+    val extension = this.extension
+    types?.forEach {
+        if (it.suffix == extension) return true
+    }
+    return false
+}
+
+fun String.hasAcceptedAudioFileExtension(types: Set<AppStateRepository.Companion.AudioFileType>): Boolean {
+    val extension = this.substringAfterLast(".")
+    types.forEach {
+        if (it.suffix == extension) return true
+    }
+    return false
+}
+
 fun RecyclerView.ViewHolder.getDrawable(resourceId: Int): Drawable? {
     return ContextCompat.getDrawable(this.itemView.context, resourceId)
 }
@@ -286,7 +305,6 @@ fun Double.roundTo(numFractionDigits: Int): Double {
     val factor = 10.0.pow(numFractionDigits.toDouble())
     return (this * factor).roundToInt() / factor
 }
-
 
 fun File.isFolder(): Boolean {
     return this.isDirectory

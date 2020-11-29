@@ -1,61 +1,69 @@
 package de.michaelpohl.loopy.ui.main.settings.items
 
+import android.content.res.Resources
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.settings.AppSetting
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-sealed class SettingsItemModel {
-    abstract val label: String
+sealed class SettingsItemModel : KoinComponent {
+
     abstract val setting: AppSetting
-    abstract fun flip() : SettingsItemModel
+    abstract fun flip(): SettingsItemModel
+    private val resources: Resources by inject()
+
+    open val label: String by lazy {
+        setting.displayNameResource?.let {
+            resources.getString(it)
+        } ?: ""
+    }
 
     data class CheckableSetting(
         override val setting: AppSetting,
-        override val label: String,
         val isChecked: Boolean
-    ) : SettingsItemModel() {
-        override fun flip(): SettingsItemModel.CheckableSetting {
+    ) : SettingsItemModel(), KoinComponent {
+
+        override fun flip(): CheckableSetting {
             return this.copy(isChecked = !this.isChecked)
         }
     }
 
     data class FileTypeSetting(
         override val setting: AppSetting,
-        override val label: String,
         val isChecked: Boolean,
         val type: AppStateRepository.Companion.AudioFileType
     ) : SettingsItemModel() {
-        override fun flip(): SettingsItemModel.FileTypeSetting {
+
+        override fun flip(): FileTypeSetting {
             return this.copy(isChecked = !this.isChecked)
         }
     }
 
-    data class ToggleableSetting(
+    data class MultipleChoiceSetting(
         override val setting: AppSetting,
-        override val label: String,
-        val secondLabel: String,
-        val toggleState: ToggleState
+        val choices: Set<SettingsChoice>
     ) : SettingsItemModel() {
 
-        override fun flip(): SettingsItemModel.ToggleableSetting {
-            return this.copy(toggleState = if (this.toggleState == ToggleState.FIRST) ToggleState.SECOND else ToggleState.FIRST)
-        }
-
-        companion object {
-            enum class ToggleState {
-                FIRST, SECOND
-            }
+        override fun flip(): MultipleChoiceSetting {
+            return this
         }
     }
 
-    data class Header(
-        override val label: String
-    ) : SettingsItemModel() {
-        override val setting = AppSetting.NONE
-        override fun flip(): SettingsItemModel.Header {
+    data class Header(override val label: String) : SettingsItemModel() {
+
+        override val setting: AppSetting = AppSetting.NONE
+        override fun flip(): Header {
             /* do nothing */
             return this
         }
     }
 }
+
+typealias SettingsChoice = Pair<String, Boolean>
+
+fun SettingsChoice.name() = this.first
+fun SettingsChoice.isChecked() = this.second
+
+
 
 

@@ -52,6 +52,7 @@ bool Converter::convertFolder() {
         std::set<std::string> allFileNames;
         std::set<std::string> excludedFileNames;
         while ((ent = readdir(dir)) != nullptr) {
+            LOGD("Inside while loop");
             std::string name = std::string(ent->d_name);
 
             bool isConverted = endsWith(name, pcm);
@@ -75,13 +76,13 @@ bool Converter::convertFolder() {
         for (const auto &name : allFileNames) {
             LOGD("Name: %s", name.c_str());
             // TODO take back in
-//            if (excludedFileNames.find(name) == excludedFileNames.end()) {
-//                LOGD("Not yet converted");
+            if (excludedFileNames.find(name) == excludedFileNames.end()) {
+                LOGD("Not yet converted");
 
             std::string fullPath = std::string(mFolder) + name;
             LOGD ("Starting conversion for: %s\n", fullPath.c_str());
             doConversion(std::string(fullPath), std::string(name));
-//            }
+            }
 
         }
     } else {

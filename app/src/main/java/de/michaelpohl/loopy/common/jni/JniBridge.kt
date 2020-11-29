@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.common.jni
 
-import android.os.Environment
 import de.michaelpohl.loopy.common.FileModel
 import timber.log.Timber
 import kotlin.coroutines.Continuation
@@ -17,7 +16,7 @@ object JniBridge {
     var filePreselectedListener: ((String) -> Unit)? = null
     lateinit var fileStartedByPlayerListener: ((String) -> Unit)
     lateinit var playbackProgressListener: (String, Int) -> Unit
-    lateinit var conversionProgressListener: (String, Int) -> Unit
+    var conversionProgressListener: ((String, Int) -> Unit)? = null
 
     init {
         System.loadLibrary("native-lib")
@@ -86,17 +85,17 @@ object JniBridge {
     }
 
     fun onConversionProgressChanged(filename: String, steps: Int) {
-        conversionProgressListener(filename, steps)
+        conversionProgressListener?.invoke(filename, steps)
     }
 
     fun onFileSelected(value: String) {
         Timber.d("name: $value")
-        fileStartedByPlayerListener?.invoke(value)
+        fileStartedByPlayerListener.invoke(value)
     }
 
     fun onFilePreselected(value: String) {
         Timber.d("preselected: name: $value")
-        fileStartedByPlayerListener?.invoke(value)
+        fileStartedByPlayerListener.invoke(value)
         filePreselectedListener?.invoke(value)
     }
 

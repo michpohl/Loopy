@@ -11,7 +11,6 @@ import com.example.adapter.adapter.adapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
-import de.michaelpohl.loopy.common.getDrawable
 import de.michaelpohl.loopy.common.setDivider
 import de.michaelpohl.loopy.databinding.FragmentFilesListBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
@@ -20,7 +19,6 @@ import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileBrowserSorting
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FileItemDelegate
 import de.michaelpohl.loopy.ui.main.filebrowser.adapter.FolderItemDelegate
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 open class FileBrowserFragment : BaseFragment() {
 

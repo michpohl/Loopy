@@ -11,7 +11,6 @@ import timber.log.Timber
 class MediaStoreRepository(val context: Context) {
 
     private var mediaStoreEntries = listOf<MediaStoreItemModel>()
-
     fun getAlbumTitles(): MutableList<String> {
         val list: MutableList<String> = mutableListOf()
 
@@ -100,7 +99,6 @@ class MediaStoreRepository(val context: Context) {
                 if (artistName == "0" || artistName.contains("unknown")) artistName =
                     "UNKNOWN" //TODO change to resource
 
-
                 Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
                 val c = context.contentResolver
 
@@ -140,5 +138,4 @@ class MediaStoreRepository(val context: Context) {
         }
         return albumItems.distinct()
     }
-
 }

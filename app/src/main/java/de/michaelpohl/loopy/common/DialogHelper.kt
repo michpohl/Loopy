@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.common
 
-
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import de.michaelpohl.loopy.R

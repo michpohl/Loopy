@@ -5,7 +5,9 @@ import com.example.adapter.adapter.ClickableAdapterItemDelegate
 import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 
-class AlbumDelegate(override val clickListener: ((MediaStoreItemModel.Album) -> Unit)) : ClickableAdapterItemDelegate<MediaStoreItemModel.Album, AlbumItemHolder>() {
+class AlbumDelegate(override val clickListener: ((MediaStoreItemModel.Album) -> Unit)) :
+    ClickableAdapterItemDelegate<MediaStoreItemModel.Album, AlbumItemHolder>() {
+
     override fun createViewHolder(parent: ViewGroup): AlbumItemHolder {
         return AlbumItemHolder(inflateLayout(R.layout.item_browser, parent))
     }
@@ -13,5 +15,4 @@ class AlbumDelegate(override val clickListener: ((MediaStoreItemModel.Album) -> 
     override fun isForItemType(item: Any): Boolean {
         return item is MediaStoreItemModel.Album
     }
-
 }

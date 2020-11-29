@@ -1,13 +1,9 @@
 package de.michaelpohl.loopy.model
 
-import de.michaelpohl.loopy.common.PlayerState.PAUSED
-import de.michaelpohl.loopy.common.PlayerState.PLAYING
-import de.michaelpohl.loopy.common.PlayerState.STOPPED
-import de.michaelpohl.loopy.common.PlayerState.UNKNOWN
+import de.michaelpohl.loopy.common.PlayerState.*
 import de.michaelpohl.loopy.common.jni.JniBridge
 import de.michaelpohl.loopy.common.jni.JniResult
 import org.koin.core.KoinComponent
-import timber.log.Timber
 
 class JniPlayer : KoinComponent {
 
@@ -20,7 +16,6 @@ class JniPlayer : KoinComponent {
         private set
 
     lateinit var onLoopedListener: (Int) -> Unit
-
     suspend fun start(): JniResult<String> {
         with(JniBridge.start()) {
             if (this.isSuccess()) state = PLAYING

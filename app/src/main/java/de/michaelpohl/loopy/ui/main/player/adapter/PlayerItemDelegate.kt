@@ -13,7 +13,6 @@ class PlayerItemDelegate(
 ) : AdapterItemDelegate<AudioModel, PlayerItemHolder>() {
 
     private val holders = mutableListOf<PlayerItemHolder>()
-
     override fun createViewHolder(parent: ViewGroup): PlayerItemHolder {
         return PlayerItemHolder(inflateLayout(R.layout.item_loop, parent)).also {
             it.clickListener = clickReceiver
@@ -44,7 +43,7 @@ class PlayerItemDelegate(
         val targetHolder = holders.find { it.getName() == payload.first }
         targetHolder?.showLoopCount(showLoopCount)
 
-        payload?.let { payload ->
+        payload.let { payload ->
             targetHolder?.updateProgress(payload.second)
         }
     }

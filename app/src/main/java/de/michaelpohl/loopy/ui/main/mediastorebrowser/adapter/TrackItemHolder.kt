@@ -6,7 +6,6 @@ import de.michaelpohl.loopy.common.getDrawable
 
 class TrackItemHolder(itemView: View) : MediaStoreItemHolder<MediaStoreItemModel.Track>(itemView) {
     lateinit var onCheckedChangedReceiver: (MediaStoreItemModel.Track, Boolean) -> Unit
-
     override fun bind(item: MediaStoreItemModel.Track) {
         label.text = item.name
         subLabel.text = item.album // TODO improve
@@ -20,5 +19,4 @@ class TrackItemHolder(itemView: View) : MediaStoreItemHolder<MediaStoreItemModel
             )
         }
     }
-
 }

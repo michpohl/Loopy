@@ -7,7 +7,6 @@
 
     <application
         android:name=".LoopyApplication"
-
         android:icon="@mipmap/ic_loopy"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_loopy_round"
