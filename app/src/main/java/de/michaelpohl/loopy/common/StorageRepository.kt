@@ -74,9 +74,11 @@ class StorageRepository(val storage: ExternalStorageManager) {
                     null,
                     null
                 )
-            cursor.moveToFirst()
-            filePath = cursor.getString(0)
-            cursor.close()
+            cursor?.let {
+                cursor.moveToFirst()
+                filePath = cursor.getString(0)
+                cursor.close()
+            }
         } else {
             filePath = uri.path
         }

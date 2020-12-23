@@ -9,6 +9,7 @@
         android:name=".LoopyApplication"
         android:icon="@mipmap/ic_loopy"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_loopy_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
