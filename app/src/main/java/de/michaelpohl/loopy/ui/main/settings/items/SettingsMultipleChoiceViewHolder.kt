@@ -23,7 +23,6 @@ class SettingsMultipleChoiceViewHolder(itemView: View) :
     }
 
     private fun buildRadioGroup(choices: List<Pair<String, Boolean>>) {
-        Timber.d("x building radio group: $choices")
         val buttonParams =
             LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val groupParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -63,13 +62,8 @@ class SettingsMultipleChoiceViewHolder(itemView: View) :
     }
 
     private fun switchChecked(choices: List<Pair<String, Boolean>>, checkedId: Int) {
-        val choice = choices[checkedId]
-        Timber.d("x Choices: $choices")
-        Timber.d("x checkedId: $checkedId\n")
         val newChoices = choices.withIndex().map { it.value.copy(it.value.name(), it.index == checkedId) }
-
         item = item!!.copy(choices = newChoices.toSet())
-        Timber.d("x Item changed to: $item")
         itemView.performClick()
     }
 }

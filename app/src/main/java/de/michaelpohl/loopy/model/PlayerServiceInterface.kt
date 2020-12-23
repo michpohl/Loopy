@@ -10,6 +10,7 @@ interface PlayerServiceInterface {
     suspend fun resume(): JniResult<Nothing>
     suspend fun stop(): JniResult<Nothing>
     suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean>
+    suspend fun setSampleRate(sampleRate: Int): JniResult<Int>
     fun setFileStartedByPlayerListener(listener: (String) -> Unit)
     fun setPlaybackProgressListener(listener: (String, Int) -> Unit)
     fun getCurrentPosition(): Float

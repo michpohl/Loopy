@@ -26,8 +26,18 @@ object JniBridge {
     suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> = suspendCoroutine { job ->
         if (setWaitModeNative(shouldWait)) {
             waitMode = shouldWait
-            Timber.d("Resuming with $waitMode")
+            Timber.d("Resuming with waitMode: $waitMode")
             job.resume(successResult(shouldWait))
+        } else {
+            job.resume(errorResult()) // shouldn't ever happen, let's see
+        }
+    }
+
+    suspend fun setSampleRate(sampleRate: Int): JniResult<Int> = suspendCoroutine { job ->
+        if (setSampleRateNative(sampleRate)) {
+//            sampleRate = sampleRate
+            Timber.d("Resuming with sampleRate: $sampleRate")
+            job.resume(successResult(sampleRate))
         } else {
             job.resume(errorResult()) // shouldn't ever happen, let's see
         }
@@ -147,6 +157,8 @@ object JniBridge {
         filePath: String,
         setPath: String
     ): Boolean
+
+    private external fun setSampleRateNative(sampleRate: Int): Boolean
 
     enum class ConversionResult {
         All_SUCCESS, SOME_SUCCESS, ALL_FAILED

@@ -59,4 +59,5 @@
     <string name="snackbar_error_message">Ein Fehler ist aufgetreten. Großes Sorry!!</string>
     <string name="processing">Verarbeite… %1$d</string>
     <string name="settings_item_sample_rate">Sample rate</string>
+    <string name="player_sample_rate">Sample rate: %s</string>
 </resources>

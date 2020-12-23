@@ -154,12 +154,25 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_convertSingleFile(JNIEnv *env, jo
     const char *path = env->GetStringUTFChars(file_path, nullptr);
     const char *name = env->GetStringUTFChars(file_name, nullptr);
 
-
-
     if (converter->setDestinationFolder(folder)) {
         LOGD("Set folder name to: %s", folder);
         bool result = converter->convertSingleFile(path, name);
         return result;
+    }
+    return false;
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_de_michaelpohl_loopy_common_jni_JniBridge_setSampleRateNative(JNIEnv *env, jobject instance, jint sampleRate) {
+    if (audioEngineExists(env, instance)) {
+        int currentSampleRate = audioEngine->getSampleRate();
+        if (currentSampleRate != (int) sampleRate) {
+            LOGD("Sample rate is different (engine: %i, desired: %i). Changing...", currentSampleRate, sampleRate);
+        bool result = audioEngine->setSampleRate((int)sampleRate);
+        return result;
+        } else {
+            return true;
+        }
     }
     return false;
 }

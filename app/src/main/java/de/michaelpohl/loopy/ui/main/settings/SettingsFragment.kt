@@ -54,7 +54,6 @@ class SettingsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.root.find<RecyclerView>(rv_settings_recycler).adapter = this.adapter
         viewModel.state.observeWith {
-            Timber.d("Updating with: ${it.settings}")
             adapter.update(it)
         }
     }

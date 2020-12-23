@@ -23,11 +23,8 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
     }
 
     fun onSettingsItemClicked(setting: SettingsItemModel) {
-        Timber.d("onSettingClicked: $setting")
         val newSetting = setting.flip()
         val currentSettings = state.value?.settings
-        Timber.d("Settings before: $currentSettings")
-        Timber.d("Looking for: ${newSetting.label}")
         currentSettings?.let { settings ->
             val index = settings.indexOf(settings.find { it.label == newSetting.label })
 
@@ -37,14 +34,12 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
                 _state.value = currentState.copy(settings = this)
             }
         }
-        Timber.d("Settings after: $currentSettings")
         save()
     }
 
     // TODO this is less sexy than it could be
     private fun save() {
         val models = currentState.settings
-        Timber.d("Models in saving: ${currentState.settings}")
         val builder = SettingsBuilder()
         models.forEach {
             when (it.setting) {
@@ -74,8 +69,7 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
                 }
             }
         }
-//        stateRepo.settings = builder.build()
-        Timber.d("Done saving\n")
+        stateRepo.settings = builder.build()
     }
 
     override fun initUIState(): UIState {
@@ -85,11 +79,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
     // TODO this is ugly
     private fun Settings.toItemModels(): List<SettingsItemModel> {
         val list = mutableListOf<SettingsItemModel>()
-//        list.add(
-//            SettingsItemModel.Header(
-//                label = getString(R.string.settings_label_loop_switching_behaviour)
-//            )
-//        )
         list.add(
             SettingsItemModel.MultipleChoiceSetting(
                 setting = WAIT_MODE,
@@ -98,11 +87,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
                     SettingsChoice(getString(R.string.settings_item_wait_until_finished), !this.isWaitMode))
             )
         )
-//        list.add(
-//            SettingsItemModel.Header(
-//                label = getString(R.string.settings_item_sample_rate)
-//            )
-//        )
         list.add(
             SettingsItemModel.MultipleChoiceSetting(
                 setting = SAMPLE_RATE,
@@ -111,11 +95,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
                 }.toSet()
             )
         )
-//        list.add(
-//            SettingsItemModel.Header(
-//                label = getString(R.string.settings_label_accepted_file_types)
-//            )
-//        )
         list.add(
             SettingsItemModel.FileTypeSetting(
                 setting = FILE_TYPE_WAV,
@@ -139,11 +118,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
 
             )
         )
-//        list.add(
-//            SettingsItemModel.Header(
-//                label = getString(R.string.settings_label_other_settings)
-//            )
-//        )
         list.add(
             SettingsItemModel.CheckableSetting(
                 setting = COUNT_LOOPS,

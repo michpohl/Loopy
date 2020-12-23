@@ -138,6 +138,8 @@ class PlayerFragment : BaseFragment() {
                     adapter.updatePlaybackProgress(progress, this.settings.showLoopCount)
                 }
                 viewModel.setPlayerWaitMode(it.settings.isWaitMode)
+                Timber.d("Observing...sample rate: ${it.settings.sampleRate}")
+                viewModel.setPlayerSampleRate(it.settings.sampleRate)
             }
         }
     }

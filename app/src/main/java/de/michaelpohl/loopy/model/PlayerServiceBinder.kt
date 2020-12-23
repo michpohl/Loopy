@@ -24,6 +24,10 @@ class PlayerServiceBinder : Binder(),
         return looper.setWaitMode(shouldWait)
     }
 
+    override suspend fun setSampleRate(sampleRate: Int): JniResult<Int> {
+       return looper.setSampleRate(sampleRate)
+    }
+
     override fun setFileStartedByPlayerListener(listener: (String) -> Unit) {
         looper.setFileStartedByPlayerListener(listener)
     }

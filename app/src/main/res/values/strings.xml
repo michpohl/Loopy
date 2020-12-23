@@ -47,7 +47,7 @@
     <string name="dialog_remove_loop_header">Remove Loop</string>
     <string name="dialog_remove_loop_content">Dou you want to remove this loop from the selection?</string>
     <string name="btn_show_libraries_info">Show Libraries</string>
-    <string name="player_empty_message">You have no loops selected. Open the menu and select one of the options to browse your phone\\\'s storage</string>
+    <string name="player_empty_message">You have no loops selected. Open the menu and select one of the options to browse your phone\'s storage</string>
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Clear List</string>
     <string name="dialog_clear_list_content">Do you really want to clear the player\'s loops list?</string>
@@ -61,5 +61,6 @@
     <string name="settings_item_play_in_background">Play in Background</string>
     <string name="processing">Processing…%1$d</string>
     <string name="settings_item_sample_rate">Sample rate</string>
+    <string name="player_sample_rate">Sample rate: %s</string>
 
 </resources>

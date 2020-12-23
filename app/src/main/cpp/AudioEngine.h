@@ -61,6 +61,9 @@ public:
     bool setWaitMode(bool value);
     bool getWaitMode();
 
+    int getSampleRate();
+    bool setSampleRate(int sampleRate);
+
     AudioEngineState getState();
 
     bool prepareNextPlayer(const char *fileName, AMediaExtractor &extractor);

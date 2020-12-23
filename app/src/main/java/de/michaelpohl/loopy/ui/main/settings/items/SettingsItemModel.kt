@@ -58,7 +58,6 @@ sealed class SettingsItemModel : KoinComponent {
         }
     }
 }
-
 typealias SettingsChoice = Pair<String, Boolean>
 
 fun SettingsChoice.name() = this.first

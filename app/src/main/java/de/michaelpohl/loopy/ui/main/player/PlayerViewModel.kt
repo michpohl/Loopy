@@ -3,12 +3,9 @@ package de.michaelpohl.loopy.ui.main.player
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.AudioModel
-import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.common.PlayerState.*
-import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.jni.JniBridge
-import de.michaelpohl.loopy.common.toVisibility
 import de.michaelpohl.loopy.common.util.coroutines.ioJob
 import de.michaelpohl.loopy.common.util.coroutines.uiJob
 import de.michaelpohl.loopy.common.util.coroutines.withUI
@@ -41,6 +38,13 @@ class PlayerViewModel(
         }
     }
 
+    val sampleRateDisplayText = MediatorLiveData<String>().apply {
+        addSource(state) {
+            this.value =
+                "${resources.getString(R.string.player_sample_rate, it.settings.sampleRate.displayName)}"
+        }
+    }
+
     private var settings: Settings = appStateRepo.settings
 
     // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
@@ -61,7 +65,7 @@ class PlayerViewModel(
 
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
-        Timber.d("Settings: $settings")
+        Timber.d("Resuming... Settings: $settings")
         _state.value = initUIState()
     }
 
@@ -77,13 +81,20 @@ class PlayerViewModel(
         uiJob {
             if (looper.setWaitMode(shouldWait).isSuccess()) {
                 waitmode = shouldWait
-            } else {
-                error("Failed to set wait mode. This is a program error.")
-            }
+            } else error("Failed to set wait mode. This is a program error.")
 
             // unselect if waitmode was turned off
             if (!looper.getWaitMode()) {
                 _state.value = currentState.copy(filePreselected = "")
+            }
+        }
+    }
+
+    fun setPlayerSampleRate(sampleRate: SampleRate) {
+        if (!::looper.isInitialized) return
+        uiJob {
+            if (!looper.setSampleRate(sampleRate.intValue).isSuccess()) {
+                error("Failed to set sample rate. This is a program error")
             }
         }
     }

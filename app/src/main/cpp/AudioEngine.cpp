@@ -28,6 +28,7 @@ AudioEngine::AudioEngine(AudioCallback &callback) : mCallback(callback) {
 }
 
 bool isWaitMode = true;
+int mSampleRate = 44100;
 std::atomic<AudioEngineState> mAudioEngineState{AudioEngineState::Loading};
 
 
@@ -206,8 +207,7 @@ bool AudioEngine::openStream() {
     builder.setCallback(this);
     builder.setPerformanceMode(PerformanceMode::LowLatency);
     builder.setSharingMode(SharingMode::Exclusive);
-    // TODO add variable sample rate here
-    builder.setSampleRate(44100);
+    builder.setSampleRate(mSampleRate);
     builder.setSampleRateConversionQuality(SampleRateConversionQuality::Best);
 
     Result result = builder.openStream(&mAudioStream);
@@ -229,10 +229,9 @@ bool AudioEngine::openStream() {
         LOGW("Failed to set buffer size. Error: %s", convertToText(setBufferSizeResult.error()));
     }
     mMixer.setChannelCount(mAudioStream->getChannelCount());
-
+    LOGD("New stream open. Sample rate: %i", mAudioStream->getSampleRate());
     return true;
 }
-
 
 void AudioEngine::onPlayerEnded() {
     LOGD("Player ended");
@@ -242,7 +241,19 @@ void AudioEngine::onPlayerEnded() {
     players.erase(players.begin());
     LOGD("Player erased");
     if (!players.empty()) {
-
     }
+}
 
+int AudioEngine::getSampleRate() {
+    return mSampleRate;
+}
+
+bool AudioEngine::setSampleRate(int sampleRate) {
+    mSampleRate = sampleRate;
+    players.clear();
+    LOGD("Clearing players...new size: %i", players.size());
+    LOGD("Opening stream...");
+    openStream();
+    LOGD("Done");
+    return true;
 }
