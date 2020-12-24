@@ -2,6 +2,7 @@ package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.io.FileDescriptor
 
 sealed class FileModel : Parcelable {
 
@@ -20,6 +21,7 @@ sealed class FileModel : Parcelable {
     data class AudioFile(
         override val path: String,
         override val name: String,
+        val descriptor: FileDescriptor,
         val sizeInMB: Double,
         val extension: String = ""
     ) : FileModel()
