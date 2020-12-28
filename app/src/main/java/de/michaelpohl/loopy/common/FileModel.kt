@@ -28,7 +28,7 @@ sealed class FileModel : Parcelable {
     data class Folder(
         override val path: String,
         override val name: String,
-        val subFiles: Int = 0,
+        val audioSubFiles: Int = 0,
         val hasSubFolders: Boolean,
         val containsAudioFiles: Boolean
     ) : FileModel()

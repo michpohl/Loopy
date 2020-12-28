@@ -247,13 +247,14 @@ fun List<File>.toFileModels(types: Set<AppStateRepository.Companion.AudioFileTyp
 }
 
 fun File.toFileModel(allowedTypes: Set<AppStateRepository.Companion.AudioFileType>? = null): FileModel {
-    val subFiles = this.listFiles() ?: arrayOf<File>()
+    // we're only interested in files suitable for the app so we filter the rest out
+    val subFiles = (this.listFiles() ?: arrayOf<File>()).filter { it.isFile }.filter { it.isAcceptedAudioType(allowedTypes) }
     return when {
         this.isFolder() -> {
             FileModel.Folder(
                 this.path,
                 this.name,
-                subFiles.size,
+                subFiles..size,
                 subFiles.any { file -> file.isDirectory },
                 subFiles.any { file ->
                     if (allowedTypes != null) file.isAcceptedAudioType(
