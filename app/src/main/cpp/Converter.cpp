@@ -81,7 +81,8 @@ bool Converter::convertFolder() {
 
             std::string fullPath = std::string(mFolder) + name;
             LOGD ("Starting conversion for: %s\n", fullPath.c_str());
-            doConversion(std::string(fullPath), std::string(name));
+            LOGE ("Batch conversion is turned off. See where this log is and fix it :-)");
+//            doConversion(std::string(fullPath), std::string(name));
             }
 
         }
@@ -93,7 +94,7 @@ bool Converter::convertFolder() {
     return false;
 }
 
-bool Converter::doConversion(const std::string &fullPath, const std::string &name) {
+bool Converter::doConversion(int descriptor, const std::string &fullPath, const std::string &name) {
     LOGD("Before callback");
     mCallback.updateConversionProgress(name.c_str(), 1);
     AMediaExtractor *extractor = AMediaExtractor_new();
@@ -101,14 +102,9 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
         LOGE("Could not obtain AMediaExtractor");
         return false;
     }
-    media_status_t amresult = AMediaExtractor_setDataSource(extractor, fullPath.c_str());
-    if (amresult != AMEDIA_OK) {
-        LOGE("Error setting extractor data source, err %d", amresult);
-        return false;
-    } else {
-        LOGD("amresult ok");
-    }
 
+    FILE* testFile = fopen(fullPath.c_str(), "r");
+    int fd = fileno(testFile);
     std::ifstream stream;
     stream.open(fullPath, std::ifstream::in | std::ifstream::binary);
 
@@ -116,11 +112,25 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
         LOGE("Opening stream failed! %s", fullPath.c_str());
         return false;
     }
-
+    else {
+        LOGD("Opening stream succeeded! %s", fullPath.c_str());
+    }
+    LOGD("Descriptor: %i", descriptor);
+    LOGD("NDK DEscriptor: %i"), fd;
     stream.seekg(0, std::ios::end);
     long size = stream.tellg();
     stream.close();
     mCallback.updateConversionProgress(name.c_str(), 2);
+
+    media_status_t amresult = AMediaExtractor_setDataSourceFd(extractor, fd, 0, size);
+//    media_status_t amresult = AMediaExtractor_setDataSource(extractor, fullPath.c_str());
+    if (amresult != AMEDIA_OK) {
+        LOGE("Error setting extractor data source, err %d", amresult);
+        return false;
+    } else {
+        LOGD("amresult ok");
+    }
+
 
     constexpr int kMaxCompressionRatio{12};
     const long maximumDataSizeInBytes = kMaxCompressionRatio * (size) * sizeof(int16_t);
@@ -154,9 +164,9 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
 
 }
 
-bool Converter::convertSingleFile(const char *filePath, const char *fileName) {
-    LOGD("Converting single file: %s%s", filePath, fileName);
-    return doConversion(std::string(filePath), std::string(fileName));
+bool Converter::convertSingleFile(int descriptor, const char *fullPath, const char *fileName) {
+    LOGD("Converting single file: %d %s", descriptor, fileName);
+    return doConversion(descriptor, std::string(fullPath), std::string(fileName));
 }
 
 

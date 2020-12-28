@@ -14,12 +14,12 @@ public:
     explicit  Converter(AudioCallback &);
     bool setDestinationFolder(const char *folderName);
     bool convertFolder();
-    bool convertSingleFile(const char *filePath, const char *fileName);
+    bool convertSingleFile(int descriptor, const char *fullPath, const char *fileName);
 
 private:
     AudioCallback &mCallback;
     const char *mFolder;
-    bool doConversion(const std::string& fullPath, const std::string& name);
+    bool doConversion(int descriptor, const std::string &fullPath, const std::string& name);
     std::string wav = ".wav";
     std::string mp3 = ".mp3";
     std::string ogg = ".ogg";
