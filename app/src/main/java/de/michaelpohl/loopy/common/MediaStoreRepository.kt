@@ -9,6 +9,8 @@ import timber.log.Timber
 
 class MediaStoreRepository(val context: Context) {
 
+    // TODO deal with the nullable cursor!
+
     private var mediaStoreEntries = listOf<MediaStoreItemModel>()
     fun getAlbumTitles(): MutableList<String> {
         val list: MutableList<String> = mutableListOf()
@@ -111,7 +113,7 @@ class MediaStoreRepository(val context: Context) {
                             audioTitle,
                             albumName,
                             artistName,
-                            trackNo.toInt(),
+                            trackNo?.toInt() ?: 0,
                             albumPath
                         )
                     )
