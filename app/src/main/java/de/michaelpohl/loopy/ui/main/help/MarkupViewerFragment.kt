@@ -27,7 +27,7 @@ class MarkupViewerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            val markupFileName = requireArguments().getString("string")
+            val markupFileName = requireArguments().getString("string")!!
             showButtons = markupFileName.contains("about")
             markupString = getMarkup(markupFileName)
         }

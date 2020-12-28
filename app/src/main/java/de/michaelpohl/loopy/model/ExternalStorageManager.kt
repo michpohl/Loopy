@@ -12,9 +12,11 @@ import java.io.InputStream
 
 class ExternalStorageManager(val context: Context) {
 
-    private val appStorageFolder: File by lazy {
-        context.getExternalFilesDir(null)
-    }
+//    private val appStorageFolder: File by lazy {
+//        context.getExternalFilesDir(null)
+//    }
+
+    private val appStorageFolder = context.getExternalFilesDir(null)
 
     private val isExternalStorageReadOnly: Boolean
         get() {
@@ -28,13 +30,13 @@ class ExternalStorageManager(val context: Context) {
         }
 
     fun listSets(): List<File> {
-        return getPathContent(path = appStorageFolder.path, onlyFolders = true)
+        return getPathContent(path = appStorageFolder!!.path, onlyFolders = true)
     }
 
     fun getAudioModelsInSet(setFolderName: String): List<AudioModel> {
         val audioModels = mutableListOf<AudioModel>()
 
-        getPathContent("${appStorageFolder.path}/$setFolderName")
+        getPathContent("${appStorageFolder?.path}/$setFolderName")
             .toFileModels(setOf(AppStateRepository.Companion.AudioFileType.PCM)) // we store only pcm in the set folders
             .filterIsInstance<FileModel.AudioFile>()
             .forEach {
@@ -105,12 +107,12 @@ class ExternalStorageManager(val context: Context) {
     }
 
     fun getFullPath(path: String): String {
-        return "${appStorageFolder.path}/$path/"
+        return "${appStorageFolder?.path}/$path/"
     }
 
     fun copyStandardFilesToSdCard(): Boolean {
         Timber.d("Is external storage available: $isExternalStorageAvailable, read only: $isExternalStorageReadOnly")
-        val outputPath = "${appStorageFolder.path}/$STANDARD_SET_FOLDER_NAME/"
+        val outputPath = "${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME/"
 
         return try {
 
@@ -121,7 +123,7 @@ class ExternalStorageManager(val context: Context) {
 //            }
             true
         } catch (e: IOException) {
-            Timber.e("Copying of files to SD card (Location: ${appStorageFolder.path}/$STANDARD_SET_FOLDER_NAME) failed")
+            Timber.e("Copying of files to SD card (Location: ${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME) failed")
             e.printStackTrace()
             false
         }
@@ -160,7 +162,7 @@ class ExternalStorageManager(val context: Context) {
 
     fun deleteFromSet(path: String?, model: AudioModel) {
 
-        val content = getPathContent("${appStorageFolder.path}/${path ?: STANDARD_SET_FOLDER_NAME}")
+        val content = getPathContent("${appStorageFolder?.path}/${path ?: STANDARD_SET_FOLDER_NAME}")
         Timber.d("name: ${model.name}")
         content.forEach {
             Timber.d("name: ${it.path}")

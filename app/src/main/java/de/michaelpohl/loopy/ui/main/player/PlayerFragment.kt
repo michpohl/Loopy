@@ -104,7 +104,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     private fun handleArguments() {
-        val newAudioFiles = requireArguments().getParcelableArrayList<FileModel>("models")
+        val newAudioFiles = requireArguments().getParcelableArrayList<FileModel>("models")!!
         viewModel.addNewLoops(
             newAudioFiles.filterIsInstance<FileModel.AudioFile>()
         )

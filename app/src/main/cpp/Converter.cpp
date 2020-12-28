@@ -19,7 +19,6 @@
 namespace fs = std::__fs::filesystem;
 
 Converter::Converter(AudioCallback &callback) : mCallback(callback) {
-
 }
 
 constexpr float kScaleI16ToFloat = (1.0f / 32768.0f);
@@ -81,6 +80,7 @@ bool Converter::convertFolder() {
 
             std::string fullPath = std::string(mFolder) + name;
             LOGD ("Starting conversion for: %s\n", fullPath.c_str());
+            LOGE ("Batch conversion is turned off. See where this log is and fix it :-)");
             doConversion(std::string(fullPath), std::string(name));
             }
 
@@ -101,26 +101,28 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
         LOGE("Could not obtain AMediaExtractor");
         return false;
     }
-    media_status_t amresult = AMediaExtractor_setDataSource(extractor, fullPath.c_str());
+
+    FILE* testFile = fopen(fullPath.c_str(), "r");
+    std::ifstream stream;
+    stream.open(fullPath, std::ifstream::in | std::ifstream::binary);
+
+    if (!stream.is_open() || testFile == nullptr) {
+        LOGE("File opening failed! %s", fullPath.c_str());
+        return false;
+    }
+    stream.seekg(0, std::ios::end);
+    int fd = fileno(testFile);
+    long size = stream.tellg();
+    stream.close();
+    mCallback.updateConversionProgress(name.c_str(), 2);
+
+    media_status_t amresult = AMediaExtractor_setDataSourceFd(extractor, fd, 0, size);
     if (amresult != AMEDIA_OK) {
         LOGE("Error setting extractor data source, err %d", amresult);
         return false;
     } else {
         LOGD("amresult ok");
     }
-
-    std::ifstream stream;
-    stream.open(fullPath, std::ifstream::in | std::ifstream::binary);
-
-    if (!stream.is_open()) {
-        LOGE("Opening stream failed! %s", fullPath.c_str());
-        return false;
-    }
-
-    stream.seekg(0, std::ios::end);
-    long size = stream.tellg();
-    stream.close();
-    mCallback.updateConversionProgress(name.c_str(), 2);
 
     constexpr int kMaxCompressionRatio{12};
     const long maximumDataSizeInBytes = kMaxCompressionRatio * (size) * sizeof(int16_t);
@@ -130,6 +132,8 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
     int64_t bytesDecoded = NDKExtractor::decode(*extractor, decodedData);
     mCallback.updateConversionProgress(name.c_str(), 3);
     auto numSamples = bytesDecoded / sizeof(int16_t);
+    fclose(testFile); // close file after conversion is done to avoid memory leaks
+
 
     std::string outputName = std::string(mFolder) + "/" + name + ".pcm";
     LOGD("outputName: %s", outputName.c_str());
@@ -154,9 +158,8 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
 
 }
 
-bool Converter::convertSingleFile(const char *filePath, const char *fileName) {
-    LOGD("Converting single file: %s%s", filePath, fileName);
-    return doConversion(std::string(filePath), std::string(fileName));
+bool Converter::convertSingleFile(const char *fullPath, const char *fileName) {
+    return doConversion(std::string(fullPath), std::string(fileName));
 }
 
 

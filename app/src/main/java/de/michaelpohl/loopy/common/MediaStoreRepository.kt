@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy.common
 
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
@@ -9,6 +8,8 @@ import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemMode
 import timber.log.Timber
 
 class MediaStoreRepository(val context: Context) {
+
+    // TODO deal with the nullable cursor!
 
     private var mediaStoreEntries = listOf<MediaStoreItemModel>()
     fun getAlbumTitles(): MutableList<String> {
@@ -34,12 +35,13 @@ class MediaStoreRepository(val context: Context) {
             selectionArgs,
             sortOrder
         )
-
-        if (cursor.moveToFirst()) {
-            val albumTitle = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
-            do {
-                list.add(cursor.getString(albumTitle))
-            } while (cursor.moveToNext())
+        cursor?.let {
+            if (cursor.moveToFirst()) {
+                val albumTitle = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
+                do {
+                    list.add(cursor.getString(albumTitle))
+                } while (cursor.moveToNext())
+            }
         }
         cursor?.close()
         return list
@@ -68,53 +70,55 @@ class MediaStoreRepository(val context: Context) {
         //val sortOrder = MediaStore.Audio.Media.TITLE + " DESC"
 
         // Query the external storage for music files
-        val cursor: Cursor = context.contentResolver.query(
+        val cursor = context.contentResolver.query(
             uri,
             null,
             selection,
             null,
             sortOrder
         )
+        cursor?.let {
 
-        if (cursor.moveToFirst()) {
-            val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
-            val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-            val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-            val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
-            val artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
-            val track = cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)
+            if (cursor.moveToFirst()) {
+                val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+                val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+                val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+                val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+                val artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+                val track = cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)
 
-            do {
-                var audioId: Long = cursor.getLong(id)
-                var audioTitle = cursor.getString(title)
-                var albumName = cursor.getString(album)
-                var artistName = cursor.getString(artist)
-                var albumPath = cursor.getString(data)
-                var trackNo = cursor.getString(track)
+                do {
+                    var audioId: Long = cursor.getLong(id)
+                    var audioTitle = cursor.getString(title)
+                    var albumName = cursor.getString(album)
+                    var artistName = cursor.getString(artist)
+                    var albumPath = cursor.getString(data)
+                    var trackNo = cursor.getString(track)
 
-                if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
-                    "UNKNOWN" //TODO change to resource
-                if (albumName == "0" || albumName.contains("unknown")) albumName =
-                    "UNKNOWN" //TODO change to resource
-                if (artistName == "0" || artistName.contains("unknown")) artistName =
-                    "UNKNOWN" //TODO change to resource
+                    if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
+                        "UNKNOWN" //TODO change to resource
+                    if (albumName == "0" || albumName.contains("unknown")) albumName =
+                        "UNKNOWN" //TODO change to resource
+                    if (artistName == "0" || artistName.contains("unknown")) artistName =
+                        "UNKNOWN" //TODO change to resource
 
-                Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
-                val c = context.contentResolver
+                    Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
+                    val c = context.contentResolver
 
-                val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
-                Timber.d("My file extension is: %s", extension)
+                    val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
+                    Timber.d("My file extension is: %s", extension)
 
-                list.add(
-                    MediaStoreItemModel.Track(
-                        audioTitle,
-                        albumName,
-                        artistName,
-                        trackNo.toInt(),
-                        albumPath
+                    list.add(
+                        MediaStoreItemModel.Track(
+                            audioTitle,
+                            albumName,
+                            artistName,
+                            trackNo?.toInt() ?: 0,
+                            albumPath
+                        )
                     )
-                )
-            } while (cursor.moveToNext())
+                } while (cursor.moveToNext())
+            }
         }
         with(list.filterIsInstance<MediaStoreItemModel.Track>()) {
             list.addAll(generateAlbumItems(this))
