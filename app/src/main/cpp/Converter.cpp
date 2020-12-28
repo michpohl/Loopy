@@ -94,7 +94,7 @@ bool Converter::convertFolder() {
     return false;
 }
 
-bool Converter::doConversion(int descriptor, const std::string &fullPath, const std::string &name) {
+bool Converter::doConversion(const std::string &fullPath, const std::string &name) {
     LOGD("Before callback");
     mCallback.updateConversionProgress(name.c_str(), 1);
     AMediaExtractor *extractor = AMediaExtractor_new();
@@ -115,7 +115,6 @@ bool Converter::doConversion(int descriptor, const std::string &fullPath, const 
     else {
         LOGD("Opening stream succeeded! %s", fullPath.c_str());
     }
-    LOGD("Descriptor: %i", descriptor);
     LOGD("NDK DEscriptor: %i"), fd;
     stream.seekg(0, std::ios::end);
     long size = stream.tellg();
@@ -164,9 +163,8 @@ bool Converter::doConversion(int descriptor, const std::string &fullPath, const 
 
 }
 
-bool Converter::convertSingleFile(int descriptor, const char *fullPath, const char *fileName) {
-    LOGD("Converting single file: %d %s", descriptor, fileName);
-    return doConversion(descriptor, std::string(fullPath), std::string(fileName));
+bool Converter::convertSingleFile(const char *fullPath, const char *fileName) {
+    return doConversion(std::string(fullPath), std::string(fileName));
 }
 
 
