@@ -5,7 +5,7 @@ import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 
-abstract class BrowserViewModel : BaseViewModel<BaseUIState>() {
+abstract class BrowserViewModel<T : BaseUIState> : BaseViewModel<T>() {
 
     protected abstract val selectedFiles: MutableLiveData<List<FileModel.AudioFile>>
 

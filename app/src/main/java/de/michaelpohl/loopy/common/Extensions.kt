@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.model.AppStateRepository
 import timber.log.Timber
 import java.io.File
-import java.io.FileInputStream
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -255,7 +254,7 @@ fun File.toFileModel(allowedTypes: Set<AppStateRepository.Companion.AudioFileTyp
             FileModel.Folder(
                 this.path,
                 this.name,
-                subFiles..size,
+                subFiles.size,
                 subFiles.any { file -> file.isDirectory },
                 subFiles.any { file ->
                     if (allowedTypes != null) file.isAcceptedAudioType(
@@ -268,7 +267,6 @@ fun File.toFileModel(allowedTypes: Set<AppStateRepository.Companion.AudioFileTyp
             FileModel.AudioFile(
                 this.path,
                 this.name,
-                FileInputStream(this).fd,
                 this.length().convertFileSizeToMB(),
                 this.extension,
             )

@@ -15,7 +15,7 @@ import java.io.File
 open class MediaStoreBrowserViewModel(
     private val repo: MediaStoreRepository,
     appStateRepository: AppStateRepository
-) : BrowserViewModel() {
+) : BrowserViewModel<BaseUIState>() {
 
     private val acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet()
 

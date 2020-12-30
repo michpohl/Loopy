@@ -6,7 +6,7 @@ import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 
-class AudioItemDelegate(val receiver: (FileModel.AudioFile, Boolean) -> Unit) :
+class AudioItemDelegate(val receiver: (FileModel.AudioFile) -> Unit) :
     AdapterItemDelegate<FileModel.AudioFile, AudioItemHolder>() {
 
     override fun createViewHolder(parent: ViewGroup): AudioItemHolder {

@@ -5,11 +5,11 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.getDrawable
 import de.michaelpohl.loopy.common.roundTo
+import timber.log.Timber
 
 class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(itemView) {
 
-//    lateinit var item: FileModel.File
-    lateinit var onCheckedChangedReceiver: (FileModel.AudioFile, Boolean) -> Unit
+    lateinit var onCheckedChangedReceiver: (FileModel.AudioFile) -> Unit
     override fun bind(item: FileModel.AudioFile) {
         label.text = item.name
         subLabel.text = "${item.sizeInMB.roundTo(2)} MB" //TODO turn into string resource
@@ -17,11 +17,17 @@ class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(i
 
         itemView.setOnClickListener { checkBox.isChecked = !checkBox.isChecked }
 
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            onCheckedChangedReceiver.invoke(
-                item,
-                isChecked
-            )
+        checkBox.apply {
+            isChecked = item.isSelected ?: false
+            setOnCheckedChangeListener { _, isChecked ->
+                Timber.d("Is Checked: $isChecked")
+                if (isChecked != item.isSelected) {
+
+                onCheckedChangedReceiver.invoke(
+                    item.copy(isSelected = isChecked)
+                )
+                }
+            }
         }
     }
 }

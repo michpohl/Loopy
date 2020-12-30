@@ -21,9 +21,9 @@ sealed class FileModel : Parcelable {
     data class AudioFile(
         override val path: String,
         override val name: String,
-        val descriptor: FileDescriptor,
         val sizeInMB: Double,
-        val extension: String = ""
+        val extension: String = "",
+        val isSelected: Boolean? = null
     ) : FileModel()
 
     @Parcelize

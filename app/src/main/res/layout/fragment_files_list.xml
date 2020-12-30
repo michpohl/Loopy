@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/bottom_background"
+            app:layout_constraintBottom_toTopOf="@id/bottom_container"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="@{model.emptyFolderLayoutVisibility}"
+            android:visibility="@{model.state.shouldShowEmptyMessage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -42,34 +42,39 @@
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/bottom_background"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_container"
             style="@style/MatchConstraints"
+            android:layout_height="wrap_content"
             android:background="@color/darkest_green"
-            android:visibility="@{model.bottomBarVisibility}"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_select_all" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/btn_select_all"
-            style="@style/Button.Borderless"
-            android:layout_marginEnd="16dp"
-            android:onClick="@{() -> model.selectAll()}"
-            android:text="@{model.selectButtonText}"
-            android:visibility="@{model.bottomBarVisibility}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_submit" />
+            <Button
+                android:id="@+id/btn_select_all"
+                style="@style/Button.Borderless"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> model.selectAll()}"
+                android:text="@string/btn_select_all"
+                android:visibility="@{model.state.shouldShowSelectAllButton}"
+                app:layout_constraintEnd_toStartOf="@id/btn_submit"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
 
-        <Button
-            android:id="@+id/btn_submit"
-            style="@style/Button.Borderless"
-            android:onClick="@{() -> model.onSubmitClicked()}"
-            android:text="@string/btn_open_selection"
-            android:visibility="@{model.bottomBarVisibility}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+/>
+
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/Button.Borderless"
+                android:visibility="@{model.state.shouldShowSubmitButton}"
+                android:onClick="@{() -> model.onSubmitClicked()}"
+                android:text="@string/btn_open_selection"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

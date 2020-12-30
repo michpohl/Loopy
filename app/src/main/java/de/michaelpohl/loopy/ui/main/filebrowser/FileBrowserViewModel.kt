@@ -1,85 +1,105 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.StorageRepository
-import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.common.toFileModels
+import de.michaelpohl.loopy.common.toVisibility
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
+import timber.log.Timber
 
 open class FileBrowserViewModel(
     private val storage: StorageRepository,
-    appStateRepository: AppStateRepository
+    val appStateRepository: AppStateRepository
 ) :
-    BrowserViewModel() {
+    BrowserViewModel<FileBrowserViewModel.UIState>() {
 
-    private val acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet()
+    var initialPath: String? = null
+        set(value) {
+            field = value
+            value?.let {
+                _state.value = (currentState.copy(
+                    currentPath = it,
+                    filesToDisplay = getFolderContent(it)
+                ))
+            }
+        }
 
-    private val _filesToDisplay = MutableLiveData<List<FileModel>>()
-    val filesToDisplay = _filesToDisplay.immutable()
-
-    private val lastDisplayedFiles = mutableListOf<List<FileModel>>()
-
-    // TODO this doesn't seem to be properly connected yet
-    var bottomBarVisibility = MediatorLiveData<Int>()
-
-    private var _emptyFolderLayoutVisibility =
-        MutableLiveData(View.INVISIBLE) //override if interested
-    var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
-
-    private var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
-    var selectButtonText = _selectButtonText.immutable()
-
-    override val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>()
-    override fun initUIState(): BaseUIState {
-        // TODO refactor
-        return object : BaseUIState() {}
+    override val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>() // TODO remove
+    override fun initUIState(): UIState {
+        return UIState(
+            acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet(),
+            filesToDisplay = listOf()
+        )
     }
 
-    fun getFolderContent(path: String) {
-        val files = storage.getPathContent(path)
-            .toFileModels(acceptedTypes)
-        if (files.isEmpty()) {
-            _emptyFolderLayoutVisibility.postValue(View.VISIBLE)
-        } else {
-            _emptyFolderLayoutVisibility.postValue(View.INVISIBLE)
+    data class UIState(
+        val currentPath: String? = null,
+        val acceptedTypes: Set<AppStateRepository.Companion.AudioFileType>,
+        val filesToDisplay: List<FileModel>,
+        val lastDisplayedFiles: List<List<FileModel>>? = listOf(),
+        val selectedFiles: List<FileModel.AudioFile>? = listOf(),
+    ) : BaseUIState() {
+
+        val shouldShowEmptyMessage = filesToDisplay.isEmpty().toVisibility()
+        val shouldShowSubmitButton = (selectedFiles?.isNotEmpty() ?: false).toVisibility()
+
+        val shouldShowSelectAllButton = (filesToDisplay.filterIsInstance<FileModel.AudioFile>().size > 1).toVisibility()
+
+        init {
+            Timber.d("Should: $shouldShowEmptyMessage, $shouldShowSelectAllButton, $shouldShowSubmitButton")
         }
-        _filesToDisplay.postValue(files)
+    }
+
+    fun getFolderContent(path: String): List<FileModel> {
+        return storage.getPathContent(path).toFileModels(currentState.acceptedTypes)
     }
 
     fun onFolderClicked(folder: FileModel.Folder) {
-        // keeping the items just diplayed so the backbutton can work properly
-        lastDisplayedFiles.add(filesToDisplay.value.orEmpty())
-        getFolderContent(folder.path)
+        // we're keeping the items just displayed so the back button can work properly
+        val backList = currentState.lastDisplayedFiles.orEmpty().toMutableList()
+        backList.add(currentState.filesToDisplay)
+        _state.postValue(
+            currentState.copy(
+                filesToDisplay = getFolderContent(folder.path),
+                lastDisplayedFiles = backList
+            ))
     }
 
-    fun onFileSelectionChanged(fileModel: FileModel.AudioFile, isSelected: Boolean) {
-        val currentList = selectedFiles.value.orEmpty().toMutableList()
-        if (isSelected) {
+    fun onFileSelectionChanged(fileModel: FileModel.AudioFile) {
+        Timber.d("Selected: $fileModel")
+        val currentList = currentState.selectedFiles.orEmpty().toMutableList()
+        if (fileModel.isSelected == true && currentList.find { it.path == fileModel.path} == null) {
             currentList.add(fileModel)
         } else {
-            currentList.remove(fileModel)
+            currentList.remove(currentList.find { it.path == fileModel.path})
         }
-        selectedFiles.postValue(currentList)
+        _state.value = currentState.copy(selectedFiles = currentList)
     }
 
     fun onSubmitClicked() {
-        onSelectionSubmittedListener(selectedFiles.value.orEmpty())
+        onSelectionSubmittedListener(currentState.selectedFiles.orEmpty())
     }
 
     override fun selectAll() {
-        TODO("Not yet implemented")
+        _state.value = currentState.copy(selectedFiles = currentState.filesToDisplay.filterIsInstance<FileModel.AudioFile>())
     }
 
     fun onBackPressed(): Boolean {
+        val lastDisplayedFiles = currentState.lastDisplayedFiles.orEmpty().toMutableList()
+
         with(lastDisplayedFiles) {
             return if (this.isNotEmpty()) {
-                _filesToDisplay.postValue(this.last())
+                val nextFilesToDisplay = this.last()
                 remove(this.last())
+                _state.postValue(
+                    currentState.copy(
+                        filesToDisplay = nextFilesToDisplay,
+                        lastDisplayedFiles = this,
+                        selectedFiles = null
+                    ))
                 true
             } else false
         }
