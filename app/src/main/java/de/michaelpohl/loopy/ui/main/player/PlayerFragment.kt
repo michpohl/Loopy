@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
@@ -83,7 +84,7 @@ class PlayerFragment : BaseFragment() {
         findNavController().popBackStack(R.id.playerFragment, false)
         observe()
         viewModel.onFragmentResumed()
-
+        Timber.d("Resume, backstack: ${findNavController().currentBackStackEntry}. ${findNavController().previousBackStackEntry}")
         if (arguments != null) {
             Timber.d("We have arguments")
             handleArguments()
@@ -101,6 +102,11 @@ class PlayerFragment : BaseFragment() {
         super.onDestroy()
         viewModel.stopLooper()
         unBindAudioService()
+    }
+
+    override fun onBackPressed(): Boolean {
+        (requireActivity() as MainActivity).finishAffinity()
+        return true
     }
 
     private fun handleArguments() {

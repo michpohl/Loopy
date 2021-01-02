@@ -13,6 +13,15 @@ import kotlinx.android.synthetic.*
 
 abstract class BaseFragment : Fragment() {
 
+    private val onBackPressedCallback = object :
+        OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (!onBackPressed()) {
+                findNavController().navigateUp()
+            }
+        }
+    }
+
     open val showOptionsMenu = false
     open val screenTitle: String? = null
 
@@ -32,14 +41,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     private fun addOnBackPressedCallback() {
-        requireActivity().onBackPressedDispatcher.addCallback(object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (!onBackPressed()) {
-                    findNavController().navigateUp()
-                }
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
     }
 
     override fun onResume() {
@@ -62,6 +64,11 @@ abstract class BaseFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.onFragmentPaused()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        onBackPressedCallback.remove()
     }
 
     /**
