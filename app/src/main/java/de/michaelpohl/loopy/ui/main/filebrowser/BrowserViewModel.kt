@@ -1,19 +1,24 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import de.michaelpohl.loopy.common.FileModel
+import de.michaelpohl.loopy.common.immutable
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
 
-abstract class BrowserViewModel<T : BaseUIState> : BaseViewModel<T>() {
-
-    protected abstract val selectedFiles: MutableLiveData<List<FileModel.AudioFile>>
+abstract class BrowserViewModel<T : BrowserViewModel.BrowserUIState> : BaseViewModel<T>() {
 
     lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
-    protected fun submitSelection(selection: List<FileModel.AudioFile>) {
-        // TODO remove I guess
-//        audioRepo.addLoopsToSet(selection)
-    }
 
     abstract fun selectAll()
+
+    abstract class BrowserUIState() : BaseUIState() {
+        abstract val itemsToDisplay : List<*>
+        abstract val lastDisplayedItems: List<List<*>>?
+        abstract val selectedItems: List<*>?
+        abstract val shouldShowEmptyMessage: Int
+        abstract val shouldShowSubmitButton: Int
+        abstract val shouldShowSelectAllButton: Int
+    }
+
 }

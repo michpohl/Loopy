@@ -5,7 +5,7 @@ import com.example.adapter.adapter.AdapterItemDelegate
 import com.example.adapter.adapter.inflateLayout
 import de.michaelpohl.loopy.R
 
-class TrackDelegate(private val receiver: (MediaStoreItemModel.Track, Boolean) -> Unit) :
+class TrackDelegate(private val receiver: (MediaStoreItemModel.Track) -> Unit) :
     AdapterItemDelegate<MediaStoreItemModel.Track, TrackItemHolder>() {
 
     override fun createViewHolder(parent: ViewGroup): TrackItemHolder {

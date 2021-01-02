@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.main.base
 
 import android.content.res.Resources
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.michaelpohl.loopy.common.immutable
@@ -15,7 +16,7 @@ abstract class BaseViewModel<T : BaseUIState> : ViewModel(), KoinComponent {
     }
 
     protected val _state = MutableLiveData<T>()
-    val state = _state.immutable()
+    open val state: LiveData<T> = _state.immutable()
 
     protected val currentState: T
         get() {

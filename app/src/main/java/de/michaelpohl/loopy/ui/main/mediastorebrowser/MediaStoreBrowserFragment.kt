@@ -12,7 +12,7 @@ import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.common.setDivider
-import de.michaelpohl.loopy.databinding.FragmentMediastoreListBinding
+import de.michaelpohl.loopy.databinding.FragmentMediaListBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.*
 import org.koin.android.ext.android.inject
@@ -21,19 +21,18 @@ import timber.log.Timber
 open class MediaStoreBrowserFragment : BaseFragment() {
 
     override val viewModel: MediaStoreBrowserViewModel by inject()
-    private lateinit var binding: FragmentMediastoreListBinding
+    private lateinit var binding: FragmentMediaListBinding
     private lateinit var recycler: RecyclerView
 
     private val browserAdapter = adapter<MediaStoreItemModel> {
         delegates = listOf(ArtistDelegate(),
             AlbumDelegate { viewModel.onAlbumClicked(it) },
-            TrackDelegate { model, selected -> viewModel.onTrackSelectionChanged(model, selected) })
+            TrackDelegate { model -> viewModel.onTrackSelectionChanged(model)})
         sorting = MediaStoreBrowserSorting()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel.onSelectionSubmittedListener = { addSelectionToPlayer(it) }
     }
 
@@ -43,8 +42,9 @@ open class MediaStoreBrowserFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_mediastore_list, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.fragment_media_list, container, false)
         binding.model = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         recycler = binding.root.find(R.id.rv_files)
         recycler.adapter = browserAdapter
         recycler.setDivider(R.drawable.divider)
@@ -57,7 +57,9 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     }
 
     private fun observe() {
-        viewModel.entriesToDisplay.observeWith { browserAdapter.update(it.toMutableList()) }
+        viewModel.state.observeWith {
+            Timber.d("Updating: $it")
+            browserAdapter.update(it.itemsToDisplay.toMutableList()) }
     }
 
     override fun getTitle(): String {

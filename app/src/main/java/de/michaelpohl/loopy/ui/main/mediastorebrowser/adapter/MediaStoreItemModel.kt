@@ -20,7 +20,9 @@ sealed class MediaStoreItemModel {
         val album: String,
         val artist: String,
         val trackNo: Int?,
-        val path: String
+        val path: String,
+        val extension: String = "",
+        val isSelected: Boolean? = null
 
     ) : MediaStoreItemModel()
 }

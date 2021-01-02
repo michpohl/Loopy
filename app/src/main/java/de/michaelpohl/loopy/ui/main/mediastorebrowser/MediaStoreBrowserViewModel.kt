@@ -1,12 +1,7 @@
 package de.michaelpohl.loopy.ui.main.mediastorebrowser
 
-import android.view.View
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.AppStateRepository
-import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.filebrowser.BrowserViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
@@ -14,41 +9,41 @@ import java.io.File
 
 open class MediaStoreBrowserViewModel(
     private val repo: MediaStoreRepository,
-    appStateRepository: AppStateRepository
-) : BrowserViewModel<BaseUIState>() {
+    val appStateRepository: AppStateRepository
+) : BrowserViewModel<MediaStoreBrowserViewModel.UIState>() {
 
-    private val acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet()
-
-    private val mediaStoreEntries = repo.getMediaStoreEntries()
-    private val _entriesToDisplay = MutableLiveData<List<MediaStoreItemModel>>()
-    private val lastDisplayedEntries = mutableListOf<List<MediaStoreItemModel>>()
-    override val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>()
-
-    val entriesToDisplay = _entriesToDisplay.immutable()
-
-    private var _emptyFolderLayoutVisibility = MutableLiveData(View.INVISIBLE)
-    private var _selectButtonText = MutableLiveData(getString(R.string.btn_select_all))
-
-    var emptyFolderLayoutVisibility = _emptyFolderLayoutVisibility.immutable()
-    var selectButtonText = _selectButtonText.immutable()
-    var bottomBarVisibility = MediatorLiveData<Int>()
-
-    init {
-        // initially, we want to show a list of all Albums
-        _entriesToDisplay.value = filterAllAlbums()
+    override fun onFragmentResumed() {
+        super.onFragmentResumed()
+        _state.value = initUIState()
     }
 
-    override fun initUIState(): BaseUIState {
-        // TODO refactor
-        return object : BaseUIState() {}
+
+    data class UIState(
+        val currentPath: String? = null,
+        val acceptedTypes: Set<AppStateRepository.Companion.AudioFileType>,
+        override val itemsToDisplay: List<MediaStoreItemModel>,
+        override val lastDisplayedItems: List<List<MediaStoreItemModel>>? = listOf(),
+        override val selectedItems: List<MediaStoreItemModel.Track>? = listOf(),
+    ) : BrowserViewModel.BrowserUIState() {
+
+        override val shouldShowEmptyMessage = itemsToDisplay.isEmpty().toVisibility()
+        override val shouldShowSubmitButton = (selectedItems?.isNotEmpty() ?: false).toVisibility()
+        override val shouldShowSelectAllButton =
+            (itemsToDisplay.filterIsInstance<FileModel.AudioFile>().size > 1).toVisibility()
+    }
+
+    override fun initUIState(): UIState {
+        return UIState(
+            acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet(),
+            itemsToDisplay = filterAllAlbums()
+        )
     }
 
     fun onSubmitClicked() {
-        val audioModels = selectedFiles.value.orEmpty().map {
+        val audioModels = currentState.selectedItems.orEmpty().map {
             val file = File(it.path)
-            file.toFileModel(acceptedTypes)
+            file.toFileModel(currentState.acceptedTypes)
         }
-//        submitSelection(audioModels.filterIsInstance<FileModel.AudioFile>())
         onSelectionSubmittedListener(audioModels.filterIsInstance<FileModel.AudioFile>())
     }
 
@@ -56,49 +51,60 @@ open class MediaStoreBrowserViewModel(
         TODO("Not yet implemented")
     }
 
-    fun onArtistClicked(artist: MediaStoreItemModel.Artist) {
-        _entriesToDisplay.postValue(filterAllTracksFromArtist(artist))
-    }
+//    fun onArtistClicked(artist: MediaStoreItemModel.Artist) {
+//        _entriesToDisplay.postValue(filterAllTracksFromArtist(artist))
+//    }
 
     fun onAlbumClicked(album: MediaStoreItemModel.Album) {
-        lastDisplayedEntries.add(entriesToDisplay.value.orEmpty())
-        _entriesToDisplay.postValue(filterAllTracksFromAlbum(album))
+        val backList = currentState.lastDisplayedItems.orEmpty().toMutableList()
+        backList.add(currentState.itemsToDisplay)
+        _state.value = currentState.copy(
+            itemsToDisplay = filterAllTracksFromAlbum(album),
+            lastDisplayedItems = backList
+        )
     }
 
-    private fun filterAllAlbums() = mediaStoreEntries.filterIsInstance<MediaStoreItemModel.Album>()
+    private fun filterAllAlbums() = repo.getMediaStoreEntries().filterIsInstance<MediaStoreItemModel.Album>()
     private fun filterAllTracksFromAlbum(album: MediaStoreItemModel.Album): List<MediaStoreItemModel.Track> {
-        return mediaStoreEntries
+        return repo.getMediaStoreEntries()
             .filterIsInstance<MediaStoreItemModel.Track>()
             .filter { it.album == album.name }
-            .filter { it.path.hasAcceptedAudioFileExtension(acceptedTypes) }
+            .filter { it.path.hasAcceptedAudioFileExtension(currentState.acceptedTypes) }
     }
 
-    private fun filterAllTracksFromArtist(artist: MediaStoreItemModel.Artist): List<MediaStoreItemModel.Track> {
-        return mediaStoreEntries
-            .filterIsInstance<MediaStoreItemModel.Track>()
-            .filter { it.artist == artist.name }
-    }
+//    private fun filterAllTracksFromArtist(artist: MediaStoreItemModel.Artist): List<MediaStoreItemModel.Track> {
+//        return mediaStoreEntries
+//            .filterIsInstance<MediaStoreItemModel.Track>()
+//            .filter { it.artist == artist.name }
+//    }
 
     fun onBackPressed(): Boolean {
-        with(lastDisplayedEntries) {
+        val lastDisplayedItems = currentState.lastDisplayedItems.orEmpty().toMutableList()
+
+        with(lastDisplayedItems) {
             return if (this.isNotEmpty()) {
-                _entriesToDisplay.postValue(this.last())
+                val nextFilesToDisplay = this.last()
                 remove(this.last())
+                _state.postValue(
+                    currentState.copy(
+                        itemsToDisplay = nextFilesToDisplay,
+                        lastDisplayedItems = this,
+                        selectedItems = null
+                    ))
                 true
             } else false
-
         }
     }
 
-    fun onTrackSelectionChanged(track: MediaStoreItemModel.Track, isSelected: Boolean) {
-        val currentList = selectedFiles.value.orEmpty().toMutableList()
-        val file = File(track.path).toFileModel(acceptedTypes)
-        if (isSelected) {
-            if (file is FileModel.AudioFile) currentList.add(file)
+
+    fun onTrackSelectionChanged(track: MediaStoreItemModel.Track) {
+        Timber.d("Clicked on: ${track.path}, is  selected: ${track.isSelected}")
+        val currentList = currentState.selectedItems.orEmpty().toMutableList()
+        if (track.isSelected == true && currentList.find { it.path == track.path } == null) {
+            currentList.add(track)
         } else {
-            currentList.remove(file)
+            currentList.remove(currentList.find { it.path == track.path })
         }
-        selectedFiles.postValue(currentList)
-        Timber.d("Currently selected: ${currentList.map { it.name }}")
+        _state.value = currentState.copy(selectedItems = currentList)
     }
 }

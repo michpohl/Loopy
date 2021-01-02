@@ -105,16 +105,19 @@ class MediaStoreRepository(val context: Context) {
                     Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
                     val c = context.contentResolver
 
+                    // TODO check if this is correct enough to keep
                     val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
+                        ?: albumPath.substringAfterLast(".")
                     Timber.d("My file extension is: %s", extension)
 
                     list.add(
                         MediaStoreItemModel.Track(
-                            audioTitle,
-                            albumName,
-                            artistName,
-                            trackNo?.toInt() ?: 0,
-                            albumPath
+                            name = audioTitle,
+                            album = albumName,
+                            artist = artistName,
+                            trackNo = trackNo?.toInt() ?: 0,
+                            path = albumPath,
+                            extension = extension
                         )
                     )
                 } while (cursor.moveToNext())

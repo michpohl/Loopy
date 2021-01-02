@@ -1,14 +1,10 @@
 package de.michaelpohl.loopy.ui.main.filebrowser
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.common.toFileModels
 import de.michaelpohl.loopy.common.toVisibility
 import de.michaelpohl.loopy.model.AppStateRepository
-import de.michaelpohl.loopy.ui.main.base.BaseUIState
-import timber.log.Timber
 
 open class FileBrowserViewModel(
     private val storage: StorageRepository,
@@ -22,35 +18,30 @@ open class FileBrowserViewModel(
             value?.let {
                 _state.value = (currentState.copy(
                     currentPath = it,
-                    filesToDisplay = getFolderContent(it)
+                    itemsToDisplay = getFolderContent(it)
                 ))
             }
         }
 
-    override val selectedFiles = MutableLiveData<List<FileModel.AudioFile>>() // TODO remove
     override fun initUIState(): UIState {
         return UIState(
             acceptedTypes = appStateRepository.settings.acceptedFileTypes.toSet(),
-            filesToDisplay = listOf()
+            itemsToDisplay = listOf()
         )
     }
 
     data class UIState(
         val currentPath: String? = null,
         val acceptedTypes: Set<AppStateRepository.Companion.AudioFileType>,
-        val filesToDisplay: List<FileModel>,
-        val lastDisplayedFiles: List<List<FileModel>>? = listOf(),
-        val selectedFiles: List<FileModel.AudioFile>? = listOf(),
-    ) : BaseUIState() {
+        override val itemsToDisplay: List<FileModel>,
+        override val lastDisplayedItems: List<List<FileModel>>? = listOf(),
+        override val selectedItems: List<FileModel.AudioFile>? = listOf(),
+    ) : BrowserUIState() {
 
-        val shouldShowEmptyMessage = filesToDisplay.isEmpty().toVisibility()
-        val shouldShowSubmitButton = (selectedFiles?.isNotEmpty() ?: false).toVisibility()
-
-        val shouldShowSelectAllButton = (filesToDisplay.filterIsInstance<FileModel.AudioFile>().size > 1).toVisibility()
-
-        init {
-            Timber.d("Should: $shouldShowEmptyMessage, $shouldShowSelectAllButton, $shouldShowSubmitButton")
-        }
+        override val shouldShowEmptyMessage = itemsToDisplay.isEmpty().toVisibility()
+        override val shouldShowSubmitButton = (selectedItems?.isNotEmpty() ?: false).toVisibility()
+        override val shouldShowSelectAllButton =
+            (itemsToDisplay.filterIsInstance<FileModel.AudioFile>().size > 1).toVisibility()
     }
 
     fun getFolderContent(path: String): List<FileModel> {
@@ -59,36 +50,35 @@ open class FileBrowserViewModel(
 
     fun onFolderClicked(folder: FileModel.Folder) {
         // we're keeping the items just displayed so the back button can work properly
-        val backList = currentState.lastDisplayedFiles.orEmpty().toMutableList()
-        backList.add(currentState.filesToDisplay)
+        val backList = currentState.lastDisplayedItems.orEmpty().toMutableList()
+        backList.add(currentState.itemsToDisplay)
         _state.postValue(
             currentState.copy(
-                filesToDisplay = getFolderContent(folder.path),
-                lastDisplayedFiles = backList
+                itemsToDisplay = getFolderContent(folder.path),
+                lastDisplayedItems = backList
             ))
     }
 
     fun onFileSelectionChanged(fileModel: FileModel.AudioFile) {
-        Timber.d("Selected: $fileModel")
-        val currentList = currentState.selectedFiles.orEmpty().toMutableList()
-        if (fileModel.isSelected == true && currentList.find { it.path == fileModel.path} == null) {
+        val currentList = currentState.selectedItems.orEmpty().toMutableList()
+        if (fileModel.isSelected == true && currentList.find { it.path == fileModel.path } == null) {
             currentList.add(fileModel)
         } else {
-            currentList.remove(currentList.find { it.path == fileModel.path})
+            currentList.remove(currentList.find { it.path == fileModel.path })
         }
-        _state.value = currentState.copy(selectedFiles = currentList)
+        _state.value = currentState.copy(selectedItems = currentList)
     }
 
     fun onSubmitClicked() {
-        onSelectionSubmittedListener(currentState.selectedFiles.orEmpty())
+        onSelectionSubmittedListener(currentState.selectedItems.orEmpty())
     }
 
     override fun selectAll() {
-        _state.value = currentState.copy(selectedFiles = currentState.filesToDisplay.filterIsInstance<FileModel.AudioFile>())
+        _state.value = currentState.copy(selectedItems = currentState.itemsToDisplay.filterIsInstance<FileModel.AudioFile>())
     }
 
     fun onBackPressed(): Boolean {
-        val lastDisplayedFiles = currentState.lastDisplayedFiles.orEmpty().toMutableList()
+        val lastDisplayedFiles = currentState.lastDisplayedItems.orEmpty().toMutableList()
 
         with(lastDisplayedFiles) {
             return if (this.isNotEmpty()) {
@@ -96,9 +86,9 @@ open class FileBrowserViewModel(
                 remove(this.last())
                 _state.postValue(
                     currentState.copy(
-                        filesToDisplay = nextFilesToDisplay,
-                        lastDisplayedFiles = this,
-                        selectedFiles = null
+                        itemsToDisplay = nextFilesToDisplay,
+                        lastDisplayedItems = this,
+                        selectedItems = null
                     ))
                 true
             } else false
