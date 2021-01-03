@@ -1,7 +1,6 @@
 package de.michaelpohl.loopy
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -24,7 +23,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.AppStateRepository
-import de.michaelpohl.loopy.model.AudioFilesRepository
+import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerFragment
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
@@ -36,13 +35,13 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
-    private val audioFilesRepo: AudioFilesRepository by inject()
+    private val audioFilesRepo: FilesRepository by inject()
     private val appState: AppStateRepository by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
 
     private lateinit var drawer: DrawerLayout
-    private lateinit var currentFragment: BaseFragment
+    var currentFragment: BaseFragment? = null
     private lateinit var container: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,15 +81,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-//    private fun initDataRepository() {
-//        DataRepository.init(
-//            getSharedPreferences(
-//                resources.getString(R.string.preference_file_key),
-//                Context.MODE_PRIVATE
-//            )
-//        )
-//    }
-
     private fun setupNavigation() {
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -124,14 +114,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Timber.d("onResume in activity")
-//        if (!::currentFragment.isInitialized) {
-//            currentFragment = StateHelper.currentFragment!! // TODO what is this for, do we need it?
-//        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -157,13 +139,15 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+        // stop player when navigating away saves a lot of headaches
+        if (currentFragment is PlayerFragment) (currentFragment as PlayerFragment).viewModel.onStopPlaybackClicked()
+
         when (item.itemId) {
             R.id.nav_browse_media -> {
-                clearBackStack()
                 if (isPermitted()) showMediaStoreBrowserFragment() else PermissionHelper(this).checkPermissions()
             }
             R.id.nav_browse_storage -> {
-                clearBackStack()
                 if (isPermitted()) showFileBrowserFragment() else PermissionHelper(this).checkPermissions()
             }
             R.id.nav_open_settings -> showSettings()
@@ -180,7 +164,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             } // do nothing
         }
         drawer.closeDrawers()
-        currentFragment = nav_host_fragment.childFragmentManager.fragments[0] as BaseFragment
 
         // returning false suppresses the visual checking of clicked items. We don't need it so we return false
         return false
@@ -231,23 +214,22 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     }
 
     private fun clearLoopsList() {
-        if (!::currentFragment.isInitialized) {
-            showSnackbar(container, R.string.snackbar_error_message)
-            return
-        }
-        if (currentFragment is PlayerFragment) {
-            Timber.d("We say it's initialized")
-            val dialogHelper = DialogHelper(this)
-            dialogHelper.requestConfirmation(
-                getString(R.string.dialog_clear_list_header),
-                getString(R.string.dialog_clear_list_content)
-            ) {
+        currentFragment?.let {
+            if (currentFragment is PlayerFragment) {
+                Timber.d("We say it's initialized")
+                val dialogHelper = DialogHelper(this)
+                dialogHelper.requestConfirmation(
+                    getString(R.string.dialog_clear_list_header),
+                    getString(R.string.dialog_clear_list_content)
+                ) {
 //                DataRepository.clearLoopsList()
-            }
-        } else {
+                }
+            } else {
 
-            showSnackbar(container, R.string.snackbar_cant_clear_loops)
-        }
+                showSnackbar(container, R.string.snackbar_cant_clear_loops)
+            }
+            return
+        } ?: showSnackbar(container, R.string.snackbar_error_message)
     }
 
     private fun clearBackStack() {

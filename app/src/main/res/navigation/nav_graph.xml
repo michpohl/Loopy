@@ -33,7 +33,11 @@
     <fragment
         android:id="@+id/markupViewerFragment"
         android:name="de.michaelpohl.loopy.ui.main.help.MarkupViewerFragment"
-        android:label="MarkupViewerFragment" />
+        android:label="MarkupViewerFragment" >
+        <action
+            android:id="@+id/action_markupViewerFragment_to_licensesFragment"
+            app:destination="@id/licensesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mediaStoreBrowserFragment"
         android:name="de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserFragment"
@@ -46,4 +50,8 @@
         android:id="@+id/settingsFragment"
         android:name="de.michaelpohl.loopy.ui.main.settings.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/licensesFragment"
+        android:name="de.michaelpohl.loopy.ui.main.licenses.LicensesFragment"
+        android:label="LicensesFragment" />
 </navigation>

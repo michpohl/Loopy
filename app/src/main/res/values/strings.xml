@@ -12,9 +12,9 @@
     <string name="snackbar_text_no_new_files_selected">You have no audio files selected or your selected files are already in the player!</string>
     <string name="btn_clear_list">Clear list</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
-    <string name="appbar_title_browse_music_library">Browse Music Library</string>
-    <string name="appbar_title_file_browser">Browse Storage</string>
-    <string name="appbar_title_help">How to use Loopy</string>
+    <string name="title_mediastore_browser">Browse Music Library</string>
+    <string name="title_file_browser">Browse Storage</string>
+    <string name="title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
     <string name="btn_browse_mediastore">Browse media files</string>
     <string name="drawer_header">Loopy Audio Looper</string>
@@ -51,7 +51,7 @@
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Clear List</string>
     <string name="dialog_clear_list_content">Do you really want to clear the player\'s loops list?</string>
-    <string name="dialog_licenses_title">Libraries used in this app</string>
+    <string name="title_licenses">Libraries used in this app</string>
     <string name="dialog_loopy_license_title">App Information</string>
     <string name="btn_show_app_info">Show App Info</string>
     <string name="snackbar_cant_clear_loops">Can\'t clear loops while not in the player!</string>
@@ -62,5 +62,11 @@
     <string name="processing">Processing…%1$d</string>
     <string name="settings_item_sample_rate">Sample rate</string>
     <string name="player_sample_rate">Sample rate: %s</string>
+    <string name="library_id">Artifact ID: %s</string>
+    <string name="library_copyright_holder">Copyright: %s</string>
+    <string name="library_License">License: %s</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_about">About Loopy</string>
+
 
 </resources>

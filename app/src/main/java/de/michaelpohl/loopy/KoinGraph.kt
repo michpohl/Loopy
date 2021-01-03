@@ -3,11 +3,12 @@ package de.michaelpohl.loopy
 import de.michaelpohl.loopy.common.MediaStoreRepository
 import de.michaelpohl.loopy.common.StorageRepository
 import de.michaelpohl.loopy.model.AppStateRepository
-import de.michaelpohl.loopy.model.AudioFilesRepository
+import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.model.ExternalStorageManager
 import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.main.filebrowser.FileBrowserViewModel
 import de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel
+import de.michaelpohl.loopy.ui.main.licenses.LicensesViewModel
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserViewModel
 import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
 import de.michaelpohl.loopy.ui.main.settings.SettingsViewModel
@@ -29,7 +30,7 @@ object KoinGraph {
         single { androidApplication().resources }
         single { androidApplication().assets }
         single { SharedPreferencesManager(get()) }
-        single { AudioFilesRepository(get(), get()) }
+        single { FilesRepository(get(), get()) }
         single { ExternalStorageManager(get()) }
         single { AppStateRepository(get()) }
         single { StorageRepository(get()) }
@@ -42,5 +43,6 @@ object KoinGraph {
         viewModel { PlayerViewModel(get(), get()) }
         viewModel { MarkupViewerViewModel() }
         viewModel { SettingsViewModel(get()) }
+        viewModel { LicensesViewModel(get()) }
     }
 }

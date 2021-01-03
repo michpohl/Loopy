@@ -10,7 +10,7 @@ import de.michaelpohl.loopy.common.util.coroutines.ioJob
 import de.michaelpohl.loopy.common.util.coroutines.uiJob
 import de.michaelpohl.loopy.common.util.coroutines.withUI
 import de.michaelpohl.loopy.model.AppStateRepository
-import de.michaelpohl.loopy.model.AudioFilesRepository
+import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
@@ -20,7 +20,7 @@ import timber.log.Timber
 import kotlin.system.measureTimeMillis
 
 class PlayerViewModel(
-    private val audioFilesRepository: AudioFilesRepository,
+    private val audioFilesRepository: FilesRepository,
     private val appStateRepo: AppStateRepository
 ) :
     BaseViewModel<PlayerViewModel.UIState>() {
