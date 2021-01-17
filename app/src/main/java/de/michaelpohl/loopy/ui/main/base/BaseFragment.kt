@@ -23,7 +23,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     open val showOptionsMenu = false
-    open val screenTitle: String? = null
+    open val titleResource: Int? = null
 
     abstract val viewModel: BaseViewModel<*>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ abstract class BaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setupActionBar(
             !showOptionsMenu,
-            screenTitle ?: getString(R.string.appbar_title_player)
+             getString(titleResource ?: R.string.appbar_title_player)
         )
     }
 
@@ -46,12 +46,15 @@ abstract class BaseFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        activity?.title = getTitle()
+        activity?.let {
+            it.title = getTitle()
+            (it as MainActivity).currentFragment = this
+        }
         viewModel.onFragmentResumed()
     }
 
     open fun getTitle(): String {
-        return getString(R.string.appbar_title_player)
+        return getString(titleResource ?: R.string.appbar_title_player)
     }
 
     /**

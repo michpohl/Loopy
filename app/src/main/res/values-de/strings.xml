@@ -37,9 +37,9 @@
     <string name="cancel">Abbrechen</string>
     <string name="btn_clear_list">Liste leeren</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
-    <string name="appbar_title_browse_music_library">Musikbibliothek durchsuchen</string>
-    <string name="appbar_title_file_browser">Gerätespeicher durchsuchen</string>
-    <string name="appbar_title_help">Loopy verwenden</string>
+    <string name="title_mediastore_browser">Musikbibliothek durchsuchen</string>
+    <string name="title_file_browser">Gerätespeicher durchsuchen</string>
+    <string name="title_help">Loopy verwenden</string>
     <string name="btn_about_app">Über diese App</string>
     <string name="btn_browse_mediastore">Musikbibliothek durchsuchen</string>
     <string name="btn_select_all">Alles auswählen</string>
@@ -49,7 +49,7 @@
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Liste leeren</string>
     <string name="dialog_clear_list_content">Möchtest du wirklich die Liste der Loops im Player leeren?</string>
-    <string name="dialog_licenses_title">Verwendete Bibliotheken</string>
+    <string name="title_licenses">Verwendete Bibliotheken</string>
     <string name="dialog_loopy_license_title">App-Informationen</string>
     <string name="btn_show_app_info">App-Infos anzeigen</string>
     <string name="save">Speichern</string>
@@ -60,4 +60,9 @@
     <string name="processing">Verarbeite… %1$d</string>
     <string name="settings_item_sample_rate">Sample rate</string>
     <string name="player_sample_rate">Sample rate: %s</string>
+    <string name="library_id">Artefakt ID: %s</string>
+    <string name="library_copyright_holder">Copyright: %s</string>
+    <string name="library_License">Lizenz: %s</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="title_about">Über Loopy</string>
 </resources>

@@ -65,8 +65,9 @@ inline fun <reified T : RecyclerView.ViewHolder> RecyclerView.getViewHoldersOfTy
  * Convenience method for getting Strings easily inside a ViewHolder class
  * @param resourceId id of the desired string
  */
-fun RecyclerView.ViewHolder.getString(resourceId: Int): String {
-    return this.itemView.resources.getString(resourceId)
+@Suppress("SpreadOperator")
+fun RecyclerView.ViewHolder.getString(resourceId: Int, vararg formatArgs: Any): String {
+    return this.itemView.context.resources.getString(resourceId, *formatArgs)
 }
 
 fun <T : View> View.find(id: Int): T {

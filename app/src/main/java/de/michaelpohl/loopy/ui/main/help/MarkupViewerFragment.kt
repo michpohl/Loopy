@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import com.franmontiel.attributionpresenter.AttributionPresenter.Builder
+import com.franmontiel.attributionpresenter.AttributionPresenter
 import com.franmontiel.attributionpresenter.entities.Attribution
 import com.franmontiel.attributionpresenter.entities.License
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.common.Library
 import de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_markup_viewer.*
@@ -61,19 +60,22 @@ class MarkupViewerFragment : BaseFragment() {
     }
 
     override fun getTitle(): String {
-        return getString(R.string.appbar_title_player)
+        return if (showButtons) {
+            getString(R.string.title_about)
+        } else {
+            getString(R.string.title_help)
+        }
     }
 
     private fun setContentText(textContent: String) {
         Markwon.setMarkdown(textView, textContent)
     }
 
-    fun onShowAppInfoClicked() {
-        val attributionPresenter = Builder(context)
-
+    private fun onShowAppInfoClicked() {
+        val attributionPresenter = AttributionPresenter.Builder(context)
             .addAttributions(
                 Attribution.Builder("Loopy Audio Looper")
-                    .addCopyrightNotice("Copyright 2019 Michael Pohl")
+                    .addCopyrightNotice("Copyright 2017 Michael Pohl")
                     .addLicense(License.APACHE)
                     .setWebsite("https://github.com/michpohl/loopy")
                     .build()
@@ -82,21 +84,7 @@ class MarkupViewerFragment : BaseFragment() {
         attributionPresenter.showDialog(getString(R.string.dialog_loopy_license_title))
     }
 
-    fun onShowDependencyLicensesClicked() {
-        val attributionPresenter = Builder(context)
-            .addAttributions(
-                Library.AUDIOGRAM.attribution,
-                Library.GSON.attribution,
-                Library.MARKWON.attribution
-            )
-            .addAttributions(
-                Attribution.Builder("AttributionPresenter")
-                    .addCopyrightNotice("Copyright 2017 Francisco José Montiel Navarro")
-                    .addLicense(License.APACHE)
-                    .setWebsite("https://github.com/franmontiel/AttributionPresenter")
-                    .build()
-            )
-            .build()
-        attributionPresenter.showDialog(getString(R.string.dialog_licenses_title))
+    private fun onShowDependencyLicensesClicked() {
+        navigateTo(R.id.action_markupViewerFragment_to_licensesFragment)
     }
 }

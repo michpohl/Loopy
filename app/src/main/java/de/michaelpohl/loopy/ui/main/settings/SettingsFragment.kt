@@ -21,6 +21,7 @@ import timber.log.Timber
 
 class SettingsFragment : BaseFragment() {
 
+    override val titleResource = R.string.title_settings
     override val viewModel: SettingsViewModel by inject()
     private lateinit var binding: FragmentSettingsBinding
 

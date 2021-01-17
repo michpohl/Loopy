@@ -23,11 +23,12 @@ import timber.log.Timber
 
 open class FileBrowserFragment : BaseFragment() {
 
+    override val titleResource = R.string.title_file_browser
     override val viewModel: FileBrowserViewModel by inject()
     private lateinit var binding: FragmentFilesListBinding
     private lateinit var recycler: RecyclerView
 
-    private var browserAdapter = customAdapter<FileModel, FileBrowserViewModel.UIState> {
+    private val browserAdapter = customAdapter<FileModel, FileBrowserViewModel.UIState> {
         delegates = listOf(
             FileItemDelegate(),
             FolderItemDelegate { viewModel.onFolderClicked(it) },
@@ -65,7 +66,7 @@ open class FileBrowserFragment : BaseFragment() {
     }
 
     override fun getTitle(): String {
-        return getString(R.string.appbar_title_file_browser)
+        return getString(R.string.title_file_browser)
     }
 
     override fun onBackPressed(): Boolean {

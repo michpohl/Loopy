@@ -129,7 +129,7 @@ class ExternalStorageManager(val context: Context) {
         }
     }
 
-    private fun copySingleFileFromAssetsToStandardSet(
+    private fun copySingleFileFromAssetsTo(
         outputPath: String,
         input: InputStream,
         fileName: String
@@ -142,13 +142,12 @@ class ExternalStorageManager(val context: Context) {
         }
     }
 
-    private fun listAssetFiles(): Set<String> {
+    private fun listAssetFiles(extension: String): Set<String> {
         val list = mutableSetOf<String>()
         try {
             context.assets.list("")?.let { filesList ->
                 filesList.filter {
-                    it.hasAcceptedAudioFileExtension(
-                        AppStateRepository.Companion.AudioFileType.values().toSet())
+                    it.endsWith( extension)
                 }.forEach { fileName ->
                     Timber.d("Found this file: $fileName")
                     list.add(fileName)
@@ -170,6 +169,21 @@ class ExternalStorageManager(val context: Context) {
         val found = content.find { it.path == model.name }
         found?.let {
             it.delete()
+        }
+    }
+
+    fun copyMiscFiles(): Boolean {
+        val outputPath = "${appStorageFolder?.path}"
+        return try {
+
+            listAssetFiles("html").forEach {
+                copySingleFileFromAssetsTo(outputPath, context.assets.open(it), it)
+            }
+            true
+        } catch (e: IOException) {
+            Timber.e("Copying of files to SD card (Location: ${appStorageFolder?.path}) failed")
+            e.printStackTrace()
+            false
         }
     }
 }

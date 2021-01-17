@@ -1,14 +1,14 @@
-package de.michaelpohl.loopy.ui.main.help
+package de.michaelpohl.loopy.ui.main.licenses
 
 import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.ui.main.base.BaseUIState
 import de.michaelpohl.loopy.ui.main.base.BaseViewModel
-import timber.log.Timber
 
-class MarkupViewerViewModel() : BaseViewModel<BaseUIState>() {
+class LicensesViewModel(private val repo: FilesRepository) : BaseViewModel<BaseUIState>() {
+
+    val licenses = repo.getLicenses()
 
     override fun initUIState(): BaseUIState {
-        // TODO refactor
         return object : BaseUIState() {}
     }
 

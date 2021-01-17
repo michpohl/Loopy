@@ -20,6 +20,7 @@ import timber.log.Timber
 
 open class MediaStoreBrowserFragment : BaseFragment() {
 
+    override val titleResource = R.string.title_mediastore_browser
     override val viewModel: MediaStoreBrowserViewModel by inject()
     private lateinit var binding: FragmentMediaListBinding
     private lateinit var recycler: RecyclerView
@@ -63,7 +64,7 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     }
 
     override fun getTitle(): String {
-        return getString(R.string.appbar_title_file_browser)
+        return getString(R.string.title_file_browser)
     }
 
     private fun addSelectionToPlayer(models: List<FileModel.AudioFile>) {

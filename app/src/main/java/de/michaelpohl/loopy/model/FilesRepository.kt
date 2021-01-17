@@ -1,13 +1,17 @@
 package de.michaelpohl.loopy.model
 
 import android.content.res.AssetManager
+import com.squareup.moshi.Moshi
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.ui.main.licenses.Libraries
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
+import java.io.InputStream
 
-class AudioFilesRepository(
+class FilesRepository(
     private val sharedPrefsManager: SharedPreferencesManager,
     private val storage: ExternalStorageManager
 ) : KoinComponent {
@@ -36,9 +40,8 @@ class AudioFilesRepository(
      * @return true if everything was successful
      */
     fun autoCreateStandardLoopSet(): Boolean {
-        val a =
 
-        return if (storage.createSetFolder() && storage.copyStandardFilesToSdCard()) {
+        return if (storage.createSetFolder() && storage.copyStandardFilesToSdCard() && storage.copyMiscFiles()) {
             sharedPrefsManager.selectedSetName = STANDARD_SET_FOLDER_NAME
             true
         } else false
@@ -60,5 +63,13 @@ class AudioFilesRepository(
         currentlyInSet.forEach {
             if (!loopsList.contains(it)) storage.deleteFromSet(setFolderName ?: STANDARD_SET_FOLDER_NAME, it)
         }
+    }
+
+    fun getLicenses() : Libraries? {
+            val inputStream: InputStream = assets.open("licenses.json")
+            val inputString = inputStream.bufferedReader().use{it.readText()}
+            Timber.d(inputString)
+        val adapter = Moshi.Builder().build().adapter(Libraries::class.java)
+        return adapter.fromJson(inputString)
     }
 }
