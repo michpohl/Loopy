@@ -21,7 +21,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.common.AssetManager
+import de.michaelpohl.loopy.common.PermissionHelper
+import de.michaelpohl.loopy.common.Settings
+import de.michaelpohl.loopy.common.getDrawable
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.ui.main.base.BaseFragment
@@ -53,7 +56,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         }
         setupAppData()
         setupNavigation()
-//        initDataRepository()
         handlePossibleIntents()
         setupDrawer()
         keepScreenOnIfDesired(appState.settings)
@@ -63,8 +65,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         Timber.d("is App set up? ${appState.isSetupComplete}")
         // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
         // on Failure, whatever the reason might be, it stays false and will run again next startup
-//        if (!appState.isSetupComplete) {
-        if (true) {
+        if (!appState.isSetupComplete) {
             val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
             Timber.d("Setup complete? $setupComplete")
             appState.isSetupComplete = setupComplete
@@ -216,16 +217,8 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
     private fun clearLoopsList() {
         currentFragment?.let {
             if (currentFragment is PlayerFragment) {
-                Timber.d("We say it's initialized")
-                val dialogHelper = DialogHelper(this)
-                dialogHelper.requestConfirmation(
-                    getString(R.string.dialog_clear_list_header),
-                    getString(R.string.dialog_clear_list_content)
-                ) {
-//                DataRepository.clearLoopsList()
-                }
+                (currentFragment as PlayerFragment).clearLoops()
             } else {
-
                 showSnackbar(container, R.string.snackbar_cant_clear_loops)
             }
             return

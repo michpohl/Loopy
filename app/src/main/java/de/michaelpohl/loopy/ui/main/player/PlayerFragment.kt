@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
+import de.michaelpohl.loopy.common.DialogHelper
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
 import de.michaelpohl.loopy.databinding.FragmentPlayerBinding
@@ -171,6 +172,15 @@ class PlayerFragment : BaseFragment() {
     private fun unBindAudioService() {
         if (playerServiceBinder != null) {
             activity?.unbindService(serviceConnection)
+        }
+    }
+    fun clearLoops() {
+        val dialogHelper = DialogHelper(requireActivity())
+        dialogHelper.requestConfirmation(
+            getString(R.string.dialog_clear_list_header),
+            getString(R.string.dialog_clear_list_content)
+        ) {
+            viewModel.clearLoops()
         }
     }
 }

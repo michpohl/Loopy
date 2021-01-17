@@ -270,6 +270,16 @@ class PlayerViewModel(
     private fun onPlaybackStopped() {
         _state.value = currentState.copy(isPlaying = false)
     }
+    fun clearLoops() {
+
+        audioFilesRepository.saveLoopSelectionToSet(
+            null,
+            mutableListOf() // TODO why is this mutable
+        )
+        _state.value = currentState.copy(
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet().toMutableList()
+        )
+    }
 
     data class UIState(
         val loopsList: MutableList<AudioModel>,

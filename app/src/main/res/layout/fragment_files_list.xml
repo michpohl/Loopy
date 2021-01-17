@@ -46,7 +46,7 @@
             android:id="@+id/bottom_container"
             style="@style/MatchConstraints"
             android:layout_height="wrap_content"
-            android:background="@color/darkest_green"
+            android:background="@color/window_background"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
