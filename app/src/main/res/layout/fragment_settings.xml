@@ -14,7 +14,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/darkest_green">
+        android:background="@color/window_background">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_settings_recycler"

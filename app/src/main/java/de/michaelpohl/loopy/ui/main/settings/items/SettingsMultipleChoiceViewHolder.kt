@@ -35,6 +35,7 @@ class SettingsMultipleChoiceViewHolder(itemView: View) :
                 id = pair.index
                 layoutParams = buttonParams
                 setTextColor(getColor(R.color.action))
+                setBackgroundColor(getColor(R.color.window_background))
 
                 layoutDirection = View.LAYOUT_DIRECTION_RTL
                 setButtonDrawable(0) // for removing default drawable

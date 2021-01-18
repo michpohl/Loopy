@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
+import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
 
@@ -96,11 +97,11 @@ class MediaStoreRepository(val context: Context) {
                     var trackNo = cursor.getString(track)
 
                     if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
-                        "UNKNOWN" //TODO change to resource
+                        context.getString(R.string.unknown)
                     if (albumName == "0" || albumName.contains("unknown")) albumName =
-                        "UNKNOWN" //TODO change to resource
+                        context.getString(R.string.unknown)
                     if (artistName == "0" || artistName.contains("unknown")) artistName =
-                        "UNKNOWN" //TODO change to resource
+                        context.getString(R.string.unknown)
 
                     Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
                     val c = context.contentResolver

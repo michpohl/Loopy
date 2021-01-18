@@ -35,7 +35,7 @@ class SettingsItemSorting : Sorting.Custom<SettingsItemModel, SettingsViewModel.
     private fun MutableList<SettingsItemModel>.addHeaderFor(setting: AppSetting, index: Int) {
 
         val string = when (setting.group) {
-            0 -> resources.getString(R.string.settings_item_wait_until_finished)
+            0 -> resources.getString(R.string.settings_label_loop_switching_behaviour)
             1 -> resources.getString(R.string.settings_label_accepted_file_types)
             2 -> resources.getString(R.string.settings_item_sample_rate)
             3 -> resources.getString(R.string.settings_label_other_settings)
