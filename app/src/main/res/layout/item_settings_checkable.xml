@@ -20,8 +20,8 @@
     <CheckBox
         android:id="@+id/cb_checkbox"
         style="@style/WrapContent"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:clickable="false"
         android:focusable="false"
         app:layout_constraintBottom_toBottomOf="parent"

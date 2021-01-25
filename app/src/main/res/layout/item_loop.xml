@@ -58,6 +58,7 @@
             android:id="@+id/wave_blocker"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:elevation="1dp"
             app:layout_constraintStart_toStartOf="@id/wave"
             app:layout_constraintTop_toTopOf="@id/wave"
             app:layout_constraintBottom_toBottomOf="@id/wave"

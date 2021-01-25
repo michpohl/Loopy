@@ -47,7 +47,12 @@ class PlayerItemHolder(
         model = item
         label.text = model.displayName
         itemView.setOnClickListener { clickListener(model) }
-        waveBlocker.setOnClickListener { clickListener(model) }
+
+        /* TODO
+        Currently the wave blocker blocks clicking the wave, so users cannot skip to a certain
+        position in the audio. In the future, this should be possible.
+         */
+        waveBlocker.setOnClickListener { itemView.performClick() }
         deleteIcon.setOnClickListener { deleteListener(model) }
         inflateWave()
     }
@@ -90,7 +95,7 @@ class PlayerItemHolder(
                 SelectionState.PLAYING -> {
                     deleteIcon.gone()
                     backgroundDrawable = R.drawable.background_item_rounded_filled
-                    waveBlocker.gone()
+                    waveBlocker.show()
                 }
             }
             field = value
@@ -100,16 +105,5 @@ class PlayerItemHolder(
         val file = File(model.path)
         val bytes = file.readBytes()
         wave.setRawData(bytes)
-//        view.onStopTracking = {
-////                    viewModel.onProgressChangedByUserTouch(it)
-////                    viewModel.blockUpdatesFromPlayer.set(false)
-//        }
-//
-//        view.onStartTracking = {
-////                    viewModel.blockUpdatesFromPlayer.set(true)
-//        }
-//
-//        view.onProgressChanged = { progress, byUser ->
-//        }
     }
 }
