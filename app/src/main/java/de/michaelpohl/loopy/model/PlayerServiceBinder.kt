@@ -72,13 +72,4 @@ class PlayerServiceBinder : Binder(),
     override suspend fun play(): JniResult<String> {
         return looper.start()
     }
-
-    //    // Destroy audio player.
-    //    private fun destroyAudioPlayer() {
-    //        if (looper.state == PlayerState.PLAYING) {
-    //            looper.stop()
-    //        }
-    //        //TODO properly release looper
-    //        //        looper.release()
-    //    }
 }

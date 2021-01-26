@@ -74,7 +74,6 @@ bool Converter::convertFolder() {
 
         for (const auto &name : allFileNames) {
             LOGD("Name: %s", name.c_str());
-            // TODO take back in
             if (excludedFileNames.find(name) == excludedFileNames.end()) {
                 LOGD("Not yet converted");
 

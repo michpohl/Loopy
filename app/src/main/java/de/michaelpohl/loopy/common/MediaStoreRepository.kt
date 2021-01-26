@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import de.michaelpohl.loopy.R
-import de.michaelpohl.loopy.ui.main.mediastorebrowser.adapter.MediaStoreItemModel
+import de.michaelpohl.loopy.ui.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
 
 class MediaStoreRepository(val context: Context) {

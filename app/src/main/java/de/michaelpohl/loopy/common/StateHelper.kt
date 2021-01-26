@@ -1,6 +1,6 @@
 package de.michaelpohl.loopy.common
 
-import de.michaelpohl.loopy.ui.main.base.BaseFragment
+import de.michaelpohl.loopy.ui.base.BaseFragment
 
 //TODO remove this class and the reason for its existence
 /**

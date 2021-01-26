@@ -15,7 +15,7 @@
         android:id="@+id/main"
         style="@style/MatchParent"
         android:background="@color/black"
-        tools:context=".ui.main.player.PlayerFragment">
+        tools:context=".ui.player.PlayerFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_loops"

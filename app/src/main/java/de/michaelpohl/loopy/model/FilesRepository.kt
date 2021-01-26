@@ -5,7 +5,7 @@ import com.squareup.moshi.Moshi
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.jni.JniBridge
-import de.michaelpohl.loopy.ui.main.licenses.Libraries
+import de.michaelpohl.loopy.ui.licenses.Libraries
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -57,7 +57,7 @@ class FilesRepository(
         )
     }
 
-    fun saveLoopSelectionToSet(setFolderName: String? = null, loopsList: MutableList<AudioModel>) {
+    fun saveLoopSelectionToSet(setFolderName: String? = null, loopsList: List<AudioModel>) {
         val currentlyInSet =
             storage.getAudioModelsInSet(setFolderName ?: STANDARD_SET_FOLDER_NAME).toMutableSet()
         currentlyInSet.forEach {

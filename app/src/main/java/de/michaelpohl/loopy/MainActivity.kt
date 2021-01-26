@@ -27,9 +27,9 @@ import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.getDrawable
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.FilesRepository
-import de.michaelpohl.loopy.ui.main.base.BaseFragment
-import de.michaelpohl.loopy.ui.main.player.PlayerFragment
-import de.michaelpohl.loopy.ui.main.player.PlayerViewModel
+import de.michaelpohl.loopy.ui.base.BaseFragment
+import de.michaelpohl.loopy.ui.player.PlayerFragment
+import de.michaelpohl.loopy.ui.player.PlayerViewModel
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject

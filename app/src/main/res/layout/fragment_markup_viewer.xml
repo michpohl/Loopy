@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.main.help.MarkupViewerViewModel"/>
+                type="de.michaelpohl.loopy.ui.help.MarkupViewerViewModel"/>
     </data>
 
     <ScrollView
