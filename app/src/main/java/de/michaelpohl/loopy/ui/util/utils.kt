@@ -1,6 +1,7 @@
 package de.michaelpohl.loopy.ui.util
 
 private var lastPercentage: Float = 0F
+
 fun calculateConversionProgress(
     totalFilesToConvert: Int,
     currentIndex: Int,
@@ -20,5 +21,6 @@ fun calculateConversionProgress(
 
     var range = percentage - lastPercentage
     val actualPercentage = lastPercentage + (range / 6 * currentStep)
+
     return actualPercentage.toInt()
 }

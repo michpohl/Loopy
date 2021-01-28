@@ -65,6 +65,12 @@ class FilesRepository(
         }
     }
 
+    fun getStringAsset(fileName: String) : String? {
+        return assets.open(fileName).bufferedReader().use {
+            it.readText()
+        }
+    }
+
     fun getLicenses() : Libraries? {
             val inputStream: InputStream = assets.open("licenses.json")
             val inputString = inputStream.bufferedReader().use{it.readText()}

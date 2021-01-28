@@ -4,30 +4,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.franmontiel.attributionpresenter.AttributionPresenter
 import com.franmontiel.attributionpresenter.entities.Attribution
 import com.franmontiel.attributionpresenter.entities.License
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.ui.base.BaseFragment
+import de.michaelpohl.loopy.ui.util.MarkDownTextView
 import kotlinx.android.synthetic.main.fragment_markup_viewer.*
 import org.koin.android.ext.android.inject
 import ru.noties.markwon.Markwon
 
-class MarkupViewerFragment : BaseFragment() {
+class MarkdownViewerFragment : BaseFragment() {
 
-    override val viewModel: MarkupViewerViewModel by inject()
+    override val viewModel: MarkdownViewerViewModel by inject()
+
     private var showButtons = false
+    private var markupString: String? = null
+
     private lateinit var binding: de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
-    private lateinit var markupString: String
-    private lateinit var textView: TextView
+    private lateinit var textView: MarkDownTextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             val markupFileName = requireArguments().getString("string")!!
             showButtons = markupFileName.contains("about")
-            markupString = getMarkup(markupFileName)
+            markupString = viewModel.getAssetString(markupFileName)
         }
     }
 
@@ -35,12 +38,6 @@ class MarkupViewerFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_markup_viewer, container, false)
         binding.lifecycleOwner = this
         return binding.root
-    }
-
-    fun getMarkup(sourceFileName: String): String {
-        return resources.assets.open(sourceFileName).bufferedReader().use {
-            it.readText()
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -66,8 +63,8 @@ class MarkupViewerFragment : BaseFragment() {
         }
     }
 
-    private fun setContentText(textContent: String) {
-        Markwon.setMarkdown(textView, textContent)
+    private fun setContentText(textContent: String?) {
+      textView.setMarkdownText(textContent)
     }
 
     private fun onShowAppInfoClicked() {

@@ -8,7 +8,7 @@
 
         <variable
             name="model"
-            type="de.michaelpohl.loopy.ui.main.settings.SettingsViewModel" />
+            type="de.michaelpohl.loopy.ui.settings.SettingsViewModel" />
     </data>
 
     <FrameLayout

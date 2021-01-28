@@ -6,7 +6,7 @@
 
         <variable
             name="model"
-            type="de.michaelpohl.loopy.ui.main.mediastorebrowser.MediaStoreBrowserViewModel" />
+            type="de.michaelpohl.loopy.ui.mediastorebrowser.MediaStoreBrowserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

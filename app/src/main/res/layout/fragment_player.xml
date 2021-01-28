@@ -8,7 +8,7 @@
 
         <variable
             name="model"
-            type="de.michaelpohl.loopy.ui.main.player.PlayerViewModel" />
+            type="de.michaelpohl.loopy.ui.player.PlayerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

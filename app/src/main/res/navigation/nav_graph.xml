@@ -32,7 +32,7 @@
         android:label="SettingsDialogFragment" />
     <fragment
         android:id="@+id/markupViewerFragment"
-        android:name="de.michaelpohl.loopy.ui.help.MarkupViewerFragment"
+        android:name="de.michaelpohl.loopy.ui.help.MarkdownViewerFragment"
         android:label="MarkupViewerFragment" >
         <action
             android:id="@+id/action_markupViewerFragment_to_licensesFragment"

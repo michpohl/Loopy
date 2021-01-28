@@ -7,7 +7,7 @@
 
         <variable
                 name="model"
-                type="de.michaelpohl.loopy.ui.help.MarkupViewerViewModel"/>
+                type="de.michaelpohl.loopy.ui.help.MarkdownViewerViewModel"/>
     </data>
 
     <ScrollView
@@ -23,14 +23,14 @@
                 style="@style/MatchParent"
                 >
 
-            <TextView
+            <de.michaelpohl.loopy.ui.util.MarkDownTextView
                     android:id="@+id/tv_content"
                     style="@style/MatchWidth"
                     android:textColor="@color/white"
                     android:textAppearance="@style/Text.Standard"
-                    android:text="test"
                     android:layout_margin="8dp"
-
+                    app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                     />
 
             <Button

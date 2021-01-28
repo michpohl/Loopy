@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.model.ExternalStorageManager
 import de.michaelpohl.loopy.model.SharedPreferencesManager
 import de.michaelpohl.loopy.ui.filebrowser.FileBrowserViewModel
-import de.michaelpohl.loopy.ui.help.MarkupViewerViewModel
+import de.michaelpohl.loopy.ui.help.MarkdownViewerViewModel
 import de.michaelpohl.loopy.ui.licenses.LicensesViewModel
 import de.michaelpohl.loopy.ui.mediastorebrowser.MediaStoreBrowserViewModel
 import de.michaelpohl.loopy.ui.player.PlayerViewModel
@@ -41,7 +41,7 @@ object KoinGraph {
         viewModel { FileBrowserViewModel(get(), get()) }
         viewModel { MediaStoreBrowserViewModel(get(), get()) }
         viewModel { PlayerViewModel(get(), get()) }
-        viewModel { MarkupViewerViewModel() }
+        viewModel { MarkdownViewerViewModel(get()) }
         viewModel { SettingsViewModel(get()) }
         viewModel { LicensesViewModel(get()) }
     }
