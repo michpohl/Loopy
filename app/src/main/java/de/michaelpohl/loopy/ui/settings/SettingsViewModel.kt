@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.common.SettingsBuilder
 import de.michaelpohl.loopy.common.toSampleRate
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.ui.base.BaseUIState
-import de.michaelpohl.loopy.ui.base.BaseViewModel
+import de.michaelpohl.loopy.ui.base.UIStateViewModel
 import de.michaelpohl.loopy.ui.settings.AppSetting.*
 import de.michaelpohl.loopy.ui.settings.items.SettingsChoice
 import de.michaelpohl.loopy.ui.settings.items.SettingsItemModel
@@ -15,7 +15,7 @@ import de.michaelpohl.loopy.ui.settings.items.isChecked
 import de.michaelpohl.loopy.ui.settings.items.name
 
 class SettingsViewModel(private val stateRepo: AppStateRepository) :
-    BaseViewModel<SettingsViewModel.UIState>() {
+    UIStateViewModel<SettingsViewModel.UIState>() {
 
     init {
         _state.postValue(initUIState())
