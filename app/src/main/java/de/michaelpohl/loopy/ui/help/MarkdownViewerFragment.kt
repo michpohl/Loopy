@@ -11,25 +11,27 @@ import com.franmontiel.attributionpresenter.entities.License
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.ui.base.BaseFragment
 import de.michaelpohl.loopy.ui.util.MarkDownTextView
-import kotlinx.android.synthetic.main.fragment_markup_viewer.*
 import org.koin.android.ext.android.inject
-import ru.noties.markwon.Markwon
 
 class MarkdownViewerFragment : BaseFragment() {
 
     override val viewModel: MarkdownViewerViewModel by inject()
 
-    private var showButtons = false
     private var markupString: String? = null
+    override var titleResource: Int? = null
 
     private lateinit var binding: de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
     private lateinit var textView: MarkDownTextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            val markupFileName = requireArguments().getString("string")!!
-            showButtons = markupFileName.contains("about")
+        handleArguments()
+    }
+
+    private fun handleArguments() {
+        with(requireArguments()) {
+            val markupFileName = this.getString(MARKDOWN_FILENAME_KEY)!!
+            titleResource = this.getInt(SCREN_TITILE_KEY, R.string.appbar_title_player)
+            viewModel.docType.value = markupFileName.toDocumentType()
             markupString = viewModel.getAssetString(markupFileName)
         }
     }
@@ -45,26 +47,10 @@ class MarkdownViewerFragment : BaseFragment() {
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel
-        if (showButtons) {
-
-            btn_show_app_license.setOnClickListener { onShowAppInfoClicked() }
-            btn_show_licenses.setOnClickListener { onShowDependencyLicensesClicked() }
-        } else {
-            btn_show_app_license.visibility = View.GONE
-            btn_show_licenses.visibility = View.GONE
-        }
-    }
-
-    override fun getTitle(): String {
-        return if (showButtons) {
-            getString(R.string.title_about)
-        } else {
-            getString(R.string.title_help)
-        }
     }
 
     private fun setContentText(textContent: String?) {
-      textView.setMarkdownText(textContent)
+        textView.setMarkdownText(textContent)
     }
 
     private fun onShowAppInfoClicked() {
@@ -82,5 +68,23 @@ class MarkdownViewerFragment : BaseFragment() {
 
     private fun onShowDependencyLicensesClicked() {
         navigateTo(R.id.action_markupViewerFragment_to_licensesFragment)
+    }
+
+    fun String.toDocumentType(): DocumentType {
+        return when {
+            this.contains("about") -> DocumentType.ABOUT
+            this.contains("whatsnew") -> DocumentType.WHATSNEW
+            else -> DocumentType.HELP
+        }
+    }
+
+    enum class DocumentType {
+        ABOUT, HELP, WHATSNEW
+    }
+
+    companion object {
+
+        const val MARKDOWN_FILENAME_KEY = "string"
+        const val SCREN_TITILE_KEY = "title"
     }
 }

@@ -24,7 +24,25 @@ sealed class FileModel : Parcelable {
         val sizeInMB: Double,
         val extension: String = "",
         val isSelected: Boolean? = null
-    ) : FileModel()
+    ) : FileModel() {
+        fun toAudioModel(): AudioModel {
+
+            // this just takes the last containing folder and assumes it is the album name
+            // this might be wrong if there is metainformation stored in the file. We'll see
+            val albumNameFromFolder: () -> String = {
+                val pathPieces = this.path.split("/")
+                val length = pathPieces.size
+                pathPieces[length - 2]
+            }
+            return AudioModel(
+                name = this.path, //throw away file extension from name
+                album = albumNameFromFolder(),
+                path = this.path,
+                fileExtension = this.extension,
+                isMediaStoreItem = false
+            )
+        }
+    }
 
     @Parcelize
     data class Folder(

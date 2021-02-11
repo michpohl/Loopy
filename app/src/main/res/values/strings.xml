@@ -68,6 +68,9 @@
     <string name="title_settings">Settings</string>
     <string name="title_about">About Loopy</string>
     <string name="unknown">unknown</string>
+    <string name="title_whatsnew">Changelog</string>
+    <string name="nav_btn_whatsnew">Changelog</string>
+    <string name="settings_item_show_suffix">Display File Extension</string>
 
 
 </resources>

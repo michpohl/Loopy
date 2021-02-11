@@ -3,7 +3,6 @@ package de.michaelpohl.loopy.model
 import com.squareup.moshi.JsonClass
 import de.michaelpohl.loopy.common.AudioModel
 import de.michaelpohl.loopy.common.FileModel
-import de.michaelpohl.loopy.common.toAudioModel
 import de.michaelpohl.loopy.common.toFileModel
 import java.io.File
 

@@ -2,9 +2,9 @@ package de.michaelpohl.loopy.ui.filebrowser
 
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.ui.base.BaseUIState
-import de.michaelpohl.loopy.ui.base.BaseViewModel
+import de.michaelpohl.loopy.ui.base.UIStateViewModel
 
-abstract class BrowserViewModel<T : BrowserViewModel.BrowserUIState> : BaseViewModel<T>() {
+abstract class BrowserViewModel<T : BrowserViewModel.BrowserUIState> : UIStateViewModel<T>() {
 
     lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
 

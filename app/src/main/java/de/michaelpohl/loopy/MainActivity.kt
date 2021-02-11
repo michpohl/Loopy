@@ -3,6 +3,7 @@ package de.michaelpohl.loopy
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -21,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import de.michaelpohl.loopy.common.AssetManager
+import de.michaelpohl.loopy.common.MarkDownFiles
 import de.michaelpohl.loopy.common.PermissionHelper
 import de.michaelpohl.loopy.common.Settings
 import de.michaelpohl.loopy.common.getDrawable
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
             Timber.d("Setup complete? $setupComplete")
             appState.isSetupComplete = setupComplete
+            showMarkupViewerFragment(MarkDownFiles.getWhatsNewFileName(), R.string.title_whatsnew)
             Handler().postDelayed({
                 Timber.d("is App setup now? ${appState.isSetupComplete}")
             }, 500)
@@ -154,12 +156,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             R.id.nav_open_settings -> showSettings()
             R.id.nav_clear_player -> clearLoopsList()
             R.id.nav_help -> {
-                val am = AssetManager()
-                showMarkupViewerFragment(am.getHelpTextResource())
+                showMarkupViewerFragment(MarkDownFiles.getHelpTextFileName(), R.string.title_help)
             }
             R.id.nav_about -> {
-                val am = AssetManager()
-                showMarkupViewerFragment(am.getAboutTextResource())
+                showMarkupViewerFragment(MarkDownFiles.getAboutFileName(), R.string.title_about)
+            }
+            R.id.nav_whatsnew -> {
+                showMarkupViewerFragment(MarkDownFiles.getWhatsNewFileName(), R.string.title_whatsnew)
             }
             else -> {
             } // do nothing
@@ -202,9 +205,13 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         )
     }
 
-    private fun showMarkupViewerFragment(markupFileName: String) {
+    private fun showMarkupViewerFragment(markupFileName: String, titleResource: Int) {
+        val bundle = buildStringArgs(markupFileName).apply {
+            putInt("title", titleResource)
+        }
+
         nav_host_fragment.findNavController().navigate(
-            R.id.markupViewerFragment, buildStringArgs(markupFileName)
+            R.id.markupViewerFragment, bundle
         )
     }
 

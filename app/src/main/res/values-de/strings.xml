@@ -66,4 +66,7 @@
     <string name="title_settings">Einstellungen</string>
     <string name="title_about">Über Loopy</string>
     <string name="unknown">unbekannt</string>
+    <string name="title_whatsnew">Changelog</string>
+    <string name="nav_btn_whatsnew">Changelog</string>
+    <string name="settings_item_show_suffix">Dateiendungen anzeigen</string>
 </resources>

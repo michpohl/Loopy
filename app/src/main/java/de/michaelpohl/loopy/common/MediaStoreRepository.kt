@@ -48,7 +48,7 @@ class MediaStoreRepository(val context: Context) {
         return list
     }
 
-    // if we've already done that, we'll just return the field. TODO check if that's sufficient!
+    // if we've already done that, we'll just return the field.
     fun getMediaStoreEntries(): List<MediaStoreItemModel> {
         if (mediaStoreEntries.isEmpty()) {
             mediaStoreEntries = readMediaStore(context)
@@ -106,7 +106,6 @@ class MediaStoreRepository(val context: Context) {
                     Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
                     val c = context.contentResolver
 
-                    // TODO check if this is correct enough to keep
                     val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
                         ?: albumPath.substringAfterLast(".")
                     Timber.d("My file extension is: %s", extension)

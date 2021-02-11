@@ -1,20 +1,29 @@
 package de.michaelpohl.loopy.ui.help
 
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import de.michaelpohl.loopy.common.toVisibility
 import de.michaelpohl.loopy.model.FilesRepository
-import de.michaelpohl.loopy.ui.base.BaseUIState
 import de.michaelpohl.loopy.ui.base.BaseViewModel
 
-class MarkdownViewerViewModel(val repo: FilesRepository) : BaseViewModel<BaseUIState>() {
+class MarkdownViewerViewModel(val repo: FilesRepository) : BaseViewModel() {
 
-    override fun initUIState(): BaseUIState {
-        // TODO refactor
-        return object : BaseUIState() {}
+    val docType = MutableLiveData<MarkdownViewerFragment.DocumentType>()
+
+    val showInfoButtons = MediatorLiveData<Int>().apply {
+        addSource(docType) {
+            this.value = (it == MarkdownViewerFragment.DocumentType.ABOUT).toVisibility()
+        }
     }
 
-    fun getAssetString(fileName: String) : String? {
-        return resources.assets.open(fileName).bufferedReader().use {
-            it.readText()
+    val showCloseButton = MediatorLiveData<Int>().apply {
+        addSource(docType) {
+            this.value = (it == MarkdownViewerFragment.DocumentType.WHATSNEW).toVisibility()
         }
+    }
+
+    fun getAssetString(fileName: String): String? {
+        return repo.getStringAsset(fileName)
     }
 
 }

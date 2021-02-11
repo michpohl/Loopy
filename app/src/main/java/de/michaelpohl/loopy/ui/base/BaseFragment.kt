@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
+import timber.log.Timber
 
 abstract class BaseFragment : Fragment() {
 
@@ -25,7 +26,7 @@ abstract class BaseFragment : Fragment() {
     open val showOptionsMenu = false
     open val titleResource: Int? = null
 
-    abstract val viewModel: BaseViewModel<*>
+    abstract val viewModel: BaseViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addOnBackPressedCallback()
@@ -47,7 +48,8 @@ abstract class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.let {
-            it.title = getTitle()
+//            it.title = getTitle()
+//            Timber.d("Setting title: ${it.title}")
             (it as MainActivity).currentFragment = this
         }
         viewModel.onFragmentResumed()
@@ -100,9 +102,6 @@ abstract class BaseFragment : Fragment() {
         })
     }
 
-    /* https://stackoverflow.com/questions/51060762/
- * Added the if check to prevent crashes, especially while testing (e.g. monkey)
- */
     private fun isDestinationSameAsCurrentDestination(destination: Int): Boolean {
         return findNavController().currentDestination?.id == destination
     }

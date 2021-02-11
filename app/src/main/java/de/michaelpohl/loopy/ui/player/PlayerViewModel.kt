@@ -13,7 +13,7 @@ import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.model.PlayerServiceInterface
 import de.michaelpohl.loopy.ui.base.BaseUIState
-import de.michaelpohl.loopy.ui.base.BaseViewModel
+import de.michaelpohl.loopy.ui.base.UIStateViewModel
 import de.michaelpohl.loopy.ui.util.calculateConversionProgress
 import kotlinx.coroutines.delay
 import timber.log.Timber
@@ -23,7 +23,7 @@ class PlayerViewModel(
     private val audioFilesRepository: FilesRepository,
     private val appStateRepo: AppStateRepository
 ) :
-    BaseViewModel<PlayerViewModel.UIState>() {
+    UIStateViewModel<PlayerViewModel.UIState>() {
 
     val isPlaying = MediatorLiveData<Boolean>().apply {
         addSource(_state) {
@@ -54,8 +54,7 @@ class PlayerViewModel(
     lateinit var playerActionsListener: PlayerActionsListener
     override fun initUIState(): UIState {
         return UIState(
-            loopsList = audioFilesRepository.getSingleSetOrStandardSet()
-                .toMutableList(), // TODO should not be mutable
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet(),
             isPlaying = false,
             clearButtonVisibility = 0,
             settings = settings,
@@ -189,7 +188,7 @@ class PlayerViewModel(
 
                     withUI {
                         _state.postValue(
-                            currentState.copy(loopsList = loops.toMutableList())
+                            currentState.copy(loopsList = loops)
                         )
                     }
                 }
@@ -225,7 +224,7 @@ class PlayerViewModel(
             currentLoops
         ) // TODO set name needs to be properly connected
         _state.value = currentState.copy(
-            loopsList = audioFilesRepository.getSingleSetOrStandardSet().toMutableList()
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet()
         )
     }
 
@@ -272,12 +271,12 @@ class PlayerViewModel(
            listOf()
         )
         _state.value = currentState.copy(
-            loopsList = audioFilesRepository.getSingleSetOrStandardSet().toMutableList()
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet()
         )
     }
 
     data class UIState(
-        val loopsList: MutableList<AudioModel>,
+        val loopsList: List<AudioModel>,
         val isPlaying: Boolean,
         val isWaitMode: Boolean = false,
         val fileInFocus: String? = null,
