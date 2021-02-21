@@ -20,7 +20,7 @@ class MarkdownViewerFragment : BaseFragment() {
     private var markupString: String? = null
     override var titleResource: Int? = null
 
-    private lateinit var binding: de.michaelpohl.loopy.databinding.FragmentMarkupViewerBinding
+    private lateinit var binding: de.michaelpohl.loopy.databinding.FragmentMarkdownViewerBinding
     private lateinit var textView: MarkDownTextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class MarkdownViewerFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_markup_viewer, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_markdown_viewer, container, false)
         binding.lifecycleOwner = this
         return binding.root
     }
@@ -47,6 +47,16 @@ class MarkdownViewerFragment : BaseFragment() {
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel
+        with (viewModel) {
+            showInfoListener = { onShowAppInfoClicked() }
+            showUsedLibrariesListener = { onShowDependencyLicensesClicked() }
+            goBackListener = { onBackPressed() }
+        }
+    }
+
+    override fun onBackPressed(): Boolean {
+        requireActivity().onBackPressed()
+        return true
     }
 
     private fun setContentText(textContent: String?) {

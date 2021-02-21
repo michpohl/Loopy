@@ -71,6 +71,7 @@
     <string name="title_whatsnew">Changelog</string>
     <string name="nav_btn_whatsnew">Changelog</string>
     <string name="settings_item_show_suffix">Display File Extension</string>
+    <string name="btn_close">Close</string>
 
 
 </resources>

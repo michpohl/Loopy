@@ -10,6 +10,10 @@ class MarkdownViewerViewModel(val repo: FilesRepository) : BaseViewModel() {
 
     val docType = MutableLiveData<MarkdownViewerFragment.DocumentType>()
 
+    lateinit var showInfoListener: () -> Unit
+    lateinit var showUsedLibrariesListener: () -> Unit
+    lateinit var goBackListener: () -> Unit
+
     val showInfoButtons = MediatorLiveData<Int>().apply {
         addSource(docType) {
             this.value = (it == MarkdownViewerFragment.DocumentType.ABOUT).toVisibility()
@@ -25,5 +29,4 @@ class MarkdownViewerViewModel(val repo: FilesRepository) : BaseViewModel() {
     fun getAssetString(fileName: String): String? {
         return repo.getStringAsset(fileName)
     }
-
 }

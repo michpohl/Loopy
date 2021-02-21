@@ -15,9 +15,7 @@
         style="@style/MatchParent"
         android:background="@color/black"
         android:padding="8dp"
-        android:scrollbars="vertical"
-
-        >
+        android:scrollbars="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout style="@style/MatchParent">
 
@@ -31,8 +29,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/btn_show_app_license"
+                android:id="@+id/btn_show_app_info"
                 style="@style/Button"
+                android:onClick="@{_ -> model.showInfoListener.invoke()}"
                 android:text="@string/btn_show_app_info"
                 android:visibility="@{model.showInfoButtons}"
                 app:layout_constraintEnd_toStartOf="@id/btn_show_licenses"
@@ -42,16 +41,18 @@
             <Button
                 android:id="@+id/btn_show_licenses"
                 style="@style/Button"
+                android:onClick="@{_ -> model.showUsedLibrariesListener.invoke()}"
                 android:text="@string/btn_show_libraries_info"
                 android:visibility="@{model.showInfoButtons}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_show_app_license"
+                app:layout_constraintStart_toEndOf="@id/btn_show_app_info"
                 app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
             <Button
                 android:id="@+id/btn_close"
                 style="@style/Button"
-                android:text="@string/btn_show_app_info"
+                android:onClick="@{_ -> model.goBackListener.invoke()}"
+                android:text="@string/btn_close"
                 android:visibility="@{model.showCloseButton}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
