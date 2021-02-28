@@ -80,8 +80,8 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
             SettingsItemModel.MultipleChoiceSetting(
                 setting = WAIT_MODE,
                 choices = setOf(
-                    SettingsChoice(getString(R.string.settings_item_switch_immediately), this.isWaitMode),
-                    SettingsChoice(getString(R.string.settings_item_wait_until_finished), !this.isWaitMode))
+                    SettingsChoice(getString(R.string.settings_item_switch_immediately), !this.isWaitMode),
+                    SettingsChoice(getString(R.string.settings_item_wait_until_finished), this.isWaitMode))
             )
         )
         list.add(

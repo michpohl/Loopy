@@ -7,9 +7,10 @@ class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 
     var settings: Settings = sharedPrefs.getSettings() ?: createDefaultSettings()
         set(value) {
-            if (field != value)
+            if (field != value) {
                 sharedPrefs.saveSettings(value)
-            field = value
+                field = value
+            }
         }
 
     var isSetupComplete: Boolean

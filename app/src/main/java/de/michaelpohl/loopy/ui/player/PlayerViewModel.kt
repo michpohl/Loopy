@@ -47,9 +47,9 @@ class PlayerViewModel(
 
     private var settings: Settings = appStateRepo.settings
 
-    // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
     private var waitmode: Boolean? = null
 
+    // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
     private lateinit var looper: PlayerServiceInterface
     lateinit var playerActionsListener: PlayerActionsListener
     override fun initUIState(): UIState {

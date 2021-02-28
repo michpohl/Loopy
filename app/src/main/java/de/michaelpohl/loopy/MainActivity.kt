@@ -232,12 +232,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         } ?: showSnackbar(container, R.string.snackbar_error_message)
     }
 
-    private fun clearBackStack() {
-//        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
-        while (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStackImmediate()
-        }
-    }
+//    private fun clearBackStack() {
+////        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
+//        while (supportFragmentManager.backStackEntryCount > 0) {
+//            supportFragmentManager.popBackStackImmediate()
+//        }
+//    }
 
     private fun keepScreenOnIfDesired(settings: Settings) {
         if (settings.keepScreenOn) {

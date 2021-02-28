@@ -2,8 +2,10 @@ package de.michaelpohl.loopy.model
 
 import android.content.Context
 import android.os.Environment
-import de.michaelpohl.loopy.common.*
+import de.michaelpohl.loopy.common.AudioModel
+import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.jni.JniBridge
+import de.michaelpohl.loopy.common.toFileModels
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -11,10 +13,6 @@ import java.io.IOException
 import java.io.InputStream
 
 class ExternalStorageManager(val context: Context) {
-
-//    private val appStorageFolder: File by lazy {
-//        context.getExternalFilesDir(null)
-//    }
 
     private val appStorageFolder = context.getExternalFilesDir(null)
 
@@ -65,9 +63,6 @@ class ExternalStorageManager(val context: Context) {
     ): List<File> {
         val file = File(path)
         Timber.d("My file should be: $path")
-//        if (file.listFiles() == null) {
-//            return arrayListOf()
-//        }
         Timber.d("what's in my path: ${file.listFiles().map { it.name }}")
 
         return file.listFiles()
@@ -147,7 +142,7 @@ class ExternalStorageManager(val context: Context) {
         try {
             context.assets.list("")?.let { filesList ->
                 filesList.filter {
-                    it.endsWith( extension)
+                    it.endsWith(extension)
                 }.forEach { fileName ->
                     Timber.d("Found this file: $fileName")
                     list.add(fileName)
@@ -186,7 +181,9 @@ class ExternalStorageManager(val context: Context) {
             false
         }
     }
+
+    companion object {
+        const val STANDARD_SET_FOLDER_NAME = "standard"
+    }
 }
 
-// tODO make a const file
-const val STANDARD_SET_FOLDER_NAME = "standard"

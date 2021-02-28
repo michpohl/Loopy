@@ -144,9 +144,10 @@ class PlayerFragment : BaseFragment() {
                 playbackProgress?.let { progress ->
                     adapter.updatePlaybackProgress(progress, this.settings.showLoopCount)
                 }
-                viewModel.setPlayerWaitMode(it.settings.isWaitMode)
-                Timber.d("Observing...sample rate: ${it.settings.sampleRate}")
-                viewModel.setPlayerSampleRate(it.settings.sampleRate)
+                    viewModel.setPlayerWaitMode(it.settings.isWaitMode)
+                if (viewModel.state.value?.settings?.sampleRate != it.settings.sampleRate) {
+                    viewModel.setPlayerSampleRate(it.settings.sampleRate)
+                }
             }
         }
     }
@@ -174,6 +175,7 @@ class PlayerFragment : BaseFragment() {
             activity?.unbindService(serviceConnection)
         }
     }
+
     fun clearLoops() {
         val dialogHelper = DialogHelper(requireActivity())
         dialogHelper.requestConfirmation(
