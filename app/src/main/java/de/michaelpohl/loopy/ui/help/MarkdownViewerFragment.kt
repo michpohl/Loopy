@@ -47,16 +47,11 @@ class MarkdownViewerFragment : BaseFragment() {
         textView = binding.root.findViewById(R.id.tv_content)
         setContentText(markupString)
         binding.model = viewModel
-        with (viewModel) {
+        with(viewModel) {
             showInfoListener = { onShowAppInfoClicked() }
             showUsedLibrariesListener = { onShowDependencyLicensesClicked() }
-            goBackListener = { onBackPressed() }
+            goBackListener = { requireActivity().onBackPressed() }
         }
-    }
-
-    override fun onBackPressed(): Boolean {
-        requireActivity().onBackPressed()
-        return true
     }
 
     private fun setContentText(textContent: String?) {

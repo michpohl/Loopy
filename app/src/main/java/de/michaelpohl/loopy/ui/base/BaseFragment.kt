@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import de.michaelpohl.loopy.MainActivity
 import de.michaelpohl.loopy.R
 import kotlinx.android.synthetic.*
-import timber.log.Timber
 
 abstract class BaseFragment : Fragment() {
 
@@ -37,7 +36,7 @@ abstract class BaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setupActionBar(
             !showOptionsMenu,
-             getString(titleResource ?: R.string.appbar_title_player)
+            getString(titleResource ?: R.string.appbar_title_player)
         )
     }
 
@@ -48,8 +47,6 @@ abstract class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.let {
-//            it.title = getTitle()
-//            Timber.d("Setting title: ${it.title}")
             (it as MainActivity).currentFragment = this
         }
         viewModel.onFragmentResumed()

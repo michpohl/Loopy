@@ -268,7 +268,7 @@ class PlayerViewModel(
 
         audioFilesRepository.saveLoopSelectionToSet(
             null,
-           listOf()
+            listOf()
         )
         _state.value = currentState.copy(
             loopsList = audioFilesRepository.getSingleSetOrStandardSet()
@@ -292,6 +292,7 @@ class PlayerViewModel(
     }
 
     interface PlayerActionsListener {
+
         fun onOpenFileBrowserClicked()
         fun onBrowseMediaStoreClicked()
     }
