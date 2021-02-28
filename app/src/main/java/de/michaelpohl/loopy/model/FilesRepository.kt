@@ -28,9 +28,9 @@ class FilesRepository(
         return storage.getAudioModelsInSet(setFolderName ?: STANDARD_SET_FOLDER_NAME)
     }
 
-    suspend fun convertFilesInSet(setFolderName: String = STANDARD_SET_FOLDER_NAME): Boolean {
-        return JniBridge.convertFilesInFolder(storage.getFullPath(setFolderName))
-    }
+//    suspend fun convertFilesInSet(setFolderName: String = STANDARD_SET_FOLDER_NAME): Boolean {
+//        return JniBridge.convertFilesInFolder(storage.getFullPath(setFolderName))
+//    }
 
     // TODO move the whole standard loop set stuff into a separate class.
     //  It clutters this one, and that's not necessary for "execute once ever" code.
@@ -40,7 +40,6 @@ class FilesRepository(
      * @return true if everything was successful
      */
     fun autoCreateStandardLoopSet(): Boolean {
-
         return if (storage.createSetFolder() && storage.copyStandardFilesToSdCard() && storage.copyMiscFiles()) {
             sharedPrefsManager.selectedSetName = STANDARD_SET_FOLDER_NAME
             true
