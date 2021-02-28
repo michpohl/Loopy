@@ -22,5 +22,12 @@ fun calculateConversionProgress(
     var range = percentage - lastPercentage
     val actualPercentage = lastPercentage + (range / 6 * currentStep)
 
-    return actualPercentage.toInt()
+    return when {
+        actualPercentage > lastPercentage -> {
+            lastPercentage = actualPercentage
+            actualPercentage.toInt()
+        }
+        actualPercentage > 100F -> 100
+        else -> lastPercentage.toInt()
+    }
 }
