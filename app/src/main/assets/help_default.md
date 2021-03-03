@@ -1,22 +1,22 @@
 ## How to use Loopy
 
-Loopy is a simple audio player that lets you loop any audio files you have on your phone. You can search your media library, but it also comes with a file browser, in case you want to search your device's storage.
+Loopy is a simple audio player that lets you loop audio files you have on your phone. You can search your media library, but it also comes with a file browser, in case you want to search your device's storage.
 
 ### Getting started
 
-At this point, Loopy does not come with any sound files, so if you open the pp for the first time you will be greeted by an empty player window. Click the menu icon in the top left corner and choose either *Browse music library* or *Browse phone storage*, depending on where you want to look for audio files. 
+If you open the app for the first time, Loopy contains a set of example loops, so you can test the app. To add own files, click the menu icon in the top left corner and choose either *Browse music library* or *Browse phone storage*, depending on where you want to look for audio files. 
 
 ### Selecting audio files
 
-Inside albums/folders, audio tracks Loopy can play will have a little checkbox to the right. Mark the ones you like (or click *Select all* to mark everything) and click *Open selecetion* to add them to your player selection.
+Audio files Loopy can play will have a little checkbox to the right. Mark the ones you like and click *Open selecetion* to add them to your player selection (or click *Select all* to mark everything).
 
 ### Playing loops
 
-Click on the loop you want to play. It will be highlighted and immediately start to play. You can use the controls at the bottom to pause (Halting playback at the current position in the track) or stop (Complete stop and reset to the beginning) the playback. It is also possible scan to a certain position by just swiping inside the selected loop's waveform to your desired position.
+Click on the loop you want to play. It will be highlighted and immediately start to play. You can use the controls at the bottom to pause (Halting playback at the current position in the track) or stop (Complete stop and reset to the beginning) the playback.
 
 ### Removing loops from the player
 
-In the drawer menu you will find the option *Clear current file selection*. Click this to clean up your player window. 
+Remove files from the player by clicking the "X" icon in a loop item's top right corner. In the drawer menu you will find the option *Clear current file selection*. Click this to clean up your player window. 
 
 ### Settings
 
@@ -28,7 +28,11 @@ The standard mode *Switch immediately* lets you switch between loops just by cli
 
 #### Accepted file types
 
-This feature currently only works when browsing the phone's storage. If you want to only pick audio files of a certain type, you can uncheck the unwanted ones here, so the file browser won't show them to you.
+If you want to only pick audio files of a certain type, you can uncheck the unwanted ones here, so the browser won't show them to you. Currently Loopy supports MP3, Wave and Ogg.
+
+### Sample Rate
+
+Chose the sample rate that fits your audio files. Currently you can chose between the three standard values 44.1kHz, 48kHz and 96kHz.
 
 #### Show loop count
 
