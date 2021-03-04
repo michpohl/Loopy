@@ -65,6 +65,7 @@ class PlayerViewModel(
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
         _state.value = initUIState()
+        setPlayerSampleRate(settings.sampleRate)
     }
 
     override fun onFragmentPaused() {

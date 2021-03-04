@@ -145,9 +145,6 @@ class PlayerFragment : BaseFragment() {
                     adapter.updatePlaybackProgress(progress, this.settings.showLoopCount)
                 }
                     viewModel.setPlayerWaitMode(it.settings.isWaitMode)
-                if (viewModel.state.value?.settings?.sampleRate != it.settings.sampleRate) {
-                    viewModel.setPlayerSampleRate(it.settings.sampleRate)
-                }
             }
         }
     }
