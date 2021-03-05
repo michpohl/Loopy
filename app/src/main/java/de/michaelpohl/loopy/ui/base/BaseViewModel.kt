@@ -1,10 +1,7 @@
 package de.michaelpohl.loopy.ui.base
 
 import android.content.res.Resources
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import de.michaelpohl.loopy.common.immutable
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

@@ -164,6 +164,12 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             R.id.nav_whatsnew -> {
                 showMarkupViewerFragment(MarkDownFiles.getWhatsNewFileName(), R.string.title_whatsnew)
             }
+            R.id.nav_contact -> {
+                startActivity(Intent(Intent.ACTION_SEND).apply {
+                    type = "application/octet-stream"
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf("google@michaelpohl.de"))
+                })
+            }
             else -> {
             } // do nothing
         }

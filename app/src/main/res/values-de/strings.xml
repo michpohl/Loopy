@@ -14,7 +14,7 @@
     <string name="ok">OK</string>
     <string name="nav_category_settings">Einstellungen</string>
     <string name="nav_category_player_settings">Player-Einstellungen</string>
-    <string name="nav_category_information">Information</string>
+    <string name="nav_category_information">Infos &amp; Feedback</string>
     <string name="nav_category_find_audio_files">Audio-Dateien finden</string>
     <string name="nav_btn_open_settings">App-Einstellungen ändern</string>
     <string name="nav_btn_how_to">Wie man Loopy verwendet</string>
@@ -70,5 +70,6 @@
     <string name="nav_btn_whatsnew">Changelog</string>
     <string name="settings_item_show_suffix">Dateiendungen anzeigen</string>
     <string name="btn_close">Schliessen</string>
+    <string name="nav_btn_contact"><![CDATA[Kontakt & Feedback]]></string>
 
 </resources>

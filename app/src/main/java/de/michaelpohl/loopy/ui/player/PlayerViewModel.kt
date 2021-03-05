@@ -233,6 +233,17 @@ class PlayerViewModel(
         looper.changePlaybackPosition(newProgress)
     }
 
+    fun clearLoops() {
+
+        audioFilesRepository.saveLoopSelectionToSet(
+            null,
+            listOf()
+        )
+        _state.value = currentState.copy(
+            loopsList = audioFilesRepository.getSingleSetOrStandardSet()
+        )
+    }
+
     private fun onPlayerSwitchedToNextFile(filename: String) {
         _state.postValue(currentState.copy(fileInFocus = filename))
     }
@@ -265,16 +276,6 @@ class PlayerViewModel(
         }
     }
 
-    fun clearLoops() {
-
-        audioFilesRepository.saveLoopSelectionToSet(
-            null,
-            listOf()
-        )
-        _state.value = currentState.copy(
-            loopsList = audioFilesRepository.getSingleSetOrStandardSet()
-        )
-    }
 
     data class UIState(
         val loopsList: List<AudioModel>,
