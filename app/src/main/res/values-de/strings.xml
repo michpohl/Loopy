@@ -71,5 +71,7 @@
     <string name="settings_item_show_suffix">Dateiendungen anzeigen</string>
     <string name="btn_close">Schliessen</string>
     <string name="nav_btn_contact"><![CDATA[Kontakt & Feedback]]></string>
+    <string name="feedback_alert_text">Möchtest du dem Entwickler eine Email senden?</string>
+    <string name="feedback_alert_title">Feedback senden</string>
 
 </resources>

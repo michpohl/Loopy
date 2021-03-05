@@ -3,7 +3,6 @@ package de.michaelpohl.loopy
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.AssetManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -22,10 +21,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import de.michaelpohl.loopy.common.MarkDownFiles
-import de.michaelpohl.loopy.common.PermissionHelper
-import de.michaelpohl.loopy.common.Settings
-import de.michaelpohl.loopy.common.getDrawable
+import de.michaelpohl.loopy.common.*
 import de.michaelpohl.loopy.model.AppStateRepository
 import de.michaelpohl.loopy.model.FilesRepository
 import de.michaelpohl.loopy.ui.base.BaseFragment
@@ -165,10 +161,16 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
                 showMarkupViewerFragment(MarkDownFiles.getWhatsNewFileName(), R.string.title_whatsnew)
             }
             R.id.nav_contact -> {
-                startActivity(Intent(Intent.ACTION_SEND).apply {
-                    type = "application/octet-stream"
-                    putExtra(Intent.EXTRA_EMAIL, arrayOf("google@michaelpohl.de"))
-                })
+                DialogHelper(this).requestConfirmation(
+                    getString(R.string.feedback_alert_title),
+                    getString(R.string.feedback_alert_text)
+                ) {
+
+                    startActivity(Intent(Intent.ACTION_SEND).apply {
+                        type = "application/octet-stream"
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf("google@michaelpohl.de"))
+                    })
+                }
             }
             else -> {
             } // do nothing
@@ -237,13 +239,6 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
             return
         } ?: showSnackbar(container, R.string.snackbar_error_message)
     }
-
-//    private fun clearBackStack() {
-////        if (currentFragment is PlayerFragment) stopPlaybackIfDesired(currentFragment as PlayerFragment)
-//        while (supportFragmentManager.backStackEntryCount > 0) {
-//            supportFragmentManager.popBackStackImmediate()
-//        }
-//    }
 
     private fun keepScreenOnIfDesired(settings: Settings) {
         if (settings.keepScreenOn) {

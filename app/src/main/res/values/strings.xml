@@ -73,6 +73,8 @@
     <string name="settings_item_show_suffix">Display File Extension</string>
     <string name="btn_close">Close</string>
     <string name="nav_btn_contact"><![CDATA[Contact & Feedback]]></string>
+    <string name="feedback_alert_title">Send feedback</string>
+    <string name="feedback_alert_text">Do you want to send an email to the developer?</string>
 
 
 </resources>
