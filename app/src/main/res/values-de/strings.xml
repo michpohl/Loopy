@@ -29,7 +29,7 @@
     <string name="menu_item_accept_files">Ausgewählte öffnen</string>
     <string name="loop_count_prefix">Geloopt:</string>
     <string name="loop_count_postfix">mal</string>
-    <string name="drawer_subtitle">Version: %s</string>
+    <string name="drawer_subtitle">Version: </string>
     <string name="drawer_header">Loopy Audio Looper</string>
     <string name="dialog_settings_header">Einstellungen</string>
     <string name="dialog_remove_loop_header">Loop entfernen</string>

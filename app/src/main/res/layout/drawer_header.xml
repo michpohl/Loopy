@@ -10,15 +10,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:paddingTop="@dimen/nav_header_vertical_spacing"-->
-    <!--app:srcCompat="@drawable/loopy_logo"-->
-    <!--android:tint="@color/white"-->
-    <!--android:contentDescription="CONTENT"-->
-    <!--android:id="@+id/imageView"/>-->
-
     <TextView
         android:id="@+id/tv_app_name"
         style="@style/MatchWidth"
@@ -39,7 +30,7 @@
     <TextView
         android:id="@+id/tv_version_number"
         style="@style/WrapContent"
-        android:text="1.0"
+        android:text=" 1.0"
         android:textAppearance="@style/Text.SubHeaderLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_version_label" />
