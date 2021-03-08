@@ -73,6 +73,7 @@ class JniPlayer : KoinComponent {
     fun getCurrentPosition(): Float {
         return 0F
     }
+
     suspend fun setSampleRate(sampleRate: Int): JniResult<Int> {
        return JniBridge.setSampleRate(sampleRate)
     }

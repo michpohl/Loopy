@@ -72,7 +72,7 @@ class SharedPreferencesManager(context: Context) {
      * then saves a new Set
      */
     fun saveSingleSet(set: LoopSet) {
-        var sets = loadLoopSets().loopSets.toMutableList()
+        val sets = loadLoopSets().loopSets.toMutableList()
         sets.remove(sets.find { it.name == set.name })
         sets.add(set)
         saveLoopSets(Sets(sets))

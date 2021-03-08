@@ -89,12 +89,13 @@ class MediaStoreRepository(val context: Context) {
                 val track = cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)
 
                 do {
-                    var audioId: Long = cursor.getLong(id)
+                    val audioId: Long = cursor.getLong(id)
+                    val albumPath = cursor.getString(data)
+                    val trackNo = cursor.getString(track)
+
                     var audioTitle = cursor.getString(title)
                     var albumName = cursor.getString(album)
                     var artistName = cursor.getString(artist)
-                    var albumPath = cursor.getString(data)
-                    var trackNo = cursor.getString(track)
 
                     if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
                         context.getString(R.string.unknown)

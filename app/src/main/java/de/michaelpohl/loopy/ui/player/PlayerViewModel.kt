@@ -114,7 +114,7 @@ class PlayerViewModel(
                 }
                 PAUSED -> {
                     looper.resume()
-                    _state.value = (currentState.copy(isPlaying = true))
+                    _state.value = currentState.copy(isPlaying = true)
                 }
                 else -> if (looper.hasLoopFile()) startLooper()
             }
@@ -134,11 +134,11 @@ class PlayerViewModel(
             when (looper.getState()) {
                 PLAYING -> {
                     looper.pause()
-                    _state.value = (currentState.copy(isPlaying = false))
+                    _state.value = currentState.copy(isPlaying = false)
                 }
                 PAUSED -> {
                     looper.resume()
-                    _state.value = (currentState.copy(isPlaying = true))
+                    _state.value = currentState.copy(isPlaying = true)
                 }
                 else -> { /* do nothing */
                 }
@@ -162,14 +162,12 @@ class PlayerViewModel(
     fun stopLooper() {
         uiJob {
             if (looper.stop().isSuccess()) {
-                _state.value = (
-                        currentState.copy(
-                            playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
-                            fileInFocus = "",
-                            filePreselected = "",
-                            isPlaying = false
-                        )
-                        )
+                _state.value = currentState.copy(
+                    playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
+                    fileInFocus = "",
+                    filePreselected = "",
+                    isPlaying = false
+                )
             }
         }
     }
@@ -178,7 +176,7 @@ class PlayerViewModel(
         JniBridge.conversionProgressListener =
             { name, steps -> onConversionProgressUpdated(newLoops, name, steps) }
         // TODO ask the user if adding or replacing is desired
-        _state.value = (currentState.copy(processingOverlayVisibility = true.toVisibility()))
+        _state.value = currentState.copy(processingOverlayVisibility = true.toVisibility())
         ioJob {
             val elapsed = measureTimeMillis {
                 val result = audioFilesRepository.addLoopsToSet(newLoops)
@@ -210,7 +208,7 @@ class PlayerViewModel(
         name: String,
         currentSteps: Int
     ) {
-        var currentIndex = (newLoops.withIndex().find { it.value.name == name }?.index ?: 0)
+        var currentIndex = newLoops.withIndex().find { it.value.name == name }?.index ?: 0
         val conversionPercentage =
             calculateConversionProgress(newLoops.size, currentIndex, currentSteps)
         _state.postValue(currentState.copy(conversionProgress = conversionPercentage))
@@ -275,7 +273,6 @@ class PlayerViewModel(
             }
         }
     }
-
 
     data class UIState(
         val loopsList: List<AudioModel>,

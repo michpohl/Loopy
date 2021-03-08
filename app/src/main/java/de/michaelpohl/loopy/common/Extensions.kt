@@ -23,6 +23,8 @@ import java.io.File
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
+@Suppress("TooManyFunctions")
+
 fun Boolean.toVisibility(hideInsteadGone: Boolean = false): Int {
     return if (this) View.VISIBLE else if (hideInsteadGone) View.INVISIBLE else View.GONE
 }

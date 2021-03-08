@@ -1,0 +1,7 @@
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+detekt {
+    config = files("$rootDir/detekt/detekt_config.yml")
+    input = files("$rootDir/app/src")
+    autoCorrect = true
+}

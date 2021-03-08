@@ -4,11 +4,11 @@ import java.util.*
 
 object MarkDownFiles {
 
-    val WHATSNEW_FILE_NAME = "whatsnew_"
-    val ABOUT_FILE_NAME = "about_"
-    val HELP_FILE_NAME = "help_"
-    val POST_FIX = ".md"
-    val DEFAULT_LOCALE = "default"
+    private const val WHATSNEW_FILE_NAME = "whatsnew_"
+    private const val ABOUT_FILE_NAME = "about_"
+    private const val HELP_FILE_NAME = "help_"
+    private const val POST_FIX = ".md"
+    private const val DEFAULT_LOCALE = "default"
 
     fun getHelpTextFileName(): String {
         val locale = getLocale()
