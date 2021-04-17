@@ -9,3 +9,7 @@ Loopy 1.0 brings a lot of changes over the last version. Key improvements:
 * You can now pick between three different sample rates, to adjust for your audio files' encoding
 * Updated design
 * Many small bugs got fixed
+
+**If you find bugs or errors, please contact me by clicking** *Contact and Feedback* **in the menu.**
+
+

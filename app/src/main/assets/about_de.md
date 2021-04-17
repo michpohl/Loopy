@@ -1,6 +1,7 @@
 Loopy ist ein einfacher Audioplayer zum nahtlosen Loopen von Audiofiles. Loopy sollte alle Audiodateien loopen können, die Du in Deiner Medienbibliothek findest.
 
 Loopy ist **kein Audio-Editor**, das heisst wenn Du exakte Ergebnisse benötigst, sollten die Dateien bereits vorbereitet und geschnitten sein.
+Bitte beachte: Loopy ist ein Hobby-Projekt, also bitte erwarte kein 100% perfektes Produkt. Wenn Du Fehler findest, freue ich mich, wenn Du Kontakt mit mir aufnimmst.
 
 Wenn Du Loopys "Bis zum Ende spielen"-Option verwendest, kannst du es als sehr einfaches Live-Kompositionstool verwenden. Diese erlaubt dir, vorauszuwählen, welcher Loop nach dem Ende des aktuellen abgespielt wird. Mit einem vorbereiteten Set von Loops kannst du diese dann "on the fly" zusammensetzen.
 
