@@ -112,10 +112,11 @@ class ExternalStorageManager(val context: Context) {
         return try {
 
             listAssetFiles(AppStateRepository.Companion.AudioFileType.MP3.suffix).forEach {
-                val conversionResult = JniBridge.convertFilesInFolder(outputPath);
-                Timber.d("conversion result: $conversionResult")
+                Timber.d("File from assets: $it")
                 copySingleFileFromAssetsTo(outputPath, context.assets.open(it), it)
             }
+            val conversionResult = JniBridge.convertFilesInFolder(outputPath);
+            Timber.d("conversion result: $conversionResult")
             true
         } catch (e: IOException) {
             Timber.e("Copying of files to SD card (Location: ${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME) failed")
