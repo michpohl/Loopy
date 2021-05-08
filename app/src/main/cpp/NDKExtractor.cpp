@@ -21,7 +21,7 @@
 #include <media/NdkMediaExtractor.h>
 #include <utils/logging.h>
 #include <cinttypes>
-#include <MultiChannelResampler.h>
+//#include <MultiChannelResampler.h>
 
 #include "NDKExtractor.h"
 #include "Constants.h"

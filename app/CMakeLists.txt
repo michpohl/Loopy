@@ -27,26 +27,17 @@ add_library(native-lib
         src/main/cpp/utils/AudioFile.h
         )
 
-set (TARGET_LIBS log android oboe GLESv2)
+set (TARGET_LIBS log android GLESv2)
+
+# get oboe
+find_package (oboe REQUIRED CONFIG)
 
 add_definitions(-DUSE_FFMPEG=0)
-#target_sources( native-lib PRIVATE src/main/cpp/audio/NDKExtractor.cpp )
 set (TARGET_LIBS ${TARGET_LIBS} mediandk)
 
-target_link_libraries( native-lib ${TARGET_LIBS} )
-
-#set(CMAKE_CXX_STANDARD 14)
-
-# Set the path to the Oboe directory.
-set(OBOE_DIR /volumes/work/development/android/oboe)
-
-# Add the Oboe library as a subdirectory.
-add_subdirectory(${OBOE_DIR} ./oboe)
+target_link_libraries( native-lib ${TARGET_LIBS} oboe::oboe)
 
 # Specify the path to the Oboe header files.
 include_directories(${OBOE_DIR}/include)
 include_directories(${OBOE_DIR}/src/flowgraph/resampler)
 
-
-#target_compile_options(native-lib
-#        PRIVATE -std=c++14 -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")

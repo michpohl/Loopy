@@ -26,7 +26,7 @@ android {
 
 dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-beta02'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
 
 
     implementation fileTree(dir: "libs", include: ["*.jar"])

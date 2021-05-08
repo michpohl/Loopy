@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Loopy Audio Looper</string>
+    <string name="app_name" translatable="false">Loopy II</string>
     <string name="preference_file_key" translatable="false">de.michaelpohl.loopy</string>
     <string name="prefs_loops_key" translatable="false">loops_list</string>
     <string name="message_empty_folder">This folder contains no playable audio files!</string>
@@ -11,13 +11,13 @@
     <string name="menu_item_accept_files">Open selected files</string>
     <string name="snackbar_text_no_new_files_selected">You have no audio files selected or your selected files are already in the player!</string>
     <string name="btn_clear_list">Clear player list</string>
-    <string name="appbar_title_player">Loopy Audio Player</string>
+    <string name="appbar_title_player">Loopy II</string>
     <string name="title_mediastore_browser">Browse Music Library</string>
     <string name="title_file_browser">Browse Storage</string>
     <string name="title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
     <string name="btn_browse_mediastore">Browse media files</string>
-    <string name="drawer_header">Loopy Audio Looper</string>
+    <string name="drawer_header">Loopy II</string>
     <string name="drawer_subtitle">Version: </string>
     <string name="nav_btn_browse_music_library">Browse music library</string>
     <string name="nav_btn_browse_phone_storage">Browse device storage</string>
