@@ -1,7 +1,8 @@
 Loopy is an audio player dedicated to seamlessly looping audio files
 It can basically loop every audio file you have in your media library.
 
-Loopy is not an audio editor, so the loops you want to use should already be prepared and edited properly, if you need exact results.
+Loopy is **not an audio editor**, so the loops you want to use should already be prepared and edited properly, if you need exact results.
+Please keep in mind: Loopy is a hobby project, so please don't expect it to be 100% perfect. If you encounter issues, please let me know!
 
 If you use Loopy's "Wait until finished" you can use Loopy as a very simple live composition tool. It allows you to pre-select what loop to switch to after the current one finishes, so with a prepared set of loops you can put them together on-the-fly.
 

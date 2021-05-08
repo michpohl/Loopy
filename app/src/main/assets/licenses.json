@@ -1,0 +1,1202 @@
+{
+  "libraries": [
+    {
+      "artifactId": {
+        "name": "oboe",
+        "group": "com.google.oboe",
+        "version": "+"
+      },
+      "copyrightHolder": "Google Inc.",
+      "copyrightStatement": "Copyright Google Inc. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/google/oboe",
+      "libraryName": "oboe"
+    },
+    {
+      "artifactId": {
+        "name": "audiowave-progressbar",
+        "group": "com.github.alxrm",
+        "version": "+"
+      },
+      "copyrightHolder": "Alexey Derbyshev",
+      "copyrightStatement": "Copyright Alexey Derbyshev. All rights reserved.",
+      "license": "MIT License",
+      "licenseUrl": "https://api.github.com/licenses/mit",
+      "normalizedLicense": "mit",
+      "url": "https://github.com/alxrm/audiowave-progressbar",
+      "libraryName": "audiowave-progressbar"
+    },
+    {
+      "artifactId": {
+        "name": "material",
+        "group": "com.google.android.material",
+        "version": "+"
+      },
+      "copyrightHolder": "Google Inc.",
+      "copyrightStatement": "Copyright Google Inc. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "material"
+    },
+    {
+      "artifactId": {
+        "name": "timber",
+        "group": "com.jakewharton.timber",
+        "version": "+"
+      },
+      "copyrightHolder": "Jake Wharton",
+      "copyrightStatement": "Copyright Jake Wharton. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/JakeWharton/timber",
+      "libraryName": "timber"
+    },
+    {
+      "artifactId": {
+        "name": "moshi-adapters",
+        "group": "com.squareup.moshi",
+        "version": "+"
+      },
+      "copyrightHolder": "Square, Inc.",
+      "copyrightStatement": "Copyright Square, Inc. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "moshi-adapters"
+    },
+    {
+      "artifactId": {
+        "name": "moshi",
+        "group": "com.squareup.moshi",
+        "version": "+"
+      },
+      "copyrightHolder": "Square, Inc.",
+      "copyrightStatement": "Copyright Square, Inc. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "moshi"
+    },
+    {
+      "artifactId": {
+        "name": "okio",
+        "group": "com.squareup.okio",
+        "version": "+"
+      },
+      "copyrightHolder": "Square, Inc.",
+      "copyrightStatement": "Copyright Square, Inc. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "okio"
+    },
+    {
+      "artifactId": {
+        "name": "kotlin-android-extensions-runtime",
+        "group": "org.jetbrains.kotlin",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://kotlinlang.org/",
+      "libraryName": "kotlin-android-extensions-runtime"
+    },
+    {
+      "artifactId": {
+        "name": "kotlin-stdlib-common",
+        "group": "org.jetbrains.kotlin",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://kotlinlang.org/",
+      "libraryName": "kotlin-stdlib-common"
+    },
+    {
+      "artifactId": {
+        "name": "kotlin-stdlib-jdk7",
+        "group": "org.jetbrains.kotlin",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://kotlinlang.org/",
+      "libraryName": "kotlin-stdlib-jdk7"
+    },
+    {
+      "artifactId": {
+        "name": "kotlin-stdlib",
+        "group": "org.jetbrains.kotlin",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://kotlinlang.org/",
+      "libraryName": "kotlin-stdlib"
+    },
+    {
+      "artifactId": {
+        "name": "kotlinx-coroutines-android",
+        "group": "org.jetbrains.kotlinx",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/Kotlin/kotlinx.coroutines",
+      "libraryName": "kotlinx-coroutines-android"
+    },
+    {
+      "artifactId": {
+        "name": "kotlinx-coroutines-core",
+        "group": "org.jetbrains.kotlinx",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/Kotlin/kotlinx.coroutines",
+      "libraryName": "kotlinx-coroutines-core"
+    },
+    {
+      "artifactId": {
+        "name": "annotations",
+        "group": "org.jetbrains",
+        "version": "+"
+      },
+      "copyrightHolder": "JetBrains",
+      "copyrightStatement": "Copyright JetBrains. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/license/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/JetBrains/java-annotations",
+      "libraryName": "annotations"
+    },
+    {
+      "artifactId": {
+        "name": "koin-android-scope",
+        "group": "org.koin",
+        "version": "+"
+      },
+      "copyrightHolder": "insert-koin.io",
+      "copyrightStatement": "Copyright insert-koin.io. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "koin-android-scope"
+    },
+    {
+      "artifactId": {
+        "name": "koin-android-viewmodel",
+        "group": "org.koin",
+        "version": "+"
+      },
+      "copyrightHolder": "insert-koin.io",
+      "copyrightStatement": "Copyright insert-koin.io. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "koin-android-viewmodel"
+    },
+    {
+      "artifactId": {
+        "name": "koin-android",
+        "group": "org.koin",
+        "version": "+"
+      },
+      "copyrightHolder": "insert-koin.io",
+      "copyrightStatement": "Copyright insert-koin.io. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "koin-android"
+    },
+    {
+      "artifactId": {
+        "name": "koin-core",
+        "group": "org.koin",
+        "version": "+"
+      },
+      "copyrightHolder": "insert-koin.io",
+      "copyrightStatement": "Copyright insert-koin.io. All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "normalizedLicense": "apache2",
+      "libraryName": "koin-core"
+    },
+    {
+      "artifactId": {
+        "name": "markwon-html-parser-api",
+        "group": "ru.noties",
+        "version": "+"
+      },
+      "copyrightHolder": "noties.io (Dimitry)",
+      "copyrightStatement": "Copyright noties.io (Dimitry). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/noties/Markwon",
+      "libraryName": "markwon-html-parser-api"
+    },
+    {
+      "artifactId": {
+        "name": "markwon-html-parser-impl",
+        "group": "ru.noties",
+        "version": "+"
+      },
+      "copyrightHolder": "noties.io (Dimitry)",
+      "copyrightStatement": "Copyright noties.io (Dimitry). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/noties/Markwon",
+      "libraryName": "markwon-html-parser-impl"
+    },
+    {
+      "artifactId": {
+        "name": "markwon",
+        "group": "ru.noties",
+        "version": "+"
+      },
+      "copyrightHolder": "noties.io (Dimitry)",
+      "copyrightStatement": "Copyright noties.io (Dimitry). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://github.com/noties/Markwon",
+      "libraryName": "markwon"
+    },
+    {
+      "artifactId": {
+        "name": "activity-ktx",
+        "group": "androidx.activity",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "activity-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "activity",
+        "group": "androidx.activity",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "activity"
+    },
+    {
+      "artifactId": {
+        "name": "annotation",
+        "group": "androidx.annotation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "annotation"
+    },
+    {
+      "artifactId": {
+        "name": "appcompat-resources",
+        "group": "androidx.appcompat",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "appcompat-resources"
+    },
+    {
+      "artifactId": {
+        "name": "appcompat",
+        "group": "androidx.appcompat",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "appcompat"
+    },
+    {
+      "artifactId": {
+        "name": "core-common",
+        "group": "androidx.arch.core",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "core-common"
+    },
+    {
+      "artifactId": {
+        "name": "core-runtime",
+        "group": "androidx.arch.core",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "core-runtime"
+    },
+    {
+      "artifactId": {
+        "name": "asynclayoutinflater",
+        "group": "androidx.asynclayoutinflater",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "asynclayoutinflater"
+    },
+    {
+      "artifactId": {
+        "name": "cardview",
+        "group": "androidx.cardview",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "cardview"
+    },
+    {
+      "artifactId": {
+        "name": "collection-ktx",
+        "group": "androidx.collection",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "collection-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "collection",
+        "group": "androidx.collection",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "collection"
+    },
+    {
+      "artifactId": {
+        "name": "constraintlayout-solver",
+        "group": "androidx.constraintlayout",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://tools.android.com",
+      "libraryName": "constraintlayout-solver"
+    },
+    {
+      "artifactId": {
+        "name": "constraintlayout",
+        "group": "androidx.constraintlayout",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://tools.android.com",
+      "libraryName": "constraintlayout"
+    },
+    {
+      "artifactId": {
+        "name": "coordinatorlayout",
+        "group": "androidx.coordinatorlayout",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "coordinatorlayout"
+    },
+    {
+      "artifactId": {
+        "name": "core-ktx",
+        "group": "androidx.core",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "core-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "core",
+        "group": "androidx.core",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "core"
+    },
+    {
+      "artifactId": {
+        "name": "cursoradapter",
+        "group": "androidx.cursoradapter",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "cursoradapter"
+    },
+    {
+      "artifactId": {
+        "name": "customview",
+        "group": "androidx.customview",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "customview"
+    },
+    {
+      "artifactId": {
+        "name": "databinding-adapters",
+        "group": "androidx.databinding",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "libraryName": "databinding-adapters"
+    },
+    {
+      "artifactId": {
+        "name": "databinding-common",
+        "group": "androidx.databinding",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/studio",
+      "libraryName": "databinding-common"
+    },
+    {
+      "artifactId": {
+        "name": "databinding-runtime",
+        "group": "androidx.databinding",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "libraryName": "databinding-runtime"
+    },
+    {
+      "artifactId": {
+        "name": "viewbinding",
+        "group": "androidx.databinding",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "libraryName": "viewbinding"
+    },
+    {
+      "artifactId": {
+        "name": "documentfile",
+        "group": "androidx.documentfile",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "documentfile"
+    },
+    {
+      "artifactId": {
+        "name": "drawerlayout",
+        "group": "androidx.drawerlayout",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "drawerlayout"
+    },
+    {
+      "artifactId": {
+        "name": "fragment-ktx",
+        "group": "androidx.fragment",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "fragment-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "fragment",
+        "group": "androidx.fragment",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "fragment"
+    },
+    {
+      "artifactId": {
+        "name": "interpolator",
+        "group": "androidx.interpolator",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "interpolator"
+    },
+    {
+      "artifactId": {
+        "name": "legacy-support-core-ui",
+        "group": "androidx.legacy",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "legacy-support-core-ui"
+    },
+    {
+      "artifactId": {
+        "name": "legacy-support-core-utils",
+        "group": "androidx.legacy",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "legacy-support-core-utils"
+    },
+    {
+      "artifactId": {
+        "name": "legacy-support-v4",
+        "group": "androidx.legacy",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "legacy-support-v4"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-common",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-common"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-extensions",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-extensions"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-livedata-core-ktx",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "lifecycle-livedata-core-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-livedata-core",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-livedata-core"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-livedata",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-livedata"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-process",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-process"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-runtime-ktx",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "lifecycle-runtime-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-runtime",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-runtime"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-service",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-service"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-viewmodel-ktx",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "lifecycle-viewmodel-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-viewmodel-savedstate",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-viewmodel-savedstate"
+    },
+    {
+      "artifactId": {
+        "name": "lifecycle-viewmodel",
+        "group": "androidx.lifecycle",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "lifecycle-viewmodel"
+    },
+    {
+      "artifactId": {
+        "name": "loader",
+        "group": "androidx.loader",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "loader"
+    },
+    {
+      "artifactId": {
+        "name": "localbroadcastmanager",
+        "group": "androidx.localbroadcastmanager",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "localbroadcastmanager"
+    },
+    {
+      "artifactId": {
+        "name": "media",
+        "group": "androidx.media",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "media"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-common-ktx",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-common-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-common",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-common"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-fragment-ktx",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-fragment-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-fragment",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-fragment"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-runtime-ktx",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-runtime-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-runtime",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-runtime"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-ui-ktx",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-ui-ktx"
+    },
+    {
+      "artifactId": {
+        "name": "navigation-ui",
+        "group": "androidx.navigation",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/topic/libraries/architecture/index.html",
+      "libraryName": "navigation-ui"
+    },
+    {
+      "artifactId": {
+        "name": "print",
+        "group": "androidx.print",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "print"
+    },
+    {
+      "artifactId": {
+        "name": "recyclerview",
+        "group": "androidx.recyclerview",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "recyclerview"
+    },
+    {
+      "artifactId": {
+        "name": "savedstate",
+        "group": "androidx.savedstate",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "savedstate"
+    },
+    {
+      "artifactId": {
+        "name": "slidingpanelayout",
+        "group": "androidx.slidingpanelayout",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "slidingpanelayout"
+    },
+    {
+      "artifactId": {
+        "name": "swiperefreshlayout",
+        "group": "androidx.swiperefreshlayout",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "swiperefreshlayout"
+    },
+    {
+      "artifactId": {
+        "name": "transition",
+        "group": "androidx.transition",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "transition"
+    },
+    {
+      "artifactId": {
+        "name": "vectordrawable-animated",
+        "group": "androidx.vectordrawable",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "vectordrawable-animated"
+    },
+    {
+      "artifactId": {
+        "name": "vectordrawable",
+        "group": "androidx.vectordrawable",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/jetpack/androidx",
+      "libraryName": "vectordrawable"
+    },
+    {
+      "artifactId": {
+        "name": "versionedparcelable",
+        "group": "androidx.versionedparcelable",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "versionedparcelable"
+    },
+    {
+      "artifactId": {
+        "name": "viewpager",
+        "group": "androidx.viewpager",
+        "version": "+"
+      },
+      "copyrightHolder": "Android Open Source Project (AOSP)",
+      "copyrightStatement": "Copyright Android Open Source Project (AOSP). All rights reserved.",
+      "license": "The Apache Software License, Version 2.0",
+      "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "normalizedLicense": "apache2",
+      "url": "https://developer.android.com/tools/extras/support-library.html",
+      "libraryName": "viewpager"
+    },
+    {
+      "artifactId": {
+        "name": "commonmark-ext-gfm-strikethrough",
+        "group": "com.atlassian.commonmark",
+        "version": "+"
+      },
+      "copyrightHolder": "Copyright (c) 2015-2019 Atlassian and others.",
+      "copyrightStatement": "Copyright Copyright (c) 2015-2019 Atlassian and others. All rights reserved.",
+      "license": "BSD-2-Clause License",
+      "licenseUrl": "https://opensource.org/licenses/BSD-2-Clause",
+      "normalizedLicense": "bsd_2_clauses",
+      "libraryName": "commonmark-ext-gfm-strikethrough"
+    },
+    {
+      "artifactId": {
+        "name": "commonmark-ext-gfm-tables",
+        "group": "com.atlassian.commonmark",
+        "version": "+"
+      },
+      "copyrightHolder": "Copyright (c) 2015-2019 Atlassian and others.",
+      "copyrightStatement": "Copyright Copyright (c) 2015-2019 Atlassian and others. All rights reserved.",
+      "license": "BSD-2-Clause License",
+      "licenseUrl": "https://opensource.org/licenses/BSD-2-Clause",
+      "normalizedLicense": "bsd_2_clauses",
+      "libraryName": "commonmark-ext-gfm-tables"
+    },
+    {
+      "artifactId": {
+        "name": "commonmark",
+        "group": "com.atlassian.commonmark",
+        "version": "+"
+      },
+      "copyrightHolder": "Copyright (c) 2015-2019 Atlassian and others.",
+      "copyrightStatement": "Copyright Copyright (c) 2015-2019 Atlassian and others. All rights reserved.",
+      "license": "BSD-2-Clause License",
+      "licenseUrl": "https://opensource.org/licenses/BSD-2-Clause",
+      "normalizedLicense": "bsd_2_clauses",
+      "libraryName": "commonmark"
+    }
+  ]
+}

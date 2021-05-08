@@ -1,50 +1,55 @@
 package de.michaelpohl.loopy.model
 
-import android.content.Context
-import android.net.Uri
 import android.os.Binder
 import de.michaelpohl.loopy.common.PlayerState
-import de.michaelpohl.loopy.common.SwitchingLoopsBehaviour
-import timber.log.Timber
+import de.michaelpohl.loopy.common.jni.JniResult
 
-class PlayerServiceBinder(serviceContext: Context) : Binder(),
+class PlayerServiceBinder : Binder(),
     PlayerServiceInterface {
 
-    private var looper = LoopedPlayer.create(serviceContext)
-
-    override fun start() {
-        Timber.d("Start in Binder")
-        looper.start()
+    private var looper = JniPlayer()
+    override suspend fun pause(): JniResult<Nothing> {
+        return looper.pause()
     }
 
-    override fun pause() {
-        looper.pause()
+    override suspend fun resume(): JniResult<Nothing> {
+        return looper.resume()
     }
 
-    override fun stop() {
-        looper.stop()
-        destroyAudioPlayer()
+    override suspend fun stop(): JniResult<Nothing> {
+        return looper.stop()
+    }
+
+    override suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
+        return looper.setWaitMode(shouldWait)
+    }
+
+    override suspend fun setSampleRate(sampleRate: Int): JniResult<Int> {
+       return looper.setSampleRate(sampleRate)
+    }
+
+    override fun setFileStartedByPlayerListener(listener: (String) -> Unit) {
+        looper.setFileStartedByPlayerListener(listener)
+    }
+
+    override fun setPlaybackProgressListener(listener: (String, Int) -> Unit) {
+        looper.setPlaybackProgressListener(listener)
     }
 
     override fun changePlaybackPosition(newPosition: Float) =
         looper.changePlaybackPosition(newPosition)
 
     override fun resetPreSelection() = looper.resetPreSelection()
-
     override fun isReady(): Boolean {
         return looper.isReady
     }
 
-    override fun isPlaying(): Boolean {
-        return looper.isPlaying()
-    }
-
-    override fun isPaused(): Boolean {
-        return looper.state == PlayerState.PAUSED
-    }
-
     override fun getState(): PlayerState {
         return looper.state
+    }
+
+    override fun getWaitMode(): Boolean {
+        return looper.waitMode
     }
 
     override fun setHasLoopFile(hasFile: Boolean) {
@@ -55,38 +60,16 @@ class PlayerServiceBinder(serviceContext: Context) : Binder(),
         looper.onLoopedListener = receiver
     }
 
-    override fun setOnLoopSwitchedListener(receiver: () -> Unit) {
-        looper.onLoopSwitchedListener = receiver
-    }
-
-    override fun setLoopUri(uri: Uri) = looper.setLoopUri(uri)
-
-    override fun setSwitchingLoopsBehaviour(behaviour: SwitchingLoopsBehaviour) {
-        looper.switchingLoopsBehaviour = behaviour
-    }
-
-    override fun getSwitchingLoopsBehaviour(): SwitchingLoopsBehaviour {
-        return looper.switchingLoopsBehaviour
-    }
-
     override fun getCurrentPosition() = looper.getCurrentPosition()
-
-    override fun getHasLoopFile(): Boolean {
+    override fun hasLoopFile(): Boolean {
         return looper.hasLoopFile
     }
 
-    override fun preselect() {
+    override suspend fun select(path: String): JniResult<String> {
+        return looper.select(path)
     }
 
-    override fun select() {
-    }
-
-    // Destroy audio player.
-    private fun destroyAudioPlayer() {
-        if (looper.state == PlayerState.PLAYING) {
-            looper.stop()
-        }
-//TODO properly release looper
-//        looper.release()
+    override suspend fun play(): JniResult<String> {
+        return looper.start()
     }
 }

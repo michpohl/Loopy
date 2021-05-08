@@ -3,14 +3,14 @@ package de.michaelpohl.loopy.common
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
 import timber.log.Timber
 
 class PermissionHelper(private val activity: Activity) {
 
     private val REQUEST_CODE = 999 // chosen randomly. What is the rule which number to pick?
-
     fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -18,8 +18,14 @@ class PermissionHelper(private val activity: Activity) {
         )
         val permissionsNotGranted = mutableListOf<String>()
 
-        permissions.forEach { if (!checkSinglePermission(it)) permissionsNotGranted.add(it) }
-        if (permissionsNotGranted.isNotEmpty()) requestPermission(permissionsNotGranted.toTypedArray())
+        permissions.forEach {
+            if (!checkSinglePermission(it)) {
+                permissionsNotGranted.add(it)
+            }
+        }
+        if (permissionsNotGranted.isNotEmpty()) {
+            requestPermission(permissionsNotGranted.toTypedArray())
+        }
     }
 
     private fun checkSinglePermission(permission: String): Boolean {

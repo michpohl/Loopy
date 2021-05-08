@@ -10,15 +10,15 @@
     <string name="btn_deselect_all">Deselect</string>
     <string name="menu_item_accept_files">Open selected files</string>
     <string name="snackbar_text_no_new_files_selected">You have no audio files selected or your selected files are already in the player!</string>
-    <string name="btn_clear_list">Clear list</string>
+    <string name="btn_clear_list">Clear player list</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
-    <string name="appbar_title_browse_music_library">Browse Music Library</string>
-    <string name="appbar_title_file_browser">Browse Storage</string>
-    <string name="appbar_title_help">How to use Loopy</string>
+    <string name="title_mediastore_browser">Browse Music Library</string>
+    <string name="title_file_browser">Browse Storage</string>
+    <string name="title_help">How to use Loopy</string>
     <string name="btn_about_app">About this app</string>
     <string name="btn_browse_mediastore">Browse media files</string>
     <string name="drawer_header">Loopy Audio Looper</string>
-    <string name="drawer_subtitle">"Version: "</string>
+    <string name="drawer_subtitle">Version: </string>
     <string name="nav_btn_browse_music_library">Browse music library</string>
     <string name="nav_btn_browse_phone_storage">Browse device storage</string>
     <string name="nav_btn_open_settings">Change app settings</string>
@@ -26,7 +26,7 @@
     <string name="nav_category_settings">Settings</string>
     <string name="nav_category_player_settings">Player settings</string>
     <string name="btn_open_selection">Open selection</string>
-    <string name="nav_category_information">Information</string>
+    <string name="nav_category_information">Infos &amp; Feedback</string>
     <string name="nav_category_find_audio_files">Find audio files</string>
     <string name="nav_btn_about">About this app</string>
     <string name="dialog_settings_header">Settings</string>
@@ -47,11 +47,11 @@
     <string name="dialog_remove_loop_header">Remove Loop</string>
     <string name="dialog_remove_loop_content">Dou you want to remove this loop from the selection?</string>
     <string name="btn_show_libraries_info">Show Libraries</string>
-    <string name="player_empty_message">You have no loops selected. Open the menu and select one of the options to browse your phone\\\'s storage</string>
+    <string name="player_empty_message">You have no loops selected. Open the menu and select one of the options to browse your phone\'s storage</string>
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Clear List</string>
     <string name="dialog_clear_list_content">Do you really want to clear the player\'s loops list?</string>
-    <string name="dialog_licenses_title">Libraries used in this app</string>
+    <string name="title_licenses">Open source libraries used in this app</string>
     <string name="dialog_loopy_license_title">App Information</string>
     <string name="btn_show_app_info">Show App Info</string>
     <string name="snackbar_cant_clear_loops">Can\'t clear loops while not in the player!</string>
@@ -59,5 +59,22 @@
     <string name="save">Save</string>
     <string name="settings_item_keep_screen_on">Keep Screen On</string>
     <string name="settings_item_play_in_background">Play in Background</string>
+    <string name="processing">Processing…%1$d</string>
+    <string name="settings_item_sample_rate">Sample rate</string>
+    <string name="player_sample_rate">Sample rate: %s</string>
+    <string name="library_id">Artifact ID: %s</string>
+    <string name="library_copyright_holder">Copyright: %s</string>
+    <string name="library_License">License: %s</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_about">About Loopy</string>
+    <string name="unknown">unknown</string>
+    <string name="title_whatsnew">Changelog</string>
+    <string name="nav_btn_whatsnew">Changelog</string>
+    <string name="settings_item_show_suffix">Display File Extension</string>
+    <string name="btn_close">Close</string>
+    <string name="nav_btn_contact"><![CDATA[Contact & Feedback]]></string>
+    <string name="feedback_alert_title">Send feedback</string>
+    <string name="feedback_alert_text">Do you want to send an email to the developer?</string>
+
 
 </resources>

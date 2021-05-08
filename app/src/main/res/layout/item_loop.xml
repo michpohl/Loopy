@@ -1,99 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
 
-        <variable
-                name="model"
-                type="de.michaelpohl.loopy.ui.main.player.PlayerItemViewModel"/>
-    </data>
-
-    <android.support.constraint.ConstraintLayout
-
-            style="@style/Row"
-            android:background="@{model.backgroundColor}"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="@{model::onItemClicked}"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            android:foreground="?selectableItemBackground"
-            android:padding="8dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/Row"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:background="@drawable/background_item_rounded_stroke"
+        android:padding="8dp">
 
         <TextView
-                android:id="@+id/tv_name"
-                style="@style/MatchWidth"
-                android:text="@{model.name}"
-                android:textAppearance="@style/Text.SubHeaderLarge"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:paddingStart="8dp"
-                tools:text="item"
-                tools:ignore="RtlSymmetry"/>
+            android:id="@+id/tv_label"
+            style="@style/MatchWidth"
+            android:paddingStart="8dp"
+            android:textAppearance="@style/Text.SubHeaderLarge"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry"
+            tools:text="item" />
+
 
         <TextView
-                android:id="@+id/tv_loop_count_prefix"
-                style="@style/WrapContent"
-                android:text="@string/loop_count_prefix"
-                android:visibility="@{model.loopsCountVisibility}"
-                android:textAppearance="@style/Text.Standard"
-                android:paddingStart="8dp"
-                android:paddingEnd="4dp"
-                app:layout_constraintStart_toStartOf="@id/tv_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
-
-        <TextView
-                android:id="@+id/tv_loop_count"
-                style="@style/WrapContent"
-                android:textAppearance="@style/Text.Standard"
-                android:text="@{model.loopsCount}"
-                android:visibility="@{model.loopsCountVisibility}"
-                app:layout_constraintStart_toEndOf="@id/tv_loop_count_prefix"
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_loop_count_prefix"/>
-
-        <TextView
-                android:id="@+id/tv_loop_count_postfix"
-                style="@style/WrapContent"
-                android:text="@string/loop_count_postfix"
-                android:visibility="@{model.loopsCountVisibility}"
-                android:textAppearance="@style/Text.Standard"
-                android:paddingStart="4dp"
-                app:layout_constraintStart_toEndOf="@id/tv_loop_count"
-                app:layout_constraintTop_toBottomOf="@id/tv_name"/>
+            android:id="@+id/tv_loop_count"
+            style="@style/WrapContent"
+            android:paddingStart="8dp"
+            android:textAppearance="@style/Text.Standard"
+            app:layout_constraintStart_toStartOf="@id/tv_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_label"
+ />
 
         <rm.com.audiowave.AudioWaveView
-                android:id="@+id/wave"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                app:progress="@{model.progress}"
-                app:animateExpansion="false"
-                app:chunkWidth="1dp"
-                app:chunkHeight="24dp"
-                app:minChunkHeight="2dp"
-                app:chunkSpacing="1dp"
-                app:chunkRadius="0dp"
-                app:touchable="@{model.canSeekAudio}"
-                app:waveColor="@android:color/white"
-                app:layout_constraintTop_toBottomOf="@id/tv_name"
-                />
+            android:id="@+id/wave"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            app:animateExpansion="false"
+            app:chunkHeight="24dp"
+            app:chunkRadius="0dp"
+            app:chunkSpacing="1dp"
+            app:chunkWidth="1dp"
+            android:focusable="false"
+            android:clickable="false"
+            app:layout_constraintTop_toBottomOf="@id/tv_label"
+            app:minChunkHeight="2dp"
+            app:waveColor="@android:color/white" />
+        
+        <View
+            android:id="@+id/wave_blocker"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="1dp"
+            app:layout_constraintStart_toStartOf="@id/wave"
+            app:layout_constraintTop_toTopOf="@id/wave"
+            app:layout_constraintBottom_toBottomOf="@id/wave"
+            app:layout_constraintEnd_toEndOf="@id/wave"
+            android:focusable="true"
+            android:clickable="true"
+            />
 
         <ImageButton
-                android:id="@+id/btn_remove"
-               style="@style/Button.SmallIcon.NoPadding"
-                android:src="@drawable/ic_delete"
-                android:tint="@color/action"
-                android:paddingLeft="16dp"
-                android:onClick="@{model::onRemoveItemClicked}"
-                android:visibility="@{model.removeButtonVisibility}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_name"/>
+            android:id="@+id/btn_remove"
+            style="@style/Button.SmallIcon.NoPadding"
+            android:paddingLeft="16dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/action"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_label" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

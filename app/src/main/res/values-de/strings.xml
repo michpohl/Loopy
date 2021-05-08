@@ -14,7 +14,7 @@
     <string name="ok">OK</string>
     <string name="nav_category_settings">Einstellungen</string>
     <string name="nav_category_player_settings">Player-Einstellungen</string>
-    <string name="nav_category_information">Information</string>
+    <string name="nav_category_information">Infos &amp; Feedback</string>
     <string name="nav_category_find_audio_files">Audio-Dateien finden</string>
     <string name="nav_btn_open_settings">App-Einstellungen ändern</string>
     <string name="nav_btn_how_to">Wie man Loopy verwendet</string>
@@ -29,17 +29,17 @@
     <string name="menu_item_accept_files">Ausgewählte öffnen</string>
     <string name="loop_count_prefix">Geloopt:</string>
     <string name="loop_count_postfix">mal</string>
-    <string name="drawer_subtitle">"Version: "</string>
+    <string name="drawer_subtitle">Version: </string>
     <string name="drawer_header">Loopy Audio Looper</string>
     <string name="dialog_settings_header">Einstellungen</string>
     <string name="dialog_remove_loop_header">Loop entfernen</string>
     <string name="dialog_remove_loop_content">Möchtest Du diesen Loop aus der Auswahl entfernen?</string>
     <string name="cancel">Abbrechen</string>
-    <string name="btn_clear_list">Liste leeren</string>
+    <string name="btn_clear_list">Player-Liste leeren</string>
     <string name="appbar_title_player">Loopy Audio Player</string>
-    <string name="appbar_title_browse_music_library">Musikbibliothek durchsuchen</string>
-    <string name="appbar_title_file_browser">Gerätespeicher durchsuchen</string>
-    <string name="appbar_title_help">Loopy verwenden</string>
+    <string name="title_mediastore_browser">Musikbibliothek durchsuchen</string>
+    <string name="title_file_browser">Gerätespeicher durchsuchen</string>
+    <string name="title_help">Loopy verwenden</string>
     <string name="btn_about_app">Über diese App</string>
     <string name="btn_browse_mediastore">Musikbibliothek durchsuchen</string>
     <string name="btn_select_all">Alles auswählen</string>
@@ -49,7 +49,7 @@
     <string name="album">Album</string>
     <string name="dialog_clear_list_header">Liste leeren</string>
     <string name="dialog_clear_list_content">Möchtest du wirklich die Liste der Loops im Player leeren?</string>
-    <string name="dialog_licenses_title">Verwendete Bibliotheken</string>
+    <string name="title_licenses">Verwendete Open Source Bibliotheken</string>
     <string name="dialog_loopy_license_title">App-Informationen</string>
     <string name="btn_show_app_info">App-Infos anzeigen</string>
     <string name="save">Speichern</string>
@@ -57,4 +57,21 @@
     <string name="settings_item_play_in_background">Im Hintergrund spielen</string>
     <string name="snackbar_cant_clear_loops">Dies geht von hier aus nicht.</string>
     <string name="snackbar_error_message">Ein Fehler ist aufgetreten. Großes Sorry!!</string>
+    <string name="processing">Verarbeite… %1$d</string>
+    <string name="settings_item_sample_rate">Sample rate</string>
+    <string name="player_sample_rate">Sample rate: %s</string>
+    <string name="library_id">Artefakt ID: %s</string>
+    <string name="library_copyright_holder">Copyright: %s</string>
+    <string name="library_License">Lizenz: %s</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="title_about">Über Loopy</string>
+    <string name="unknown">unbekannt</string>
+    <string name="title_whatsnew">Changelog</string>
+    <string name="nav_btn_whatsnew">Changelog</string>
+    <string name="settings_item_show_suffix">Dateiendungen anzeigen</string>
+    <string name="btn_close">Schliessen</string>
+    <string name="nav_btn_contact"><![CDATA[Kontakt & Feedback]]></string>
+    <string name="feedback_alert_text">Möchtest du dem Entwickler eine Email senden?</string>
+    <string name="feedback_alert_title">Feedback senden</string>
+
 </resources>

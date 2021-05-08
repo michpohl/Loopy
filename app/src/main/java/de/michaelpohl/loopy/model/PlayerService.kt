@@ -12,9 +12,12 @@ class PlayerService : Service() {
         Timber.d("The service exists!")
     }
 
-    private val playerServiceBinder = PlayerServiceBinder(this)
-
+    private val playerServiceBinder = PlayerServiceBinder()
     override fun onBind(intent: Intent): IBinder? {
         return playerServiceBinder
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_NOT_STICKY
     }
 }

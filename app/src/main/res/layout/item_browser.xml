@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/black"
+        android:foreground="?selectableItemBackground"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_label"
+            style="@style/MatchWidth"
+            android:layout_width="0dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textAppearance="@style/Text.SubHeaderLarge"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_sublabel"
+            tools:text="Pictures" />
+
+
+        <TextView
+            android:id="@+id/tv_sublabel"
+            style="@style/MatchWidth"
+            android:layout_width="0dp"
+            android:singleLine="true"
+            android:textAppearance="@style/Text.HeaderSmall"
+            app:layout_constraintEnd_toEndOf="@id/tv_label"
+            app:layout_constraintStart_toStartOf="@id/tv_label"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            style="@style/WrapContent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_start"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/action" />
+
+        <CheckBox
+            android:id="@+id/cb_checkbox"
+            style="@style/WrapContent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline_end"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="56dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="56dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -2,6 +2,7 @@ package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
 /**
  * Holds the informations to save in SavedInstanceState
@@ -9,9 +10,10 @@ import kotlinx.android.parcel.Parcelize
  * and - if not specified - places empty lists for them
  */
 
+@Deprecated("in this form we won't use this anymore")
 @Parcelize
 data class AppData(
-    @JvmField val fileModels: List<FileModel> = listOf(),
+    @JvmField val fileModels: @RawValue() List<FileModel> = listOf(),
     @JvmField val audioModels: List<AudioModel> = listOf(),
-    @JvmField val settings: Settings
+    @JvmField val settings: @RawValue() Settings
 ) : Parcelable

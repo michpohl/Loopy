@@ -1,0 +1,15 @@
+name: Build Loopy
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  builds:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Build the app
+      run: ./gradlew build

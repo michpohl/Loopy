@@ -1,7 +1,7 @@
 package de.michaelpohl.loopy.common
 
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import de.michaelpohl.loopy.R
 import timber.log.Timber
 

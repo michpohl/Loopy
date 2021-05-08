@@ -1,65 +1,56 @@
 package de.michaelpohl.loopy.common
 
 import android.os.Parcelable
-import de.michaelpohl.loopy.model.DataRepository
 import kotlinx.android.parcel.Parcelize
-import java.io.File
+import java.io.FileDescriptor
 
-//remember this smart solution to get a parcelable from any path class!!
-// annotate in the front and implement in the back
-@Parcelize
-data class FileModel(
-    val path: String,
-    val fileType: FileType,
-    val name: String,
-    val sizeInMB: Double,
-    val extension: String = "",
-    val subFiles: Int = 0
-) : Parcelable {
+sealed class FileModel : Parcelable {
 
-    //TODO beautify this into an Enum or so
-    private var supportedFileTypes = listOf("wav", "mp3", "ogg")
+    abstract val path: String
+    abstract val name: String
 
-    fun getSubFiles(showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
-        return FileHelper.getFilesFromPath(path, showHiddenFiles, onlyFolders)
-    }
+    @Parcelize
+    data class File(
+        override val path: String,
+        override val name: String,
+        val sizeInMB: Double,
+        val extension: String = ""
+    ) : FileModel()
 
-    fun isValidFileType(): Boolean {
-        if (fileType == FileType.FILE) {
-            var isValid = false
+    @Parcelize
+    data class AudioFile(
+        override val path: String,
+        override val name: String,
+        val sizeInMB: Double,
+        val extension: String = "",
+        val isSelected: Boolean? = null
+    ) : FileModel() {
+        fun toAudioModel(): AudioModel {
 
-            DataRepository.settings.allowedFileTypes.forEach {
-//                Timber.d("Testing for: %s", it.suffix)
-                if (name.endsWith(it.suffix)) {
-                    isValid = true
-//                    Timber.d("This is a valid audio file: %s, %s", name, it.suffix)
-                } else {
-//                    Timber.d("This is not a valid audio file: %s, %s", name, it.suffix)
-                }
+            // this just takes the last containing folder and assumes it is the album name
+            // this might be wrong if there is metainformation stored in the file. We'll see
+            val albumNameFromFolder: () -> String = {
+                val pathPieces = this.path.split("/")
+                val length = pathPieces.size
+                pathPieces[length - 2]
             }
-            return isValid
+            return AudioModel(
+                name = this.path, //throw away file extension from name
+                album = albumNameFromFolder(),
+                path = this.path,
+                fileExtension = this.extension,
+                isMediaStoreItem = false
+            )
         }
-        // Folders stay in the list
-        return true
     }
 
-    fun hasSubFolders(): Boolean {
-        var hasSubFolders = false
-        val filesToCheck: List<File> = getSubFiles()
-
-        val foundFolderModels: List<FileModel> =
-            FileHelper.getFileModelsFromFiles(filesToCheck).filter { it.fileType == FileType.FOLDER }
-
-        if (!foundFolderModels.isEmpty()) hasSubFolders = true
-
-        return hasSubFolders
-    }
-
-    fun containsAudioFiles(): Boolean {
-        val filesToCheck: List<File> = getSubFiles()
-        if (FileHelper.getFileModelsFromFiles(filesToCheck).isEmpty()) {
-            return false
-        }
-        return true
-    }
+    @Parcelize
+    data class Folder(
+        override val path: String,
+        override val name: String,
+        val audioSubFiles: Int = 0,
+        val hasSubFolders: Boolean,
+        val containsAudioFiles: Boolean
+    ) : FileModel()
 }
+
