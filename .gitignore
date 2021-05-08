@@ -18,3 +18,5 @@
 .externalNativeBuild/
 .cxx/
 /testfiles
+*.apk
+release
