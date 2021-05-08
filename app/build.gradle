@@ -9,8 +9,8 @@ android {
         applicationId "de.michaelpohl.loopy"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 6
-        versionName "0.10"
+        versionCode 7
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
