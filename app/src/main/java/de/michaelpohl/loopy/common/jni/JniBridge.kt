@@ -1,5 +1,6 @@
 package de.michaelpohl.loopy.common.jni
 
+import androidx.annotation.Keep
 import de.michaelpohl.loopy.common.FileModel
 import timber.log.Timber
 import kotlin.coroutines.Continuation

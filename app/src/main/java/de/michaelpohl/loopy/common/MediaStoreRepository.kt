@@ -91,7 +91,7 @@ class MediaStoreRepository(val context: Context) {
                 do {
                     val audioId: Long = cursor.getLong(id)
                     val albumPath = cursor.getString(data)
-                    val trackNo = cursor.getString(track)
+                    val trackNumberString = cursor.getString(track)
 
                     var audioTitle = cursor.getString(title)
                     var albumName = cursor.getString(album)
@@ -104,7 +104,7 @@ class MediaStoreRepository(val context: Context) {
                     if (artistName == "0" || artistName.contains("unknown")) artistName =
                         context.getString(R.string.unknown)
 
-                    Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNo")
+                    Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNumberString")
                     val c = context.contentResolver
 
                     val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
@@ -116,7 +116,7 @@ class MediaStoreRepository(val context: Context) {
                             name = audioTitle,
                             album = albumName,
                             artist = artistName,
-                            trackNo = trackNo?.toInt() ?: 0,
+                            trackNo = extractTrackNumber(trackNumberString),
                             path = albumPath,
                             extension = extension
                         )
@@ -129,6 +129,18 @@ class MediaStoreRepository(val context: Context) {
             list.addAll(generateArtistItems(this))
         }
         return list
+    }
+
+    private fun extractTrackNumber(trackNo: String?): Int {
+        if (trackNo == null) return 0
+        val numberOnly = trackNo.split("/")[0]
+        Timber.d("Number only: $numberOnly")
+        return try {
+            numberOnly.toInt()
+        } catch (e: NumberFormatException) {
+            Timber.w("Couldn't convert track number to an integer: $e")
+            0
+        }
     }
 
     private fun generateAlbumItems(list: List<MediaStoreItemModel.Track>): Collection<MediaStoreItemModel.Album> {
