@@ -25,4 +25,6 @@
 #-keep class de.michaelpohl.loopy.common.AudioModel{ <fields>; }
 #-keep class de.michaelpohl.loopy.common.FileModel{ <fields>; }
 -dontobfuscate
-#-keep class kotlin.Metadata { *; }
+-dontshrink
+
+

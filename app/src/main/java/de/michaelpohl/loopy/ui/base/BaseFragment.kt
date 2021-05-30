@@ -34,10 +34,6 @@ abstract class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).setupActionBar(
-            !showOptionsMenu,
-            getString(titleResource ?: R.string.appbar_title_player)
-        )
     }
 
     private fun addOnBackPressedCallback() {
@@ -48,6 +44,9 @@ abstract class BaseFragment : Fragment() {
         super.onResume()
         activity?.let {
             (it as MainActivity).currentFragment = this
+            (it as MainActivity).setupActionBar(
+                !showOptionsMenu,
+                getString(titleResource ?: R.string.appbar_title_player))
         }
         viewModel.onFragmentResumed()
     }
