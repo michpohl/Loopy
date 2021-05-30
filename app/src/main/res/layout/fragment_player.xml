@@ -51,18 +51,17 @@
             android:paddingTop="8dp"
             app:layout_constraintBottom_toTopOf="@id/tv_sample_rate"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-             />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_sample_rate"
             style="@style/WrapContent.SingleLine"
             android:padding="4dp"
-            tools:text="test"
             android:text="@{model.sampleRateDisplayText}"
             android:textColor="@color/action"
             app:layout_constraintBottom_toTopOf="@id/controls_separator"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="test" />
 
         <View
             android:id="@+id/controls_separator"
@@ -72,8 +71,7 @@
             android:paddingTop="8dp"
             app:layout_constraintBottom_toTopOf="@id/btn_play"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-             />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/btn_play"
@@ -82,9 +80,9 @@
             android:elevation="2dp"
             android:onClick="@{() -> model.onStartPlaybackClicked()}"
             android:src="@drawable/ic_play"
-            android:tint="@{model.isPlaying? @color/action : @color/white}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btn_pause" />
+            app:layout_constraintStart_toEndOf="@id/btn_pause"
+            app:tint="@color/background_clickable_item" />
 
         <ImageButton
             android:id="@+id/btn_stop"
@@ -93,10 +91,9 @@
             android:elevation="2dp"
             android:onClick="@{() -> model.onStopPlaybackClicked()}"
             android:src="@drawable/ic_stop"
-            android:tint="@color/white"
-
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_pause" />
+            app:layout_constraintEnd_toStartOf="@id/btn_pause"
+            app:tint="@color/background_clickable_item" />
 
         <ImageButton
             android:id="@+id/btn_pause"
@@ -105,11 +102,11 @@
             android:elevation="2dp"
             android:onClick="@{() -> model.onPausePlaybackClicked()}"
             android:src="@drawable/ic_pause"
-            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/background_clickable_item" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -117,9 +114,9 @@
             android:background="@color/window_background"
             android:elevation="10dp"
             android:visibility="@{model.state.processingOverlayVisibility}"
-            tools:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_loading_info"

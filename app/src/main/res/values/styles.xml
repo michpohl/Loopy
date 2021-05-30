@@ -46,7 +46,7 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingRight">20dp</item>
         <item name="android:paddingBottom">12dp</item>
-        <item name="android:tint">@color/white</item>
+        <item name="tint">@color/white</item>
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
     </style>
 
@@ -62,13 +62,13 @@
     </style>
 
     <style name="Button.SmallIcon.Edit">
-        <item name="android:tint">@color/action</item>
+        <item name="tint">@color/action</item>
     </style>
 
     <style name="Button.SmallIcon.Delete">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:tint">@color/action</item>
+        <item name="tint">@color/action</item>
     </style>
 
     <style name="Button.Wide">
@@ -362,7 +362,7 @@
 
     </style>
 
-    <style name="TileIcon"></style>
+    <style name="TileIcon" />
 
     <style name="WrapContent.SingleLine">
         <item name="android:singleLine">true</item>

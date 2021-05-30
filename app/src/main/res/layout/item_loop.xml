@@ -72,7 +72,7 @@
             style="@style/Button.SmallIcon.NoPadding"
             android:paddingLeft="16dp"
             android:src="@drawable/ic_delete"
-            android:tint="@color/action"
+            app:tint="@color/action"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_label" />
 

@@ -41,7 +41,7 @@ class PlayerViewModel(
     val sampleRateDisplayText = MediatorLiveData<String>().apply {
         addSource(state) {
             this.value =
-                "${resources.getString(R.string.player_sample_rate, it.settings.sampleRate.displayName)}"
+                resources.getString(R.string.player_sample_rate, it.settings.sampleRate.displayName)
         }
     }
 
