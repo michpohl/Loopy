@@ -34,7 +34,7 @@ class ExternalStorageManager(val context: Context) {
     fun getAudioModelsInSet(setFolderName: String): List<AudioModel> {
         val audioModels = mutableListOf<AudioModel>()
 
-        getPathContent("${appStorageFolder?.path}/$setFolderName")
+        getPathContent( "${appStorageFolder?.path}/$setFolderName")
             .toFileModels(setOf(AppStateRepository.Companion.AudioFileType.PCM)) // we store only pcm in the set folders
             .filterIsInstance<FileModel.AudioFile>()
             .forEach {
@@ -44,7 +44,7 @@ class ExternalStorageManager(val context: Context) {
     }
 
     fun saveFile(fileToSave: File, path: String): Boolean {
-        var externalFile = File(path, fileToSave.name.toString())
+        val externalFile = File(path, fileToSave.name.toString())
         return try {
             val fileOutPutStream = FileOutputStream(externalFile)
             fileOutPutStream.write(fileToSave.readBytes())

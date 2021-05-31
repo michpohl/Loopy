@@ -92,11 +92,11 @@ class PlayerFragment : BaseFragment() {
         }
 
         // TODO what is this? Is it still needed?
-        try {
-            viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
-        } catch (e: Exception) {
-            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
-        }
+//        try {
+//            viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
+//        } catch (e: Exception) {
+//            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
+//        }
     }
 
     override fun onDestroy() {
@@ -106,6 +106,13 @@ class PlayerFragment : BaseFragment() {
     }
 
     override fun onBackPressed(): Boolean {
+
+        /*
+        TODO FIXME this is a quickfix for the fact that when the player presses back
+         while conversion is in progress, the process does not get canceled properly
+        */
+        if (viewModel.state.value?.processingOverlayVisibility == View.VISIBLE) return true
+
         (requireActivity() as MainActivity).finishAffinity()
         return true
     }

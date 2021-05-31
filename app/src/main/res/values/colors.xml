@@ -4,10 +4,6 @@
     <color name="colorPrimaryDark">#001613</color>
     <color name="colorAccent">@color/action</color>
 
-
-
-
-
     <!--all above this line is going to become a victim of refactoring!!!-->
 
     <!--NEW COLOR SYSTEM-->

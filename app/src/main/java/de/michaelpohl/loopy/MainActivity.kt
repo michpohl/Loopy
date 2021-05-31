@@ -32,7 +32,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
+class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
     private val audioFilesRepo: FilesRepository by inject()
@@ -118,23 +118,20 @@ class MainActivity : AppCompatActivity(), PlayerViewModel.PlayerActionsListener,
         return true
     }
 
-    override fun onOpenFileBrowserClicked() {
-        showFileBrowserFragment()
-    }
+//    override fun onOpenFileBrowserClicked() {
+//        showFileBrowserFragment()
+//    }
 
-    override fun onBrowseMediaStoreClicked() {
-        showMediaStoreBrowserFragment()
-    }
+//    override fun onBrowseMediaStoreClicked() {
+//        showMediaStoreBrowserFragment()
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                drawer.openDrawer(GravityCompat.START)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+        return if (item.itemId == android.R.id.home) {
+            drawer.openDrawer(GravityCompat.START)
+            true
         }
+        else super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

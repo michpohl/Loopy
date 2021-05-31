@@ -7,7 +7,7 @@ import de.michaelpohl.loopy.ui.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber
 import java.io.File
 
-open class MediaStoreBrowserViewModel(
+class MediaStoreBrowserViewModel(
     private val repo: MediaStoreRepository,
     val appStateRepository: AppStateRepository
 ) : BrowserViewModel<MediaStoreBrowserViewModel.UIState>() {
@@ -29,7 +29,7 @@ open class MediaStoreBrowserViewModel(
         override val shouldShowEmptyMessage = itemsToDisplay.isEmpty().toVisibility()
         override val shouldShowSubmitButton = (selectedItems?.isNotEmpty() ?: false).toVisibility()
         override val shouldShowSelectAllButton =
-            (itemsToDisplay.filterIsInstance<FileModel.AudioFile>().size > 1).toVisibility()
+            (itemsToDisplay.filterIsInstance<MediaStoreItemModel.Track>().size > 1).toVisibility()
     }
 
     override fun initUIState(): UIState {

@@ -1,6 +1,5 @@
 package de.michaelpohl.loopy.common.jni
 
-import androidx.annotation.Keep
 import de.michaelpohl.loopy.common.FileModel
 import timber.log.Timber
 import kotlin.coroutines.Continuation
@@ -37,7 +36,6 @@ object JniBridge {
 
     suspend fun setSampleRate(sampleRate: Int): JniResult<Int> = suspendCoroutine { job ->
         if (setSampleRateNative(sampleRate)) {
-//            sampleRate = sampleRate
             Timber.d("Resuming with sampleRate: $sampleRate")
             job.resume(successResult(sampleRate))
         } else {
@@ -154,14 +152,13 @@ object JniBridge {
     private external fun pausePlaybackNative(): Boolean
     private external fun resumePlaybackNative(): Boolean
     private external fun convertFolder(folderName: String): Boolean
-
     private external fun convertSingleFile(
         fileName: String,
         filePath: String,
         setPath: String
     ): Boolean
-    private external fun setSampleRateNative(sampleRate: Int): Boolean
 
+    private external fun setSampleRateNative(sampleRate: Int): Boolean
     enum class ConversionResult {
         All_SUCCESS, SOME_SUCCESS, ALL_FAILED
     }

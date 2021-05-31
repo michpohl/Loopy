@@ -51,7 +51,8 @@ class PlayerViewModel(
 
     // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
     private lateinit var looper: PlayerServiceInterface
-    lateinit var playerActionsListener: PlayerActionsListener
+    var playerActionsListener: PlayerActionsListener? = null
+
     override fun initUIState(): UIState {
         return UIState(
             loopsList = audioFilesRepository.getSingleSetOrStandardSet(),
@@ -208,7 +209,7 @@ class PlayerViewModel(
         name: String,
         currentSteps: Int
     ) {
-        var currentIndex = newLoops.withIndex().find { it.value.name == name }?.index ?: 0
+        val currentIndex = newLoops.withIndex().find { it.value.name == name }?.index ?: 0
         val conversionPercentage =
             calculateConversionProgress(newLoops.size, currentIndex, currentSteps)
         _state.postValue(currentState.copy(conversionProgress = conversionPercentage))

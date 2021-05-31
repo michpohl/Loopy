@@ -73,5 +73,6 @@
     <string name="nav_btn_contact"><![CDATA[Kontakt & Feedback]]></string>
     <string name="feedback_alert_text">Möchtest du dem Entwickler eine Email senden?</string>
     <string name="feedback_alert_title">Feedback senden</string>
+    <string name="loading_overlay_headline">Wandle die ausgewählten Dateien in Raw Audio</string>
 
 </resources>

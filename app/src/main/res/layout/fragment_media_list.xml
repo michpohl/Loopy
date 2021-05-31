@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:background="@color/window_background"
             android:orientation="horizontal"
+                android:visibility="@{model.state.shouldShowSelectAllButton}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -58,7 +59,6 @@
                 android:layout_marginEnd="16dp"
                 android:onClick="@{() -> model.selectAll()}"
                 android:text="@string/btn_select_all"
-                android:visibility="@{model.state.shouldShowSelectAllButton}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_submit"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -68,7 +68,6 @@
                 style="@style/Button.Borderless"
                 android:onClick="@{() -> model.onSubmitClicked()}"
                 android:text="@string/btn_open_selection"
-                android:visibility="@{model.state.shouldShowSubmitButton}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

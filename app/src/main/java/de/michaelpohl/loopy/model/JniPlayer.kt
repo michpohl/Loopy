@@ -71,6 +71,7 @@ class JniPlayer : KoinComponent {
     }
 
     fun getCurrentPosition(): Float {
+        // TODO reimplement
         return 0F
     }
 
