@@ -1,14 +1,26 @@
 package de.michaelpohl.loopy.ui.mediastorebrowser.adapter
 
 import com.example.adapter.adapter.Sorting
+import de.michaelpohl.loopy.ui.mediastorebrowser.MediaStoreBrowserViewModel
+import timber.log.Timber
 
-class MediaStoreBrowserSorting : Sorting.Basic<MediaStoreItemModel>() {
-    override fun sort(input: List<MediaStoreItemModel>): List<MediaStoreItemModel> {
-        return when {
-            input.containsOnly<MediaStoreItemModel.Album>() -> input.sortedBy { it.name }
-            input.containsOnly<MediaStoreItemModel.Artist>() -> input.sortedBy { it.name }
-            input.containsOnly<MediaStoreItemModel.Track>() -> sortTracks(input as List<MediaStoreItemModel.Track>)
-            else -> input
+class MediaStoreBrowserSorting : Sorting.Custom<MediaStoreItemModel, MediaStoreBrowserViewModel.UIState>() {
+
+    override fun sort(input: MediaStoreBrowserViewModel.UIState): List<MediaStoreItemModel> {
+        val sorted = with(input.itemsToDisplay) {
+            when {
+                this.containsOnly<MediaStoreItemModel.Album>() -> this.sortedBy { it.name }
+                this.containsOnly<MediaStoreItemModel.Artist>() -> this.sortedBy { it.name }
+                this.containsOnly<MediaStoreItemModel.Track>() -> sortTracks(this as List<MediaStoreItemModel.Track>)
+                else -> this
+            }
+        }
+        Timber.d("${input.itemsToDisplay}")
+        Timber.d("${input.selectedItems}")
+        return sorted.map { model ->
+            if (model is MediaStoreItemModel.Track) {
+                model.copy(isSelected = (input.selectedItems ?: listOf()).map { it.path }.contains(model.path))
+            } else model
         }
     }
 
@@ -19,8 +31,7 @@ class MediaStoreBrowserSorting : Sorting.Basic<MediaStoreItemModel>() {
     }
 
     private inline fun <reified T> List<MediaStoreItemModel>.containsOnly(): Boolean {
-        var result = true
-        this.forEach { if (it !is T) result = false }
-        return result
+        this.forEach { if (it !is T) return false }
+        return true
     }
 }

@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.adapter.adapter.adapter
+import com.example.adapter.adapter.customAdapter
 import de.michaelpohl.loopy.R
 import de.michaelpohl.loopy.common.FileModel
 import de.michaelpohl.loopy.common.find
@@ -25,10 +26,10 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     private lateinit var binding: FragmentMediaListBinding
     private lateinit var recycler: RecyclerView
 
-    private val browserAdapter = adapter<MediaStoreItemModel> {
+    private val browserAdapter = customAdapter<MediaStoreItemModel, MediaStoreBrowserViewModel.UIState> {
         delegates = listOf(ArtistDelegate(),
             AlbumDelegate { viewModel.onAlbumClicked(it) },
-            TrackDelegate { model -> viewModel.onTrackSelectionChanged(model)})
+            TrackDelegate { model -> viewModel.onTrackSelectionChanged(model) })
         sorting = MediaStoreBrowserSorting()
     }
 
@@ -60,7 +61,8 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     private fun observe() {
         viewModel.state.observeWith {
             Timber.d("Updating: $it")
-            browserAdapter.update(it.itemsToDisplay.toMutableList()) }
+            browserAdapter.update(it)
+        }
     }
 
     override fun getTitle(): String {

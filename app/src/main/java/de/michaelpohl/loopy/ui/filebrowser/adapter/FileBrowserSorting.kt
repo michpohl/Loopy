@@ -22,7 +22,6 @@ class FileBrowserSorting : Sorting.Custom<FileModel, FileBrowserViewModel.UIStat
                 } else it
             }
 
-        val result = folders + rest
-        return result
+        return folders + rest
     }
 }

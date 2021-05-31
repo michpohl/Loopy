@@ -17,7 +17,6 @@ class MediaStoreBrowserViewModel(
         _state.value = initUIState()
     }
 
-
     data class UIState(
         val currentPath: String? = null,
         val acceptedTypes: Set<AppStateRepository.Companion.AudioFileType>,
@@ -48,7 +47,10 @@ class MediaStoreBrowserViewModel(
     }
 
     override fun selectAll() {
-        TODO("Not yet implemented")
+        Timber.d("selectall")
+        _state.value = currentState.copy(
+            selectedItems = currentState.itemsToDisplay.filterIsInstance<MediaStoreItemModel.Track>()
+        )
     }
 
 //    fun onArtistClicked(artist: MediaStoreItemModel.Artist) {
@@ -95,7 +97,6 @@ class MediaStoreBrowserViewModel(
             } else false
         }
     }
-
 
     fun onTrackSelectionChanged(track: MediaStoreItemModel.Track) {
         Timber.d("Clicked on: ${track.path}, is  selected: ${track.isSelected}")
