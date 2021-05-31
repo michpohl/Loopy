@@ -90,13 +90,6 @@ class PlayerFragment : BaseFragment() {
             Timber.d("We have arguments")
             handleArguments()
         }
-
-        // TODO what is this? Is it still needed?
-//        try {
-//            viewModel.playerActionsListener = context as PlayerViewModel.PlayerActionsListener
-//        } catch (e: Exception) {
-//            throw Exception("${context} should implement MusicBrowserFragment.OnItemCLickListener")
-//        }
     }
 
     override fun onDestroy() {

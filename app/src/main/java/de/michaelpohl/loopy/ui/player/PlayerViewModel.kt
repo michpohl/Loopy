@@ -51,7 +51,6 @@ class PlayerViewModel(
 
     // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
     private lateinit var looper: PlayerServiceInterface
-    var playerActionsListener: PlayerActionsListener? = null
 
     override fun initUIState(): UIState {
         return UIState(
@@ -289,11 +288,5 @@ class PlayerViewModel(
     ) : BaseUIState() {
 
         val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
-    }
-
-    interface PlayerActionsListener {
-
-        fun onOpenFileBrowserClicked()
-        fun onBrowseMediaStoreClicked()
     }
 }

@@ -118,14 +118,6 @@ class MainActivity : AppCompatActivity(),
         return true
     }
 
-//    override fun onOpenFileBrowserClicked() {
-//        showFileBrowserFragment()
-//    }
-
-//    override fun onBrowseMediaStoreClicked() {
-//        showMediaStoreBrowserFragment()
-//    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == android.R.id.home) {
             drawer.openDrawer(GravityCompat.START)
