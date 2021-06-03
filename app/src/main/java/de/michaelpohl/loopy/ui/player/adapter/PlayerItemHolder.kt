@@ -46,6 +46,11 @@ class PlayerItemHolder(
     override fun bind(item: AudioModel) {
         model = item
         label.text = model.displayName
+
+        // although state should be set properly, we have to set it when binding, to avoid glitches
+        // caused by how RecyclerView recycles. Works for now.
+        // TODO implement a more elegant solution
+        state = SelectionState.NOT_SELECTED
         itemView.setOnClickListener { clickListener(model) }
 
         /* TODO

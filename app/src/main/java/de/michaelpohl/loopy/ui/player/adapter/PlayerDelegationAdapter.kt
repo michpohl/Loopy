@@ -1,13 +1,12 @@
 package de.michaelpohl.loopy.ui.player.adapter
 
-import com.example.adapter.adapter.AnyDiffCallback
 import com.example.adapter.adapter.DelegationAdapter
 import de.michaelpohl.loopy.common.AudioModel
 
 // TODO refactor with custom Sorting
 class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :
     DelegationAdapter<AudioModel>(
-        AnyDiffCallback(), PlayerItemSorting(),
+        PlayerItemDiffCallback(), PlayerItemSorting(),
         listOf(delegate)
     ) {
 
