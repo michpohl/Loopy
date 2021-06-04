@@ -12,6 +12,25 @@ jobs:
       - name: Checkout repo
         id: checkout
         uses: actions/checkout@v2 
+      - name: Expose version name
+        uses: michpohl/android-expose-version-name-action@v1.0.0
+        with:
+          expose-version-name: 'true'
+          expose-version-code: 'true'
+      - name: Combine env vars
+        uses: michpohl/action-concatenate-strings@v1.0.0
+        with:
+          first: ${{ env.ANDROID_VERSION_NAME }}
+          second: ${{ github.run_number }}
+          separator: '.'
+          output-var-name: 'COMBINED_OUTPUT'
+      - name: Set new version code and number
+        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+        with:
+          build-gradle-path: app/build.gradle
+          version-code: ${{ github.run_number }}
+          version-name: '${{ env.COMBINED_OUTPUT }}'
+          print-file: 'true'
       - name: Build the app
         id: build
         run: ./gradlew build
