@@ -249,8 +249,8 @@ class PlayerViewModel(
     private fun onFileSelected(filename: String) {
         if (looper.getWaitMode()) {
             when (looper.getState()) {
-                PLAYING, PAUSED, READY -> _state.postValue(currentState.copy(filePreselected = filename))
-                STOPPED, UNKNOWN -> startLooper()
+                PLAYING, PAUSED -> _state.postValue(currentState.copy(filePreselected = filename))
+                STOPPED, UNKNOWN, READY -> startLooper()
             }
         } else {
             startLooper()

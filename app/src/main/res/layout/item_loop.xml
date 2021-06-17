@@ -25,6 +25,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:maxLines="1"
             tools:ignore="RtlSymmetry"
             tools:text="item" />
 
@@ -33,6 +34,7 @@
             android:id="@+id/tv_loop_count"
             style="@style/WrapContent"
             android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textAppearance="@style/Text.Standard"
             app:layout_constraintStart_toStartOf="@id/tv_label"
             app:layout_constraintTop_toBottomOf="@id/tv_label"
@@ -41,17 +43,17 @@
         <rm.com.audiowave.AudioWaveView
             android:id="@+id/wave"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="64dp"
             android:layout_margin="8dp"
             app:animateExpansion="false"
-            app:chunkHeight="24dp"
+            app:chunkHeight="64dp"
             app:chunkRadius="0dp"
-            app:chunkSpacing="1dp"
-            app:chunkWidth="1dp"
+            app:chunkSpacing="0dp"
+            app:chunkWidth="3dp"
             android:focusable="false"
             android:clickable="false"
             app:layout_constraintTop_toBottomOf="@id/tv_label"
-            app:minChunkHeight="2dp"
+            app:minChunkHeight="1dp"
             app:waveColor="@android:color/white" />
         
         <View
@@ -70,7 +72,7 @@
         <ImageButton
             android:id="@+id/btn_remove"
             style="@style/Button.SmallIcon.NoPadding"
-            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
             android:src="@drawable/ic_delete"
             app:tint="@color/action"
             app:layout_constraintEnd_toEndOf="parent"
