@@ -52,7 +52,7 @@ bool audioEngineExists(JNIEnv *env, jobject instance) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject instance,
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_selectNative(JNIEnv *env, jobject instance,
                                                             jstring URI) {
     LOGD("loadNative");
 
@@ -67,7 +67,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_selectNative(JNIEnv *env, jobject
 }
 
 JNIEXPORT void JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, jobject instance) {
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, jobject instance) {
     if (audioEngineExists(env, instance)) {
         if (!audioEngine->getWaitMode() || audioEngine->getState() != AudioEngineState::Playing) {
             audioEngine->start();
@@ -78,7 +78,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_startPlaybackNative(JNIEnv *env, 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env,
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env,
                                                                   jobject instance) {
 
     if (audioEngineExists(env, instance)) {
@@ -89,7 +89,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_stopPlaybackNative(JNIEnv *env,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_pausePlaybackNative(JNIEnv *env, jobject instance) {
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_pausePlaybackNative(JNIEnv *env, jobject instance) {
     if (audioEngineExists(env, instance)) {
         bool success = audioEngine->pause();
         return (jboolean) success;
@@ -98,7 +98,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_pausePlaybackNative(JNIEnv *env, 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_resumePlaybackNative(JNIEnv *env, jobject instance) {
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_resumePlaybackNative(JNIEnv *env, jobject instance) {
     if (audioEngineExists(env, instance)) {
         bool success = audioEngine->resume();
         return (jboolean) success;
@@ -109,7 +109,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_resumePlaybackNative(JNIEnv *env,
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_setWaitModeNative(JNIEnv *env, jobject instance,
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_setWaitModeNative(JNIEnv *env, jobject instance,
                                                                  jboolean should_wait) {
     if (audioEngineExists(env, instance)) {
         if (audioEngine->setWaitMode((bool) should_wait)) {
@@ -120,7 +120,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_setWaitModeNative(JNIEnv *env, jo
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_convertFolder(JNIEnv *env, jobject instance,
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_convertFolder(JNIEnv *env, jobject instance,
                                                              jstring folder_name) {
 
     if (callback == nullptr) {
@@ -139,7 +139,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_convertFolder(JNIEnv *env, jobjec
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_convertSingleFile(JNIEnv *env, jobject instance,
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_convertSingleFile(JNIEnv *env, jobject instance,
                                                                  jstring file_name,
                                                                  jstring file_path,
                                                                  jstring set_path) {
@@ -163,7 +163,7 @@ Java_de_michaelpohl_loopy_common_jni_JniBridge_convertSingleFile(JNIEnv *env, jo
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_de_michaelpohl_loopy_common_jni_JniBridge_setSampleRateNative(JNIEnv *env, jobject instance, jint sampleRate) {
+Java_com_michaelpohl_loopyplayer2_common_jni_JniBridge_setSampleRateNative(JNIEnv *env, jobject instance, jint sampleRate) {
     if (audioEngineExists(env, instance)) {
         int currentSampleRate = audioEngine->getSampleRate();
         if (currentSampleRate != (int) sampleRate) {

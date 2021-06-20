@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.michaelpohl.loopy">
+    package="com.michaelpohl.loopyplayer2">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -37,7 +37,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.de.michaelpohl.loopy"
+            android:authorities="com.com.michaelpohl.loopyplayer2"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -48,7 +48,7 @@
 
         <!--        <provider-->
         <!--            android:name=".model.GenericFileProvider"-->
-        <!--            android:authorities="com.de.michaelpohl.loopy"-->
+        <!--            android:authorities="com.com.michaelpohl.loopyplayer2"-->
         <!--            android:exported="false"-->
         <!--            android:grantUriPermissions="true">-->
         <!--            <meta-data-->

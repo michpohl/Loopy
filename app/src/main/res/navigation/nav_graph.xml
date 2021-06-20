@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/playerFragment"
-        android:name="de.michaelpohl.loopy.ui.player.PlayerFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.player.PlayerFragment"
         android:label="PlayerFragment" >
         <action
             android:id="@+id/action_playerFragment_to_fileBrowserFragment"
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/fileBrowserFragment"
-        android:name="de.michaelpohl.loopy.ui.filebrowser.FileBrowserFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.filebrowser.FileBrowserFragment"
         android:label="FileBrowserFragment" >
         <action
             android:id="@+id/action_fileBrowserFragment_to_playerFragment"
@@ -28,11 +28,11 @@
     </fragment>
     <fragment
         android:id="@+id/settingsDialogFragment"
-        android:name="de.michaelpohl.loopy.ui.player.SettingsDialogFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.player.SettingsDialogFragment"
         android:label="SettingsDialogFragment" />
     <fragment
         android:id="@+id/markupViewerFragment"
-        android:name="de.michaelpohl.loopy.ui.help.MarkdownViewerFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.help.MarkdownViewerFragment"
         android:label="MarkupViewerFragment" >
         <action
             android:id="@+id/action_markupViewerFragment_to_licensesFragment"
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/mediaStoreBrowserFragment"
-        android:name="de.michaelpohl.loopy.ui.mediastorebrowser.MediaStoreBrowserFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.mediastorebrowser.MediaStoreBrowserFragment"
         android:label="MediaStoreBrowserFragment" >
         <action
             android:id="@+id/action_mediaStoreBrowserFragment_to_playerFragment"
@@ -48,10 +48,10 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="de.michaelpohl.loopy.ui.settings.SettingsFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.settings.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/licensesFragment"
-        android:name="de.michaelpohl.loopy.ui.licenses.LicensesFragment"
+        android:name="com.michaelpohl.loopyplayer2.ui.licenses.LicensesFragment"
         android:label="LicensesFragment" />
 </navigation>

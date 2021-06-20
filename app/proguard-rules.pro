@@ -20,10 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-#-keep class de.michaelpohl.loopy.common.AppData{ <fields>; }
-#-keep class de.michaelpohl.loopy.common.Settings{ <fields>; }
-#-keep class de.michaelpohl.loopy.common.AudioModel{ <fields>; }
-#-keep class de.michaelpohl.loopy.common.FileModel{ <fields>; }
+#-keep class com.michaelpohl.loopyplayer2.common.AppData{ <fields>; }
+#-keep class com.michaelpohl.loopyplayer2.common.Settings{ <fields>; }
+#-keep class com.michaelpohl.loopyplayer2.common.AudioModel{ <fields>; }
+#-keep class com.michaelpohl.loopyplayer2.common.FileModel{ <fields>; }
 -dontobfuscate
 -dontshrink
 

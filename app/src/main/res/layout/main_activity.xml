@@ -12,7 +12,7 @@
         android:id="@+id/outer_layout"
         style="@style/MatchParent"
         android:orientation="vertical"
-        tools:context="de.michaelpohl.loopy.MainActivity">
+        tools:context="com.michaelpohl.loopyplayer2.MainActivity">
 
 <!--        <include-->
 <!--            layout="@layout/app_bar_main"-->

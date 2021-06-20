@@ -11,22 +11,22 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/background_item_rounded_stroke"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
-        android:background="@drawable/background_item_rounded_stroke"
         android:padding="8dp">
 
         <TextView
             android:id="@+id/tv_label"
             style="@style/MatchHeight"
             android:layout_width="0dp"
+            android:maxLines="1"
             android:paddingStart="8dp"
             android:textAppearance="@style/Text.SubHeaderLarge"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_remove"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:maxLines="1"
             tools:text="item" />
 
 
@@ -37,46 +37,44 @@
             android:paddingEnd="8dp"
             android:textAppearance="@style/Text.Standard"
             app:layout_constraintStart_toStartOf="@id/tv_label"
-            app:layout_constraintTop_toBottomOf="@id/tv_label"
- />
+            app:layout_constraintTop_toBottomOf="@id/tv_label" />
 
         <rm.com.audiowave.AudioWaveView
             android:id="@+id/wave"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="32dp"
             android:layout_margin="8dp"
-            app:animateExpansion="false"
-            app:chunkHeight="64dp"
-            app:chunkRadius="0dp"
-            app:chunkSpacing="0dp"
-            app:chunkWidth="3dp"
-            android:focusable="false"
             android:clickable="false"
+            android:focusable="false"
+            app:animateExpansion="false"
+            app:chunkHeight="24dp"
+            app:chunkRadius="0dp"
+            app:chunkSpacing="1dp"
+            app:chunkWidth="1dp"
             app:layout_constraintTop_toBottomOf="@id/tv_label"
-            app:minChunkHeight="1dp"
+            app:minChunkHeight="2dp"
             app:waveColor="@android:color/white" />
-        
+
         <View
             android:id="@+id/wave_blocker"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:clickable="true"
             android:elevation="1dp"
-            app:layout_constraintStart_toStartOf="@id/wave"
-            app:layout_constraintTop_toTopOf="@id/wave"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="@id/wave"
             app:layout_constraintEnd_toEndOf="@id/wave"
-            android:focusable="true"
-            android:clickable="true"
-            />
+            app:layout_constraintStart_toStartOf="@id/wave"
+            app:layout_constraintTop_toTopOf="@id/wave" />
 
         <ImageButton
             android:id="@+id/btn_remove"
             style="@style/Button.SmallIcon.NoPadding"
             android:paddingStart="16dp"
             android:src="@drawable/ic_delete"
-            app:tint="@color/action"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_label" />
+            app:layout_constraintTop_toTopOf="@id/tv_label"
+            app:tint="@color/action" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
