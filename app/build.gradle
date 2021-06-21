@@ -7,7 +7,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.michaelpohl.loopyplayer2"
-        minSdkVersion 21
+        minSdkVersion 22
         targetSdkVersion 30
         versionCode 2
         versionName "1.0"
@@ -100,8 +100,12 @@ dependencies {
     // oboe
     implementation 'com.google.oboe:oboe:1.6.0'
 
-    // Testing
+    // bug reporting
+    implementation 'ch.acra:acra-mail:5.8.3'
+    implementation'ch.acra:acra-dialog:5.8.3'
+    implementation'ch.acra:acra-advanced-scheduler:5.8.3'
 
+    // Testing
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 
     testImplementation 'junit:junit:4.13.2'
