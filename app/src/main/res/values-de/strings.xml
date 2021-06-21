@@ -74,5 +74,13 @@
     <string name="feedback_alert_text">Möchtest du dem Entwickler eine Email senden?</string>
     <string name="feedback_alert_title">Feedback senden</string>
     <string name="loading_overlay_headline">Wandle die ausgewählten Dateien in Raw Audio</string>
+    <string name="acra_dialog_text">Loopy 2 ist leider abgestürzt. Möchtest Du dem Entwickler eine Email mit dem Crash-Report schicken?</string>
+    <string name="acra_dialog_title">Leider ist die App abgestürzt</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="arca_dialog_comment_prompt">Gib einen Kommentar ein, wenn du möchtest:</string>
+    <string name="arca_dialog_email_prompt">Gib Deine Email-Adresse ein:</string>
+    <string name="error_reporting_email">google@michaelpohl.de</string>
+    <string name="error_reporting_subject">Loopy 2 ist abgestürzt!</string>
 
 </resources>

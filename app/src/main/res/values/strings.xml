@@ -76,6 +76,14 @@
     <string name="feedback_alert_title">Send feedback</string>
     <string name="feedback_alert_text">Do you want to send an email to the developer?</string>
     <string name="loading_overlay_headline">Converting the selected files to raw audio</string>
+    <string name="acra_dialog_text">Unfortunately, Loopy 2 crashed. Do you want to send a crash report email to the developer to help fix the issue?</string>
+    <string name="acra_dialog_title">Sorry, the app crashed</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="arca_dialog_comment_prompt">Enter a comment if you like:</string>
+    <string name="arca_dialog_email_prompt">Enter your email address:</string>
+    <string name="error_reporting_email">google@michaelpohl.de</string>
+    <string name="error_reporting_subject">Loopy 2 crashed!</string>
 
 
 </resources>

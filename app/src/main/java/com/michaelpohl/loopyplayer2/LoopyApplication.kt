@@ -11,6 +11,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import timber.log.Timber
+import java.util.*
 
 class LoopyApplication : Application() {
 
@@ -21,38 +22,19 @@ class LoopyApplication : Application() {
             //core configuration:
             buildConfigClass = BuildConfig::class.java
             reportFormat = StringFormat.JSON
-            //each plugin you chose above can be configured in a block like this:
+
+            // plugins
             dialog {
-                //required
-                text = "hi"
-                //optional, enables the dialog title
-                title = "title"
-                //defaults to android.R.string.ok
-                positiveButtonText = "positive"
-                //defaults to android.R.string.cancel
-                negativeButtonText = "negative"
-                //optional, enables the comment input
-                commentPrompt = "commentprompt"
-                //optional, enables the email input
-                emailPrompt = "emailprompt"
-                //defaults to android.R.drawable.ic_dialog_alert
-//                resIcon = R.drawable.ic_menu_share
-                //optional, defaults to @android:style/Theme.Dialog
+                text = getString(R.string.acra_dialog_text)
+                positiveButtonText = getString(R.string.yes)
+                negativeButtonText = getString(R.string.no)
                 resTheme = R.style.AppTheme
-                //allows other customization
-//                reportDialogClass = MyCustomDialog::class.java
             }
             mailSender {
-                //required
-                mailTo = "google@michaelpohl.de"
-                //defaults to true
+                mailTo = getString(R.string.error_reporting_email)
                 reportAsFile = true
-                //defaults to ACRA-report.stacktrace
-                reportFileName = "Crash.txt"
-                //defaults to "<applicationId> Crash Report"
-                subject = "subject"
-                //defaults to empty
-                body = "body"
+                reportFileName = "${Date()}_${BuildConfig.VERSION_NAME}_CrashReport.txt"
+                subject = getString(R.string.error_reporting_subject)
             }
         }
     }
