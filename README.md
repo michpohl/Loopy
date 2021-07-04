@@ -1,8 +1,9 @@
 # Loopy Audio Looper 2
 
 This is the repository for **Loopy Audio Looper 2**, which is available on the Play Store: 
-[![google-play-badge](https://user-images.githubusercontent.com/25121161/124374823-96549080-dc9e-11eb-8e76-0621073f9b62.png) | width=124](https://play.google.com/store/apps/details?id=com.michaelpohl.loopyplayer2)
 
+[<img src="https://user-images.githubusercontent.com/25121161/124374823-96549080-dc9e-11eb-8e76-0621073f9b62.png" alt="play store logo" width="196">
+](https://play.google.com/store/apps/details?id=com.michaelpohl.loopyplayer2)
 
 ## About the app
 
