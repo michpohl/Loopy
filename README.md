@@ -1,18 +1,26 @@
-# Loopy Audio Looper
+# Loopy Audio Looper 2
 
+This is the repository for **Loopy Audio Looper 2**, which is available on the Play Store: https://play.google.com/store/apps/details?id=com.michaelpohl.loopyplayer2
 
-Loopy is an audio player for Android devices dedicated to seamlessly looping audio files. It can basically loop every audio file you have in your media library.
+## About the app
 
-Find the app in the Google Play Store here: https://play.google.com/store/apps/details?id=com.michaelpohl.loopyplayer2 
-Or just check out this repository and compile it yourself using Android studio or whichever way you like (code in this repo is usually ahead of the version on the Play store)
+This app is meant to provide a simple solution for anyone who wants to loop audio files easily, like DJs, artists or musicians. It can be used for practice sessions, as a source of uninterrupted background atmospheres or to play endless beat loops.
 
-**Loopy is not an audio editor!** So the loops you want to use should already be prepared and edited properly, if you need exact results. It's purpose is to provide a solution to those who just want to play audio files in loop, like DJs, artists, musicians, who can use this for easy training sessions, to provide gapless background atmosphere or play neverending beat loops. I am sure it is not the only app capable of this, but it is the one I made :-)
+If you have tried it before, you might know that it is really hard to find a player that just perfectly and reliably loops an audio track for you. It's a known problem of the Android OS. This player aims to give you just that: Seamless looping. Loopy II uses low-level code to make sure there are no hickups, which could still be observed in some situations with its predecessor.
 
-If you use Loopy's "Wait until finished" you can use Loopy as a very simple live composition tool. It allows you to pre-select what loop to switch to after the current one finishes, so with a prepared set of loops you can put them together on-the-fly.
+The app plays audio files from your media library or files you select from your file browser. You can have a file repeat endlessly, or automatically skip to another loop when it reaches the end.
 
-Loopy is written with joy in Kotlin and C++ using [oboe](https://github.com/google/oboe). The min SDK version is 21.
+Important: If you find bugs in the app, use the contact function in the app so I can fix them faster. If you like the app but are missing a feature, feel free to let me know that too so I can consider it in future releases.
 
+Please be aware, that Loopy II is not an audio editor! That means if you need exact results, your files need to be prepared and cut properly.
 
+## About the source code
+
+This is an Android project using Kotlin and C++. You should be able to just clone the repository and build the app in Android studio.
+
+Internally, Loopy 2 uses [oboe](https://github.com/google/oboe) to do the sound processing. Files selected by the user get converted to raw PCM and stored internally to minimize startup time, then oboe handles queing and playing of the files.
+
+There is also a basic CI/CD setup using Github Actions (it's very basic, it just creates an apk and uploads it to the Play Store ), so if you want to fork this repo and get automated builds you can esily tweak that to your needs.
 
 ### License
 Copyright 2019 Michael Pohl
