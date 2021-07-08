@@ -19,11 +19,11 @@ Please be aware, that Loopy II is not an audio editor! That means if you need ex
 
 ## About the source code
 
-This is an Android project using Kotlin and C++. You should be able to just clone the repository and build the app in Android studio.
+This is an Android project using Kotlin and C++. If you want to play around with it, or fork it, you should be able to just clone the repository and build the app in Android studio.
 
-Internally, Loopy 2 uses [oboe](https://github.com/google/oboe) to do the sound processing. Files selected by the user get converted to raw PCM and stored internally to minimize startup time, then oboe handles queing and playing of the files.
+Internally, Loopy 2 uses [oboe](https://github.com/google/oboe) to do the sound processing. Files selected by the user get converted to raw PCM and stored internally to minimize startup time, then oboe handles queueing and playback of the files.
 
-There is also a basic CI/CD setup using Github Actions (it's very basic, it just creates an apk and uploads it to the Play Store ), so if you want to fork this repo and get automated builds you can esily tweak that to your needs.
+There is also a basic CI/CD setup using Github Actions (it's very basic, it just creates an apk and uploads it to the Play Store ), so if you fork this repo and get automated builds you can easily tweak that to your needs - just add your own secrets.
 
 ### License
 Copyright 2019 Michael Pohl
