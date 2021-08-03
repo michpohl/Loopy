@@ -1,10 +1,10 @@
 package com.michaelpohl.loopyplayer2.ui.settings
 
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.SampleRate
+import com.michaelpohl.shared.SampleRate
 import com.michaelpohl.loopyplayer2.common.Settings
 import com.michaelpohl.loopyplayer2.common.SettingsBuilder
-import com.michaelpohl.loopyplayer2.common.toSampleRate
+import com.michaelpohl.shared.toSampleRate
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel

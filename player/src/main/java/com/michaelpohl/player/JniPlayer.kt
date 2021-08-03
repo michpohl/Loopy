@@ -1,10 +1,9 @@
 package com.michaelpohl.player
 
-import com.michaelpohl.loopyplayer2.common.PlayerState.*
+import com.michaelpohl.shared.PlayerState.*
 import com.michaelpohl.shared.JniResult
-import org.koin.core.KoinComponent
 
-class JniPlayer : KoinComponent {
+class JniPlayer {
 
     var hasLoopFile = false
     var state = UNKNOWN

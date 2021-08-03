@@ -3,6 +3,7 @@ package com.michaelpohl.loopyplayer2.common
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
+import com.michaelpohl.shared.SampleRate
 import kotlinx.android.parcel.Parcelize
 import kotlin.properties.Delegates
 

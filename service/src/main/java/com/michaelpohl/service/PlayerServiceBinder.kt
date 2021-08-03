@@ -1,7 +1,7 @@
 package com.michaelpohl.service
 
 import android.os.Binder
-import com.michaelpohl.loopyplayer2.common.PlayerState
+import com.michaelpohl.shared.PlayerState
 import com.michaelpohl.player.JniPlayer
 import com.michaelpohl.shared.JniResult
 

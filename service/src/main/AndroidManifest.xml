@@ -2,4 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.michaelpohl.service">
 
+    <application>
+
+        <service android:name="com.michaelpohl.service.PlayerService" />
+    </application>
+
 </manifest>

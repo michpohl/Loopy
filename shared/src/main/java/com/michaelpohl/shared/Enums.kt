@@ -1,4 +1,4 @@
-package com.michaelpohl.loopyplayer2.common
+package com.michaelpohl.shared
 
 import com.squareup.moshi.JsonClass
 

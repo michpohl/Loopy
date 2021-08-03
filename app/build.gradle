@@ -119,4 +119,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.5.13'
     androidTestImplementation 'org.mockito:mockito-android:2.7.22'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
-}
+
+    // JSON parsing
+    api 'com.squareup.moshi:moshi:1.12.0'
+    api 'com.squareup.moshi:moshi-adapters:1.11.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'}

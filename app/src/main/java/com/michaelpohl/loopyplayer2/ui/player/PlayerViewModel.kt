@@ -4,7 +4,7 @@ import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.*
-import com.michaelpohl.loopyplayer2.common.PlayerState.*
+import com.michaelpohl.shared.PlayerState.*
 import com.michaelpohl.loopyplayer2.common.util.coroutines.ioJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.uiJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.withUI
@@ -16,6 +16,7 @@ import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.loopyplayer2.ui.util.calculateConversionProgress
+import com.michaelpohl.shared.SampleRate
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import kotlin.system.measureTimeMillis
