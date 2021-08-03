@@ -56,7 +56,7 @@
         <!--                android:resource="@xml/provider_paths" />-->
         <!--        </provider>-->
 
-        <service android:name=".model.PlayerService" />
+        <service android:name="com.michaelpohl.service.PlayerService" />
     </application>
 
 </manifest>

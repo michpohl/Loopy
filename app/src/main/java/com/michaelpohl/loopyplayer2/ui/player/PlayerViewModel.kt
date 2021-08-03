@@ -5,13 +5,14 @@ import androidx.lifecycle.MediatorLiveData
 import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.*
 import com.michaelpohl.loopyplayer2.common.PlayerState.*
-import com.michaelpohl.loopyplayer2.common.jni.JniBridge
 import com.michaelpohl.loopyplayer2.common.util.coroutines.ioJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.uiJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.withUI
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.model.FilesRepository
-import com.michaelpohl.loopyplayer2.model.PlayerServiceInterface
+import com.michaelpohl.service.PlayerServiceInterface
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.loopyplayer2.ui.util.calculateConversionProgress
@@ -173,7 +174,7 @@ class PlayerViewModel(
     }
 
     fun addNewLoops(newLoops: List<FileModel.AudioFile>) {
-        JniBridge.conversionProgressListener =
+        com.michaelpohl.player.jni.JniBridge.conversionProgressListener =
             { name, steps -> onConversionProgressUpdated(newLoops, name, steps) }
         // TODO ask the user if adding or replacing is desired
         _state.value = currentState.copy(processingOverlayVisibility = true.toVisibility())
@@ -182,7 +183,7 @@ class PlayerViewModel(
                 val result = audioFilesRepository.addLoopsToSet(newLoops)
 
                 // TODO set handling is a total work in progress
-                if (result != JniBridge.ConversionResult.ALL_FAILED) { // if at least one from the conversion succeeded, update UI
+                if (result != com.michaelpohl.player.jni.JniBridge.ConversionResult.ALL_FAILED) { // if at least one from the conversion succeeded, update UI
                     val loops = audioFilesRepository.getSingleSetOrStandardSet()
 
                     withUI {

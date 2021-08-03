@@ -1,4 +1,4 @@
-package com.michaelpohl.loopyplayer2.common.jni
+package com.michaelpohl.shared
 
 sealed class JniResult<out T> {
     abstract val data: T?

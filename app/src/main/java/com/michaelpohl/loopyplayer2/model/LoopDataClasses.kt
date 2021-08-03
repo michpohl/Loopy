@@ -1,8 +1,8 @@
 package com.michaelpohl.loopyplayer2.model
 
 import com.squareup.moshi.JsonClass
-import com.michaelpohl.loopyplayer2.common.AudioModel
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.toFileModel
 import java.io.File
 

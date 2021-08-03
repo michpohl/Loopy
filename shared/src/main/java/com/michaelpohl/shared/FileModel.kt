@@ -1,4 +1,4 @@
-package com.michaelpohl.loopyplayer2.common
+package com.michaelpohl.shared
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -24,6 +24,7 @@ sealed class FileModel : Parcelable {
         val extension: String = "",
         val isSelected: Boolean? = null
     ) : FileModel() {
+        // TODO move to extension wherever AudioModel ends up
         fun toAudioModel(): AudioModel {
 
             // this just takes the last containing folder and assumes it is the album name

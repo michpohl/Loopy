@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
+import com.michaelpohl.shared.FileModel
 import timber.log.Timber
 import java.io.File
 import kotlin.math.pow

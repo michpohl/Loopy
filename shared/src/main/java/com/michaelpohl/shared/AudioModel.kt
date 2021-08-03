@@ -1,9 +1,8 @@
-package com.michaelpohl.loopyplayer2.common
+package com.michaelpohl.shared
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-//@JsonClass(generateAdapter = true)
 @Parcelize
 data class AudioModel(
     val name: String,

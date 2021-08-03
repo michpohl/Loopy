@@ -1,6 +1,6 @@
-package com.michaelpohl.loopyplayer2.common.jni
+package com.michaelpohl.player.jni
 
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.*
 import timber.log.Timber
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume

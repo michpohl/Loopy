@@ -1,7 +1,7 @@
-package com.michaelpohl.loopyplayer2.model
+package com.michaelpohl.service
 
 import com.michaelpohl.loopyplayer2.common.PlayerState
-import com.michaelpohl.loopyplayer2.common.jni.JniResult
+import com.michaelpohl.shared.JniResult
 
 interface PlayerServiceInterface {
     suspend fun select(path: String): JniResult<String>

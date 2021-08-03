@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import com.michaelpohl.delegationadapter.ClickableAdapterItemDelegate
 import com.michaelpohl.delegationadapter.inflateLayout
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.FileModel
 
 class FolderItemDelegate(override val clickListener: (FileModel.Folder) -> Unit) :
     ClickableAdapterItemDelegate<FileModel.Folder, FolderItemHolder>() {

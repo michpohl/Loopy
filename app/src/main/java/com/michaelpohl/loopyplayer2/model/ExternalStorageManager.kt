@@ -2,10 +2,10 @@ package com.michaelpohl.loopyplayer2.model
 
 import android.content.Context
 import android.os.Environment
-import com.michaelpohl.loopyplayer2.common.AudioModel
-import com.michaelpohl.loopyplayer2.common.FileModel
-import com.michaelpohl.loopyplayer2.common.jni.JniBridge
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.toFileModels
+import com.michaelpohl.player.jni.JniBridge
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream

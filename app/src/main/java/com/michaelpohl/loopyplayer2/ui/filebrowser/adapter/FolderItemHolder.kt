@@ -2,7 +2,7 @@ package com.michaelpohl.loopyplayer2.ui.filebrowser.adapter
 
 import android.view.View
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.getDrawable
 import com.michaelpohl.loopyplayer2.common.gone
 

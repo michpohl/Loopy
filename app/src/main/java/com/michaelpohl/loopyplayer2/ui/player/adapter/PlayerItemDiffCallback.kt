@@ -1,7 +1,7 @@
 package com.michaelpohl.loopyplayer2.ui.player.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.michaelpohl.loopyplayer2.common.AudioModel
+import com.michaelpohl.shared.AudioModel
 
 class PlayerItemDiffCallback : DiffUtil.ItemCallback<AudioModel>() {
 

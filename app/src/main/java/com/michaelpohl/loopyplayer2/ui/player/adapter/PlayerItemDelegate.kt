@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import com.michaelpohl.delegationadapter.AdapterItemDelegate
 import com.michaelpohl.delegationadapter.inflateLayout
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.AudioModel
+import com.michaelpohl.shared.AudioModel
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 
 class PlayerItemDelegate(

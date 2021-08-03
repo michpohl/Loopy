@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.michaelpohl.loopyplayer2.MainActivity
 import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.DialogHelper
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.find
 import com.michaelpohl.loopyplayer2.databinding.FragmentPlayerBinding
-import com.michaelpohl.loopyplayer2.model.PlayerService
-import com.michaelpohl.loopyplayer2.model.PlayerServiceBinder
+import com.michaelpohl.service.PlayerService
+import com.michaelpohl.service.PlayerServiceBinder
 import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerItemDelegate

@@ -2,6 +2,7 @@ package com.michaelpohl.loopyplayer2.ui.mediastorebrowser
 
 import com.michaelpohl.loopyplayer2.common.*
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.filebrowser.BrowserViewModel
 import com.michaelpohl.loopyplayer2.ui.mediastorebrowser.adapter.MediaStoreItemModel
 import timber.log.Timber

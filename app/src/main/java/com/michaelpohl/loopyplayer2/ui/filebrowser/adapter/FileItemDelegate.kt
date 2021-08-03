@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import com.michaelpohl.delegationadapter.AdapterItemDelegate
 import com.michaelpohl.delegationadapter.inflateLayout
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.FileModel
 
 class FileItemDelegate :
     AdapterItemDelegate<FileModel.File, FileItemHolder>() {

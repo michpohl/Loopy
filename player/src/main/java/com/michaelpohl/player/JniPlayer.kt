@@ -1,8 +1,7 @@
-package com.michaelpohl.loopyplayer2.model
+package com.michaelpohl.player
 
 import com.michaelpohl.loopyplayer2.common.PlayerState.*
-import com.michaelpohl.loopyplayer2.common.jni.JniBridge
-import com.michaelpohl.loopyplayer2.common.jni.JniResult
+import com.michaelpohl.shared.JniResult
 import org.koin.core.KoinComponent
 
 class JniPlayer : KoinComponent {
@@ -12,40 +11,40 @@ class JniPlayer : KoinComponent {
     var isReady = false
         private set
 
-    var waitMode = JniBridge.waitMode
+    var waitMode = com.michaelpohl.player.jni.JniBridge.waitMode
         private set
 
     lateinit var onLoopedListener: (Int) -> Unit
     suspend fun start(): JniResult<String> {
-        with(JniBridge.start()) {
+        with(com.michaelpohl.player.jni.JniBridge.start()) {
             if (this.isSuccess()) state = PLAYING
             return@start this
         }
     }
 
     suspend fun pause(): JniResult<Nothing> {
-        with(JniBridge.pause()) {
+        with(com.michaelpohl.player.jni.JniBridge.pause()) {
             if (this.isSuccess()) state = PAUSED
             return@pause this
         }
     }
 
     suspend fun resume(): JniResult<Nothing> {
-        with(JniBridge.resume()) {
+        with(com.michaelpohl.player.jni.JniBridge.resume()) {
             if (this.isSuccess()) state = PLAYING
             return@resume this
         }
     }
 
     suspend fun stop(): JniResult<Nothing> {
-        with(JniBridge.stop()) {
+        with(com.michaelpohl.player.jni.JniBridge.stop()) {
             if (this.isSuccess()) state = STOPPED
             return@stop this
         }
     }
 
     suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
-        val result = JniBridge.setWaitMode(shouldWait)
+        val result = com.michaelpohl.player.jni.JniBridge.setWaitMode(shouldWait)
         if (result.isSuccess()) waitMode = result.data ?: false
         return result
     }
@@ -59,15 +58,15 @@ class JniPlayer : KoinComponent {
     }
 
     fun setFileStartedByPlayerListener(listener: (String) -> Unit) {
-        JniBridge.fileStartedByPlayerListener = listener
+        com.michaelpohl.player.jni.JniBridge.fileStartedByPlayerListener = listener
     }
 
     fun setPlaybackProgressListener(listener: (String, Int) -> Unit) {
-        JniBridge.playbackProgressListener = listener
+        com.michaelpohl.player.jni.JniBridge.playbackProgressListener = listener
     }
 
     suspend fun select(path: String): JniResult<String> {
-        return JniBridge.select(path)
+        return com.michaelpohl.player.jni.JniBridge.select(path)
     }
 
     fun getCurrentPosition(): Float {
@@ -76,6 +75,6 @@ class JniPlayer : KoinComponent {
     }
 
     suspend fun setSampleRate(sampleRate: Int): JniResult<Int> {
-       return JniBridge.setSampleRate(sampleRate)
+       return com.michaelpohl.player.jni.JniBridge.setSampleRate(sampleRate)
     }
 }

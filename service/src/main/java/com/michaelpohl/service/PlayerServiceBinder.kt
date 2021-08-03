@@ -1,8 +1,9 @@
-package com.michaelpohl.loopyplayer2.model
+package com.michaelpohl.service
 
 import android.os.Binder
 import com.michaelpohl.loopyplayer2.common.PlayerState
-import com.michaelpohl.loopyplayer2.common.jni.JniResult
+import com.michaelpohl.player.JniPlayer
+import com.michaelpohl.shared.JniResult
 
 class PlayerServiceBinder : Binder(),
     PlayerServiceInterface {

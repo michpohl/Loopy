@@ -1,6 +1,8 @@
 package com.michaelpohl.loopyplayer2.common
 
 import android.os.Parcelable
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 

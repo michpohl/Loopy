@@ -1,7 +1,7 @@
 package com.michaelpohl.loopyplayer2.ui.player.adapter
 
 import com.michaelpohl.delegationadapter.Sorting
-import com.michaelpohl.loopyplayer2.common.AudioModel
+import com.michaelpohl.shared.AudioModel
 
 class PlayerItemSorting : Sorting.Basic<AudioModel>() {
 

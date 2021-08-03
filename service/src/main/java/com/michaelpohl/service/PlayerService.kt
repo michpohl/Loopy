@@ -1,4 +1,4 @@
-package com.michaelpohl.loopyplayer2.model
+package com.michaelpohl.service
 
 import android.app.Service
 import android.content.Intent

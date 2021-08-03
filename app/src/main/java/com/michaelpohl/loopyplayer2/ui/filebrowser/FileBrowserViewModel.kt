@@ -1,6 +1,6 @@
 package com.michaelpohl.loopyplayer2.ui.filebrowser
 
-import com.michaelpohl.loopyplayer2.common.FileModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.StorageRepository
 import com.michaelpohl.loopyplayer2.common.toFileModels
 import com.michaelpohl.loopyplayer2.common.toVisibility

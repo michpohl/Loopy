@@ -2,9 +2,8 @@ package com.michaelpohl.loopyplayer2.model
 
 import android.content.res.AssetManager
 import com.squareup.moshi.Moshi
-import com.michaelpohl.loopyplayer2.common.AudioModel
-import com.michaelpohl.loopyplayer2.common.FileModel
-import com.michaelpohl.loopyplayer2.common.jni.JniBridge
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.model.ExternalStorageManager.Companion.STANDARD_SET_FOLDER_NAME
 import com.michaelpohl.loopyplayer2.ui.licenses.Libraries
 import org.koin.core.KoinComponent
@@ -50,9 +49,9 @@ class FilesRepository(
     suspend fun addLoopsToSet(
         newLoops: List<FileModel.AudioFile>,
         setName: String? = null
-    ): JniBridge.ConversionResult {
+    ): com.michaelpohl.player.jni.JniBridge.ConversionResult {
 
-        return JniBridge.convertAndAddToSet(
+        return com.michaelpohl.player.jni.JniBridge.convertAndAddToSet(
             newLoops, storage.getFullPath(setName ?: STANDARD_SET_FOLDER_NAME)
         )
     }

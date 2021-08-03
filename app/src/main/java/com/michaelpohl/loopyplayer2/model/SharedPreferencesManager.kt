@@ -3,7 +3,7 @@ package com.michaelpohl.loopyplayer2.model
 import android.content.Context
 import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
-import com.michaelpohl.loopyplayer2.common.AudioModel
+import com.michaelpohl.shared.AudioModel
 import com.michaelpohl.loopyplayer2.common.Settings
 import timber.log.Timber
 
