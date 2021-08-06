@@ -1,11 +1,14 @@
 package com.michaelpohl.loopyplayer2
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -26,6 +29,7 @@ import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.model.FilesRepository
 import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.player.PlayerFragment
+import com.michaelpohl.service.PlayerService
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -33,6 +37,25 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
+
+    private val serviceConnection = object : ServiceConnection {
+        var isReady = false
+            private set
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            Timber.d("Service connected")
+            val binder = service as PlayerService.ServiceBinder
+            playerService = binder.service.apply {
+                activityClass = this@MainActivity.javaClass
+                start()
+            }
+            isReady = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            Timber.d("Service disconnected")
+        }
+    }
 
     private val audioFilesRepo: FilesRepository by inject()
     private val appState: AppStateRepository by inject()
@@ -42,6 +65,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawer: DrawerLayout
     var currentFragment: BaseFragment? = null
     private lateinit var container: LinearLayout
+    private lateinit var playerService: PlayerService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -55,6 +79,23 @@ class MainActivity : AppCompatActivity(),
         handlePossibleIntents()
         setupDrawer()
         keepScreenOnIfDesired(appState.settings)
+        // Let the service know the activity is around
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("Activity Resumed for service")
+        bindService(
+            Intent(this, PlayerService::class.java),
+            serviceConnection,
+            BIND_AUTO_CREATE
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("should unbind")
+        unbindService(serviceConnection)
     }
 
     private fun setupAppData() {
@@ -121,8 +162,7 @@ class MainActivity : AppCompatActivity(),
         return if (item.itemId == android.R.id.home) {
             drawer.openDrawer(GravityCompat.START)
             true
-        }
-        else super.onOptionsItemSelected(item)
+        } else super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -249,5 +289,3 @@ class MainActivity : AppCompatActivity(),
         }
     }
 }
-
-

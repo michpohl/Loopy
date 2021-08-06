@@ -1,76 +1,78 @@
 package com.michaelpohl.service
 
 import android.os.Binder
-import com.michaelpohl.shared.PlayerState
 import com.michaelpohl.player.JniPlayer
+import com.michaelpohl.player.PlayerInterface
 import com.michaelpohl.shared.JniResult
+import com.michaelpohl.shared.PlayerState
 
-class PlayerServiceBinder : Binder(),
-    PlayerServiceInterface {
+open class PlayerServiceBinder : Binder(),
+    PlayerInterface {
 
-    private var looper = JniPlayer()
+    protected var player = JniPlayer()
     override suspend fun pause(): JniResult<Nothing> {
-        return looper.pause()
+        return player.pause()
     }
 
     override suspend fun resume(): JniResult<Nothing> {
-        return looper.resume()
+        return player.resume()
     }
 
     override suspend fun stop(): JniResult<Nothing> {
-        return looper.stop()
+        return player.stop()
     }
 
     override suspend fun setWaitMode(shouldWait: Boolean): JniResult<Boolean> {
-        return looper.setWaitMode(shouldWait)
+        return player.setWaitMode(shouldWait)
     }
 
     override suspend fun setSampleRate(sampleRate: Int): JniResult<Int> {
-       return looper.setSampleRate(sampleRate)
+        return player.setSampleRate(sampleRate)
     }
 
     override fun setFileStartedByPlayerListener(listener: (String) -> Unit) {
-        looper.setFileStartedByPlayerListener(listener)
+        player.setFileStartedByPlayerListener(listener)
     }
 
     override fun setPlaybackProgressListener(listener: (String, Int) -> Unit) {
-        looper.setPlaybackProgressListener(listener)
+        player.setPlaybackProgressListener(listener)
     }
 
     override fun changePlaybackPosition(newPosition: Float) =
-        looper.changePlaybackPosition(newPosition)
+        player.changePlaybackPosition(newPosition)
 
-    override fun resetPreSelection() = looper.resetPreSelection()
+    override fun resetPreSelection() = player.resetPreSelection()
     override fun isReady(): Boolean {
-        return looper.isReady
+        return player.isReady
     }
 
     override fun getState(): PlayerState {
-        return looper.state
+        return player.state
     }
 
     override fun getWaitMode(): Boolean {
-        return looper.waitMode
+        return player.waitMode
     }
 
     override fun setHasLoopFile(hasFile: Boolean) {
-        looper.hasLoopFile = hasFile
+        player.hasLoopFile = hasFile
     }
 
     override fun setOnLoopedListener(receiver: (Int) -> Unit) {
-        looper.onLoopedListener = receiver
+        player.onLoopedListener = receiver
     }
 
-    override fun getCurrentPosition() = looper.getCurrentPosition()
+    override fun getCurrentPosition() = player.getCurrentPosition()
+    // TODO refactor this so it's not needed outside
     override fun hasLoopFile(): Boolean {
-        return looper.hasLoopFile
+        return player.hasLoopFile
     }
 
     override suspend fun select(path: String): JniResult<String> {
-        return looper.select(path)
+        return player.select(path)
     }
 
     override suspend fun play(): JniResult<String> {
-        return looper.start()
+        return player.start()
     }
 }

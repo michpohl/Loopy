@@ -1,9 +1,10 @@
-package com.michaelpohl.service
+package com.michaelpohl.player
 
 import com.michaelpohl.shared.PlayerState
 import com.michaelpohl.shared.JniResult
 
-interface PlayerServiceInterface {
+// TODO evaluate if needed
+interface PlayerInterface {
     suspend fun select(path: String): JniResult<String>
     suspend fun play(): JniResult<String>
     suspend fun pause(): JniResult<Nothing>

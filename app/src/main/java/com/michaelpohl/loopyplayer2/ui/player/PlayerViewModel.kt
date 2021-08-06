@@ -10,7 +10,7 @@ import com.michaelpohl.loopyplayer2.common.util.coroutines.uiJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.withUI
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.model.FilesRepository
-import com.michaelpohl.service.PlayerServiceInterface
+import com.michaelpohl.player.PlayerInterface
 import com.michaelpohl.shared.AudioModel
 import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
@@ -52,7 +52,7 @@ class PlayerViewModel(
     private var waitmode: Boolean? = null
 
     // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
-    private lateinit var looper: PlayerServiceInterface
+    private lateinit var playerInterface: PlayerInterface
 
     override fun initUIState(): UIState {
         return UIState(
@@ -73,35 +73,35 @@ class PlayerViewModel(
     override fun onFragmentPaused() {
         super.onFragmentPaused()
         uiJob {
-            if (!currentState.settings.playInBackground) looper.pause()
+            if (!currentState.settings.playInBackground) playerInterface.pause()
         }
     }
 
     fun setPlayerWaitMode(shouldWait: Boolean) {
-        if (!::looper.isInitialized || waitmode == shouldWait) return
+        if (!::playerInterface.isInitialized || waitmode == shouldWait) return
         uiJob {
-            if (looper.setWaitMode(shouldWait).isSuccess()) {
+            if (playerInterface.setWaitMode(shouldWait).isSuccess()) {
                 waitmode = shouldWait
             } else error("Failed to set wait mode. This is a program error.")
 
             // unselect if waitmode was turned off
-            if (!looper.getWaitMode()) {
+            if (!playerInterface.getWaitMode()) {
                 _state.value = currentState.copy(filePreselected = "")
             }
         }
     }
 
     fun setPlayerSampleRate(sampleRate: SampleRate) {
-        if (!::looper.isInitialized) return
+        if (!::playerInterface.isInitialized) return
         uiJob {
-            if (!looper.setSampleRate(sampleRate.intValue).isSuccess()) {
+            if (!playerInterface.setSampleRate(sampleRate.intValue).isSuccess()) {
                 error("Failed to set sample rate. This is a program error")
             }
         }
     }
 
-    fun setPlayer(player: PlayerServiceInterface) {
-        looper = player.apply {
+    fun setPlayer(player: PlayerInterface) {
+        playerInterface = player.apply {
             setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
             setPlaybackProgressListener { name, value ->
                 _state.postValue(currentState.copy(playbackProgress = Pair(name, value)))
@@ -111,20 +111,20 @@ class PlayerViewModel(
 
     fun onStartPlaybackClicked() {
         uiJob {
-            when (looper.getState()) {
+            when (playerInterface.getState()) {
                 PLAYING -> { /* do nothing */
                 }
                 PAUSED -> {
-                    looper.resume()
+                    playerInterface.resume()
                     _state.value = currentState.copy(isPlaying = true)
                 }
-                else -> if (looper.hasLoopFile()) startLooper()
+                else -> if (playerInterface.hasLoopFile()) startLooper()
             }
         }
     }
 
     fun onStopPlaybackClicked() {
-        when (looper.getState()) {
+        when (playerInterface.getState()) {
             PLAYING, PAUSED -> stopLooper()
             else -> { /* do nothing */
             }
@@ -133,13 +133,13 @@ class PlayerViewModel(
 
     fun onPausePlaybackClicked() {
         uiJob {
-            when (looper.getState()) {
+            when (playerInterface.getState()) {
                 PLAYING -> {
-                    looper.pause()
+                    playerInterface.pause()
                     _state.value = currentState.copy(isPlaying = false)
                 }
                 PAUSED -> {
-                    looper.resume()
+                    playerInterface.resume()
                     _state.value = currentState.copy(isPlaying = true)
                 }
                 else -> { /* do nothing */
@@ -151,7 +151,7 @@ class PlayerViewModel(
 
     fun onLoopClicked(audioModel: AudioModel) {
         uiJob {
-            with(looper.select(audioModel.path)) {
+            with(playerInterface.select(audioModel.path)) {
                 if (this.isSuccess()) {
                     this.data?.let {
                         onFileSelected(it)
@@ -163,7 +163,7 @@ class PlayerViewModel(
 
     fun stopLooper() {
         uiJob {
-            if (looper.stop().isSuccess()) {
+            if (playerInterface.stop().isSuccess()) {
                 _state.value = currentState.copy(
                     playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
                     fileInFocus = "",
@@ -230,7 +230,7 @@ class PlayerViewModel(
     }
 
     fun onProgressChangedByUser(newProgress: Float) {
-        looper.changePlaybackPosition(newProgress)
+        playerInterface.changePlaybackPosition(newProgress)
     }
 
     fun clearLoops() {
@@ -249,8 +249,8 @@ class PlayerViewModel(
     }
 
     private fun onFileSelected(filename: String) {
-        if (looper.getWaitMode()) {
-            when (looper.getState()) {
+        if (playerInterface.getWaitMode()) {
+            when (playerInterface.getState()) {
                 PLAYING, PAUSED -> _state.postValue(currentState.copy(filePreselected = filename))
                 STOPPED, UNKNOWN, READY -> startLooper()
             }
@@ -261,7 +261,7 @@ class PlayerViewModel(
 
     private fun startLooper() {
         uiJob {
-            with(looper.play()) {
+            with(playerInterface.play()) {
                 if (this.isSuccess()) {
                     this.data?.let {
                         _state.postValue(
