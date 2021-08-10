@@ -30,6 +30,7 @@ import com.michaelpohl.loopyplayer2.model.FilesRepository
 import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.player.PlayerFragment
 import com.michaelpohl.service.PlayerService
+import com.michaelpohl.service.PlayerServiceConnection
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -38,34 +39,15 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 
-    private val serviceConnection = object : ServiceConnection {
-        var isReady = false
-            private set
-
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            Timber.d("Service connected")
-            val binder = service as PlayerService.ServiceBinder
-            playerService = binder.service.apply {
-                activityClass = this@MainActivity.javaClass
-                start()
-            }
-            isReady = true
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            Timber.d("Service disconnected")
-        }
-    }
-
     private val audioFilesRepo: FilesRepository by inject()
     private val appState: AppStateRepository by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
+    private val serviceConnection = PlayerServiceConnection(this.javaClass)
 
     private lateinit var drawer: DrawerLayout
     var currentFragment: BaseFragment? = null
     private lateinit var container: LinearLayout
-    private lateinit var playerService: PlayerService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -79,7 +61,6 @@ class MainActivity : AppCompatActivity(),
         handlePossibleIntents()
         setupDrawer()
         keepScreenOnIfDesired(appState.settings)
-        // Let the service know the activity is around
     }
 
     override fun onResume() {

@@ -1,5 +1,6 @@
 package com.michaelpohl.service
 
+import android.media.session.MediaSession
 import android.os.Binder
 import com.michaelpohl.player.JniPlayer
 import com.michaelpohl.player.PlayerInterface
@@ -9,12 +10,18 @@ import com.michaelpohl.shared.PlayerState
 open class PlayerServiceBinder : Binder(),
     PlayerInterface {
 
+
+
+    lateinit var session: MediaSession // TODO check if we can do without lateinit
     protected var player = JniPlayer()
+
+
     override suspend fun pause(): JniResult<Nothing> {
         return player.pause()
     }
 
     override suspend fun resume(): JniResult<Nothing> {
+
         return player.resume()
     }
 

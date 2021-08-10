@@ -35,8 +35,6 @@ class PlayerFragment : BaseFragment() {
 
     override val showOptionsMenu = true
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +48,10 @@ class PlayerFragment : BaseFragment() {
         recycler = binding.root.find(R.id.rv_loops)
         initAdapter()
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onResume() {
@@ -125,31 +127,6 @@ class PlayerFragment : BaseFragment() {
             }
         }
     }
-
-    // TODO rebuild
-//    private fun bindAudioService() {
-//        if (playerServiceBinder == null) {
-//            val intent = Intent(activity, PlayerService::class.java)
-//
-//            // Below code will invoke serviceConnection's onServiceConnected method.
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                requireActivity().startForegroundService(intent)
-//            } else {
-//                requireActivity().startService(intent)
-//            }
-//            requireActivity().bindService(
-//                intent,
-//                serviceConnection,
-//                Context.BIND_AUTO_CREATE
-//            )
-//        }
-//    }
-
-//    private fun unBindAudioService() {
-//        if (playerServiceBinder != null) {
-//            activity?.unbindService(serviceConnection)
-//        }
-//    }
 
     fun clearLoops() {
         val dialogHelper = DialogHelper(requireActivity())

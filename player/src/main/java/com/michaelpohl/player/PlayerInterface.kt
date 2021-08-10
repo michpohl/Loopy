@@ -1,10 +1,13 @@
 package com.michaelpohl.player
 
+import android.media.session.MediaSession
 import com.michaelpohl.shared.PlayerState
 import com.michaelpohl.shared.JniResult
 
 // TODO evaluate if needed
 interface PlayerInterface {
+
+
     suspend fun select(path: String): JniResult<String>
     suspend fun play(): JniResult<String>
     suspend fun pause(): JniResult<Nothing>
