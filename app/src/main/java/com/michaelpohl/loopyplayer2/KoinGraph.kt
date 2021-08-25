@@ -12,6 +12,7 @@ import com.michaelpohl.loopyplayer2.ui.licenses.LicensesViewModel
 import com.michaelpohl.loopyplayer2.ui.mediastorebrowser.MediaStoreBrowserViewModel
 import com.michaelpohl.loopyplayer2.ui.player.PlayerViewModel
 import com.michaelpohl.loopyplayer2.ui.settings.SettingsViewModel
+import com.michaelpohl.service.PlayerServiceConnection
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -35,12 +36,13 @@ object KoinGraph {
         single { AppStateRepository(get()) }
         single { StorageRepository(get()) }
         single { MediaStoreRepository(androidApplication()) }
+        single { PlayerServiceConnection(MainActivity::class.java) }
     }
 
     private val viewModelModule = module {
         viewModel { FileBrowserViewModel(get(), get()) }
         viewModel { MediaStoreBrowserViewModel(get(), get()) }
-        viewModel { PlayerViewModel(get(), get()) }
+        viewModel { PlayerViewModel(get(), get(), get()) }
         viewModel { MarkdownViewerViewModel(get()) }
         viewModel { SettingsViewModel(get()) }
         viewModel { LicensesViewModel(get()) }

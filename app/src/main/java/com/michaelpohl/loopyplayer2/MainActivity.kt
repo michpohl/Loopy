@@ -41,9 +41,9 @@ class MainActivity : AppCompatActivity(),
 
     private val audioFilesRepo: FilesRepository by inject()
     private val appState: AppStateRepository by inject()
+    private val serviceConnection: PlayerServiceConnection by inject()
 
     private val defaultFilesPath = Environment.getExternalStorageDirectory().toString()
-    private val serviceConnection = PlayerServiceConnection(this.javaClass)
 
     private lateinit var drawer: DrawerLayout
     var currentFragment: BaseFragment? = null
@@ -210,6 +210,8 @@ class MainActivity : AppCompatActivity(),
         // TODO
     }
 
+
+    // TODO move all of the navigation stuff into a separate class, maybe a "SimpleNavigator"
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {
         nav_host_fragment.findNavController().navigate(
             R.id.action_playerFragment_to_fileBrowserFragment, buildStringArgs(path)

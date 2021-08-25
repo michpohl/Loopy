@@ -3,19 +3,21 @@ package com.michaelpohl.loopyplayer2.ui.player
 import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.*
-import com.michaelpohl.shared.PlayerState.*
+import com.michaelpohl.loopyplayer2.common.Settings
+import com.michaelpohl.loopyplayer2.common.toVisibility
 import com.michaelpohl.loopyplayer2.common.util.coroutines.ioJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.uiJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.withUI
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.model.FilesRepository
-import com.michaelpohl.player.PlayerInterface
-import com.michaelpohl.shared.AudioModel
-import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.loopyplayer2.ui.util.calculateConversionProgress
+import com.michaelpohl.player.PlayerInterface
+import com.michaelpohl.service.PlayerServiceConnection
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
+import com.michaelpohl.shared.PlayerState.*
 import com.michaelpohl.shared.SampleRate
 import kotlinx.coroutines.delay
 import timber.log.Timber
@@ -23,9 +25,15 @@ import kotlin.system.measureTimeMillis
 
 class PlayerViewModel(
     private val audioFilesRepository: FilesRepository,
-    private val appStateRepo: AppStateRepository
+    private val appStateRepo: AppStateRepository,
+    private val playerServiceConnection: PlayerServiceConnection
 ) :
     UIStateViewModel<PlayerViewModel.UIState>() {
+
+    init {
+        // TODO this might be sketchy
+        playerServiceConnection.onServiceConnectedListener = { setPlayer(it)}
+    }
 
     val isPlaying = MediatorLiveData<Boolean>().apply {
         addSource(_state) {
@@ -48,12 +56,10 @@ class PlayerViewModel(
     }
 
     private var settings: Settings = appStateRepo.settings
-
     private var waitmode: Boolean? = null
 
-    // TODO this is a workaround. Looper should be injected. The lateinit causes too much trouble
-    private lateinit var playerInterface: PlayerInterface
-
+    // TODO this is a workaround. Player should be injected. The lateinit causes too much trouble
+    private var playerInterface: PlayerInterface? = null
     override fun initUIState(): UIState {
         return UIState(
             loopsList = audioFilesRepository.getSingleSetOrStandardSet(),
@@ -73,29 +79,34 @@ class PlayerViewModel(
     override fun onFragmentPaused() {
         super.onFragmentPaused()
         uiJob {
-            if (!currentState.settings.playInBackground) playerInterface.pause()
+            if (!currentState.settings.playInBackground) playerInterface?.pause()
         }
     }
 
     fun setPlayerWaitMode(shouldWait: Boolean) {
-        if (!::playerInterface.isInitialized || waitmode == shouldWait) return
+        if (playerInterface != null || waitmode == shouldWait) return
         uiJob {
-            if (playerInterface.setWaitMode(shouldWait).isSuccess()) {
+            playerInterface?.let {
+
+            if (it.setWaitMode(shouldWait).isSuccess()) {
                 waitmode = shouldWait
             } else error("Failed to set wait mode. This is a program error.")
 
             // unselect if waitmode was turned off
-            if (!playerInterface.getWaitMode()) {
+            if (!it.getWaitMode()) {
                 _state.value = currentState.copy(filePreselected = "")
+            }
             }
         }
     }
 
     fun setPlayerSampleRate(sampleRate: SampleRate) {
-        if (!::playerInterface.isInitialized) return
+        if (playerInterface != null) return
         uiJob {
-            if (!playerInterface.setSampleRate(sampleRate.intValue).isSuccess()) {
+            playerInterface?.let {
+            if (!it.setSampleRate(sampleRate.intValue).isSuccess()) {
                 error("Failed to set sample rate. This is a program error")
+            }
             }
         }
     }
@@ -111,20 +122,20 @@ class PlayerViewModel(
 
     fun onStartPlaybackClicked() {
         uiJob {
-            when (playerInterface.getState()) {
+            when (playerInterface?.getState()) {
                 PLAYING -> { /* do nothing */
                 }
                 PAUSED -> {
-                    playerInterface.resume()
+                    playerInterface?.resume()
                     _state.value = currentState.copy(isPlaying = true)
                 }
-                else -> if (playerInterface.hasLoopFile()) startLooper()
+                else -> if (playerInterface?.hasLoopFile() == true) startLooper()
             }
         }
     }
 
     fun onStopPlaybackClicked() {
-        when (playerInterface.getState()) {
+        when (playerInterface?.getState()) {
             PLAYING, PAUSED -> stopLooper()
             else -> { /* do nothing */
             }
@@ -133,13 +144,13 @@ class PlayerViewModel(
 
     fun onPausePlaybackClicked() {
         uiJob {
-            when (playerInterface.getState()) {
+            when (playerInterface?.getState()) {
                 PLAYING -> {
-                    playerInterface.pause()
+                    playerInterface?.pause()
                     _state.value = currentState.copy(isPlaying = false)
                 }
                 PAUSED -> {
-                    playerInterface.resume()
+                    playerInterface?.resume()
                     _state.value = currentState.copy(isPlaying = true)
                 }
                 else -> { /* do nothing */
@@ -151,11 +162,13 @@ class PlayerViewModel(
 
     fun onLoopClicked(audioModel: AudioModel) {
         uiJob {
-            with(playerInterface.select(audioModel.path)) {
-                if (this.isSuccess()) {
-                    this.data?.let {
-                        onFileSelected(it)
-                    } ?: error("Got no filename back from JNI. This shouldn't happen")
+            playerInterface?.let {
+                with(it.select(audioModel.path)) {
+                    if (this.isSuccess()) {
+                        this.data?.let {
+                            onFileSelected(it)
+                        } ?: error("Got no filename back from JNI. This shouldn't happen")
+                    }
                 }
             }
         }
@@ -163,13 +176,15 @@ class PlayerViewModel(
 
     fun stopLooper() {
         uiJob {
-            if (playerInterface.stop().isSuccess()) {
-                _state.value = currentState.copy(
-                    playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
-                    fileInFocus = "",
-                    filePreselected = "",
-                    isPlaying = false
-                )
+            playerInterface?.let {
+                if (it.stop().isSuccess()) {
+                    _state.value = currentState.copy(
+                        playbackProgress = Pair(currentState.fileInFocus ?: "", 0),
+                        fileInFocus = "",
+                        filePreselected = "",
+                        isPlaying = false
+                    )
+                }
             }
         }
     }
@@ -230,7 +245,7 @@ class PlayerViewModel(
     }
 
     fun onProgressChangedByUser(newProgress: Float) {
-        playerInterface.changePlaybackPosition(newProgress)
+        playerInterface?.changePlaybackPosition(newProgress)
     }
 
     fun clearLoops() {
@@ -249,27 +264,33 @@ class PlayerViewModel(
     }
 
     private fun onFileSelected(filename: String) {
-        if (playerInterface.getWaitMode()) {
-            when (playerInterface.getState()) {
-                PLAYING, PAUSED -> _state.postValue(currentState.copy(filePreselected = filename))
-                STOPPED, UNKNOWN, READY -> startLooper()
+        playerInterface?.let {
+
+            if (it.getWaitMode()) {
+                when (playerInterface?.getState()) {
+                    PLAYING, PAUSED -> _state.postValue(currentState.copy(filePreselected = filename))
+                    STOPPED, UNKNOWN, READY -> startLooper()
+                }
+            } else {
+                startLooper()
             }
-        } else {
-            startLooper()
         }
     }
 
     private fun startLooper() {
         uiJob {
-            with(playerInterface.play()) {
-                if (this.isSuccess()) {
-                    this.data?.let {
-                        _state.postValue(
-                            currentState.copy(
-                                fileInFocus = this.data,
-                                isPlaying = true
+            playerInterface?.let {
+
+                with(it.play()) {
+                    if (this.isSuccess()) {
+                        this.data?.let {
+                            _state.postValue(
+                                currentState.copy(
+                                    fileInFocus = this.data,
+                                    isPlaying = true
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

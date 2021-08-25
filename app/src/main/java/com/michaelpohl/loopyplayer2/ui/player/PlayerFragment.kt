@@ -21,19 +21,23 @@ import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerItemDelegate
 import com.michaelpohl.service.PlayerService
+import com.michaelpohl.service.PlayerServiceConnection
 import com.michaelpohl.shared.FileModel
 import org.koin.android.ext.android.inject
+import org.koin.core.inject
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
 
-    private lateinit var adapter: PlayerDelegationAdapter
+    override val showOptionsMenu = true
 
+    private val serviceConnection: PlayerServiceConnection by inject()
     override val viewModel: PlayerViewModel by inject()
+
+    private lateinit var adapter: PlayerDelegationAdapter
     private lateinit var binding: FragmentPlayerBinding
     private lateinit var recycler: RecyclerView
 
-    override val showOptionsMenu = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
