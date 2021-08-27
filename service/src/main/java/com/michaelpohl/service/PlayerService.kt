@@ -25,92 +25,102 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
     var activityClass: Class<out AppCompatActivity>? = null
     var serviceState = ServiceState.STOPPED
 
-//    // initializing variables for audio focus and playback management
-//    val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-//    val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
-//        setAudioAttributes(AudioAttributes.Builder().run {
-//            setUsage(AudioAttributes.USAGE_GAME)
-//            setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//            build()
-//        })
-//        setAcceptsDelayedFocusGain(true)
-//        setOnAudioFocusChangeListener { Timber.d("onAudioFocusChanged") }
-//        build()
-//    }
-//    val focusLock = Any()
-//
-//    var playbackDelayed = false
-//    var playbackNowAuthorized = false
-//
-//    // requesting audio focus and processing the response
-//    val res = audioManager.requestAudioFocus(focusRequest)
-//
-//    init {
-//
-//        synchronized(focusLock) {
-//            playbackNowAuthorized = when (res) {
-//                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> false
-//                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
-//                    // play
-//                    true
-//                }
-//                AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> {
-//                    playbackDelayed = true
-//                    false
-//                }
-//                else -> false
-//            }
-//        }
-//    }
-//
+
+    init {
+        Timber.d("init");
+    }
+
+    private fun startAudioFocus() {
+
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+            setAudioAttributes(AudioAttributes.Builder().run {
+                setUsage(AudioAttributes.USAGE_GAME)
+                setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                build()
+            })
+            setAcceptsDelayedFocusGain(true)
+            setOnAudioFocusChangeListener(this@PlayerService)
+            build()
+        }
+        val focusLock = Any()
+
+        var playbackDelayed = false
+        var playbackNowAuthorized = false
+
+        // requesting audio focus and processing the response
+        val res = audioManager.requestAudioFocus(focusRequest)
+        Timber.d("AudioFocusRequest result: $res")
+        synchronized(focusLock) {
+            playbackNowAuthorized = when (res) {
+                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> false
+                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
+                    // play
+                    true
+                }
+                AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> {
+                    playbackDelayed = true
+                    false
+                }
+                else -> false
+            }
+        }
+    }
+
+    //
 //    // implementing OnAudioFocusChangeListener to react to focus changes
     override fun onAudioFocusChange(focusChange: Int) {
-//        when (focusChange) {
-//            AudioManager.AUDIOFOCUS_GAIN -> Timber.d("Focus Gain")
-////                if (playbackDelayed || resumeOnFocusGain) {
-////                    synchronized(focusLock) {
-////                        playbackDelayed = false
-////                        resumeOnFocusGain = false
-////                    }
-////                    playbackNow()
-////                }
-//            AudioManager.AUDIOFOCUS_LOSS -> { Timber.d("Focus loss")
-////                synchronized(focusLock) {
-////                    resumeOnFocusGain = false
-////                    playbackDelayed = false
-////                }
-////                pausePlayback()
-//            }
-//            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> { Timber.d("Focus Loss Transient")
-////                synchronized(focusLock) {
-////                    // only resume if playback is being interrupted
-////                    resumeOnFocusGain = isPlaying()
-////                    playbackDelayed = false
-////                }
-////                pausePlayback()
-//            }
-//            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-//                // ... pausing or ducking depends on your app
-//            }
-//        }
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> Timber.d("Focus Gain")
+//                if (playbackDelayed || resumeOnFocusGain) {
+//                    synchronized(focusLock) {
+//                        playbackDelayed = false
+//                        resumeOnFocusGain = false
+//                    }
+//                    playbackNow()
+//                }
+            AudioManager.AUDIOFOCUS_LOSS -> { Timber.d("Focus loss")
+//                synchronized(focusLock) {
+//                    resumeOnFocusGain = false
+//                    playbackDelayed = false
+//                }
+//                pausePlayback()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> { Timber.d("Focus Loss Transient")
+//                synchronized(focusLock) {
+//                    // only resume if playback is being interrupted
+//                    resumeOnFocusGain = isPlaying()
+//                    playbackDelayed = false
+//                }
+//                pausePlayback()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                // ... pausing or ducking depends on your app
+            }
+        }
     }
 
     fun start() {
         if (serviceState != ServiceState.RUNNING) startService(Intent(applicationContext, PlayerService::class.java))
         serviceState = ServiceState.RUNNING
-        session = MediaSession(this, TAG).apply {
-            setCallback(sessionCallback) // TODO maybe separate later into a separate session class
-        }
-        session.isActive = true
-        playerServiceBinder.session = session
+        startAudioFocus()
     }
 
     override fun onCreate() {
         Timber.d("Service created")
         super.onCreate()
+        createMediaSession()
 
         setupThread()
         setupNotification()
+    }
+
+    private fun createMediaSession() {
+        session = MediaSession(this, TAG).apply {
+            setCallback(sessionCallback) // TODO maybe separate later into a separate session class
+        }
+        session.isActive = true
+        playerServiceBinder.session = session
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -225,7 +235,6 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     // TODO let's see if this is the smartest way...
     inner class ServiceBinder : PlayerServiceBinder() {
-
         val service: PlayerService // used to be internal but I wasn't allowed to do this
             get() = this@PlayerService
     }
