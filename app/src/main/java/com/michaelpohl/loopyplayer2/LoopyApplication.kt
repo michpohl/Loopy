@@ -49,7 +49,7 @@ class LoopyApplication : Application() {
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@LoopyApplication)
-            modules(KoinGraph.get())
+            modules(getModules())
         }
     }
 

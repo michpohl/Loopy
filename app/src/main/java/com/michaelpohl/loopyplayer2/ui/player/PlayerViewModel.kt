@@ -1,6 +1,5 @@
 package com.michaelpohl.loopyplayer2.ui.player
 
-import android.view.View
 import androidx.lifecycle.MediatorLiveData
 import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.Settings
@@ -10,7 +9,6 @@ import com.michaelpohl.loopyplayer2.common.util.coroutines.uiJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.withUI
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.model.FilesRepository
-import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.loopyplayer2.ui.util.calculateConversionProgress
 import com.michaelpohl.player.PlayerInterface
@@ -26,12 +24,13 @@ import kotlin.system.measureTimeMillis
 class PlayerViewModel(
     private val audioFilesRepository: FilesRepository,
     private val appStateRepo: AppStateRepository,
-    private val playerServiceConnection: PlayerServiceConnection
+    playerServiceConnection: PlayerServiceConnection
 ) :
-    UIStateViewModel<PlayerViewModel.UIState>() {
+    UIStateViewModel<PlayerUIState>() {
 
     init {
-        // TODO this might be sketchy
+        Timber.d("viewModel.init")
+        // TODO we have to watch this, this might be sketchy
         playerServiceConnection.onServiceConnectedListener = { setPlayer(it)}
     }
 
@@ -58,10 +57,9 @@ class PlayerViewModel(
     private var settings: Settings = appStateRepo.settings
     private var waitmode: Boolean? = null
 
-    // TODO this is a workaround. Player should be injected. The lateinit causes too much trouble
     private var playerInterface: PlayerInterface? = null
-    override fun initUIState(): UIState {
-        return UIState(
+    override fun initUIState(): PlayerUIState {
+        return PlayerUIState(
             loopsList = audioFilesRepository.getSingleSetOrStandardSet(),
             isPlaying = false,
             clearButtonVisibility = 0,
@@ -295,21 +293,5 @@ class PlayerViewModel(
                 }
             }
         }
-    }
-
-    data class UIState(
-        val loopsList: List<AudioModel>,
-        val isPlaying: Boolean,
-        val isWaitMode: Boolean = false,
-        val fileInFocus: String? = null,
-        val filePreselected: String? = null,
-        val playbackProgress: Pair<String, Int>? = null,
-        val clearButtonVisibility: Int = View.GONE,
-        val settings: Settings,
-        val processingOverlayVisibility: Int,
-        val conversionProgress: Int? = 0
-    ) : BaseUIState() {
-
-        val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
     }
 }
