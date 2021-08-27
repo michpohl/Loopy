@@ -10,7 +10,7 @@ class PlayerServiceConnection(private val activityClass: Class<out AppCompatActi
 
     var onServiceConnectedListener: ((PlayerService.ServiceBinder)-> Unit)? = null
 
-    var service: PlayerService? = null
+    var playerService: PlayerService? = null
         private set
 
 
@@ -18,7 +18,7 @@ class PlayerServiceConnection(private val activityClass: Class<out AppCompatActi
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
         Timber.d("Service connected")
         val binder = service as PlayerService.ServiceBinder
-        this@PlayerServiceConnection.service = binder.service.apply {
+        this@PlayerServiceConnection.playerService = binder.service.apply {
             activityClass = this@PlayerServiceConnection.activityClass
             start()
         }

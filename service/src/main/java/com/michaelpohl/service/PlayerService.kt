@@ -10,6 +10,7 @@ import android.media.session.MediaSession
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import com.michaelpohl.shared.PlayerState
 import timber.log.Timber
 import java.util.*
 
@@ -17,6 +18,7 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     private val sessionCallback = SessionCallback()
     private val playerServiceBinder = ServiceBinder()
+    private val focusHandler = AudioFocusHandler()
     private lateinit var session: MediaSession
 
     private lateinit var notificationManager: NotificationManager
@@ -25,74 +27,19 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
     var activityClass: Class<out AppCompatActivity>? = null
     var serviceState = ServiceState.STOPPED
 
-
-    init {
-        Timber.d("init");
-    }
-
     private fun startAudioFocus() {
-
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
-            setAudioAttributes(AudioAttributes.Builder().run {
-                setUsage(AudioAttributes.USAGE_GAME)
-                setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                build()
-            })
-            setAcceptsDelayedFocusGain(true)
-            setOnAudioFocusChangeListener(this@PlayerService)
-            build()
-        }
-        val focusLock = Any()
-
-        var playbackDelayed = false
-        var playbackNowAuthorized = false
-
-        // requesting audio focus and processing the response
-        val res = audioManager.requestAudioFocus(focusRequest)
-        Timber.d("AudioFocusRequest result: $res")
-        synchronized(focusLock) {
-            playbackNowAuthorized = when (res) {
-                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> false
-                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
-                    // play
-                    true
-                }
-                AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> {
-                    playbackDelayed = true
-                    false
-                }
-                else -> false
-            }
-        }
+        focusHandler.requestaudioFocus(this, this)
     }
 
-    //
-//    // implementing OnAudioFocusChangeListener to react to focus changes
     override fun onAudioFocusChange(focusChange: Int) {
         when (focusChange) {
             AudioManager.AUDIOFOCUS_GAIN -> Timber.d("Focus Gain")
-//                if (playbackDelayed || resumeOnFocusGain) {
-//                    synchronized(focusLock) {
-//                        playbackDelayed = false
-//                        resumeOnFocusGain = false
-//                    }
-//                    playbackNow()
-//                }
+
             AudioManager.AUDIOFOCUS_LOSS -> { Timber.d("Focus loss")
-//                synchronized(focusLock) {
-//                    resumeOnFocusGain = false
-//                    playbackDelayed = false
-//                }
-//                pausePlayback()
+
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> { Timber.d("Focus Loss Transient")
-//                synchronized(focusLock) {
-//                    // only resume if playback is being interrupted
-//                    resumeOnFocusGain = isPlaying()
-//                    playbackDelayed = false
-//                }
-//                pausePlayback()
+
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 // ... pausing or ducking depends on your app
@@ -198,9 +145,13 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onUnbind(intent: Intent): Boolean {
         Timber.d("onUnbind")
 
+        // if we're not playing, no need to go foreground
+        Timber.d("State: ${playerServiceBinder.getState()}")
+
         // if we don't know the activity class yet, we can't properly set up the service and notification
         // and therefore we shouldn't do anything
         activityClass?.let {
+        if (playerServiceBinder.getState() != PlayerState.PLAYING) return true
             startForeground(NOTIFICATION_ID, getNotification())
             return true
         } ?: Timber.w("No activity class found!")
