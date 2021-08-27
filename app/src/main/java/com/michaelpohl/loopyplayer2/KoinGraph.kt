@@ -18,9 +18,7 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-object KoinGraph {
-
-    fun get(): List<Module> {
+    fun getModules(): List<Module> {
         return listOf(
             baseModule,
             viewModelModule
@@ -47,4 +45,3 @@ object KoinGraph {
         viewModel { SettingsViewModel(get()) }
         viewModel { LicensesViewModel(get()) }
     }
-}
