@@ -6,10 +6,14 @@ import com.michaelpohl.player.JniPlayer
 import com.michaelpohl.player.PlayerInterface
 import com.michaelpohl.shared.JniResult
 import com.michaelpohl.shared.PlayerState
+import timber.log.Timber
 
 open class PlayerServiceBinder : Binder(),
     PlayerInterface {
 
+    init {
+        Timber.d("INIT BINDER")
+    }
 
 
     lateinit var session: MediaSession // TODO check if we can do without lateinit

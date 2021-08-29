@@ -10,20 +10,9 @@ class AudioFocusHandler {
 
     var authorization = PlaybackAuthorization.NOT_GRANTED
 
-    var playbackDelayed = false
-    var playbackNowAuthorized = false
-    fun requestaudioFocus(context: Context, focusChangeListener: AudioManager.OnAudioFocusChangeListener) {
+    fun requestAudioFocus(context: Context, focusChangeListener: AudioManager.OnAudioFocusChangeListener) {
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
-            setAudioAttributes(AudioAttributes.Builder().run {
-                setUsage(AudioAttributes.USAGE_GAME)
-                setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                build()
-            })
-            setAcceptsDelayedFocusGain(true)
-            setOnAudioFocusChangeListener(focusChangeListener)
-            build()
-        }
+        val focusRequest = buildFocusRequest(focusChangeListener)
         val focusLock = Any()
 
         val requestResult = audioManager.requestAudioFocus(focusRequest)
@@ -37,6 +26,20 @@ class AudioFocusHandler {
                 else -> PlaybackAuthorization.NOT_GRANTED
             }
         }
+    }
+
+    private fun buildFocusRequest(focusChangeListener: AudioManager.OnAudioFocusChangeListener): AudioFocusRequest {
+        val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+            setAudioAttributes(AudioAttributes.Builder().run {
+                setUsage(AudioAttributes.USAGE_GAME)
+                setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                build()
+            })
+            setAcceptsDelayedFocusGain(true)
+            setOnAudioFocusChangeListener(focusChangeListener)
+            build()
+        }
+        return focusRequest
     }
 
     enum class PlaybackAuthorization {

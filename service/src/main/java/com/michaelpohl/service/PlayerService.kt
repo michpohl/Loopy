@@ -1,16 +1,15 @@
 package com.michaelpohl.service
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.session.MediaSession
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import com.michaelpohl.shared.PlayerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
@@ -18,6 +17,7 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     private val sessionCallback = SessionCallback()
     private val playerServiceBinder = ServiceBinder()
+    private val notificationHandler = NotificationHandler()
     private val focusHandler = AudioFocusHandler()
     private lateinit var session: MediaSession
 
@@ -26,20 +26,43 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     var activityClass: Class<out AppCompatActivity>? = null
     var serviceState = ServiceState.STOPPED
-
     private fun startAudioFocus() {
-        focusHandler.requestaudioFocus(this, this)
+        focusHandler.requestAudioFocus(this, this)
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
         when (focusChange) {
-            AudioManager.AUDIOFOCUS_GAIN -> Timber.d("Focus Gain")
-
-            AudioManager.AUDIOFOCUS_LOSS -> { Timber.d("Focus loss")
-
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                Timber.d("Focus Gain")
+                if (playerServiceBinder.getState() == PlayerState.PAUSED) {
+                    CoroutineScope(Dispatchers.Default).launch {
+                        playerServiceBinder.play()
+                    }
+                }
             }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> { Timber.d("Focus Loss Transient")
 
+            AudioManager.AUDIOFOCUS_LOSS -> {
+                Timber.d("Focus loss")
+                CoroutineScope(Dispatchers.Default).launch {
+                    with(playerServiceBinder) {
+                        if (this.getState() == PlayerState.PLAYING) {
+                            this.pause()
+                        } else {
+                            stop()
+                        }
+                    }
+                }
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                CoroutineScope(Dispatchers.Default).launch {
+                    with(playerServiceBinder) {
+                        if (this.getState() == PlayerState.PLAYING) {
+                            this.pause()
+                        } else {
+                            stop()
+                        }
+                    }
+                }
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 // ... pausing or ducking depends on your app
@@ -88,43 +111,6 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
         }
     }
 
-    private fun getNotification(): Notification {
-        Timber.d("Get notification")
-        // service intent
-        val intent = Intent(this, PlayerService::class.java)
-        intent.putExtra(DID_START_FROM_NOTIFICATION, true)
-        val servicePendingIntent = PendingIntent.getService(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        // resume activity intent
-        val activityPendingIntent = PendingIntent.getActivity(
-            this, 0, Intent(this, activityClass!!), 0
-        )
-
-        val builder =
-            NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .addAction(0, "launch", activityPendingIntent) // TODO take back in
-                .addAction(0, "turn off", servicePendingIntent)
-                .setContentTitle("Notification title")
-                .setContentText("Notification content)")
-                .setOngoing(true)
-                .setPriority(
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        NotificationManager.IMPORTANCE_HIGH
-                    } else {
-                        Notification.FLAG_HIGH_PRIORITY
-                    }
-                )
-                .setSmallIcon(android.R.drawable.sym_def_app_icon) // TODO
-                .setWhen(System.currentTimeMillis())
-
-        // if Android O or higher, we need a channel ID
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(NOTIFICATION_CHANNEL_ID) // Channel ID
-        }
-        return builder.build()
-    }
-
     private fun setupThread() {
         val handlerThread = HandlerThread(TAG)
         handlerThread.start()
@@ -151,14 +137,15 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
         // if we don't know the activity class yet, we can't properly set up the service and notification
         // and therefore we shouldn't do anything
         activityClass?.let {
-        if (playerServiceBinder.getState() != PlayerState.PLAYING) return true
-            startForeground(NOTIFICATION_ID, getNotification())
+            if (playerServiceBinder.getState() != PlayerState.PLAYING) return true
+            startForeground(NOTIFICATION_ID, notificationHandler.buildNotification(this, activityClass!!))
             return true
         } ?: Timber.w("No activity class found!")
         return false
     }
 
     private fun stop() {
+        Timber.d("Service stopped")
         serviceState = ServiceState.STOPPED
         stopSelf()
     }
@@ -186,16 +173,18 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     // TODO let's see if this is the smartest way...
     inner class ServiceBinder : PlayerServiceBinder() {
+
         val service: PlayerService // used to be internal but I wasn't allowed to do this
             get() = this@PlayerService
     }
 
     companion object {
 
+        // TODO check which places these should go to
         private val TAG = PlayerService::class.java.simpleName
-        private const val NOTIFICATION_CHANNEL_ID = "loopy_channel"
+        const val NOTIFICATION_CHANNEL_ID = "loopy_channel"
         private const val NOTIFICATION_ID = 56479
-        private const val DID_START_FROM_NOTIFICATION = "started_from_notification"
+        const val DID_START_FROM_NOTIFICATION = "started_from_notification"
     }
 }
 
