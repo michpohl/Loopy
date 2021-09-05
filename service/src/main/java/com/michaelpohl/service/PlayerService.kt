@@ -2,7 +2,6 @@ package com.michaelpohl.service
 
 import android.app.*
 import android.content.Intent
-import android.media.AudioManager
 import android.media.session.MediaSession
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +12,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
+class PlayerService : Service() {
 
     private val sessionCallback = SessionCallback()
     private val playerServiceBinder = ServiceBinder()
     private val notificationHandler = NotificationHandler()
-    private val focusHandler = AudioFocusHandler()
+    private val focusHandler = AudioFocusHandler({onAudioFocusGained()}, {onAudioFocusLost()})
     private lateinit var session: MediaSession
 
     private lateinit var notificationManager: NotificationManager
@@ -27,45 +26,25 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
     var activityClass: Class<out AppCompatActivity>? = null
     var serviceState = ServiceState.STOPPED
     private fun startAudioFocus() {
-        focusHandler.requestAudioFocus(this, this)
+        focusHandler.requestAudioFocus(this)
     }
 
-    override fun onAudioFocusChange(focusChange: Int) {
-        when (focusChange) {
-            AudioManager.AUDIOFOCUS_GAIN -> {
-                Timber.d("Focus Gain")
-                if (playerServiceBinder.getState() == PlayerState.PAUSED) {
-                    CoroutineScope(Dispatchers.Default).launch {
-                        playerServiceBinder.play()
-                    }
-                }
+    private fun onAudioFocusGained() {
+        if (playerServiceBinder.getState() == PlayerState.PAUSED) {
+            CoroutineScope(Dispatchers.Default).launch {
+                playerServiceBinder.play() // play if it was paused
             }
+        }
+    }
 
-            AudioManager.AUDIOFOCUS_LOSS -> {
-                Timber.d("Focus loss")
-                CoroutineScope(Dispatchers.Default).launch {
-                    with(playerServiceBinder) {
-                        if (this.getState() == PlayerState.PLAYING) {
-                            this.pause()
-                        } else {
-                            stop()
-                        }
-                    }
+    private fun onAudioFocusLost() {
+        CoroutineScope(Dispatchers.Default).launch {
+            with(playerServiceBinder) {
+                if (this.getState() == PlayerState.PLAYING) {
+                    this.pause() // pause player
+                } else {
+                    stop() // stop service
                 }
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                CoroutineScope(Dispatchers.Default).launch {
-                    with(playerServiceBinder) {
-                        if (this.getState() == PlayerState.PLAYING) {
-                            this.pause()
-                        } else {
-                            stop()
-                        }
-                    }
-                }
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                // ... pausing or ducking depends on your app
             }
         }
     }
@@ -94,7 +73,7 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.d("service started")
+        Timber.d("Service started")
         return START_NOT_STICKY
     }
 
@@ -179,7 +158,6 @@ class PlayerService : Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     companion object {
-
         // TODO check which places these should go to
         private val TAG = PlayerService::class.java.simpleName
         const val NOTIFICATION_CHANNEL_ID = "loopy_channel"
