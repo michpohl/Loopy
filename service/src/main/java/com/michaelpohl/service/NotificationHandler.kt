@@ -1,5 +1,6 @@
 package com.michaelpohl.service
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,22 +13,25 @@ import timber.log.Timber
 
 class NotificationHandler {
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun buildNotification(context: Context, activityClass: Class<out AppCompatActivity>): Notification {
         Timber.d("Get notification")
         // service intent
-        val intent = Intent(context, PlayerService::class.java)
+        val intent = Intent(context.applicationContext, PlayerService::class.java)
         intent.putExtra(PlayerService.DID_START_FROM_NOTIFICATION, true)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
         val servicePendingIntent = PendingIntent.getService(
-            context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT,
+            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
         )
         // resume activity intent
         val activityPendingIntent = PendingIntent.getActivity(
-            context, 0, Intent(context, activityClass), PendingIntent.FLAG_CANCEL_CURRENT
+            context, 0, Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val builder =
             NotificationCompat.Builder(context, PlayerService.NOTIFICATION_CHANNEL_ID)
-                .addAction(0, "launch", activityPendingIntent) // TODO take back in
+                .addAction(0, "launch", activityPendingIntent)
                 .addAction(0, "turn off", servicePendingIntent)
                 .setContentTitle("Notification title")
                 .setContentText("Notification content)")
