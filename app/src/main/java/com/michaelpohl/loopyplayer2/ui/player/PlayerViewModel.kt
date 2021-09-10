@@ -4,6 +4,7 @@ import androidx.lifecycle.MediatorLiveData
 import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.Settings
 import com.michaelpohl.loopyplayer2.common.toVisibility
+import com.michaelpohl.loopyplayer2.common.util.coroutines.backgroundJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.ioJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.uiJob
 import com.michaelpohl.loopyplayer2.common.util.coroutines.withUI
@@ -31,13 +32,7 @@ class PlayerViewModel(
     init {
         Timber.d("viewModel.init")
         // TODO we have to watch this, this might be sketchy
-        playerServiceConnection.onServiceConnectedListener = { setPlayer(it)}
-    }
-
-    val isPlaying = MediatorLiveData<Boolean>().apply {
-        addSource(_state) {
-            this.value = it.isPlaying
-        }
+        playerServiceConnection.onServiceConnectedListener = { setPlayer(it) }
     }
 
     val processingText = MediatorLiveData<String>().apply {
@@ -70,8 +65,8 @@ class PlayerViewModel(
 
     override fun onFragmentResumed() {
         settings = appStateRepo.settings
-        _state.value = initUIState()
         setPlayerSampleRate(settings.sampleRate)
+        _state.value = initUIState()
     }
 
     override fun onFragmentPaused() {
@@ -82,18 +77,19 @@ class PlayerViewModel(
     }
 
     fun setPlayerWaitMode(shouldWait: Boolean) {
-        if (playerInterface != null || waitmode == shouldWait) return
-        uiJob {
+        if (waitmode == shouldWait) return
+        backgroundJob {
             playerInterface?.let {
+                if (it.setWaitMode(shouldWait).isSuccess()) {
+                    waitmode = shouldWait
+                } else error("Failed to set wait mode. This is a program error.")
 
-            if (it.setWaitMode(shouldWait).isSuccess()) {
-                waitmode = shouldWait
-            } else error("Failed to set wait mode. This is a program error.")
-
-            // unselect if waitmode was turned off
-            if (!it.getWaitMode()) {
-                _state.value = currentState.copy(filePreselected = "")
-            }
+                // unselect if waitmode was turned off
+                withUI {
+                    if (!it.getWaitMode()) {
+                        _state.value = currentState.copy(filePreselected = "")
+                    }
+                }
             }
         }
     }
@@ -102,9 +98,9 @@ class PlayerViewModel(
         if (playerInterface != null) return
         uiJob {
             playerInterface?.let {
-            if (!it.setSampleRate(sampleRate.intValue).isSuccess()) {
-                error("Failed to set sample rate. This is a program error")
-            }
+                if (!it.setSampleRate(sampleRate.intValue).isSuccess()) {
+                    error("Failed to set sample rate. This is a program error")
+                }
             }
         }
     }
@@ -163,8 +159,8 @@ class PlayerViewModel(
             playerInterface?.let {
                 with(it.select(audioModel.path)) {
                     if (this.isSuccess()) {
-                        this.data?.let {
-                            onFileSelected(it)
+                        this.data?.let { data ->
+                            onFileSelected(data)
                         } ?: error("Got no filename back from JNI. This shouldn't happen")
                     }
                 }
@@ -263,7 +259,6 @@ class PlayerViewModel(
 
     private fun onFileSelected(filename: String) {
         playerInterface?.let {
-
             if (it.getWaitMode()) {
                 when (playerInterface?.getState()) {
                     PLAYING, PAUSED -> _state.postValue(currentState.copy(filePreselected = filename))

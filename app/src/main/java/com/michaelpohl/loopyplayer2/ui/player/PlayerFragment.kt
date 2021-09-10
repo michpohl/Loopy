@@ -1,14 +1,9 @@
 package com.michaelpohl.loopyplayer2.ui.player
 
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +15,9 @@ import com.michaelpohl.loopyplayer2.databinding.FragmentPlayerBinding
 import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerItemDelegate
-import com.michaelpohl.service.PlayerService
 import com.michaelpohl.service.PlayerServiceConnection
 import com.michaelpohl.shared.FileModel
 import org.koin.android.ext.android.inject
-import org.koin.core.inject
 import timber.log.Timber
 
 class PlayerFragment : BaseFragment() {
@@ -37,8 +30,6 @@ class PlayerFragment : BaseFragment() {
     private lateinit var adapter: PlayerDelegationAdapter
     private lateinit var binding: FragmentPlayerBinding
     private lateinit var recycler: RecyclerView
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -116,19 +107,17 @@ class PlayerFragment : BaseFragment() {
 
         // FIXME adapter needs to take nullable values
         viewModel.state.observeWith {
-            with(it) {
-                adapter.update(loopsList)
-                fileInFocus?.let { file ->
-                    adapter.updateFileCurrentlyPlayed(file)
-                }
-                filePreselected?.let { file ->
-                    adapter.updateFilePreselected(file)
-                }
-                playbackProgress?.let { progress ->
-                    adapter.updatePlaybackProgress(progress, this.settings.showLoopCount)
-                }
-                viewModel.setPlayerWaitMode(it.settings.isWaitMode)
+            adapter.update(it.loopsList)
+            it.fileInFocus?.let { file ->
+                adapter.updateFileCurrentlyPlayed(file)
             }
+            it.filePreselected?.let { file ->
+                adapter.updateFilePreselected(file)
+            }
+            it.playbackProgress?.let { progress ->
+                adapter.updatePlaybackProgress(progress, it.settings.showLoopCount)
+            }
+            viewModel.setPlayerWaitMode(it.settings.isWaitMode)
         }
     }
 
