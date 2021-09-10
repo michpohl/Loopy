@@ -205,7 +205,10 @@ bool AudioEngine::openStream() {
     // Create an audio stream
     AudioStreamBuilder builder;
     builder.setCallback(this);
-    builder.setPerformanceMode(PerformanceMode::LowLatency);
+
+    // TODO This could be an app setting
+    builder.setPerformanceMode(PerformanceMode::None);
+
     builder.setSharingMode(SharingMode::Exclusive);
     builder.setSampleRate(mSampleRate);
     builder.setSampleRateConversionQuality(SampleRateConversionQuality::Best);
