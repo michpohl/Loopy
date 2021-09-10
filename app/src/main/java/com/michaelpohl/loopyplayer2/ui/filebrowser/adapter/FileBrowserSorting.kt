@@ -1,8 +1,8 @@
 package com.michaelpohl.loopyplayer2.ui.filebrowser.adapter
 
 import com.michaelpohl.delegationadapter.Sorting
-import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.filebrowser.FileBrowserViewModel
+import com.michaelpohl.shared.FileModel
 
 class FileBrowserSorting : Sorting.Custom<FileModel, FileBrowserViewModel.UIState>() {
 

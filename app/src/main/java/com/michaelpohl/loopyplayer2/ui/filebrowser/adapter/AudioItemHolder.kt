@@ -2,9 +2,9 @@ package com.michaelpohl.loopyplayer2.ui.filebrowser.adapter
 
 import android.view.View
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.getDrawable
 import com.michaelpohl.loopyplayer2.common.roundTo
+import com.michaelpohl.shared.FileModel
 import timber.log.Timber
 
 class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(itemView) {
@@ -23,9 +23,9 @@ class AudioItemHolder(itemView: View) : BrowserItemHolder<FileModel.AudioFile>(i
                 Timber.d("Is Checked: $isChecked")
                 if (isChecked != item.isSelected) {
 
-                onCheckedChangedReceiver.invoke(
-                    item.copy(isSelected = isChecked)
-                )
+                    onCheckedChangedReceiver.invoke(
+                        item.copy(isSelected = isChecked)
+                    )
                 }
             }
         }

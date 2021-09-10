@@ -1,7 +1,6 @@
 package com.michaelpohl.loopyplayer2.ui.util
 
 private var lastPercentage: Float = 0F
-
 fun calculateConversionProgress(
     totalFilesToConvert: Int,
     currentIndex: Int,

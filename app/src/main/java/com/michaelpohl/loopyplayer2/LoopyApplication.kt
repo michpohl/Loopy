@@ -15,7 +15,7 @@ import java.util.*
 
 class LoopyApplication : Application() {
 
-    override fun attachBaseContext(base:Context) {
+    override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
 
         initAcra {

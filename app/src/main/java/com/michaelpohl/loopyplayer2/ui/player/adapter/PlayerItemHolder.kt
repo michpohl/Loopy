@@ -6,8 +6,8 @@ import android.widget.TextView
 import com.michaelpohl.delegationadapter.DelegationAdapterItemHolder
 import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.*
-import com.michaelpohl.shared.AudioModel
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
+import com.michaelpohl.shared.AudioModel
 import rm.com.audiowave.AudioWaveView
 import java.io.File
 

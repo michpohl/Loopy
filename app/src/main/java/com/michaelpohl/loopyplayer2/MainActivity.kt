@@ -1,14 +1,11 @@
 package com.michaelpohl.loopyplayer2
 
 import android.Manifest
-import android.content.ComponentName
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
-import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -48,6 +45,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawer: DrawerLayout
     var currentFragment: BaseFragment? = null
     private lateinit var container: LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -77,61 +75,6 @@ class MainActivity : AppCompatActivity(),
         super.onPause()
         Timber.d("should unbind")
         unbindService(serviceConnection)
-    }
-
-    private fun setupAppData() {
-        Timber.d("is App set up? ${appState.isSetupComplete}")
-        // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
-        // on Failure, whatever the reason might be, it stays false and will run again next startup
-        if (!appState.isSetupComplete) {
-            val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
-            Timber.d("Setup complete? $setupComplete")
-            appState.isSetupComplete = setupComplete
-            showMarkupViewerFragment(MarkDownFiles.getWhatsNewFileName(), R.string.title_whatsnew)
-            Handler().postDelayed({
-                Timber.d("is App setup now? ${appState.isSetupComplete}")
-            }, 500)
-        }
-    }
-
-    private fun handlePossibleIntents() {
-        if (Intent.ACTION_VIEW == intent.action) {
-            Timber.d("Intent")
-            handleIntent()
-        }
-    }
-
-    private fun setupNavigation() {
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
-        navigationView.setupWithNavController(navController)
-    }
-
-    private fun setupDrawer() {
-        drawer = drawer_layout as DrawerLayout
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
-    }
-
-    fun setupActionBar(
-        withBackButton: Boolean = false,
-        titleString: String = getString(R.string.appbar_title_player)
-    ) {
-        val toolBar = findViewById<Toolbar>(R.id.tb_toolbar)
-        toolBar.apply {
-            title = titleString
-            setSupportActionBar(toolBar)
-            navigationIcon =
-                getDrawable(if (withBackButton) R.drawable.ic_back else R.drawable.ic_settings)
-            setNavigationOnClickListener {
-                if (withBackButton) {
-                    onBackPressed()
-                } else {
-                    drawer.openDrawer(GravityCompat.START)
-                }
-            }
-
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -190,6 +133,27 @@ class MainActivity : AppCompatActivity(),
         return false
     }
 
+    fun setupActionBar(
+        withBackButton: Boolean = false,
+        titleString: String = getString(R.string.appbar_title_player)
+    ) {
+        val toolBar = findViewById<Toolbar>(R.id.tb_toolbar)
+        toolBar.apply {
+            title = titleString
+            setSupportActionBar(toolBar)
+            navigationIcon =
+                getDrawable(if (withBackButton) R.drawable.ic_back else R.drawable.ic_settings)
+            setNavigationOnClickListener {
+                if (withBackButton) {
+                    onBackPressed()
+                } else {
+                    drawer.openDrawer(GravityCompat.START)
+                }
+            }
+
+        }
+    }
+
     fun showSnackbar(
         view: View,
         messageResource: Int,
@@ -206,10 +170,43 @@ class MainActivity : AppCompatActivity(),
         snackbar.show()
     }
 
+    private fun setupAppData() {
+        Timber.d("is App set up? ${appState.isSetupComplete}")
+        // if the standard folder has not been created yet, we do so, and on success set isAppSetup to true
+        // on Failure, whatever the reason might be, it stays false and will run again next startup
+        if (!appState.isSetupComplete) {
+            val setupComplete = audioFilesRepo.autoCreateStandardLoopSet()
+            Timber.d("Setup complete? $setupComplete")
+            appState.isSetupComplete = setupComplete
+            showMarkupViewerFragment(MarkDownFiles.getWhatsNewFileName(), R.string.title_whatsnew)
+            Handler().postDelayed({
+                Timber.d("is App setup now? ${appState.isSetupComplete}")
+            }, 500)
+        }
+    }
+
+    private fun handlePossibleIntents() {
+        if (Intent.ACTION_VIEW == intent.action) {
+            Timber.d("Intent")
+            handleIntent()
+        }
+    }
+
+    private fun setupNavigation() {
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val navController = findNavController(R.id.nav_host_fragment)
+        navigationView.setupWithNavController(navController)
+    }
+
+    private fun setupDrawer() {
+        drawer = drawer_layout as DrawerLayout
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+    }
+
     private fun handleIntent() {
         // TODO
     }
-
 
     // TODO move all of the navigation stuff into a separate class, maybe a "SimpleNavigator"
     private fun showFileBrowserFragment(path: String = defaultFilesPath) {

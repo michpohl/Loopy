@@ -71,7 +71,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // oboe
-    implementation 'com.google.oboe:oboe:1.6.0'
+    implementation 'com.google.oboe:oboe:1.6.1'
 
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
 

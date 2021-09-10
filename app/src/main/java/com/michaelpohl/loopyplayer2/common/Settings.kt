@@ -1,9 +1,9 @@
 package com.michaelpohl.loopyplayer2.common
 
 import android.os.Parcelable
-import com.squareup.moshi.JsonClass
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.shared.SampleRate
+import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import kotlin.properties.Delegates
 
@@ -19,6 +19,7 @@ data class Settings(
 ) : Parcelable
 
 class SettingsBuilder {
+
     var acceptedFileTypes: MutableList<AppStateRepository.Companion.AudioFileType> = mutableListOf()
     var isWaitMode by Delegates.notNull<Boolean>()
     var showLoopCount by Delegates.notNull<Boolean>()

@@ -42,7 +42,8 @@ class SettingsMultipleChoiceViewHolder(itemView: View) :
                     0,
                     0,
                     R.drawable.radio_button,
-                    0); // for adding drawable on the right
+                    0
+                ) // for adding drawable on the right
                 gravity = Gravity.CENTER_VERTICAL
             })
         }

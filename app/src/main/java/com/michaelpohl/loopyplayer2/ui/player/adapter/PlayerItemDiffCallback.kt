@@ -8,6 +8,7 @@ class PlayerItemDiffCallback : DiffUtil.ItemCallback<AudioModel>() {
     override fun areItemsTheSame(oldItem: AudioModel, newItem: AudioModel): Boolean {
         return oldItem.path == newItem.path
     }
+
     override fun areContentsTheSame(oldItem: AudioModel, newItem: AudioModel): Boolean {
         return oldItem.path == newItem.path
     }

@@ -6,8 +6,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.michaelpohl.delegationadapter.DelegationAdapterItemHolder
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.find
+import com.michaelpohl.shared.FileModel
 
 abstract class BrowserItemHolder<T : FileModel>(itemView: View) :
     DelegationAdapterItemHolder<T>(itemView) {

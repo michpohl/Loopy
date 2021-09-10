@@ -2,10 +2,10 @@ package com.michaelpohl.loopyplayer2.model
 
 import android.content.Context
 import android.os.Environment
-import com.michaelpohl.shared.AudioModel
-import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.common.toFileModels
 import com.michaelpohl.player.jni.JniBridge
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -34,7 +34,7 @@ class ExternalStorageManager(val context: Context) {
     fun getAudioModelsInSet(setFolderName: String): List<AudioModel> {
         val audioModels = mutableListOf<AudioModel>()
 
-        getPathContent( "${appStorageFolder?.path}/$setFolderName")
+        getPathContent("${appStorageFolder?.path}/$setFolderName")
             .toFileModels(setOf(AppStateRepository.Companion.AudioFileType.PCM)) // we store only pcm in the set folders
             .filterIsInstance<FileModel.AudioFile>()
             .forEach {
@@ -115,7 +115,7 @@ class ExternalStorageManager(val context: Context) {
                 Timber.d("File from assets: $it")
                 copySingleFileFromAssetsTo(outputPath, context.assets.open(it), it)
             }
-            val conversionResult = JniBridge.convertFilesInFolder(outputPath);
+            val conversionResult = JniBridge.convertFilesInFolder(outputPath)
             Timber.d("conversion result: $conversionResult")
             true
         } catch (e: IOException) {
@@ -184,6 +184,7 @@ class ExternalStorageManager(val context: Context) {
     }
 
     companion object {
+
         const val STANDARD_SET_FOLDER_NAME = "standard"
     }
 }

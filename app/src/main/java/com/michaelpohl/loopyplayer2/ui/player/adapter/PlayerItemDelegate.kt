@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import com.michaelpohl.delegationadapter.AdapterItemDelegate
 import com.michaelpohl.delegationadapter.inflateLayout
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.shared.AudioModel
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
+import com.michaelpohl.shared.AudioModel
 
 class PlayerItemDelegate(
     private val clickReceiver: (AudioModel) -> Unit, // use the standard auto click receiver feature

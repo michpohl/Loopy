@@ -45,10 +45,6 @@ class PlayerFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
     override fun onResume() {
         super.onResume()
         findNavController().popBackStack(R.id.playerFragment, false)
@@ -59,10 +55,6 @@ class PlayerFragment : BaseFragment() {
             Timber.d("We have arguments")
             handleArguments()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroy() {

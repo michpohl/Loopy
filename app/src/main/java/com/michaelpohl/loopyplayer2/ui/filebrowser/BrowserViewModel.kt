@@ -1,8 +1,8 @@
 package com.michaelpohl.loopyplayer2.ui.filebrowser
 
-import com.michaelpohl.shared.FileModel
 import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
+import com.michaelpohl.shared.FileModel
 
 abstract class BrowserViewModel<T : BrowserViewModel.BrowserUIState> : UIStateViewModel<T>() {
 
