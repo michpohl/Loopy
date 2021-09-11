@@ -1,8 +1,8 @@
-### Was ist neu in Loopy II 1.0
+### Was ist neu in Loopy 2 1.0
 
-**Vielen Dank, dass Du Loopy II verwendest!**
+**Vielen Dank, dass Du Loopy 2 verwendest!**
 
-Loopy II bringt eine Reihe von Verbesserungen gegenüber Loopy I. Die wichtigsten Verbesserungen:
+Loopy 2 bringt eine Reihe von Verbesserungen gegenüber Loopy I. Die wichtigsten Verbesserungen:
 
 * Verwendet jetzt low-level C++ - Code für die Audioverarbeitung. Das Playback ist dadurch
   zuverlässiger und nahtloses Loopen ist sichergestellt.

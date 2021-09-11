@@ -9,13 +9,13 @@ This is the repository for **Loopy Audio Looper 2**, which is available on the P
 
 This app is meant to provide a simple solution for anyone who wants to loop audio files easily, like DJs, artists or musicians. It can be used for practice sessions, as a source of uninterrupted background atmospheres or to play endless beat loops.
 
-If you have tried it before, you might know that it is really hard to find a player that just perfectly and reliably loops an audio track for you. It's a known problem of the Android OS. This player aims to give you just that: Seamless looping. Loopy II uses low-level code to make sure there are no hickups, which could still be observed in some situations with its predecessor.
+If you have tried it before, you might know that it is really hard to find a player that just perfectly and reliably loops an audio track for you. It's a known problem of the Android OS. This player aims to give you just that: Seamless looping. Loopy 2 uses low-level code to make sure there are no hickups, which could still be observed in some situations with its predecessor.
 
 The app plays audio files from your media library or files you select from your file browser. You can have a file repeat endlessly, or automatically skip to another loop when it reaches the end.
 
 Important: If you find bugs in the app, use the contact function in the app so I can fix them faster. If you like the app but are missing a feature, feel free to let me know that too so I can consider it in future releases.
 
-Please be aware, that Loopy II is not an audio editor! That means if you need exact results, your files need to be prepared and cut properly.
+Please be aware, that Loopy 2 is not an audio editor! That means if you need exact results, your files need to be prepared and cut properly.
 
 ## About the source code
 

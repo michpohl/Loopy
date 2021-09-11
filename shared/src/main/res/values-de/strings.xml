@@ -17,7 +17,7 @@
     <string name="nav_category_information">Infos &amp; Feedback</string>
     <string name="nav_category_find_audio_files">Audio-Dateien finden</string>
     <string name="nav_btn_open_settings">App-Einstellungen ändern</string>
-    <string name="nav_btn_how_to">Wie man Loopy II verwendet</string>
+    <string name="nav_btn_how_to">Wie man Loopy 2 verwendet</string>
     <string name="nav_btn_clear_current_file_selection">Auswahl zurücksetzen</string>
     <string name="nav_btn_browse_phone_storage">Gerätespeicher durchsuchen</string>
     <string name="nav_btn_browse_music_library">Musikbibliothek durchsuchen</string>
@@ -30,16 +30,16 @@
     <string name="loop_count_prefix">Geloopt:</string>
     <string name="loop_count_postfix">mal</string>
     <string name="drawer_subtitle">Version: </string>
-    <string name="drawer_header">Loopy II Audio Looper</string>
+    <string name="drawer_header">Loopy 2 Audio Looper</string>
     <string name="dialog_settings_header">Einstellungen</string>
     <string name="dialog_remove_loop_header">Loop entfernen</string>
     <string name="dialog_remove_loop_content">Möchtest Du diesen Loop aus der Auswahl entfernen?</string>
     <string name="cancel">Abbrechen</string>
     <string name="btn_clear_list">Player-Liste leeren</string>
-    <string name="appbar_title_player">Loopy II</string>
+    <string name="appbar_title_player">Loopy 2</string>
     <string name="title_mediastore_browser">Musikbibliothek durchsuchen</string>
     <string name="title_file_browser">Gerätespeicher durchsuchen</string>
-    <string name="title_help">Loopy II verwenden</string>
+    <string name="title_help">Loopy 2 verwenden</string>
     <string name="btn_about_app">Über diese App</string>
     <string name="btn_browse_mediastore">Musikbibliothek durchsuchen</string>
     <string name="btn_select_all">Alles auswählen</string>
@@ -82,5 +82,11 @@
     <string name="arca_dialog_email_prompt">Gib Deine Email-Adresse ein:</string>
     <string name="error_reporting_email">google@michaelpohl.de</string>
     <string name="error_reporting_subject">Loopy 2 ist abgestürzt!</string>
+    <string name="notification_title">Loopy 2 läuft im Hintergrund</string>
+    <string name="notification_content"> </string>
+    <string name="notification_btn_open_app">Player öffnen</string>
+    <string name="notification_btn_stop_player">Player stoppen</string>
+
+
 
 </resources>

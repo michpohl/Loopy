@@ -1,8 +1,8 @@
-### What's new in Loopy II 1.0
+### What's new in Loopy 2 1.0
 
-**Thank you for using Loopy II!**
+**Thank you for using Loopy 2!**
 
-Loopy II brings a lot of changes over Loopy I. Key improvements:
+Loopy 2 brings a lot of changes over Loopy I. Key improvements:
 
 * Now uses low level C++ code to process audio playback. It's faster and helps making sure the
   looping is really seamless.
