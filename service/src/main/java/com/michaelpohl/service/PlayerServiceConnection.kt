@@ -18,7 +18,7 @@ class PlayerServiceConnection(private val activityClass: Class<out AppCompatActi
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
         Timber.d("Service connected")
         val binder = service as PlayerService.ServiceBinder
-        this@PlayerServiceConnection.playerService = binder.service.apply {
+        this@PlayerServiceConnection.playerService = binder.getService().apply {
             activityClass = this@PlayerServiceConnection.activityClass
             start()
         }

@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawer: DrawerLayout
     var currentFragment: BaseFragment? = null
     private lateinit var container: LinearLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -75,6 +74,12 @@ class MainActivity : AppCompatActivity(),
         super.onPause()
         Timber.d("should unbind")
         unbindService(serviceConnection)
+    }
+
+    override fun onDestroy() {
+        Timber.d("onDestroy")
+        super.onDestroy()
+        stopService(Intent(this@MainActivity, PlayerService::class.java))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

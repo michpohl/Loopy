@@ -24,7 +24,7 @@ class PlayerFragment : BaseFragment() {
 
     override val showOptionsMenu = true
 
-    private val serviceConnection: PlayerServiceConnection by inject()
+//    private val serviceConnection: PlayerServiceConnection by inject()
     override val viewModel: PlayerViewModel by inject()
 
     private lateinit var adapter: PlayerDelegationAdapter
@@ -60,7 +60,6 @@ class PlayerFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopLooper()
-//        unBindAudioService()
     }
 
     override fun onBackPressed(): Boolean {

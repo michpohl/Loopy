@@ -43,7 +43,7 @@ class NotificationHandler {
                         Notification.FLAG_ONGOING_EVENT
                     }
                 )
-                .setSmallIcon(android.R.drawable.sym_def_app_icon) // TODO
+                .setSmallIcon(R.drawable.ic_launcher_foreground) // TODO
                 .setWhen(System.currentTimeMillis())
 
         // if Android O or higher, we need a channel ID

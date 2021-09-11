@@ -43,7 +43,7 @@ class PlayerService : Service() {
                 if (this.getState() == PlayerState.PLAYING) {
                     this.pause() // pause player
                 } else {
-                    stop() // stop service
+                    stopSelf() // stop service
                 }
             }
         }
@@ -59,9 +59,7 @@ class PlayerService : Service() {
         Timber.d("Service created")
         super.onCreate()
         createMediaSession()
-
         setupThread()
-        setupNotification()
     }
 
     private fun createMediaSession() {
@@ -117,6 +115,7 @@ class PlayerService : Service() {
         // and therefore we shouldn't do anything
         activityClass?.let {
             if (playerServiceBinder.getState() != PlayerState.PLAYING) return true
+            setupNotification()
             startForeground(NOTIFICATION_ID, notificationHandler.buildNotification(this, activityClass!!))
             return true
         } ?: Timber.w("No activity class found!")
@@ -153,8 +152,9 @@ class PlayerService : Service() {
     // TODO let's see if this is the smartest way...
     inner class ServiceBinder : PlayerServiceBinder() {
 
-        val service: PlayerService // used to be internal but I wasn't allowed to do this
-            get() = this@PlayerService
+        fun getService(): PlayerService {
+            return this@PlayerService
+        }
     }
 
     companion object {
