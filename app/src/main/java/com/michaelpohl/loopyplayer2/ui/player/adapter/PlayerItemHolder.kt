@@ -9,6 +9,7 @@ import com.michaelpohl.loopyplayer2.common.*
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
 import com.michaelpohl.shared.AudioModel
 import rm.com.audiowave.AudioWaveView
+import timber.log.Timber
 import java.io.File
 
 class PlayerItemHolder(
@@ -32,6 +33,7 @@ class PlayerItemHolder(
     private var progress: Float = 0F
         set(value) {
             field = value
+            Timber.d("Setting progress: ${model.name}, $value")
             wave.progress = if (state == SelectionState.PLAYING) value else 0F
         }
 

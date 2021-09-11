@@ -30,8 +30,6 @@ class PlayerViewModel(
     UIStateViewModel<PlayerUIState>() {
 
     init {
-        Timber.d("viewModel.init")
-        // TODO we have to watch this, this might be sketchy
         playerServiceConnection.onServiceConnectedListener = { setPlayer(it) }
     }
 
@@ -109,7 +107,7 @@ class PlayerViewModel(
         playerInterface = player.apply {
             setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
             setPlaybackProgressListener { name, value ->
-                _state.postValue(currentState.copy(playbackProgress = Pair(name, value)))
+                _state.postValue(currentState.copy(playbackProgress = Pair(name, value), fileInFocus = name))
             }
         }
     }
