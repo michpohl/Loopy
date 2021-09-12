@@ -7,6 +7,10 @@
 * Fehler behoben, der zu Soundartefakten beim Start auf einigen Geräten führen konnte.
 * Fehler behoben, der das Samplerate-switching  betraf 
 
+## Version 1.1
+
+* Crash reporting dialog hinzugefügt
+
 ## Version 1.0
 
 Loopy 2 bringt eine Reihe von Verbesserungen gegenüber Loopy I. Die wichtigsten Verbesserungen:

@@ -1,11 +1,15 @@
 ### Changelog
 
-## Version 1.1
+## Version 1.2
 
 * Loopy 2 now respects AudioFocus. It will pause playback when other apps need to output sound, or during phone calls
 * Improved background playback. Loopy will now show a notification with basic control options  
 * Fixed a bug that could cause noise at playback start on some devices
 * Fixed a bug related to sample rate switching
+
+## Version 1.1
+
+* Add crash reporting dialog
 
 ## Version 1.0
 
