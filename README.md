@@ -25,6 +25,8 @@ Internally, Loopy 2 uses [oboe](https://github.com/google/oboe) to do the sound 
 
 There is also a basic CI/CD setup using Github Actions (it's very basic, it just creates an apk and uploads it to the Play Store ), so if you fork this repo and get automated builds you can easily tweak that to your needs - just add your own secrets.
 
+**Please be aware: This is a hobby project, and I work on this very infrequently in my very limited spare time. This is often visible in the code base (and, for example, its lack of test coverage). So if you're looking for examples or a reference how to do something, don't use this!!! Come back in 3 to 5 years, by then I should have cleaned up most of it :-) (Of course, if you feel inclined to help improve this, I am happy to merge any usefull pull requests).**
+
 ### License
 Copyright 2019 Michael Pohl
 
