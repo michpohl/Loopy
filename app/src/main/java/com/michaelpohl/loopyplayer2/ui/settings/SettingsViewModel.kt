@@ -4,7 +4,6 @@ import com.michaelpohl.loopyplayer2.R
 import com.michaelpohl.loopyplayer2.common.Settings
 import com.michaelpohl.loopyplayer2.common.SettingsBuilder
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
-import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.loopyplayer2.ui.settings.AppSetting.*
 import com.michaelpohl.loopyplayer2.ui.settings.items.SettingsChoice
@@ -140,6 +139,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
 
     data class UIState(
         val settings: List<SettingsItemModel>
-    ) : BaseUIState()
+    )
 }
 

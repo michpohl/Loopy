@@ -92,26 +92,6 @@ class PlayerViewModel(
         }
     }
 
-    fun setPlayerSampleRate(sampleRate: SampleRate) {
-        if (playerInterface != null) return
-        uiJob {
-            playerInterface?.let {
-                if (!it.setSampleRate(sampleRate.intValue).isSuccess()) {
-                    error("Failed to set sample rate. This is a program error")
-                }
-            }
-        }
-    }
-
-    fun setPlayer(player: PlayerInterface) {
-        playerInterface = player.apply {
-            setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
-            setPlaybackProgressListener { name, value ->
-                _state.postValue(currentState.copy(playbackProgress = Pair(name, value), fileInFocus = name))
-            }
-        }
-    }
-
     fun onStartPlaybackClicked() {
         uiJob {
             when (playerInterface?.getState()) {
@@ -213,17 +193,6 @@ class PlayerViewModel(
         }
     }
 
-    private fun onConversionProgressUpdated(
-        newLoops: List<FileModel.AudioFile>,
-        name: String,
-        currentSteps: Int
-    ) {
-        val currentIndex = newLoops.withIndex().find { it.value.name == name }?.index ?: 0
-        val conversionPercentage =
-            calculateConversionProgress(newLoops.size, currentIndex, currentSteps)
-        _state.postValue(currentState.copy(conversionProgress = conversionPercentage))
-    }
-
     fun onDeleteLoopClicked(audioModel: AudioModel) {
         val currentLoops = currentState.loopsList.toMutableList()
 
@@ -250,6 +219,37 @@ class PlayerViewModel(
         _state.value = currentState.copy(
             loopsList = audioFilesRepository.getSingleSetOrStandardSet()
         )
+    }
+
+    private fun setPlayerSampleRate(sampleRate: SampleRate) {
+        uiJob {
+            playerInterface?.let {
+                if (!it.setSampleRate(sampleRate.intValue).isSuccess()) {
+                    error("Failed to set sample rate. This is a program error")
+                }
+            }
+        }
+    }
+
+    private fun setPlayer(player: PlayerInterface) {
+        playerInterface = player.apply {
+            setFileStartedByPlayerListener { onPlayerSwitchedToNextFile(it) }
+            setPlaybackProgressListener { name, value ->
+                _state.postValue(currentState.copy(playbackProgress = Pair(name, value), fileInFocus = name))
+            }
+        }
+        setPlayerSampleRate(settings.sampleRate)
+    }
+
+    private fun onConversionProgressUpdated(
+        newLoops: List<FileModel.AudioFile>,
+        name: String,
+        currentSteps: Int
+    ) {
+        val currentIndex = newLoops.withIndex().find { it.value.name == name }?.index ?: 0
+        val conversionPercentage =
+            calculateConversionProgress(newLoops.size, currentIndex, currentSteps)
+        _state.postValue(currentState.copy(conversionProgress = conversionPercentage))
     }
 
     private fun onPlayerSwitchedToNextFile(filename: String) {
