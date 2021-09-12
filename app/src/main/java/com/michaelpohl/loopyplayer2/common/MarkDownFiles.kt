@@ -9,7 +9,6 @@ object MarkDownFiles {
     private const val HELP_FILE_NAME = "help_"
     private const val POST_FIX = ".md"
     private const val DEFAULT_LOCALE = "default"
-
     fun getHelpTextFileName(): String {
         val locale = getLocale()
         return if (locale == "de") {
@@ -38,6 +37,6 @@ object MarkDownFiles {
     }
 
     private fun getLocale(): String {
-        return Locale.getDefault().language.toLowerCase()
+        return Locale.getDefault().language.lowercase(Locale.getDefault())
     }
 }

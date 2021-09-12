@@ -1,7 +1,7 @@
 package com.michaelpohl.loopyplayer2.ui.player.adapter
 
 import com.michaelpohl.delegationadapter.DelegationAdapter
-import com.michaelpohl.loopyplayer2.common.AudioModel
+import com.michaelpohl.shared.AudioModel
 
 // TODO refactor with custom Sorting
 class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :

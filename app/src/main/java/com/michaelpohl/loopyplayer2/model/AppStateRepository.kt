@@ -1,7 +1,7 @@
 package com.michaelpohl.loopyplayer2.model
 
-import com.michaelpohl.loopyplayer2.common.SampleRate
 import com.michaelpohl.loopyplayer2.common.Settings
+import com.michaelpohl.shared.SampleRate
 
 class AppStateRepository(private val sharedPrefs: SharedPreferencesManager) {
 

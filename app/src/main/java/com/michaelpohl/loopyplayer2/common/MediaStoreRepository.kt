@@ -1,6 +1,7 @@
 package com.michaelpohl.loopyplayer2.common
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
@@ -81,47 +82,7 @@ class MediaStoreRepository(val context: Context) {
         cursor?.let {
 
             if (cursor.moveToFirst()) {
-                val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
-                val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
-                val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
-                val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
-                val artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
-                val track = cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)
-
-                do {
-                    val audioId: Long = cursor.getLong(id)
-                    val albumPath = cursor.getString(data)
-                    val trackNumberString = cursor.getString(track)
-
-                    var audioTitle = cursor.getString(title)
-                    var albumName = cursor.getString(album)
-                    var artistName = cursor.getString(artist)
-
-                    if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
-                        context.getString(R.string.unknown)
-                    if (albumName == "0" || albumName.contains("unknown")) albumName =
-                        context.getString(R.string.unknown)
-                    if (artistName == "0" || artistName.contains("unknown")) artistName =
-                        context.getString(R.string.unknown)
-
-                    Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNumberString")
-                    val c = context.contentResolver
-
-                    val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
-                        ?: albumPath.substringAfterLast(".")
-                    Timber.d("My file extension is: %s", extension)
-
-                    list.add(
-                        MediaStoreItemModel.Track(
-                            name = audioTitle,
-                            album = albumName,
-                            artist = artistName,
-                            trackNo = extractTrackNumber(trackNumberString),
-                            path = albumPath,
-                            extension = extension
-                        )
-                    )
-                } while (cursor.moveToNext())
+                readMediaStoreData(cursor, context, uri, list)
             }
         }
         with(list.filterIsInstance<MediaStoreItemModel.Track>()) {
@@ -129,6 +90,55 @@ class MediaStoreRepository(val context: Context) {
             list.addAll(generateArtistItems(this))
         }
         return list
+    }
+
+    private fun readMediaStoreData(
+        cursor: Cursor,
+        context: Context,
+        uri: Uri,
+        list: MutableList<MediaStoreItemModel>
+    ) {
+        val id: Int = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+        val title: Int = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+        val data: Int = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+        val album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+        val artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+        val track = cursor.getColumnIndex(MediaStore.Audio.Media.TRACK)
+
+        do {
+            val audioId: Long = cursor.getLong(id)
+            val albumPath = cursor.getString(data)
+            val trackNumberString = cursor.getString(track)
+
+            var audioTitle = cursor.getString(title)
+            var albumName = cursor.getString(album)
+            var artistName = cursor.getString(artist)
+
+            if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
+                context.getString(R.string.unknown)
+            if (albumName == "0" || albumName.contains("unknown")) albumName =
+                context.getString(R.string.unknown)
+            if (artistName == "0" || artistName.contains("unknown")) artistName =
+                context.getString(R.string.unknown)
+
+            Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNumberString")
+            val c = context.contentResolver
+
+            val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(c.getType(uri))
+                ?: albumPath.substringAfterLast(".")
+            Timber.d("My file extension is: %s", extension)
+
+            list.add(
+                MediaStoreItemModel.Track(
+                    name = audioTitle,
+                    album = albumName,
+                    artist = artistName,
+                    trackNo = extractTrackNumber(trackNumberString),
+                    path = albumPath,
+                    extension = extension
+                )
+            )
+        } while (cursor.moveToNext())
     }
 
     private fun extractTrackNumber(trackNo: String?): Int {

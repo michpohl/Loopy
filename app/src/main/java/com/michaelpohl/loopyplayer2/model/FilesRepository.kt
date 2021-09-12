@@ -1,12 +1,11 @@
 package com.michaelpohl.loopyplayer2.model
 
 import android.content.res.AssetManager
-import com.squareup.moshi.Moshi
-import com.michaelpohl.loopyplayer2.common.AudioModel
-import com.michaelpohl.loopyplayer2.common.FileModel
-import com.michaelpohl.loopyplayer2.common.jni.JniBridge
 import com.michaelpohl.loopyplayer2.model.ExternalStorageManager.Companion.STANDARD_SET_FOLDER_NAME
 import com.michaelpohl.loopyplayer2.ui.licenses.Libraries
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
+import com.squareup.moshi.Moshi
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -50,9 +49,9 @@ class FilesRepository(
     suspend fun addLoopsToSet(
         newLoops: List<FileModel.AudioFile>,
         setName: String? = null
-    ): JniBridge.ConversionResult {
+    ): com.michaelpohl.player.jni.JniBridge.ConversionResult {
 
-        return JniBridge.convertAndAddToSet(
+        return com.michaelpohl.player.jni.JniBridge.convertAndAddToSet(
             newLoops, storage.getFullPath(setName ?: STANDARD_SET_FOLDER_NAME)
         )
     }
@@ -65,16 +64,16 @@ class FilesRepository(
         }
     }
 
-    fun getStringAsset(fileName: String) : String? {
+    fun getStringAsset(fileName: String): String? {
         return assets.open(fileName).bufferedReader().use {
             it.readText()
         }
     }
 
-    fun getLicenses() : Libraries? {
-            val inputStream: InputStream = assets.open("licenses.json")
-            val inputString = inputStream.bufferedReader().use{it.readText()}
-            Timber.d(inputString)
+    fun getLicenses(): Libraries? {
+        val inputStream: InputStream = assets.open("licenses.json")
+        val inputString = inputStream.bufferedReader().use { it.readText() }
+        Timber.d(inputString)
         val adapter = Moshi.Builder().build().adapter(Libraries::class.java)
         return adapter.fromJson(inputString)
     }

@@ -12,13 +12,13 @@ android {
         versionCode 2
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++14 -frtti -fexceptions"
-                arguments "-DANDROID_STL=c++_shared"
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-            }
-        }
+//        externalNativeBuild {
+//            cmake {
+//                cppFlags "-std=c++14 -frtti -fexceptions"
+//                arguments "-DANDROID_STL=c++_shared"
+//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+//            }
+//        }
 
     }
     buildTypes {
@@ -36,27 +36,27 @@ android {
         }
 
     }
-    buildFeatures {
-        prefab true
-    }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
+//    buildFeatures {
+//        prefab true
+//    }
+//    externalNativeBuild {
+//        cmake {
+//            path "CMakeLists.txt"
+//        }
+//    }
     dataBinding {
         enabled = true
     }
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
-    ndkVersion "21.3.6528147"
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//        }
+//    }
+//    ndkVersion "21.3.6528147"
+//    compileOptions {
+//        sourceCompatibility 1.8
+//        targetCompatibility 1.8
+//    }
 }
 
 androidExtensions {
@@ -65,12 +65,13 @@ androidExtensions {
 
 dependencies {
     implementation project(":adapter")
+    implementation project(":shared")
+    implementation project(":service")
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Miscellaneous
-    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.github.alxrm:audiowave-progressbar:0.9.2'
     implementation "ru.noties:markwon:2.0.1"
@@ -92,18 +93,16 @@ dependencies {
     implementation 'org.koin:koin-android:2.1.6'
     implementation 'org.koin:koin-android-viewmodel:2.1.5'
 
-    // JSON parsing
-    implementation 'com.squareup.moshi:moshi:1.12.0'
-    api 'com.squareup.moshi:moshi-adapters:1.11.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
-
-    // oboe
-    implementation 'com.google.oboe:oboe:1.6.0'
+//    // JSON parsing
+//    implementation 'com.squareup.moshi:moshi:1.12.0'
+//    api 'com.squareup.moshi:moshi-adapters:1.11.0'
+//    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
 
     // bug reporting
     implementation 'ch.acra:acra-mail:5.8.3'
     implementation'ch.acra:acra-dialog:5.8.3'
     implementation'ch.acra:acra-advanced-scheduler:5.8.3'
+    implementation project(path: ':player')
 
     // Testing
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
@@ -120,4 +119,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.5.13'
     androidTestImplementation 'org.mockito:mockito-android:2.7.22'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
-}
+
+    // JSON parsing
+    api 'com.squareup.moshi:moshi:1.12.0'
+    api 'com.squareup.moshi:moshi-adapters:1.11.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'}

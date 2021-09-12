@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/playerFragment">
 
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.michaelpohl.loopyplayer2.ui.player.PlayerFragment"
-        android:label="PlayerFragment" >
+        android:label="PlayerFragment">
         <action
             android:id="@+id/action_playerFragment_to_fileBrowserFragment"
             app:destination="@id/fileBrowserFragment" />
@@ -21,7 +22,7 @@
     <fragment
         android:id="@+id/fileBrowserFragment"
         android:name="com.michaelpohl.loopyplayer2.ui.filebrowser.FileBrowserFragment"
-        android:label="FileBrowserFragment" >
+        android:label="FileBrowserFragment">
         <action
             android:id="@+id/action_fileBrowserFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
@@ -33,7 +34,7 @@
     <fragment
         android:id="@+id/markupViewerFragment"
         android:name="com.michaelpohl.loopyplayer2.ui.help.MarkdownViewerFragment"
-        android:label="MarkupViewerFragment" >
+        android:label="MarkupViewerFragment">
         <action
             android:id="@+id/action_markupViewerFragment_to_licensesFragment"
             app:destination="@id/licensesFragment" />
@@ -41,7 +42,7 @@
     <fragment
         android:id="@+id/mediaStoreBrowserFragment"
         android:name="com.michaelpohl.loopyplayer2.ui.mediastorebrowser.MediaStoreBrowserFragment"
-        android:label="MediaStoreBrowserFragment" >
+        android:label="MediaStoreBrowserFragment">
         <action
             android:id="@+id/action_mediaStoreBrowserFragment_to_playerFragment"
             app:destination="@id/playerFragment" />

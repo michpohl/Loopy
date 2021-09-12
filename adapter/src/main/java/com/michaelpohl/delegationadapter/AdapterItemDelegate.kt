@@ -1,7 +1,6 @@
 package com.michaelpohl.delegationadapter
 
 import android.view.ViewGroup
-import com.michaelpohl.delegationadapter.DelegationAdapterItemHolder
 import timber.log.Timber
 
 abstract class AdapterItemDelegate<ItemType : Any, HolderType : DelegationAdapterItemHolder<ItemType>> {

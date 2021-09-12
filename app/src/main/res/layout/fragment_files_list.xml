@@ -59,21 +59,21 @@
                 android:onClick="@{() -> model.selectAll()}"
                 android:text="@string/btn_select_all"
                 android:visibility="@{model.state.shouldShowSelectAllButton}"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_submit"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
 
-/>
+                />
 
             <Button
                 android:id="@+id/btn_submit"
                 style="@style/Button.Borderless"
-                android:visibility="@{model.state.shouldShowSubmitButton}"
                 android:onClick="@{() -> model.onSubmitClicked()}"
                 android:text="@string/btn_open_selection"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="@{model.state.shouldShowSubmitButton}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

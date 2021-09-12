@@ -3,29 +3,29 @@ package com.michaelpohl.delegationadapter
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import com.michaelpohl.delegationadapter.AdapterItemDelegate
-
 import kotlin.reflect.KClass
 
 class GenericAdapterItemDelegate<Model : Any, VH : DelegationAdapterItemHolder<Model>>(
     @LayoutRes val layoutId: Int, private val modelClass: KClass<Model>, private val vhClass: KClass<VH>,
     val clickListener: ((Model) -> Unit)?) :
     AdapterItemDelegate<Model, VH>() {
+
     override fun createViewHolder(parent: ViewGroup): VH {
         val itemView = inflateLayout(layoutId, parent)
         return vhClass.createEntity(itemView)
     }
 
     override fun isForItemType(item: Any): Boolean {
-        return modelClass.isInstance(item);
+        return modelClass.isInstance(item)
     }
 
     override fun doBinding(item: Any, holder: DelegationAdapterItemHolder<*>) {
         if (this.isForItemType(item)) {
             if (clickListener != null) {
                 holder.itemView.setOnClickListener {
-                        val itemToSend = holder.item ?: item
-                         clickListener.invoke(itemToSend as Model) }
+                    val itemToSend = holder.item ?: item
+                    clickListener.invoke(itemToSend as Model)
+                }
             }
             bindViewHolder(item as Model, holder as VH)
         } else {

@@ -1,9 +1,9 @@
 package com.michaelpohl.loopyplayer2.model
 
-import com.squareup.moshi.JsonClass
-import com.michaelpohl.loopyplayer2.common.AudioModel
-import com.michaelpohl.loopyplayer2.common.FileModel
 import com.michaelpohl.loopyplayer2.common.toFileModel
+import com.michaelpohl.shared.AudioModel
+import com.michaelpohl.shared.FileModel
+import com.squareup.moshi.JsonClass
 import java.io.File
 
 @JsonClass(generateAdapter = true)

@@ -61,7 +61,7 @@ class MarkdownViewerFragment : BaseFragment() {
     private fun onShowAppInfoClicked() {
         val attributionPresenter = AttributionPresenter.Builder(context)
             .addAttributions(
-                Attribution.Builder("Loopy II")
+                Attribution.Builder("Loopy 2")
                     .addCopyrightNotice("Copyright 2020 Michael Pohl")
                     .addLicense(License.APACHE)
                     .setWebsite("https://github.com/michpohl/loopy")

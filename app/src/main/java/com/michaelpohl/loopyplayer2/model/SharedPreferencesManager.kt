@@ -2,9 +2,9 @@ package com.michaelpohl.loopyplayer2.model
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.squareup.moshi.Moshi
-import com.michaelpohl.loopyplayer2.common.AudioModel
 import com.michaelpohl.loopyplayer2.common.Settings
+import com.michaelpohl.shared.AudioModel
+import com.squareup.moshi.Moshi
 import timber.log.Timber
 
 /**
@@ -93,6 +93,7 @@ class SharedPreferencesManager(context: Context) {
     }
 
     companion object {
+
         const val SHARED_PREFS_KEY = "loopy"
         const val SETS = "sets"
         const val SELECTED_SET = "selectedset"

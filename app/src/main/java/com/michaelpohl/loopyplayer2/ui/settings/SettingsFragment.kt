@@ -26,7 +26,8 @@ class SettingsFragment : BaseFragment() {
     private val adapter = customAdapter<SettingsItemModel, SettingsViewModel.UIState> {
         delegates = listOf(
             delegate<SettingsItemModel.Header, SettingsHeaderViewHolder>(
-                R.layout.item_settings_header),
+                R.layout.item_settings_header
+            ),
             clickableDelegate<SettingsItemModel.CheckableSetting, SettingsCheckableViewHolder>
                 (R.layout.item_settings_checkable) { viewModel.onSettingsItemClicked(it) },
             clickableDelegate<SettingsItemModel.MultipleChoiceSetting, SettingsMultipleChoiceViewHolder>

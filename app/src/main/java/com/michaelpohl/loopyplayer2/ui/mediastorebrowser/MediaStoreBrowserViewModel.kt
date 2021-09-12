@@ -1,9 +1,13 @@
 package com.michaelpohl.loopyplayer2.ui.mediastorebrowser
 
-import com.michaelpohl.loopyplayer2.common.*
+import com.michaelpohl.loopyplayer2.common.MediaStoreRepository
+import com.michaelpohl.loopyplayer2.common.hasAcceptedAudioFileExtension
+import com.michaelpohl.loopyplayer2.common.toFileModel
+import com.michaelpohl.loopyplayer2.common.toVisibility
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
 import com.michaelpohl.loopyplayer2.ui.filebrowser.BrowserViewModel
 import com.michaelpohl.loopyplayer2.ui.mediastorebrowser.adapter.MediaStoreItemModel
+import com.michaelpohl.shared.FileModel
 import timber.log.Timber
 import java.io.File
 
@@ -92,7 +96,8 @@ class MediaStoreBrowserViewModel(
                         itemsToDisplay = nextFilesToDisplay,
                         lastDisplayedItems = this,
                         selectedItems = null
-                    ))
+                    )
+                )
                 true
             } else false
         }

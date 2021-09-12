@@ -6,7 +6,7 @@ import com.michaelpohl.loopyplayer2.common.toVisibility
 import com.michaelpohl.loopyplayer2.model.FilesRepository
 import com.michaelpohl.loopyplayer2.ui.base.BaseViewModel
 
-class MarkdownViewerViewModel(val repo: FilesRepository) : BaseViewModel() {
+class MarkdownViewerViewModel(private val repo: FilesRepository) : BaseViewModel() {
 
     val docType = MutableLiveData<MarkdownViewerFragment.DocumentType>()
 
