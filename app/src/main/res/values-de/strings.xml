@@ -82,5 +82,10 @@
     <string name="arca_dialog_email_prompt">Gib Deine Email-Adresse ein:</string>
     <string name="error_reporting_email">google@michaelpohl.de</string>
     <string name="error_reporting_subject">Loopy 2 ist abgestürzt!</string>
+    <string name="notification_title">Loopy 2 läuft im Hintergrund</string>
+    <string name="notification_btn_open_app">Player öffnen</string>
+    <string name="notification_btn_stop_player">Player stoppen</string>
+
+
 
 </resources>

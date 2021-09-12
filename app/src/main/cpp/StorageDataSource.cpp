@@ -145,7 +145,7 @@ StorageDataSource::openFromSet(const char *fileName, AudioProperties targetPrope
     LOGD("Successfully read: %i", stream.gcount());
     stream.close();
     auto numSamples = bufferSize / sizeof(int16_t);
-    LOGD("NumSamples: %i", numSamples);
+    LOGD("NumSamples: %lu", numSamples);
 
     auto outputBuffer = std::make_unique<float[]>(numSamples);
 
