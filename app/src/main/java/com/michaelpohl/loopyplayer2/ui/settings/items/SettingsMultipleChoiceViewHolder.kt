@@ -23,7 +23,8 @@ class SettingsMultipleChoiceViewHolder(itemView: View) :
     private fun buildRadioGroup(choices: List<Pair<String, Boolean>>) {
         val buttonParams =
             LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        val groupParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val groupParams =
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         val radioGroup = RadioGroup(itemView.context)
         choices.withIndex().forEach { pair ->

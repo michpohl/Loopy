@@ -17,7 +17,7 @@ class PlayerService : Service() {
     private val sessionCallback = SessionCallback()
     private val playerServiceBinder = ServiceBinder()
     private val notificationHandler = NotificationHandler()
-    private val focusHandler = AudioFocusHandler({onAudioFocusGained()}, {onAudioFocusLost()})
+    private val focusHandler = AudioFocusHandler({ onAudioFocusGained() }, { onAudioFocusLost() })
     private lateinit var session: MediaSession
 
     private lateinit var notificationManager: NotificationManager
@@ -79,8 +79,7 @@ class PlayerService : Service() {
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                "here be app name", // TODO
+                NOTIFICATION_CHANNEL_ID, "here be app name", // TODO
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 notificationManager.createNotificationChannel(this)
@@ -114,9 +113,10 @@ class PlayerService : Service() {
         // if we don't know the activity class yet, we can't properly set up the service and notification
         // and therefore we shouldn't do anything
         activityClass?.let {
-            if (playerServiceBinder.getState() != PlayerState.PLAYING) return true
-            setupNotification()
-            startForeground(NOTIFICATION_ID, notificationHandler.buildNotification(this, activityClass!!))
+            if (playerServiceBinder.getState() == PlayerState.PLAYING) {
+                setupNotification()
+                startForeground(NOTIFICATION_ID, notificationHandler.buildNotification(this, activityClass!!))
+            }
             return true
         } ?: Timber.w("No activity class found!")
         return false
@@ -138,8 +138,7 @@ class PlayerService : Service() {
     private fun handleNotificationStopClicked(intent: Intent?) {
         with(
             intent?.getBooleanExtra(
-                DID_START_FROM_NOTIFICATION,
-                false
+                DID_START_FROM_NOTIFICATION, false
             )
         ) {
             if (this == true) {
@@ -158,6 +157,7 @@ class PlayerService : Service() {
     }
 
     companion object {
+
         // TODO check which places these should go to
         private val TAG = PlayerService::class.java.simpleName
         const val NOTIFICATION_CHANNEL_ID = "loopy_channel"
@@ -166,6 +166,5 @@ class PlayerService : Service() {
     }
 }
 
-enum class ServiceState {
-    RUNNING, STOPPED
+enum class ServiceState { RUNNING, STOPPED
 }

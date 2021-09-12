@@ -33,6 +33,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 
+@Suppress("TooManyFunctions") //TODO clean up, navigation could be moved to own class
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, KoinComponent {
 

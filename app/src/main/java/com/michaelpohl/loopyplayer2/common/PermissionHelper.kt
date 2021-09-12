@@ -10,7 +10,6 @@ import timber.log.Timber
 
 class PermissionHelper(private val activity: Activity) {
 
-    private val REQUEST_CODE = 999 // chosen randomly. What is the rule which number to pick?
     fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -38,7 +37,7 @@ class PermissionHelper(private val activity: Activity) {
             Timber.v("Permission %s granted", permission)
             true
         } else {
-            Timber.e("Permission %s denied", permission)
+            Timber.w("Permission %s denied", permission)
             false
         }
     }
@@ -49,5 +48,10 @@ class PermissionHelper(private val activity: Activity) {
             permissions,
             REQUEST_CODE
         )
+    }
+
+    companion object {
+
+        private const val REQUEST_CODE = 999 // chosen randomly. What is the rule which number to pick?
     }
 }

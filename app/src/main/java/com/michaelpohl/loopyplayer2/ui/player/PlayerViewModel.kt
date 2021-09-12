@@ -191,7 +191,8 @@ class PlayerViewModel(
                 val result = audioFilesRepository.addLoopsToSet(newLoops)
 
                 // TODO set handling is a total work in progress
-                if (result != com.michaelpohl.player.jni.JniBridge.ConversionResult.ALL_FAILED) { // if at least one from the conversion succeeded, update UI
+                // if at least one from the conversion succeeded, update UI
+                if (result != com.michaelpohl.player.jni.JniBridge.ConversionResult.ALL_FAILED) {
                     val loops = audioFilesRepository.getSingleSetOrStandardSet()
 
                     withUI {

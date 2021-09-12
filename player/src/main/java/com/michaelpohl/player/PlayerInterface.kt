@@ -1,10 +1,10 @@
 package com.michaelpohl.player
 
-import android.media.session.MediaSession
 import com.michaelpohl.shared.PlayerState
 import com.michaelpohl.shared.JniResult
 
 // TODO evaluate if needed
+@Suppress("TooManyFunctions") // Todo remove some, there are redundancies!
 interface PlayerInterface {
 
 

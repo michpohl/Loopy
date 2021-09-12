@@ -75,7 +75,8 @@ open class FileBrowserViewModel(
     }
 
     override fun selectAll() {
-        _state.value = currentState.copy(selectedItems = currentState.itemsToDisplay.filterIsInstance<FileModel.AudioFile>())
+        _state.value = currentState.copy(
+            selectedItems = currentState.itemsToDisplay.filterIsInstance<FileModel.AudioFile>())
     }
 
     fun onBackPressed(): Boolean {

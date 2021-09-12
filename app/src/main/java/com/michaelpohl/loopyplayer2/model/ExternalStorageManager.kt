@@ -36,8 +36,7 @@ class ExternalStorageManager(val context: Context) {
 
         getPathContent("${appStorageFolder?.path}/$setFolderName")
             .toFileModels(setOf(AppStateRepository.Companion.AudioFileType.PCM)) // we store only pcm in the set folders
-            .filterIsInstance<FileModel.AudioFile>()
-            .forEach {
+            .filterIsInstance<FileModel.AudioFile>().forEach {
                 audioModels.add(it.toAudioModel())
             }
         return audioModels
@@ -51,24 +50,20 @@ class ExternalStorageManager(val context: Context) {
             fileOutPutStream.close()
             true
         } catch (e: IOException) {
-            e.printStackTrace()
+            Timber.e(e.message)
             false
         }
     }
 
     fun getPathContent(
-        path: String,
-        showHiddenFiles: Boolean = false,
-        onlyFolders: Boolean = false
+        path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false
     ): List<File> {
         val file = File(path)
         Timber.d("My file should be: $path")
         Timber.d("what's in my path: ${file.listFiles().map { it.name }}")
 
-        return file.listFiles()
-            .filter { showHiddenFiles || !it.name.startsWith(".") }
-            .filter { !onlyFolders || it.isDirectory }
-            .toList()
+        return file.listFiles().orEmpty().filter { showHiddenFiles || !it.name.startsWith(".") }
+            .filter { !onlyFolders || it.isDirectory }.toList()
     }
 
     //    fun readFile(): File {
@@ -91,10 +86,9 @@ class ExternalStorageManager(val context: Context) {
     //    }
     //    })  }
 
-    fun createSetFolder(folderName: String? = STANDARD_SET_FOLDER_NAME): Boolean {
+    fun createSetFolder(folderName: String = STANDARD_SET_FOLDER_NAME): Boolean {
         val folder = File(
-            "$appStorageFolder",
-            folderName
+            "$appStorageFolder", folderName
         )
         return if (!folder.exists()) {
             folder.mkdirs()
@@ -106,7 +100,7 @@ class ExternalStorageManager(val context: Context) {
     }
 
     fun copyStandardFilesToSdCard(): Boolean {
-        Timber.d("Is external storage available: $isExternalStorageAvailable, read only: $isExternalStorageReadOnly")
+        Timber.d("Eexternal storage available: $isExternalStorageAvailable, read only: $isExternalStorageReadOnly")
         val outputPath = "${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME/"
 
         return try {
@@ -119,16 +113,14 @@ class ExternalStorageManager(val context: Context) {
             Timber.d("conversion result: $conversionResult")
             true
         } catch (e: IOException) {
-            Timber.e("Copying of files to SD card (Location: ${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME) failed")
-            e.printStackTrace()
+            Timber.e("Copying of files to Location: ${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME) failed")
+            Timber.e(e)
             false
         }
     }
 
     private fun copySingleFileFromAssetsTo(
-        outputPath: String,
-        input: InputStream,
-        fileName: String
+        outputPath: String, input: InputStream, fileName: String
     ) {
         FileOutputStream(File(outputPath, fileName)).use { out ->
             input.use {
@@ -150,7 +142,7 @@ class ExternalStorageManager(val context: Context) {
                 }
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Timber.e(e)
         }
         return list
     }
@@ -178,7 +170,7 @@ class ExternalStorageManager(val context: Context) {
             true
         } catch (e: IOException) {
             Timber.e("Copying of files to SD card (Location: ${appStorageFolder?.path}) failed")
-            e.printStackTrace()
+            Timber.e(e.message)
             false
         }
     }

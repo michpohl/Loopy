@@ -68,6 +68,7 @@ class JniPlayer {
         return com.michaelpohl.player.jni.JniBridge.select(path)
     }
 
+    @Suppress("FunctionOnlyReturningConstant")
     fun getCurrentPosition(): Float {
         // TODO reimplement
         return 0F

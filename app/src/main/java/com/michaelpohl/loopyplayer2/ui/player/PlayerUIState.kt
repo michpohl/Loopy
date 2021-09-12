@@ -3,7 +3,6 @@ package com.michaelpohl.loopyplayer2.ui.player
 import android.view.View
 import com.michaelpohl.loopyplayer2.common.Settings
 import com.michaelpohl.loopyplayer2.common.toVisibility
-import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.shared.AudioModel
 
 data class PlayerUIState(
@@ -17,7 +16,7 @@ data class PlayerUIState(
     val settings: Settings,
     val processingOverlayVisibility: Int,
     val conversionProgress: Int? = 0
-) : BaseUIState() {
+) {
 
     val emptyMessageVisibility: Int = this.loopsList.isEmpty().toVisibility()
 }

@@ -1,6 +1,5 @@
 package com.michaelpohl.loopyplayer2.ui.filebrowser
 
-import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.shared.FileModel
 
@@ -8,7 +7,7 @@ abstract class BrowserViewModel<T : BrowserViewModel.BrowserUIState> : UIStateVi
 
     lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
     abstract fun selectAll()
-    abstract class BrowserUIState : BaseUIState() {
+    abstract class BrowserUIState{
 
         abstract val itemsToDisplay: List<*>
         abstract val lastDisplayedItems: List<List<*>>?

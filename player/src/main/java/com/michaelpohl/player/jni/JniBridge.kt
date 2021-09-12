@@ -6,7 +6,7 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@Suppress("EmptyFunctionBlock")
+@Suppress("EmptyFunctionBlock", "TooManyFunctions")
 object JniBridge {
 
     private var startJob: Continuation<JniResult<String>>? = null

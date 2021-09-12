@@ -3,7 +3,7 @@ package com.michaelpohl.loopyplayer2.common.util.coroutines
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class CoroutinesConfiguration {
+class CoroutinesConfiguration private constructor() {
     companion object {
 
         var uiDispatcher: CoroutineDispatcher = Dispatchers.Main

@@ -8,6 +8,6 @@ class LicensesViewModel(private val repo: FilesRepository) : UIStateViewModel<Ba
 
     val licenses = repo.getLicenses()
     override fun initUIState(): BaseUIState {
-        return object : BaseUIState() {}
+        return object{}
     }
 }

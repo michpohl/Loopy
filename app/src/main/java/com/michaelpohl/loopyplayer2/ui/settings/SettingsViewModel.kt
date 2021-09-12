@@ -74,6 +74,7 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
         return UIState(stateRepo.settings.toItemModels())
     }
 
+    @Suppress("LongMethod")
     private fun Settings.toItemModels(): List<SettingsItemModel> {
         val list = mutableListOf<SettingsItemModel>()
         list.add(

@@ -13,10 +13,12 @@ package com.michaelpohl.delegationadapter
 sealed class Sorting<ItemType : Any, UpdateType : Any> {
 
     abstract class Basic<ItemType : Any> : Sorting<ItemType, ItemType>() {
+
         abstract fun sort(input: List<ItemType>): List<ItemType>
     }
 
     abstract class Custom<ItemType : Any, UpdateType : Any> : Sorting<ItemType, UpdateType>() {
+
         abstract fun sort(input: UpdateType): List<ItemType>
     }
 }
