@@ -1,11 +1,15 @@
 ### Changelog
 
-## Version 1.1
+## Version 1.2
 
 * Loopy 2 erkennt jetzt AudioFokus. Bei Anrufen, oder wenn eine andere App Sound abspielt, wird das Playback pausiert.
 * Playback im Hintergrund wurde verbessert. Es wird nun auch eine Notification mit einfachen Kontrollmöglichkeiten angezeigt.
 * Fehler behoben, der zu Soundartefakten beim Start auf einigen Geräten führen konnte.
 * Fehler behoben, der das Samplerate-switching  betraf 
+
+## Version 1.1
+
+* Crash reporting dialog hinzugefügt
 
 ## Version 1.0
 
