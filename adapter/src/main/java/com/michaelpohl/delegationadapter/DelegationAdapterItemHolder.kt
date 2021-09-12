@@ -14,7 +14,6 @@ abstract class DelegationAdapterItemHolder<I : Any>(itemView: View) : RecyclerVi
      * Override this to store edited versions of your item. They will then be used by the clickListenenr
      */
     open var item: I? = null
-
     open fun onCreated() {}
     abstract fun bind(item: I)
 }

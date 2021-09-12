@@ -15,7 +15,7 @@ import java.util.*
 
 class LoopyApplication : Application() {
 
-    override fun attachBaseContext(base:Context) {
+    override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
 
         initAcra {
@@ -49,7 +49,7 @@ class LoopyApplication : Application() {
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@LoopyApplication)
-            modules(KoinGraph.get())
+            modules(getModules())
         }
     }
 

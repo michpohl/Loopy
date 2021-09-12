@@ -6,6 +6,7 @@ import com.michaelpohl.loopyplayer2.common.getDrawable
 import com.michaelpohl.loopyplayer2.common.gone
 
 class AlbumItemHolder(itemView: View) : MediaStoreItemHolder<MediaStoreItemModel.Album>(itemView) {
+
     override fun bind(item: MediaStoreItemModel.Album) {
         label.text = item.name
         subLabel.gone()

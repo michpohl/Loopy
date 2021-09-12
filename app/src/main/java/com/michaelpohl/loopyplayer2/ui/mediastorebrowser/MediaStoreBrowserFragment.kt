@@ -9,12 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.michaelpohl.delegationadapter.customAdapter
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.FileModel
 import com.michaelpohl.loopyplayer2.common.find
 import com.michaelpohl.loopyplayer2.common.setDivider
 import com.michaelpohl.loopyplayer2.databinding.FragmentMediaListBinding
 import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.mediastorebrowser.adapter.*
+import com.michaelpohl.shared.FileModel
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 

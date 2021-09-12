@@ -24,7 +24,6 @@ class LicensesFragment : BaseFragment() {
     override val viewModel: LicensesViewModel by inject()
 
     lateinit var recycler: RecyclerView
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_licenses, container, false)
         recycler = view.find(R.id.rv_licenses)

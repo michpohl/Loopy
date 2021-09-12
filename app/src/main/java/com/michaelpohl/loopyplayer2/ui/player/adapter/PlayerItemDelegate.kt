@@ -4,8 +4,9 @@ import android.view.ViewGroup
 import com.michaelpohl.delegationadapter.AdapterItemDelegate
 import com.michaelpohl.delegationadapter.inflateLayout
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.AudioModel
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter.Companion.SelectionState
+import com.michaelpohl.shared.AudioModel
+import timber.log.Timber
 
 class PlayerItemDelegate(
     private val clickReceiver: (AudioModel) -> Unit, // use the standard auto click receiver feature
@@ -40,11 +41,10 @@ class PlayerItemDelegate(
     }
 
     fun updatePlaybackProgress(payload: Pair<String, Int>, showLoopCount: Boolean) {
-        val targetHolder = holders.find { it.getName() == payload.first }
-        targetHolder?.showLoopCount(showLoopCount)
-
-        payload.let { payload ->
-            targetHolder?.updateProgress(payload.second)
+        holders.find { it.getName() == payload.first }?.let { itemHolder ->
+            Timber.d("Updating: ${payload.first}, value: ${payload.second}")
+            itemHolder.showLoopCount(showLoopCount)
+            itemHolder.updateProgress(payload.second)
         }
     }
 }

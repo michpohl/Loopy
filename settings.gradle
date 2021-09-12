@@ -1,2 +1,5 @@
 include ':adapter'
 include ':app'
+include ':service'
+include ':shared'
+include ':player'

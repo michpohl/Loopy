@@ -1,7 +1,6 @@
 package com.michaelpohl.delegationadapter
 
 import android.view.View
-import com.michaelpohl.delegationadapter.AdapterItemDelegate
 import timber.log.Timber
 
 /**

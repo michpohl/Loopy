@@ -1,18 +1,17 @@
 package com.michaelpohl.loopyplayer2.ui.settings
 
 import com.michaelpohl.loopyplayer2.R
-import com.michaelpohl.loopyplayer2.common.SampleRate
 import com.michaelpohl.loopyplayer2.common.Settings
 import com.michaelpohl.loopyplayer2.common.SettingsBuilder
-import com.michaelpohl.loopyplayer2.common.toSampleRate
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
-import com.michaelpohl.loopyplayer2.ui.base.BaseUIState
 import com.michaelpohl.loopyplayer2.ui.base.UIStateViewModel
 import com.michaelpohl.loopyplayer2.ui.settings.AppSetting.*
 import com.michaelpohl.loopyplayer2.ui.settings.items.SettingsChoice
 import com.michaelpohl.loopyplayer2.ui.settings.items.SettingsItemModel
 import com.michaelpohl.loopyplayer2.ui.settings.items.isChecked
 import com.michaelpohl.loopyplayer2.ui.settings.items.name
+import com.michaelpohl.shared.SampleRate
+import com.michaelpohl.shared.toSampleRate
 
 class SettingsViewModel(private val stateRepo: AppStateRepository) :
     UIStateViewModel<SettingsViewModel.UIState>() {
@@ -74,6 +73,7 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
         return UIState(stateRepo.settings.toItemModels())
     }
 
+    @Suppress("LongMethod")
     private fun Settings.toItemModels(): List<SettingsItemModel> {
         val list = mutableListOf<SettingsItemModel>()
         list.add(
@@ -81,7 +81,8 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
                 setting = WAIT_MODE,
                 choices = setOf(
                     SettingsChoice(getString(R.string.settings_item_switch_immediately), !this.isWaitMode),
-                    SettingsChoice(getString(R.string.settings_item_wait_until_finished), this.isWaitMode))
+                    SettingsChoice(getString(R.string.settings_item_wait_until_finished), this.isWaitMode)
+                )
             )
         )
         list.add(
@@ -138,6 +139,6 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
 
     data class UIState(
         val settings: List<SettingsItemModel>
-    ) : BaseUIState()
+    )
 }
 

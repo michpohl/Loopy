@@ -1,10 +1,10 @@
 package com.michaelpohl.loopyplayer2.ui.filebrowser
 
-import com.michaelpohl.loopyplayer2.common.FileModel
 import com.michaelpohl.loopyplayer2.common.StorageRepository
 import com.michaelpohl.loopyplayer2.common.toFileModels
 import com.michaelpohl.loopyplayer2.common.toVisibility
 import com.michaelpohl.loopyplayer2.model.AppStateRepository
+import com.michaelpohl.shared.FileModel
 
 open class FileBrowserViewModel(
     private val storage: StorageRepository,
@@ -56,7 +56,8 @@ open class FileBrowserViewModel(
             currentState.copy(
                 itemsToDisplay = getFolderContent(folder.path),
                 lastDisplayedItems = backList
-            ))
+            )
+        )
     }
 
     fun onFileSelectionChanged(fileModel: FileModel.AudioFile) {
@@ -74,7 +75,8 @@ open class FileBrowserViewModel(
     }
 
     override fun selectAll() {
-        _state.value = currentState.copy(selectedItems = currentState.itemsToDisplay.filterIsInstance<FileModel.AudioFile>())
+        _state.value = currentState.copy(
+            selectedItems = currentState.itemsToDisplay.filterIsInstance<FileModel.AudioFile>())
     }
 
     fun onBackPressed(): Boolean {
@@ -89,7 +91,8 @@ open class FileBrowserViewModel(
                         itemsToDisplay = nextFilesToDisplay,
                         lastDisplayedItems = this,
                         selectedItems = null
-                    ))
+                    )
+                )
                 true
             } else false
         }
