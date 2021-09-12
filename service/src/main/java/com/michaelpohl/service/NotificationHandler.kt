@@ -30,7 +30,7 @@ class NotificationHandler {
         )
         // resume activity intent
         val activityPendingIntent = PendingIntent.getActivity(
-            context, 0, Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT
+            context, 1321, Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val builder =

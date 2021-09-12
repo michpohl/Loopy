@@ -43,7 +43,7 @@ class PlayerService : Service() {
                 if (this.getState() == PlayerState.PLAYING) {
                     this.pause() // pause player
                 } else {
-                    stopSelf() // stop service
+                    this@PlayerService.stop() // stop service
                 }
             }
         }
@@ -72,6 +72,7 @@ class PlayerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.d("Service started")
+        handleNotificationStopClicked(intent)
         return START_NOT_STICKY
     }
 
@@ -136,14 +137,9 @@ class PlayerService : Service() {
 
     // if the user wants to end the service from the notification, this gets executed
     private fun handleNotificationStopClicked(intent: Intent?) {
-        with(
-            intent?.getBooleanExtra(
-                DID_START_FROM_NOTIFICATION, false
-            )
-        ) {
-            if (this == true) {
-                // do whatever else might be necessary
-                stop()
+        if (intent?.getBooleanExtra(DID_START_FROM_NOTIFICATION, false) == true) {
+            CoroutineScope(Dispatchers.Default).launch {
+                playerServiceBinder.stop()
             }
         }
     }
