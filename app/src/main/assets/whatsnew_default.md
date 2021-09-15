@@ -1,5 +1,10 @@
 ### Changelog
 
+## Version 1.2.1
+
+* Fixed a bug that would prevent playback after loading new files in some cases
+* Fixed a localisation issue
+
 ## Version 1.2
 
 * Loopy 2 now respects AudioFocus. It will pause playback when other apps need to output sound, or during phone calls

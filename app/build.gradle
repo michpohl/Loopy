@@ -5,22 +5,16 @@ apply plugin: "kotlin-kapt"
 
 android {
     compileSdkVersion 30
+
     defaultConfig {
         applicationId "com.michaelpohl.loopyplayer2"
         minSdkVersion 22
         targetSdkVersion 30
         versionCode 3
-        versionName "1.2"
+        versionName "1.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        externalNativeBuild {
-//            cmake {
-//                cppFlags "-std=c++14 -frtti -fexceptions"
-//                arguments "-DANDROID_STL=c++_shared"
-//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-//            }
-//        }
-
     }
+
     buildTypes {
         debug {
             shrinkResources true
@@ -36,27 +30,11 @@ android {
         }
 
     }
-//    buildFeatures {
-//        prefab true
-//    }
-//    externalNativeBuild {
-//        cmake {
-//            path "CMakeLists.txt"
-//        }
-//    }
+
     dataBinding {
         enabled = true
     }
-//    sourceSets {
-//        main {
-//            jniLibs.srcDirs = ['libs']
-//        }
-//    }
-//    ndkVersion "21.3.6528147"
-//    compileOptions {
-//        sourceCompatibility 1.8
-//        targetCompatibility 1.8
-//    }
+
 }
 
 androidExtensions {
@@ -92,11 +70,6 @@ dependencies {
     // Dependency injection
     implementation 'org.koin:koin-android:2.1.6'
     implementation 'org.koin:koin-android-viewmodel:2.1.5'
-
-//    // JSON parsing
-//    implementation 'com.squareup.moshi:moshi:1.12.0'
-//    api 'com.squareup.moshi:moshi-adapters:1.11.0'
-//    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
 
     // bug reporting
     implementation 'ch.acra:acra-mail:5.8.3'

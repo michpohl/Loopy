@@ -10,7 +10,7 @@ class FolderItemHolder(itemView: View) : BrowserItemHolder<FileModel.Folder>(ite
 
     override fun bind(item: FileModel.Folder) {
         label.text = item.name
-        subLabel.text = "(${item.audioSubFiles} files)" //TODO change to resource
+        subLabel.text = resources.getString(R.string.folder_item_content_info, item.audioSubFiles.toString())
         icon.setImageDrawable(getDrawable(R.drawable.ic_folder))
         checkBox.gone()
     }
