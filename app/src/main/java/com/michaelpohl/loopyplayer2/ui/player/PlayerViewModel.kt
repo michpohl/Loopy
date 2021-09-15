@@ -25,7 +25,7 @@ import kotlin.system.measureTimeMillis
 class PlayerViewModel(
     private val audioFilesRepository: FilesRepository,
     private val appStateRepo: AppStateRepository,
-    playerServiceConnection: PlayerServiceConnection
+    private val playerServiceConnection: PlayerServiceConnection
 ) :
     UIStateViewModel<PlayerUIState>() {
 
@@ -65,6 +65,9 @@ class PlayerViewModel(
         settings = appStateRepo.settings
         setPlayerSampleRate(settings.sampleRate)
         _state.value = initUIState()
+        playerServiceConnection.requestPlayerInterface()?.let {
+            setPlayer(it)
+        }
     }
 
     override fun onFragmentPaused() {

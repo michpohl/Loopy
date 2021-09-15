@@ -1,5 +1,10 @@
 ### Changelog
 
+## Version 1.2.1
+
+* Fehler behoben, der in manchen Fällen das Abspielen verhindert, wenn neue Dateien geladen wurden
+* Übersetzungsfehler behoben
+
 ## Version 1.2
 
 * Loopy 2 erkennt jetzt AudioFokus. Bei Anrufen, oder wenn eine andere App Sound abspielt, wird das Playback pausiert.

@@ -69,7 +69,7 @@
     <string name="title_whatsnew">Changelog</string>
     <string name="nav_btn_whatsnew">Changelog</string>
     <string name="settings_item_show_suffix">Dateiendungen anzeigen</string>
-    <string name="btn_close">Schliessen</string>
+    <string name="btn_close">Schließen</string>
     <string name="nav_btn_contact"><![CDATA[Kontakt & Feedback]]></string>
     <string name="feedback_alert_text">Möchtest du dem Entwickler eine Email senden?</string>
     <string name="feedback_alert_title">Feedback senden</string>
@@ -87,5 +87,6 @@
     <string name="notification_btn_stop_player">Player stoppen</string>
 
 
+    <string name="folder_item_content_info">%s Audiodateien</string>
 
 </resources>

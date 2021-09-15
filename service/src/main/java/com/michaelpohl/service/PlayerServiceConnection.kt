@@ -8,12 +8,16 @@ import timber.log.Timber
 
 class PlayerServiceConnection(private val activityClass: Class<out AppCompatActivity>) : ServiceConnection {
 
+    private var playerInterface: PlayerService.ServiceBinder? = null
+
     var onServiceConnectedListener: ((PlayerService.ServiceBinder)-> Unit)? = null
 
     var playerService: PlayerService? = null
         private set
 
-
+    fun requestPlayerInterface() : PlayerService.ServiceBinder? {
+        return playerInterface
+    }
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
         Timber.d("Service connected")
@@ -22,6 +26,7 @@ class PlayerServiceConnection(private val activityClass: Class<out AppCompatActi
             activityClass = this@PlayerServiceConnection.activityClass
             start()
         }
+        playerInterface = binder
         onServiceConnectedListener?.invoke(binder)
     }
 
