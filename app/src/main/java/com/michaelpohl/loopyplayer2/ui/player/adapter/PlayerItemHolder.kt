@@ -25,6 +25,7 @@ class PlayerItemHolder(
     private var loopsCount: Int = 0
         set(value) {
             loopCounter.text = if (value != 0) {
+                // TODO replace with placeholder string
                 getString(R.string.loop_count_prefix) + " $value " + getString(R.string.loop_count_postfix)
             } else ""
             field = value
@@ -66,7 +67,7 @@ class PlayerItemHolder(
     }
 
     fun getName(): String {
-        return model.name
+        return if (::model.isInitialized) model.name else "" // hack
     }
 
     fun showLoopCount(shouldShow: Boolean) {
@@ -84,10 +85,10 @@ class PlayerItemHolder(
     }
 
     var state: SelectionState =
-        SelectionState.NOT_SELECTED
+        SelectionState.UNKNOWN
         set(value) {
             when (value) {
-                SelectionState.NOT_SELECTED -> {
+                SelectionState.NOT_SELECTED, SelectionState.UNKNOWN -> {
                     backgroundDrawable = R.drawable.background_item_rounded_stroke
                     deleteIcon.show()
                     loopsCount = 0

@@ -23,6 +23,6 @@ class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :
     }
 
     companion object {
-        enum class SelectionState { NOT_SELECTED, PRESELECTED, PLAYING }
+        enum class SelectionState { NOT_SELECTED, PRESELECTED, PLAYING, UNKNOWN }
     }
 }
