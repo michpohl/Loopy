@@ -45,7 +45,7 @@ jobs:
           keyPassword: ${{ secrets.KS_PR_PW }}
       - name: Deploy to Google
         id: deploy
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@v1.0.15
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.michaelpohl.loopyplayer2
