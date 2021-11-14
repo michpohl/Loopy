@@ -54,7 +54,7 @@ open class MediaStoreBrowserFragment : BaseFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        return if (!viewModel.onBackPressed()) super.onBackPressed() else false
+        return viewModel.onBackPressed()
     }
 
     private fun observe() {
