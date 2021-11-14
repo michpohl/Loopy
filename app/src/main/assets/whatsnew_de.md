@@ -3,6 +3,8 @@
 ## Version 1.2.2
 
 * Crash behoben, der unvorhergesehen auftreten konnte
+* Backbutton Fehler im Mediastore-Browser behoben
+* Fehler behoben bei Alben, die nur einen einzelnen Song enthalten
 
 ## Version 1.2.1
 
