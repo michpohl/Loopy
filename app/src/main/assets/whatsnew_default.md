@@ -3,6 +3,8 @@
 ## Version 1.2.2
 
 * Fixed a crash that could randomly occur
+* Fixed back button behavior in media browser
+* Fixed a bug with albums that contain just a single song
 
 ## Version 1.2.1
 

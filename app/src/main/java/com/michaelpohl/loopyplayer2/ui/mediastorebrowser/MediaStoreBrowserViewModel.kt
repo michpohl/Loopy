@@ -68,6 +68,7 @@ class MediaStoreBrowserViewModel(
             itemsToDisplay = filterAllTracksFromAlbum(album),
             lastDisplayedItems = backList
         )
+        Timber.d("Last displayed: ${currentState.lastDisplayedItems}")
     }
 
     private fun filterAllAlbums() = repo.getMediaStoreEntries().filterIsInstance<MediaStoreItemModel.Album>()
@@ -85,22 +86,19 @@ class MediaStoreBrowserViewModel(
 //    }
 
     fun onBackPressed(): Boolean {
-        val lastDisplayedItems = currentState.lastDisplayedItems.orEmpty().toMutableList()
+        return currentState.lastDisplayedItems?.let { itemBackStack ->
+            val newItemBackStack = if (itemBackStack.size > 1) {
+                itemBackStack.subList(0, itemBackStack.lastIndex - 1)
+            } else null
+            _state.value =
+                currentState.copy(
+                    itemsToDisplay = itemBackStack.last(),
+                    lastDisplayedItems = newItemBackStack,
+                    selectedItems = null
 
-        with(lastDisplayedItems) {
-            return if (this.isNotEmpty()) {
-                val nextFilesToDisplay = this.last()
-                remove(this.last())
-                _state.postValue(
-                    currentState.copy(
-                        itemsToDisplay = nextFilesToDisplay,
-                        lastDisplayedItems = this,
-                        selectedItems = null
-                    )
                 )
-                true
-            } else false
-        }
+            true
+        } ?: false
     }
 
     fun onTrackSelectionChanged(track: MediaStoreItemModel.Track) {
