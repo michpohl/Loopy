@@ -27,14 +27,14 @@ class PlayerItemDelegate(
     }
 
     fun updateFileCurrentlyPlayed(name: String) {
-        holders.forEach {
+        holders.filter { it.state != SelectionState.UNKNOWN }.forEach {
             it.state =
                 if (it.getName() == name) SelectionState.PLAYING else SelectionState.NOT_SELECTED
         }
     }
 
     fun updateFilePreselected(name: String) {
-        holders.filter { it.state != SelectionState.PLAYING }.forEach {
+        holders.filter { it.state != SelectionState.PLAYING && it.state != SelectionState.UNKNOWN }.forEach {
             it.state =
                 if (it.getName() == name) SelectionState.PRESELECTED else SelectionState.NOT_SELECTED
         }
