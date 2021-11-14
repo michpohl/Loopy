@@ -1,5 +1,9 @@
 ### Changelog
 
+## Version 1.2.2
+
+* Crash behoben, der unvorhergesehen auftreten konnte
+
 ## Version 1.2.1
 
 * Fehler behoben, der in manchen Fällen das Abspielen verhindert, wenn neue Dateien geladen wurden

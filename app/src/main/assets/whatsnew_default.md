@@ -1,5 +1,9 @@
 ### Changelog
 
+## Version 1.2.2
+
+* Fixed a crash that could randomly occur
+
 ## Version 1.2.1
 
 * Fixed a bug that would prevent playback after loading new files in some cases
