@@ -1,5 +1,9 @@
 ### Changelog
 
+## Version 1.2.3
+
+* Bugs in der Navigation behoben
+
 ## Version 1.2.2
 
 * Crash behoben, der unvorhergesehen auftreten konnte
