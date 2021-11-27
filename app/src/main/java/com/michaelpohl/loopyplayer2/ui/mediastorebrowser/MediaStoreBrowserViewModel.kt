@@ -86,19 +86,22 @@ class MediaStoreBrowserViewModel(
 //    }
 
     fun onBackPressed(): Boolean {
-        return currentState.lastDisplayedItems?.let { itemBackStack ->
-            val newItemBackStack = if (itemBackStack.size > 1) {
-                itemBackStack.subList(0, itemBackStack.lastIndex - 1)
-            } else null
-            _state.value =
-                currentState.copy(
-                    itemsToDisplay = itemBackStack.last(),
-                    lastDisplayedItems = newItemBackStack,
-                    selectedItems = null
+        val lastDisplayedFiles = currentState.lastDisplayedItems.orEmpty().toMutableList()
 
+        with(lastDisplayedFiles) {
+            return if (this.isNotEmpty()) {
+                val nextFilesToDisplay = this.last()
+                remove(this.last())
+                _state.postValue(
+                    currentState.copy(
+                        itemsToDisplay = nextFilesToDisplay,
+                        lastDisplayedItems = t  his,
+                        selectedItems = null
+                    )
                 )
-            true
-        } ?: false
+                true
+            } else false
+        }
     }
 
     fun onTrackSelectionChanged(track: MediaStoreItemModel.Track) {
