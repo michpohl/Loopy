@@ -95,7 +95,7 @@ class MediaStoreBrowserViewModel(
                 _state.postValue(
                     currentState.copy(
                         itemsToDisplay = nextFilesToDisplay,
-                        lastDisplayedItems = t  his,
+                        lastDisplayedItems = this,
                         selectedItems = null
                     )
                 )

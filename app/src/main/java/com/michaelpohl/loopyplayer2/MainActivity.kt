@@ -97,8 +97,16 @@ class MainActivity : AppCompatActivity(),
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
-        // stop player when navigating away saves a lot of headaches
-        if (currentFragment is PlayerFragment) (currentFragment as PlayerFragment).viewModel.onStopPlaybackClicked()
+        if (currentFragment is PlayerFragment) {
+            // stop player when navigating away saves a lot of headaches
+            (currentFragment as PlayerFragment).viewModel.onStopPlaybackClicked()
+        } else {
+            // as a safeguard, if not coming from the PlayerFragment, we'll pop the backstack
+            // this shouldn't be necessary, but apparently some users experience crashes related to this
+            if (currentFragment !is PlayerFragment) {
+                findNavController(R.id.nav_host_fragment).popBackStack()
+            }
+        }
 
         when (item.itemId) {
             R.id.nav_browse_media -> {
