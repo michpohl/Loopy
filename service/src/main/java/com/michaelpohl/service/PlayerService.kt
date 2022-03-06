@@ -140,6 +140,7 @@ class PlayerService : Service() {
         if (intent?.getBooleanExtra(DID_START_FROM_NOTIFICATION, false) == true) {
             CoroutineScope(Dispatchers.Default).launch {
                 playerServiceBinder.stop()
+                stopForeground(true)
             }
         }
     }
