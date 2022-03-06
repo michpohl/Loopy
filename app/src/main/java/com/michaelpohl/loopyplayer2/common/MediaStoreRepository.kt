@@ -114,11 +114,11 @@ class MediaStoreRepository(val context: Context) {
             var albumName = cursor.getString(album)
             var artistName = cursor.getString(artist)
 
-            if (audioTitle == "0" || audioTitle.contains("unknown")) audioTitle =
+            if (audioTitle == "0" || audioTitle == null || audioTitle.contains("unknown")) audioTitle =
                 context.getString(R.string.unknown)
-            if (albumName == "0" || albumName.contains("unknown")) albumName =
+            if (albumName == "0" || albumName == null || albumName.contains("unknown")) albumName =
                 context.getString(R.string.unknown)
-            if (artistName == "0" || artistName.contains("unknown")) artistName =
+            if (artistName == "0" || artistName == null || artistName.contains("unknown")) artistName =
                 context.getString(R.string.unknown)
 
             Timber.d("Music file: $audioId, $audioTitle, $albumName, $artistName, $albumPath, $trackNumberString")

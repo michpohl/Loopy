@@ -66,26 +66,6 @@ class ExternalStorageManager(val context: Context) {
             .filter { !onlyFolders || it.isDirectory }.toList()
     }
 
-    //    fun readFile(): File {
-    //        var myExternalFile = File(getExternalFilesDir(filepath), fileName.text.toString())
-    //
-    //        val filename = myExternalFile.name.toString()
-    //        myExternalFile = File(getExternalFilesDir(filepath),filename)
-    //        if(filename.toString()!=null && filename.toString().trim()!=""){
-    //            var fileInputStream = FileInputStream(myExternalFile)
-    //            var inputStreamReader = InputStreamReader(fileInputStream)
-    //            val bufferedReader = BufferedReader(inputStreamReader)
-    //            val stringBuilder: StringBuilder = StringBuilder()
-    //            var text: String? = null
-    //            while ({ text = bufferedReader.readLine(); text }() != null) {
-    //                stringBuilder.append(text)
-    //            }
-    //            fileInputStream.close()
-    //            //Displaying data on EditText
-    //            Toast.makeText(applicationContext,stringBuilder.toString(),Toast.LENGTH_SHORT).show()
-    //    }
-    //    })  }
-
     fun createSetFolder(folderName: String = STANDARD_SET_FOLDER_NAME): Boolean {
         val folder = File(
             "$appStorageFolder", folderName
@@ -100,7 +80,7 @@ class ExternalStorageManager(val context: Context) {
     }
 
     fun copyStandardFilesToSdCard(): Boolean {
-        Timber.d("Eexternal storage available: $isExternalStorageAvailable, read only: $isExternalStorageReadOnly")
+        Timber.d("External storage available: $isExternalStorageAvailable, read only: $isExternalStorageReadOnly")
         val outputPath = "${appStorageFolder?.path}/$STANDARD_SET_FOLDER_NAME/"
 
         return try {
