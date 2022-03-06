@@ -29,7 +29,7 @@ add_library(native-lib
 
 set (TARGET_LIBS log android GLESv2)
 
-# get oboe
+## get oboe
 find_package (oboe REQUIRED CONFIG)
 
 add_definitions(-DUSE_FFMPEG=0)
@@ -37,7 +37,7 @@ set (TARGET_LIBS ${TARGET_LIBS} mediandk)
 
 target_link_libraries( native-lib ${TARGET_LIBS} oboe::oboe)
 
-# Specify the path to the Oboe header files.
-include_directories(${OBOE_DIR}/include)
-include_directories(${OBOE_DIR}/src/flowgraph/resampler)
+## Specify the path to the Oboe header files.
+#include_directories(${OBOE_DIR}/include)
+#include_directories(${OBOE_DIR}/src/flowgraph/resampler)
 

@@ -11,8 +11,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -51,7 +49,7 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-    ndkVersion "21.3.6528147"
+    ndkVersion "21.4.7075529"
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
