@@ -48,9 +48,9 @@
             android:focusable="false"
             app:animateExpansion="true"
             app:chunkHeight="32dp"
-            app:chunkRadius="0dp"
-            app:chunkSpacing="0dp"
-            app:chunkWidth="0.5dp"
+            app:chunkRadius="0.1dp"
+            app:chunkSpacing="0.2dp"
+            app:chunkWidth="1dp"
             app:layout_constraintTop_toTopOf="parent"
             app:minChunkHeight="0.5dp"
             app:waveColor="@android:color/white" />
