@@ -15,7 +15,8 @@ data class Settings(
     val sampleRate: SampleRate,
     val showLoopCount: Boolean = true,
     val keepScreenOn: Boolean = false,
-    val playInBackground: Boolean = true
+    val playInBackground: Boolean = true,
+    val renderWaveform: Boolean = true
 ) : Parcelable
 
 class SettingsBuilder {
@@ -26,6 +27,8 @@ class SettingsBuilder {
     var keepScreenOn by Delegates.notNull<Boolean>()
     var playInBackground by Delegates.notNull<Boolean>()
     var sampleRate by Delegates.notNull<SampleRate>()
+    var renderWaveForm by Delegates.notNull<Boolean>()
+
     fun addFileType(type: AppStateRepository.Companion.AudioFileType) {
         if (!acceptedFileTypes.contains(type)) acceptedFileTypes.add(type)
     }
@@ -35,7 +38,15 @@ class SettingsBuilder {
     }
 
     fun build(): Settings {
-        return Settings(acceptedFileTypes, isWaitMode, sampleRate, showLoopCount, keepScreenOn, playInBackground)
+        return Settings(
+            acceptedFileTypes,
+            isWaitMode,
+            sampleRate,
+            showLoopCount,
+            keepScreenOn,
+            playInBackground,
+            renderWaveForm
+        )
     }
 }
 

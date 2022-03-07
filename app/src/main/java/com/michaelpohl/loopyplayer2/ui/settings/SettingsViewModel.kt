@@ -64,6 +64,9 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
                 }
                 NONE -> { /* do nothing */
                 }
+                RENDER_WAVEFORM -> {
+                    builder.renderWaveForm = (it as SettingsItemModel.CheckableSetting).isChecked
+                }
             }
         }
         stateRepo.settings = builder.build()
@@ -132,6 +135,12 @@ class SettingsViewModel(private val stateRepo: AppStateRepository) :
             SettingsItemModel.CheckableSetting(
                 setting = PLAY_IN_BACKGROUND,
                 isChecked = this.playInBackground
+            )
+        )
+        list.add(
+            SettingsItemModel.CheckableSetting(
+                setting = RENDER_WAVEFORM,
+                isChecked = this.renderWaveform
             )
         )
         return list.toList()

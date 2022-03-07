@@ -88,6 +88,5 @@
     <string name="notification_btn_open_app">Open player</string>
     <string name="notification_btn_stop_player">Stop player</string>
     <string name="folder_item_content_info">%s audio files</string>
-
-
+    <string name="settings_item_render_waveform">Render Waveform</string>
 </resources>

@@ -85,8 +85,7 @@
     <string name="notification_title">Loopy 2 läuft im Hintergrund</string>
     <string name="notification_btn_open_app">Player öffnen</string>
     <string name="notification_btn_stop_player">Player stoppen</string>
-
-
+    <string name="settings_item_render_waveform">Waveform anzeigen</string>
     <string name="folder_item_content_info">%s Audiodateien</string>
 
 </resources>
