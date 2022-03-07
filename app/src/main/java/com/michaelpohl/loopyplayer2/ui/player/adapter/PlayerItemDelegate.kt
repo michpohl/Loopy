@@ -10,7 +10,7 @@ import timber.log.Timber
 
 class PlayerItemDelegate(
     private val clickReceiver: (AudioModel) -> Unit, // use the standard auto click receiver feature
-    private val deleteReceiver: (AudioModel) -> Unit // additional custom receiver bound here
+    private val deleteReceiver: (AudioModel) -> Unit, // additional custom receiver bound here
 ) : AdapterItemDelegate<AudioModel, PlayerItemHolder>() {
 
     private val holders = mutableListOf<PlayerItemHolder>()
@@ -46,5 +46,10 @@ class PlayerItemDelegate(
             itemHolder.showLoopCount(showLoopCount)
             itemHolder.updateProgress(payload.second)
         }
+    }
+
+    fun updateRenderWaveform(shouldRender: Boolean) {
+        Timber.d("render render")
+        holders.forEach { it.renderWaveform = shouldRender }
     }
 }

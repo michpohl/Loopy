@@ -86,7 +86,8 @@ class PlayerFragment : BaseFragment() {
         adapter = PlayerDelegationAdapter(
             PlayerItemDelegate(
                 clickReceiver = { viewModel.onLoopClicked(it) },
-                deleteReceiver = { viewModel.onDeleteLoopClicked(it) })
+                deleteReceiver = { viewModel.onDeleteLoopClicked(it) },
+            )
         ).also {
             recycler.adapter = it
         }
@@ -97,6 +98,9 @@ class PlayerFragment : BaseFragment() {
         // FIXME adapter needs to take nullable values
         viewModel.state.observeWith {
             adapter.update(it.loopsList)
+
+            adapter.updateRenderWaveform(it.settings.renderWaveform)
+
             it.fileInFocus?.let { file ->
                 adapter.updateFileCurrentlyPlayed(file)
             }

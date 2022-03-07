@@ -22,6 +22,10 @@ class PlayerDelegationAdapter(private val delegate: PlayerItemDelegate) :
         delegate.updatePlaybackProgress(payload, showLoopCount)
     }
 
+    fun updateRenderWaveform(shouldRender: Boolean) {
+        delegate.updateRenderWaveform(shouldRender)
+    }
+
     companion object {
         enum class SelectionState { NOT_SELECTED, PRESELECTED, PLAYING, UNKNOWN }
     }

@@ -16,6 +16,12 @@ class PlayerItemHolder(
     itemView: View
 ) : DelegationAdapterItemHolder<AudioModel>(itemView) {
 
+    var renderWaveform: Boolean = false
+        set(value) {
+            field = value
+            if (value) inflateWave()
+        }
+
     private var backgroundDrawable: Int = R.drawable.background_item_rounded_stroke
         set(value) {
             field = value
@@ -63,7 +69,9 @@ class PlayerItemHolder(
          */
         waveBlocker.setOnClickListener { itemView.performClick() }
         deleteIcon.setOnClickListener { deleteListener(model) }
-        inflateWave()
+
+        // TODO remove this setting again once rendering is foolproof
+        if (renderWaveform) inflateWave()
     }
 
     fun getName(): String {
@@ -112,7 +120,9 @@ class PlayerItemHolder(
 
     private fun inflateWave() {
         val file = File(model.path)
-        val bytes = file.readBytes()
+        val reader = file.inputStream()
+        val bytes = reader.readBytes()
         wave.setRawData(bytes)
+        reader.close()
     }
 }
