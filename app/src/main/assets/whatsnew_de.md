@@ -1,7 +1,7 @@
 ### Changelog
 
 ## Version 1.3.0
-* Die Notification wird nun entfernt, wenn der Player gestoppt wird
+* Die Benachrichtigung wird nun entfernt, wenn der Player gestoppt wird
 * Ein Bug wurde entfernt, der zu Crashes bei sehr langen Audiodateien geführt hat  
 * Es wurde eine Einstellung hinzugefügt, um das Anzeigen der Waveformen im Player auszuschalten
 * Einige weitere kleinere Fehler wurden behoben
@@ -29,7 +29,7 @@
 
 ## Version 1.1
 
-* Crash reporting dialog hinzugefügt
+* Crash reporting Dialog hinzugefügt
 
 ## Version 1.0
 
@@ -40,7 +40,7 @@ Loopy 2 bringt eine Reihe von Verbesserungen gegenüber Loopy I. Die wichtigsten
 * Audiodateien werden jetzt vor-transcodiert und intern gespeichert, um eine bessere Performance zu
   erzielen. (Wenn eine Datei aus der Playerliste gelöscht, wird die Datei aus Loopys internem
   Speicher entfernt.)
-* Du kannst jetzt zwischen drei verschiedenen Sampleraten wählen, um die App an Ihre Audiodateien
+* Du kannst jetzt zwischen drei verschiedenen Sampleraten wählen, um die App an Deine Audiodateien
   anzupassen
 * Neues, durchdachteres Design
 
