@@ -1,7 +1,12 @@
 ### Changelog
 
-## Version 1.2.3
+## Version 1.3.0
+* Die Notification wird nun entfernt, wenn der Player gestoppt wird
+* Ein Bug wurde entfernt, der zu Crashes bei sehr langen Audiodateien geführt hat  
+* Es wurde eine Einstellung hinzugefügt, um das Anzeigen der Waveformen im Player auszuschalten
+* Einige weitere kleinere Fehler wurden behoben
 
+## Version 1.2.3
 * Bugs in der Navigation behoben
 
 ## Version 1.2.2

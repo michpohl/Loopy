@@ -99,7 +99,7 @@ class PlayerFragment : BaseFragment() {
         viewModel.state.observeWith {
             adapter.update(it.loopsList)
 
-            adapter.updateRenderWaveform(it.settings.renderWaveform)
+//            adapter.updateRenderWaveform(it.settings.renderWaveform)
 
             it.fileInFocus?.let { file ->
                 adapter.updateFileCurrentlyPlayed(file)

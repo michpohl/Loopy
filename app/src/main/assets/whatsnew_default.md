@@ -1,11 +1,15 @@
 ### Changelog
 
-## Version 1.2.3
+## Version 1.3.0
+* The Notification is now removed when player is stopped
+* Fixed a bug that would lead to crashes when using very long audio files  
+* A setting has been added to turn of waveform rendering
+* Fixed a few more minor bugs
 
+## Version 1.2.3
 * Fixed bugs related to navigation
 
 ## Version 1.2.2
-
 * Fixed a crash that could randomly occur
 * Fixed back button behavior in media browser
 * Fixed a bug with albums that contain just a single song

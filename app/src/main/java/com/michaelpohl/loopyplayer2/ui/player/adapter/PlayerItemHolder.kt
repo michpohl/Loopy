@@ -40,7 +40,6 @@ class PlayerItemHolder(
     private var progress: Float = 0F
         set(value) {
             field = value
-            Timber.d("Setting progress: ${model.name}, $value")
             wave.progress = if (state == SelectionState.PLAYING) value else 0F
         }
 
@@ -71,7 +70,8 @@ class PlayerItemHolder(
         deleteIcon.setOnClickListener { deleteListener(model) }
 
         // TODO remove this setting again once rendering is foolproof
-        if (renderWaveform) inflateWave()
+//        if (renderWaveform)
+        inflateWave()
     }
 
     fun getName(): String {
@@ -120,9 +120,23 @@ class PlayerItemHolder(
 
     private fun inflateWave() {
         val file = File(model.path)
-        val reader = file.inputStream()
-        val bytes = reader.readBytes()
-        wave.setRawData(bytes)
-        reader.close()
+        val length = file.length()
+        val rawData = if (length > SIMPLE_RENDER_THRESHOLD) {
+            Timber.i("Large file found. Using simplified waveform rendering.")
+            val bytes = mutableListOf<Byte>()
+            file.forEachBlock((length / 1000).toInt()) { buffer, _ ->
+                buffer.forEachIndexed { index, byte ->
+                    if (index.mod(50) == 0) {
+                        bytes.add(byte)
+                    }
+                }
+            }
+            bytes.toByteArray()
+        } else file.readBytes()
+        wave.setRawData(rawData)
+    }
+
+    companion object {
+        private const val SIMPLE_RENDER_THRESHOLD = 60000000
     }
 }

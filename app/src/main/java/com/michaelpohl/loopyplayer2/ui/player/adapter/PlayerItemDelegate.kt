@@ -14,12 +14,20 @@ class PlayerItemDelegate(
 ) : AdapterItemDelegate<AudioModel, PlayerItemHolder>() {
 
     private val holders = mutableListOf<PlayerItemHolder>()
+
+    private var renderWavefrom = false
+
     override fun createViewHolder(parent: ViewGroup): PlayerItemHolder {
         return PlayerItemHolder(inflateLayout(R.layout.item_loop, parent)).also {
             it.clickListener = clickReceiver
             it.deleteListener = deleteReceiver
             holders.add(it)
         }
+    }
+
+    override fun bindViewHolder(item: AudioModel, holder: PlayerItemHolder) {
+        super.bindViewHolder(item, holder)
+        holder.renderWaveform = renderWavefrom
     }
 
     override fun isForItemType(item: Any): Boolean {
@@ -42,14 +50,14 @@ class PlayerItemDelegate(
 
     fun updatePlaybackProgress(payload: Pair<String, Int>, showLoopCount: Boolean) {
         holders.find { it.getName() == payload.first }?.let { itemHolder ->
-            Timber.d("Updating: ${payload.first}, value: ${payload.second}")
             itemHolder.showLoopCount(showLoopCount)
             itemHolder.updateProgress(payload.second)
         }
     }
 
     fun updateRenderWaveform(shouldRender: Boolean) {
-        Timber.d("render render")
+        Timber.d("render render $shouldRender")
+        renderWavefrom = shouldRender
         holders.forEach { it.renderWaveform = shouldRender }
     }
 }
