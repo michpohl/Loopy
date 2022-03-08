@@ -1,5 +1,8 @@
 ### Changelog
 
+## Version 1.3.1
+* Dateibrowser akzeptiert jetzt auch Dateiendungen in Großbuchstaben
+
 ## Version 1.3.0
 * Die Benachrichtigung wird nun entfernt, wenn der Player gestoppt wird
 * Ein Bug wurde entfernt, der zu Crashes bei sehr langen Audiodateien geführt hat  

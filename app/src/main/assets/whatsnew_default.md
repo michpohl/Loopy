@@ -1,5 +1,8 @@
 ### Changelog
 
+## Version 1.3.1
+* File browser now accepts uppercase file extensions too
+
 ## Version 1.3.0
 * The Notification is now removed when player is stopped
 * Fixed a bug that would lead to crashes when using very long audio files  

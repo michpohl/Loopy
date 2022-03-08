@@ -149,7 +149,7 @@ fun File.toFileModel(allowedTypes: Set<AppStateRepository.Companion.AudioFileTyp
 }
 
 fun File.isAcceptedAudioType(types: Set<AppStateRepository.Companion.AudioFileType>? = null): Boolean {
-    val extension = this.extension
+    val extension = this.extension.lowercase()
     types?.forEach {
         if (it.suffix == extension) return true
     }
@@ -157,7 +157,7 @@ fun File.isAcceptedAudioType(types: Set<AppStateRepository.Companion.AudioFileTy
 }
 
 fun String.hasAcceptedAudioFileExtension(types: Set<AppStateRepository.Companion.AudioFileType>): Boolean {
-    val extension = this.substringAfterLast(".")
+    val extension = this.substringAfterLast(".").lowercase()
     types.forEach {
         if (it.suffix == extension) return true
     }

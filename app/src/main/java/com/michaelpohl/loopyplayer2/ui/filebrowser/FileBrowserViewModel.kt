@@ -44,7 +44,7 @@ open class FileBrowserViewModel(
             (itemsToDisplay.filterIsInstance<FileModel.AudioFile>().size > 1).toVisibility()
     }
 
-    fun getFolderContent(path: String): List<FileModel> {
+    private fun getFolderContent(path: String): List<FileModel> {
         return storage.getPathContent(path).toFileModels(currentState.acceptedTypes)
     }
 
