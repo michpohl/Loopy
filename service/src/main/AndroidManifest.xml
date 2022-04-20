@@ -3,7 +3,6 @@
     package="com.michaelpohl.service">
 
     <application>
-
         <service android:name="com.michaelpohl.service.PlayerService" />
     </application>
 
