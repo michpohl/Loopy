@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 open class CustomDelegationAdapter<ItemType : Any, UpdateType : Any>(
     diffCallback: DiffUtil.ItemCallback<ItemType>? = AnyDiffCallback(),
     private val sorting: Sorting.Custom<ItemType, UpdateType>,
-    delegates: List<AdapterItemDelegate<out ItemType, *>>) :
+    delegates: List<AdapterItemDelegate<out ItemType, *>>
+) :
     DelegationAdapter<ItemType>(diffCallback, null, delegates) {
 
     open fun update(input: UpdateType) {

@@ -122,7 +122,7 @@ StorageDataSource::openFromSet(const char *fileName, AudioProperties targetPrope
     LOGD("Start openFromset");
 
     long bufferSize;
-    char * inputBuffer;
+    char *inputBuffer;
 
     std::ifstream stream;
     stream.open(fileName, std::ifstream::in | std::ifstream::binary);
@@ -134,12 +134,12 @@ StorageDataSource::openFromSet(const char *fileName, AudioProperties targetPrope
 
     }
 
-    stream.seekg (0, std::ios::end);
+    stream.seekg(0, std::ios::end);
     bufferSize = stream.tellg();
     LOGD("size %ld", bufferSize);
-    stream.seekg (0, std::ios::beg);
+    stream.seekg(0, std::ios::beg);
 
-    inputBuffer = new char [bufferSize];
+    inputBuffer = new char[bufferSize];
 
     stream.read(inputBuffer, bufferSize);
     LOGD("Successfully read: %i", stream.gcount());

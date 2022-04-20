@@ -30,6 +30,7 @@ public:
 
     static int32_t decode(AMediaExtractor &extractor, uint8_t *targetData,
                           AudioProperties targetProperties);
+
     static int32_t decode(AMediaExtractor &extractor, uint8_t *targetData);
 
     static int32_t getBitRate(AMediaExtractor &extractor);

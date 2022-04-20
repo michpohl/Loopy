@@ -1,12 +1,11 @@
 package com.michaelpohl.player
 
-import com.michaelpohl.shared.PlayerState
 import com.michaelpohl.shared.JniResult
+import com.michaelpohl.shared.PlayerState
 
 // TODO evaluate if needed
 @Suppress("TooManyFunctions") // Todo remove some, there are redundancies!
 interface PlayerInterface {
-
 
     suspend fun select(path: String): JniResult<String>
     suspend fun play(): JniResult<String>

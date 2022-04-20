@@ -1,20 +1,24 @@
 package com.michaelpohl.shared
 
 sealed class JniResult<out T> {
+
     abstract val data: T?
     abstract fun <T> copy(data: T): JniResult<T>
     data class Success<out T>(override val data: T?) : JniResult<T>() {
+
         override fun <T> copy(data: T): JniResult<T> {
             return Success<T>(data)
         }
     }
 
     data class Error(val code: Int? = null, val e: Exception? = null) : JniResult<Nothing>() {
+
         override val data = null
         override fun <T> copy(data: T): JniResult<T> = this
     }
 
     object JniError : JniResult<Nothing>() {
+
         override val data = null
         override fun <T> copy(data: T): JniError = this
     }
@@ -47,5 +51,3 @@ fun errorResult() = JniResult.Error(null)
 fun Boolean.toJniResult(): JniResult<Nothing> {
     return if (this) successResult() else errorResult()
 }
-
-

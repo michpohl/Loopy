@@ -21,7 +21,7 @@
 #include "IRenderableAudio.h"
 #include <utils/logging.h>
 
-constexpr int32_t kBufferSize = 192*10;  // Temporary buffer is used for mixing
+constexpr int32_t kBufferSize = 192 * 10;  // Temporary buffer is used for mixing
 constexpr uint8_t kMaxTracks = 100;
 
 /**
@@ -47,16 +47,16 @@ public:
         }
     }
 
-    void addTrack(IRenderableAudio *renderer){
+    void addTrack(IRenderableAudio *renderer) {
         mTracks[mNextFreeTrackIndex++] = renderer;
         LOGD("Track added. Next free: %i", mNextFreeTrackIndex);
     }
 
-    void setChannelCount(int32_t channelCount){ mChannelCount = channelCount; }
+    void setChannelCount(int32_t channelCount) { mChannelCount = channelCount; }
 
 private:
     float mixingBuffer[kBufferSize];
-    std::array<IRenderableAudio*, kMaxTracks> mTracks;
+    std::array<IRenderableAudio *, kMaxTracks> mTracks;
     uint8_t mNextFreeTrackIndex = 0;
     int32_t mChannelCount = 1; // Default to mono
 };

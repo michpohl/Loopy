@@ -11,7 +11,8 @@ import timber.log.Timber
 class AudioFocusHandler(
     private val onFocusGained: () -> Unit,
     private val onFocusLost: () -> Unit,
-    private val onFocusLostTransient: () -> Unit = onFocusLost) : AudioManager.OnAudioFocusChangeListener {
+    private val onFocusLostTransient: () -> Unit = onFocusLost
+) : AudioManager.OnAudioFocusChangeListener {
 
     var authorization = PlaybackAuthorization.NOT_GRANTED
     fun requestAudioFocus(context: Context) {

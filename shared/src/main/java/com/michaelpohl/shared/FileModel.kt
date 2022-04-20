@@ -24,6 +24,7 @@ sealed class FileModel : Parcelable {
         val extension: String = "",
         val isSelected: Boolean? = null
     ) : FileModel() {
+
         // TODO move to extension wherever AudioModel ends up
         fun toAudioModel(): AudioModel {
 
@@ -53,4 +54,3 @@ sealed class FileModel : Parcelable {
         val containsAudioFiles: Boolean
     ) : FileModel()
 }
-

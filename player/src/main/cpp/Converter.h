@@ -11,22 +11,26 @@
 class Converter {
 public:
 
-    explicit  Converter(AudioCallback &);
+    explicit Converter(AudioCallback &);
+
     bool setDestinationFolder(const char *folderName);
+
     bool convertFolder();
+
     bool convertSingleFile(const char *fullPath, const char *fileName);
 
 private:
     AudioCallback &mCallback;
     const char *mFolder;
-    bool doConversion(const std::string &fullPath, const std::string& name);
+
+    bool doConversion(const std::string &fullPath, const std::string &name);
+
     std::string wav = ".wav";
     std::string mp3 = ".mp3";
     std::string ogg = ".ogg";
     std::string pcm = ".pcm";
 
-    static inline bool endsWith(std::string const & value, std::string const & ending)
-    {
+    static inline bool endsWith(std::string const &value, std::string const &ending) {
         if (ending.size() > value.size()) return false;
         return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
     }

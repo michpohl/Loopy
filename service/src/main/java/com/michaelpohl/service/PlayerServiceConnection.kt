@@ -10,12 +10,12 @@ class PlayerServiceConnection(private val activityClass: Class<out AppCompatActi
 
     private var playerInterface: PlayerService.ServiceBinder? = null
 
-    var onServiceConnectedListener: ((PlayerService.ServiceBinder)-> Unit)? = null
+    var onServiceConnectedListener: ((PlayerService.ServiceBinder) -> Unit)? = null
 
     var playerService: PlayerService? = null
         private set
 
-    fun requestPlayerInterface() : PlayerService.ServiceBinder? {
+    fun requestPlayerInterface(): PlayerService.ServiceBinder? {
         return playerInterface
     }
 
@@ -34,4 +34,3 @@ class PlayerServiceConnection(private val activityClass: Class<out AppCompatActi
         Timber.d("Service disconnected")
     }
 }
-

@@ -15,8 +15,8 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
-        android:paddingTop="8dp"
         android:paddingLeft="0dp"
+        android:paddingTop="8dp"
         android:paddingRight="0dp"
         android:paddingBottom="8dp">
 
@@ -48,10 +48,10 @@
             android:id="@+id/wave"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="1dp"
+            android:layout_marginBottom="8dp"
             android:clickable="false"
             android:focusable="false"
             app:animateExpansion="true"
@@ -78,9 +78,9 @@
         <ImageButton
             android:id="@+id/btn_remove"
             style="@style/Button.SmallIcon.NoPadding"
+            android:layout_width="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="8dp"
-            android:layout_width="wrap_content"
             android:src="@drawable/ic_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_label"

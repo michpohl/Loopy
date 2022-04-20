@@ -27,17 +27,16 @@ add_library(native-lib
         src/main/cpp/utils/AudioFile.h
         )
 
-set (TARGET_LIBS log android GLESv2)
+set(TARGET_LIBS log android GLESv2)
 
 ## get oboe
-find_package (oboe REQUIRED CONFIG)
+find_package(oboe REQUIRED CONFIG)
 
 add_definitions(-DUSE_FFMPEG=0)
-set (TARGET_LIBS ${TARGET_LIBS} mediandk)
+set(TARGET_LIBS ${TARGET_LIBS} mediandk)
 
-target_link_libraries( native-lib ${TARGET_LIBS} oboe::oboe)
+target_link_libraries(native-lib ${TARGET_LIBS} oboe::oboe)
 
 ## Specify the path to the Oboe header files.
 #include_directories(${OBOE_DIR}/include)
 #include_directories(${OBOE_DIR}/src/flowgraph/resampler)
-

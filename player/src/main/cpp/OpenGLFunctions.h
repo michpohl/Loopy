@@ -26,24 +26,26 @@ struct ScreenColor {
     float alpha;
 };
 
-constexpr ScreenColor RED { 1.0f, 0.0f, 0.0f, 1.0f };
-constexpr ScreenColor GREEN { 0.0f, 1.0f, 0.0f, 1.0f };
-constexpr ScreenColor BLUE { 0.0f, 0.0f, 1.0f, 1.0f };
-constexpr ScreenColor PURPLE { 1.0f, 0.0f, 1.0f, 1.0f };
-constexpr ScreenColor ORANGE { 1.0f, 0.5f, 0.0f, 1.0f };
-constexpr ScreenColor GREY { 0.3f, 0.3f, 0.3f, 0.3f };
-constexpr ScreenColor YELLOW { 1.0f, 1.0f, 0.0f, 1.0f };
+constexpr ScreenColor RED{1.0f, 0.0f, 0.0f, 1.0f};
+constexpr ScreenColor GREEN{0.0f, 1.0f, 0.0f, 1.0f};
+constexpr ScreenColor BLUE{0.0f, 0.0f, 1.0f, 1.0f};
+constexpr ScreenColor PURPLE{1.0f, 0.0f, 1.0f, 1.0f};
+constexpr ScreenColor ORANGE{1.0f, 0.5f, 0.0f, 1.0f};
+constexpr ScreenColor GREY{0.3f, 0.3f, 0.3f, 0.3f};
+constexpr ScreenColor YELLOW{1.0f, 1.0f, 0.0f, 1.0f};
 
 #ifdef GL3
 #include <GLES3/gl3.h>
 #elif GL3_2
 #include <GLES3/gl32.h>
 #else
+
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+
 #endif
 
-void CheckOpenGLError(const char* stmt, const char* fname, int line);
+void CheckOpenGLError(const char *stmt, const char *fname, int line);
 
 #ifndef NDEBUG
 #define GL_CHECK(stmt) \

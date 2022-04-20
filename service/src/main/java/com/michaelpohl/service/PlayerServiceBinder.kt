@@ -15,10 +15,8 @@ open class PlayerServiceBinder : Binder(),
         Timber.d("INIT BINDER")
     }
 
-
     lateinit var session: MediaSession // TODO check if we can do without lateinit
     protected var player = JniPlayer()
-
 
     override suspend fun pause(): JniResult<Nothing> {
         return player.pause()
@@ -74,6 +72,7 @@ open class PlayerServiceBinder : Binder(),
     }
 
     override fun getCurrentPosition() = player.getCurrentPosition()
+
     // TODO refactor this so it's not needed outside
     override fun hasLoopFile(): Boolean {
         return player.hasLoopFile

@@ -137,6 +137,7 @@ class PlayerItemHolder(
     }
 
     companion object {
+
         private const val SIMPLE_RENDER_THRESHOLD = 60000000
     }
 }

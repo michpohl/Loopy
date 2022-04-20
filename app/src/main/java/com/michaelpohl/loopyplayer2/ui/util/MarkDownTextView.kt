@@ -12,7 +12,7 @@ class MarkDownTextView @JvmOverloads constructor(
 
     fun setMarkdownText(text: String?) {
         text?.let {
-            Markwon.setMarkdown(this, text.let { it } ?: "Sorry, the source file was not found.")
+            Markwon.setMarkdown(this, text.let { it })
         }
     }
 }

@@ -15,7 +15,7 @@ import org.koin.core.inject
 abstract class BrowserItemHolder<T : FileModel>(itemView: View) :
     DelegationAdapterItemHolder<T>(itemView), KoinComponent {
 
-    val resources : Resources by inject() // TODO don't inject here, this is a quick fix. Should be solved differently
+    val resources: Resources by inject() // TODO don't inject here, this is a quick fix. Should be solved differently
 
     val label: TextView = itemView.find(R.id.tv_label)
     val subLabel: TextView = itemView.find(R.id.tv_sublabel)

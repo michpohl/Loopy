@@ -1,17 +1,20 @@
 package com.michaelpohl.service
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.content.Intent
 import android.media.session.MediaSession
-import android.os.*
-import android.support.v4.media.session.MediaSessionCompat
+import android.os.Build
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import com.michaelpohl.shared.PlayerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 class PlayerService : Service() {
 

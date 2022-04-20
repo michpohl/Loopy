@@ -1,7 +1,7 @@
 package com.michaelpohl.player
 
-import com.michaelpohl.shared.PlayerState.*
 import com.michaelpohl.shared.JniResult
+import com.michaelpohl.shared.PlayerState.*
 
 class JniPlayer {
 
@@ -75,6 +75,6 @@ class JniPlayer {
     }
 
     suspend fun setSampleRate(sampleRate: Int): JniResult<Int> {
-       return com.michaelpohl.player.jni.JniBridge.setSampleRate(sampleRate)
+        return com.michaelpohl.player.jni.JniBridge.setSampleRate(sampleRate)
     }
 }

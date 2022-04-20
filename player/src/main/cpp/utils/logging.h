@@ -28,5 +28,4 @@
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, APP_NAME, __VA_ARGS__))
 
 
-
 #endif //ANDROID_LOGGING_H

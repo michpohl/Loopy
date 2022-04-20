@@ -53,7 +53,7 @@ bool audioEngineExists(JNIEnv *env, jobject instance) {
 
 JNIEXPORT jboolean JNICALL
 Java_com_michaelpohl_player_jni_JniBridge_selectNative(JNIEnv *env, jobject instance,
-                                                            jstring URI) {
+                                                       jstring URI) {
     LOGD("loadNative");
 
 
@@ -79,7 +79,7 @@ Java_com_michaelpohl_player_jni_JniBridge_startPlaybackNative(JNIEnv *env, jobje
 
 JNIEXPORT jboolean JNICALL
 Java_com_michaelpohl_player_jni_JniBridge_stopPlaybackNative(JNIEnv *env,
-                                                                  jobject instance) {
+                                                             jobject instance) {
 
     if (audioEngineExists(env, instance)) {
         bool success = audioEngine->stop();
@@ -110,7 +110,7 @@ Java_com_michaelpohl_player_jni_JniBridge_resumePlaybackNative(JNIEnv *env, jobj
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_michaelpohl_player_jni_JniBridge_setWaitModeNative(JNIEnv *env, jobject instance,
-                                                                 jboolean should_wait) {
+                                                            jboolean should_wait) {
     if (audioEngineExists(env, instance)) {
         if (audioEngine->setWaitMode((bool) should_wait)) {
             return (jboolean) true;
@@ -121,7 +121,7 @@ Java_com_michaelpohl_player_jni_JniBridge_setWaitModeNative(JNIEnv *env, jobject
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_michaelpohl_player_jni_JniBridge_convertFolder(JNIEnv *env, jobject instance,
-                                                             jstring folder_name) {
+                                                        jstring folder_name) {
 
     if (callback == nullptr) {
         myJNIClass = env->NewGlobalRef(instance);
@@ -140,9 +140,9 @@ Java_com_michaelpohl_player_jni_JniBridge_convertFolder(JNIEnv *env, jobject ins
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_michaelpohl_player_jni_JniBridge_convertSingleFile(JNIEnv *env, jobject instance,
-                                                                 jstring file_name,
-                                                                 jstring file_path,
-                                                                 jstring set_path) {
+                                                            jstring file_name,
+                                                            jstring file_path,
+                                                            jstring set_path) {
 
     if (callback == nullptr) {
         myJNIClass = env->NewGlobalRef(instance);
@@ -163,13 +163,15 @@ Java_com_michaelpohl_player_jni_JniBridge_convertSingleFile(JNIEnv *env, jobject
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_michaelpohl_player_jni_JniBridge_setSampleRateNative(JNIEnv *env, jobject instance, jint sampleRate) {
+Java_com_michaelpohl_player_jni_JniBridge_setSampleRateNative(JNIEnv *env, jobject instance,
+                                                              jint sampleRate) {
     if (audioEngineExists(env, instance)) {
         int currentSampleRate = audioEngine->getSampleRate();
         if (currentSampleRate != (int) sampleRate) {
-            LOGD("Sample rate is different (engine: %i, desired: %i). Changing...", currentSampleRate, sampleRate);
-        bool result = audioEngine->setSampleRate((int)sampleRate);
-        return result;
+            LOGD("Sample rate is different (engine: %i, desired: %i). Changing...",
+                 currentSampleRate, sampleRate);
+            bool result = audioEngine->setSampleRate((int) sampleRate);
+            return result;
         } else {
             return true;
         }

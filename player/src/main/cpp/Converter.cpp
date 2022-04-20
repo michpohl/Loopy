@@ -77,10 +77,10 @@ bool Converter::convertFolder() {
             if (excludedFileNames.find(name) == excludedFileNames.end()) {
                 LOGD("Not yet converted");
 
-            std::string fullPath = std::string(mFolder) + name;
-            LOGD ("Starting conversion for: %s\n", fullPath.c_str());
-            LOGE ("Batch conversion is turned off. See where this log is and fix it :-)");
-            doConversion(std::string(fullPath), std::string(name));
+                std::string fullPath = std::string(mFolder) + name;
+                LOGD ("Starting conversion for: %s\n", fullPath.c_str());
+                LOGE ("Batch conversion is turned off. See where this log is and fix it :-)");
+                doConversion(std::string(fullPath), std::string(name));
             }
 
         }
@@ -101,7 +101,7 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
         return false;
     }
 
-    FILE* testFile = fopen(fullPath.c_str(), "r");
+    FILE *testFile = fopen(fullPath.c_str(), "r");
     std::ifstream stream;
     stream.open(fullPath, std::ifstream::in | std::ifstream::binary);
 
@@ -160,10 +160,3 @@ bool Converter::doConversion(const std::string &fullPath, const std::string &nam
 bool Converter::convertSingleFile(const char *fullPath, const char *fileName) {
     return doConversion(std::string(fullPath), std::string(fileName));
 }
-
-
-
-
-
-
-
