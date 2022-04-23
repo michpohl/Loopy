@@ -13,15 +13,21 @@ import androidx.appcompat.app.AppCompatActivity
 import com.michaelpohl.shared.PlayerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class PlayerService : Service() {
 
     private val playerServiceBinder = ServiceBinder()
-    private val sessionCallback = SessionCallback({ startPlayback() }, { pausePlayback() }, { stopPlayback() })
+    private val sessionCallback = SessionCallback { onPlayOrPausePressed() }
     private val notificationHandler = NotificationHandler()
     private val focusHandler = AudioFocusHandler({ onAudioFocusGained() }, { onAudioFocusLost() })
+    private var isBlockingControlInput = false
+        set(value) {
+            field = value
+            Timber.d("blocker changed to $value")
+        }
     private lateinit var session: MediaSession
     private lateinit var notificationManager: NotificationManager
     private lateinit var serviceHandler: Handler
@@ -144,6 +150,32 @@ class PlayerService : Service() {
                 playerServiceBinder.stop()
                 stopForeground(true)
             }
+        }
+    }
+
+    private fun onPlayOrPausePressed() {
+        Timber.d("MediaButton pressed: Playerstate: ${playerServiceBinder.getState()}")
+        CoroutineScope(Dispatchers.Default).launch {
+            // this feels hacky, but I receive two keyevents, so the second one needs to be ignored
+            // TODO investigate deeper!
+            if (!isBlockingControlInput) {
+                when (playerServiceBinder.getState()) {
+                    PlayerState.PLAYING -> {
+                        playerServiceBinder.pause()
+                    }
+                    PlayerState.PAUSED -> {
+                        playerServiceBinder.resume()
+                    }
+                    else -> if (playerServiceBinder.hasLoopFile()) startPlayback()
+                }
+                isBlockingControlInput = true
+            } else {
+                Timber.d("Input Blocked")
+            }
+            delay(100)
+        }.invokeOnCompletion {
+            Timber.d("Unblocking input")
+            isBlockingControlInput = false
         }
     }
 
