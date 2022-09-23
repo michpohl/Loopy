@@ -119,6 +119,7 @@ class PlayerItemHolder(
         }
 
     private fun inflateWave() {
+        if (!renderWaveform) return
         val file = File(model.path)
         val length = file.length()
         val rawData = if (length > SIMPLE_RENDER_THRESHOLD) {
