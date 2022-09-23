@@ -1,5 +1,13 @@
 ### Changelog
 
+## Version 1.3.2
+
+* Fixes an error that prevents the correct waveform render setting from being applied
+
+## Version 1.3.1
+
+* File extensions are now case-insensitive
+
 ## Version 1.3.0
 
 * The Notification is now removed when player is stopped

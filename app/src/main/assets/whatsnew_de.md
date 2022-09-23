@@ -1,5 +1,13 @@
 ### Changelog
 
+## Version 1.3.2
+
+* Behebt Fehler, der das Ausschalten des Waveform-Renderers verhindert
+
+## Version 1.3.1
+
+* Dateinamenerweiterungen werden jetzt case-insensitive behandelt
+
 ## Version 1.3.0
 
 * Die Benachrichtigung wird nun entfernt, wenn der Player gestoppt wird
