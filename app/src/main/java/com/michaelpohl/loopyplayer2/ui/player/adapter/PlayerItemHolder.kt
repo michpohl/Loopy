@@ -70,8 +70,7 @@ class PlayerItemHolder(
         deleteIcon.setOnClickListener { deleteListener(model) }
 
         // TODO remove this setting again once rendering is foolproof
-//        if (renderWaveform)
-        inflateWave()
+        if (renderWaveform) inflateWave()
     }
 
     fun getName(): String {
@@ -119,7 +118,6 @@ class PlayerItemHolder(
         }
 
     private fun inflateWave() {
-        if (!renderWaveform) return
         val file = File(model.path)
         val length = file.length()
         val rawData = if (length > SIMPLE_RENDER_THRESHOLD) {

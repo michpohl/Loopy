@@ -15,7 +15,13 @@ class PlayerItemDelegate(
 
     private val holders = mutableListOf<PlayerItemHolder>()
 
-    private var renderWavefrom = false
+    private var renderWaveform = false
+        set(value) {
+            if (renderWaveform != value) {
+                holders.forEach { it.renderWaveform = value }
+                field = value
+            }
+        }
 
     override fun createViewHolder(parent: ViewGroup): PlayerItemHolder {
         return PlayerItemHolder(inflateLayout(R.layout.item_loop, parent)).also {
@@ -27,7 +33,7 @@ class PlayerItemDelegate(
 
     override fun bindViewHolder(item: AudioModel, holder: PlayerItemHolder) {
         super.bindViewHolder(item, holder)
-        holder.renderWaveform = renderWavefrom
+        holder.renderWaveform = renderWaveform
     }
 
     override fun isForItemType(item: Any): Boolean {
@@ -56,8 +62,6 @@ class PlayerItemDelegate(
     }
 
     fun updateRenderWaveform(shouldRender: Boolean) {
-        Timber.d("render render $shouldRender")
-        renderWavefrom = shouldRender
-        holders.forEach { it.renderWaveform = shouldRender }
+        renderWaveform = shouldRender
     }
 }
