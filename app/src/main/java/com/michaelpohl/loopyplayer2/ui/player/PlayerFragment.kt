@@ -15,7 +15,6 @@ import com.michaelpohl.loopyplayer2.databinding.FragmentPlayerBinding
 import com.michaelpohl.loopyplayer2.ui.base.BaseFragment
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerDelegationAdapter
 import com.michaelpohl.loopyplayer2.ui.player.adapter.PlayerItemDelegate
-import com.michaelpohl.service.PlayerServiceConnection
 import com.michaelpohl.shared.FileModel
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -99,7 +98,7 @@ class PlayerFragment : BaseFragment() {
         viewModel.state.observeWith {
             adapter.update(it.loopsList)
 
-//            adapter.updateRenderWaveform(it.settings.renderWaveform)
+            adapter.updateRenderWaveform(it.settings.renderWaveform)
 
             it.fileInFocus?.let { file ->
                 adapter.updateFileCurrentlyPlayed(file)

@@ -50,7 +50,7 @@ int32_t NDKExtractor::getBitRate(AMediaExtractor &extractor) {
     }
 }
 
- int32_t NDKExtractor::getChannelCount(AMediaExtractor &extractor) {
+int32_t NDKExtractor::getChannelCount(AMediaExtractor &extractor) {
     LOGD("Get channel count");
     AMediaFormat *format = AMediaExtractor_getTrackFormat(&extractor, 0);
     int32_t channelCount;
@@ -362,4 +362,3 @@ int32_t NDKExtractor::decode(AMediaExtractor &extractor, uint8_t *targetData) {
 
     return bytesWritten;
 }
-

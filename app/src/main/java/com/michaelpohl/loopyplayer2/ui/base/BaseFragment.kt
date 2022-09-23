@@ -1,7 +1,6 @@
 package com.michaelpohl.loopyplayer2.ui.base
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData

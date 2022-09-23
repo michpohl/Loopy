@@ -7,6 +7,6 @@ class LicensesViewModel(private val repo: FilesRepository) : UIStateViewModel<An
 
     val licenses = repo.getLicenses()
     override fun initUIState(): Any {
-        return object{}
+        return object {}
     }
 }

@@ -1,15 +1,22 @@
 ### Changelog
 
+## Version 1.3.2
+
+* Behebt Fehler, der das Ausschalten des Waveform-Renderers verhindert
+
 ## Version 1.3.1
-* Dateibrowser akzeptiert jetzt auch Dateiendungen in Großbuchstaben
+
+* Dateinamenerweiterungen werden jetzt case-insensitive behandelt
 
 ## Version 1.3.0
+
 * Die Benachrichtigung wird nun entfernt, wenn der Player gestoppt wird
-* Ein Bug wurde entfernt, der zu Crashes bei sehr langen Audiodateien geführt hat  
+* Ein Bug wurde entfernt, der zu Crashes bei sehr langen Audiodateien geführt hat
 * Es wurde eine Einstellung hinzugefügt, um das Anzeigen der Waveformen im Player auszuschalten
 * Einige weitere kleinere Fehler wurden behoben
 
 ## Version 1.2.3
+
 * Bugs in der Navigation behoben
 
 ## Version 1.2.2
@@ -25,10 +32,12 @@
 
 ## Version 1.2
 
-* Loopy 2 erkennt jetzt AudioFokus. Bei Anrufen, oder wenn eine andere App Sound abspielt, wird das Playback pausiert.
-* Playback im Hintergrund wurde verbessert. Es wird nun auch eine Notification mit einfachen Kontrollmöglichkeiten angezeigt.
+* Loopy 2 erkennt jetzt AudioFokus. Bei Anrufen, oder wenn eine andere App Sound abspielt, wird das
+  Playback pausiert.
+* Playback im Hintergrund wurde verbessert. Es wird nun auch eine Notification mit einfachen
+  Kontrollmöglichkeiten angezeigt.
 * Fehler behoben, der zu Soundartefakten beim Start auf einigen Geräten führen konnte.
-* Fehler behoben, der das Samplerate-switching  betraf 
+* Fehler behoben, der das Samplerate-switching betraf
 
 ## Version 1.1
 

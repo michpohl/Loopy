@@ -1,8 +1,10 @@
 package com.michaelpohl.loopyplayer2.ui.settings
 
 import com.michaelpohl.loopyplayer2.R
+
 // TODO remove logical separation from Settings somehow
 enum class AppSetting(val displayNameResource: Int?, val group: Int) {
+
     WAIT_MODE(R.string.settings_item_wait_until_finished, 0),
     FILE_TYPE_MP3(R.string.settings_item_allow_mp3, 1),
     FILE_TYPE_OGG(R.string.settings_item_allow_ogg, 1),

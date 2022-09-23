@@ -1,28 +1,36 @@
 package com.michaelpohl.service
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.content.Intent
 import android.media.session.MediaSession
-import android.os.*
+import android.os.Build
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import com.michaelpohl.shared.PlayerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 class PlayerService : Service() {
 
-    private val sessionCallback = SessionCallback()
     private val playerServiceBinder = ServiceBinder()
+    private val sessionCallback = SessionCallback { onPlayOrPausePressed() }
     private val notificationHandler = NotificationHandler()
     private val focusHandler = AudioFocusHandler({ onAudioFocusGained() }, { onAudioFocusLost() })
+    private var isBlockingControlInput = false
+        set(value) {
+            field = value
+            Timber.d("blocker changed to $value")
+        }
     private lateinit var session: MediaSession
-
     private lateinit var notificationManager: NotificationManager
     private lateinit var serviceHandler: Handler
-
     var activityClass: Class<out AppCompatActivity>? = null
     var serviceState = ServiceState.STOPPED
     private fun startAudioFocus() {
@@ -30,10 +38,9 @@ class PlayerService : Service() {
     }
 
     private fun onAudioFocusGained() {
+        // resume playback if it was paused
         if (playerServiceBinder.getState() == PlayerState.PAUSED) {
-            CoroutineScope(Dispatchers.Default).launch {
-                playerServiceBinder.play() // play if it was paused
-            }
+            startPlayback()
         }
     }
 
@@ -41,7 +48,7 @@ class PlayerService : Service() {
         CoroutineScope(Dispatchers.Default).launch {
             with(playerServiceBinder) {
                 if (this.getState() == PlayerState.PLAYING) {
-                    this.pause() // pause player
+                    pausePlayback()
                 } else {
                     this@PlayerService.stop() // stop service
                 }
@@ -125,6 +132,7 @@ class PlayerService : Service() {
 
     private fun stop() {
         Timber.d("Service stopped")
+        stopPlayback()
         serviceState = ServiceState.STOPPED
         stopSelf()
     }
@@ -142,6 +150,50 @@ class PlayerService : Service() {
                 playerServiceBinder.stop()
                 stopForeground(true)
             }
+        }
+    }
+
+    private fun onPlayOrPausePressed() {
+        Timber.d("MediaButton pressed: Playerstate: ${playerServiceBinder.getState()}")
+        CoroutineScope(Dispatchers.Default).launch {
+            // this feels hacky, but I receive two keyevents, so the second one needs to be ignored
+            // TODO investigate deeper!
+            if (!isBlockingControlInput) {
+                when (playerServiceBinder.getState()) {
+                    PlayerState.PLAYING -> {
+                        playerServiceBinder.pause()
+                    }
+                    PlayerState.PAUSED -> {
+                        playerServiceBinder.resume()
+                    }
+                    else -> if (playerServiceBinder.hasLoopFile()) startPlayback()
+                }
+                isBlockingControlInput = true
+            } else {
+                Timber.d("Input Blocked")
+            }
+            delay(100)
+        }.invokeOnCompletion {
+            Timber.d("Unblocking input")
+            isBlockingControlInput = false
+        }
+    }
+
+    private fun startPlayback() {
+        CoroutineScope(Dispatchers.Default).launch {
+            playerServiceBinder.play()
+        }
+    }
+
+    private fun pausePlayback() {
+        CoroutineScope(Dispatchers.Default).launch {
+            playerServiceBinder.pause()
+        }
+    }
+
+    private fun stopPlayback() {
+        CoroutineScope(Dispatchers.Default).launch {
+            playerServiceBinder.stop()
         }
     }
 

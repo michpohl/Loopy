@@ -7,22 +7,27 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/Row"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="2dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/background_item_rounded_stroke"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackground"
-        android:padding="8dp">
+        android:paddingLeft="0dp"
+        android:paddingTop="8dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/tv_label"
             style="@style/MatchHeight"
             android:layout_width="0dp"
-            android:maxLines="1"
-            android:paddingStart="8dp"
+            android:ellipsize="start"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:singleLine="true"
             android:textAppearance="@style/Text.SubHeaderLarge"
             app:layout_constraintEnd_toStartOf="@id/btn_remove"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,17 +38,20 @@
         <TextView
             android:id="@+id/tv_loop_count"
             style="@style/WrapContent"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:textAppearance="@style/Text.TileName"
-            app:layout_constraintStart_toStartOf="@id/tv_label"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_label" />
 
         <rm.com.audiowave.AudioWaveView
             android:id="@+id/wave"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_margin="8dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="8dp"
             android:clickable="false"
             android:focusable="false"
             app:animateExpansion="true"
@@ -70,7 +78,9 @@
         <ImageButton
             android:id="@+id/btn_remove"
             style="@style/Button.SmallIcon.NoPadding"
+            android:layout_width="wrap_content"
             android:paddingStart="16dp"
+            android:paddingEnd="8dp"
             android:src="@drawable/ic_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_label"

@@ -59,9 +59,11 @@ public:
     bool resume();
 
     bool setWaitMode(bool value);
+
     bool getWaitMode();
 
     int getSampleRate();
+
     bool setSampleRate(int sampleRate);
 
     AudioEngineState getState();

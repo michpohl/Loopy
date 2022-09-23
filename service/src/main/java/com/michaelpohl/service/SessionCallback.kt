@@ -2,12 +2,17 @@ package com.michaelpohl.service
 
 import android.content.Intent
 import android.media.session.MediaSession
-import timber.log.Timber
+import android.view.KeyEvent
 
-class SessionCallback : MediaSession.Callback() {
+class SessionCallback(
+    val onPlayOrPausePressed: () -> Unit,
+) : MediaSession.Callback() {
 
     override fun onMediaButtonEvent(mediaButtonIntent: Intent): Boolean {
-        Timber.d("There was an event")
-        return super.onMediaButtonEvent(mediaButtonIntent)
+        val keyEvent = mediaButtonIntent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+        if (keyEvent?.keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
+            onPlayOrPausePressed()
+        }
+        return true
     }
 }

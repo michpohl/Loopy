@@ -66,12 +66,13 @@ class NotificationHandler {
         val channel = NotificationChannel(
             PlayerService.NOTIFICATION_CHANNEL_ID,
             context.getString(R.string.app_name),
-            NotificationManager.IMPORTANCE_LOW)
+            NotificationManager.IMPORTANCE_LOW
+        )
             .apply {
-            this.description = description
-            this.setShowBadge(false)
-            this.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        }
+                this.description = description
+                this.setShowBadge(false)
+                this.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            }
         manager.createNotificationChannel(channel)
     }
 }

@@ -70,8 +70,7 @@ class PlayerItemHolder(
         deleteIcon.setOnClickListener { deleteListener(model) }
 
         // TODO remove this setting again once rendering is foolproof
-//        if (renderWaveform)
-        inflateWave()
+        if (renderWaveform) inflateWave()
     }
 
     fun getName(): String {
@@ -137,6 +136,7 @@ class PlayerItemHolder(
     }
 
     companion object {
+
         private const val SIMPLE_RENDER_THRESHOLD = 60000000
     }
 }

@@ -7,7 +7,7 @@ abstract class BrowserViewModel<T : BrowserViewModel.BrowserUIState> : UIStateVi
 
     lateinit var onSelectionSubmittedListener: (List<FileModel.AudioFile>) -> Unit
     abstract fun selectAll()
-    abstract class BrowserUIState{
+    abstract class BrowserUIState {
 
         abstract val itemsToDisplay: List<*>
         abstract val lastDisplayedItems: List<List<*>>?

@@ -26,25 +26,25 @@ class StorageDataSource : public DataSource {
 
 public:
     int64_t getSize() const override { return mBufferSize; }
+
     AudioProperties getProperties() const override { return mProperties; }
-    const float* getData() const override { return mBuffer.get(); }
+
+    const float *getData() const override { return mBuffer.get(); }
 
     static StorageDataSource *openFromSet(const char *fileName, AudioProperties targetProperties);
 
 
-    static StorageDataSource* newFromStorageAsset(
+    static StorageDataSource *newFromStorageAsset(
             AMediaExtractor &extractor,
-            const char*fileName,
+            const char *fileName,
             AudioProperties targetProperties
     );
 
 private:
 
     StorageDataSource(std::unique_ptr<float[]> data, size_t size,
-                     const AudioProperties properties)
-            : mBuffer(std::move(data))
-            , mBufferSize(size)
-            , mProperties(properties) {
+                      const AudioProperties properties)
+            : mBuffer(std::move(data)), mBufferSize(size), mProperties(properties) {
     }
 
     const std::unique_ptr<float[]> mBuffer;
@@ -52,4 +52,5 @@ private:
     const AudioProperties mProperties;
 
 };
+
 #endif //RHYTHMGAME_StorageDataSource_H

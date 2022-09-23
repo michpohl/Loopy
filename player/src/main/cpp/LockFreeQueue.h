@@ -40,7 +40,7 @@
  * UINT32_MAX can be time consuming and is not always possible.
  */
 
-template <typename T, uint32_t CAPACITY, typename INDEX_TYPE = uint32_t>
+template<typename T, uint32_t CAPACITY, typename INDEX_TYPE = uint32_t>
 class LockFreeQueue {
 public:
 
@@ -59,6 +59,7 @@ public:
      */
 
     static constexpr bool isPowerOfTwo(uint32_t n) { return (n & (n - 1)) == 0; }
+
     static_assert(isPowerOfTwo(CAPACITY), "Capacity must be a power of 2");
     static_assert(std::is_unsigned<INDEX_TYPE>::value, "Index type must be unsigned");
 
@@ -69,7 +70,7 @@ public:
      * @return true if value was popped successfully, false if the queue is empty
      */
     bool pop(T &val) {
-        if (isEmpty()){
+        if (isEmpty()) {
             return false;
         } else {
             val = buffer[mask(readCounter)];
@@ -84,8 +85,8 @@ public:
      * @param item - The item to add
      * @return true if item was added, false if the queue was full
      */
-    bool push(const T& item) {
-        if (isFull()){
+    bool push(const T &item) {
+        if (isFull()) {
             return false;
         } else {
             buffer[mask(writeCounter)] = item;
@@ -101,7 +102,7 @@ public:
      * @return true if item was stored, false if the queue was empty
      */
     bool peek(T &item) const {
-        if (isEmpty()){
+        if (isEmpty()) {
             return false;
         } else {
             item = buffer[mask(readCounter)];
@@ -146,8 +147,8 @@ private:
     INDEX_TYPE mask(INDEX_TYPE n) const { return static_cast<INDEX_TYPE>(n & (CAPACITY - 1)); }
 
     T buffer[CAPACITY];
-    std::atomic<INDEX_TYPE> writeCounter { 0 };
-    std::atomic<INDEX_TYPE> readCounter { 0 };
+    std::atomic<INDEX_TYPE> writeCounter{0};
+    std::atomic<INDEX_TYPE> readCounter{0};
 
 };
 

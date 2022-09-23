@@ -85,12 +85,10 @@ void AudioCallback::updatePlaybackProgress(const char *filename, int progressPer
 //    mJvm.DetachCurrentThread();
 }
 
-void AudioCallback::updateConversionProgress(const char* filename, int steps) {
+void AudioCallback::updateConversionProgress(const char *filename, int steps) {
     JNIEnv *g_env;
     getEnv(g_env);
     jstring callbackString = g_env->NewStringUTF(filename);
     g_env->CallVoidMethod(g_object, conversionProgressMethod, callbackString, (jint) steps);
     g_env->DeleteLocalRef(callbackString);
 }
-
-
