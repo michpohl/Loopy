@@ -49,5 +49,3 @@ Loopy 2 bringt eine Reihe von Verbesserungen gegenüber Loopy I. Die wichtigsten
 
 **Wenn Du Bugs und Fehler findest, bitte nimm Kontakt mit mir auf, indem Du auf** *Kontakt und
 Feedback* **im Menü klickst.**
-
-

@@ -45,5 +45,3 @@ Loopy 2 brings a lot of changes over Loopy I. Key improvements:
 * Many small bugs got fixed
 
 **If you find bugs or errors, please contact me by clicking** *Contact and Feedback* **in the menu.**
-
-
