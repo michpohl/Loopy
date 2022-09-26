@@ -26,11 +26,11 @@ class NotificationHandler {
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val servicePendingIntent = PendingIntent.getService(
-            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, 0, intent, getIntentFlags()
         )
         // resume activity intent
         val activityPendingIntent = PendingIntent.getActivity(
-            context, 1321, Intent(context, activityClass), PendingIntent.FLAG_UPDATE_CURRENT
+            context, 1321, Intent(context, activityClass), getIntentFlags()
         )
 
         val builder =
@@ -56,6 +56,14 @@ class NotificationHandler {
             builder.setChannelId(PlayerService.NOTIFICATION_CHANNEL_ID) // Channel ID
         }
         return builder.build()
+    }
+
+    private fun getIntentFlags(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
