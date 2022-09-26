@@ -1,5 +1,9 @@
 ### Changelog
 
+## Version 1.3.3
+
+# Behebt einen Crash verursacht durch verändertes Intent-Handling in neueren Android Versionen
+
 ## Version 1.3.2
 
 * Behebt Fehler, der das Ausschalten des Waveform-Renderers verhindert

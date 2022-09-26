@@ -1,5 +1,9 @@
 ### Changelog
 
+## Version 1.3.3
+
+# Fixes a crash due to updated intent handling in newer Android versions
+
 ## Version 1.3.2
 
 * Fixes an error that prevents the correct waveform render setting from being applied
