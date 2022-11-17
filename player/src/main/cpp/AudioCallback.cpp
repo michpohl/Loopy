@@ -40,7 +40,7 @@ void AudioCallback::onFileStartsPlaying(const char *fileName) {
         jstring callbackString = g_env->NewStringUTF(mFileName);
         g_env->CallVoidMethod(g_object, fileStartedMethod, callbackString);
         g_env->DeleteLocalRef(callbackString);
-//    g_jvm.DetachCurrentThread();
+    g_jvm.DetachCurrentThread();
         LOGD("end");
     }
 }
@@ -48,7 +48,7 @@ void AudioCallback::onFileStartsPlaying(const char *fileName) {
 JNIEnv *AudioCallback::getEnv(JNIEnv *&g_env) const {
     int getEnvStat = g_jvm.GetEnv((void **) &g_env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED) {
-        LOGD("GetEnv: not attached - attaching");
+//        LOGD("GetEnv: not attached - attaching");
         int result = g_jvm.AttachCurrentThread(reinterpret_cast<JNIEnv **>(&g_env), NULL);
         if (result != 0) {
             LOGD("GetEnv: Failed to attach");
@@ -70,7 +70,7 @@ void AudioCallback::onFilePreselected(const char *fileName) {
         g_env->CallVoidMethod(g_object, filePreselectedMethod, callbackString);
         g_env->DeleteLocalRef(callbackString);
         LOGD("Done preselected");
-//    g_jvm.DetachCurrentThread();
+    g_jvm.DetachCurrentThread();
     }
 }
 
@@ -82,7 +82,7 @@ void AudioCallback::updatePlaybackProgress(const char *filename, int progressPer
     g_env->CallVoidMethod(g_object, progressChangedMethod, callbackString,
                           (jint) progressPercentage);
     g_env->DeleteLocalRef(callbackString);
-//    mJvm.DetachCurrentThread();
+    g_jvm.DetachCurrentThread();
 }
 
 void AudioCallback::updateConversionProgress(const char *filename, int steps) {

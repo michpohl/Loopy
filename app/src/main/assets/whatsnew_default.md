@@ -1,8 +1,12 @@
 ### Changelog
 
+## Version 1.3.4
+
+* Fixes a bug that can cause devices running older Android OS versions to crash
+
 ## Version 1.3.3
 
-# Fixes a crash due to updated intent handling in newer Android versions
+* Fixes a crash due to updated intent handling in newer Android versions
 
 ## Version 1.3.2
 

@@ -1,8 +1,12 @@
 ### Changelog
 
+## Version 1.3.4
+
+* Behebt einmen Bug, der auf Geräten mit älteren Android-Versionen zum Crash führen kann 
+
 ## Version 1.3.3
 
-# Behebt einen Crash verursacht durch verändertes Intent-Handling in neueren Android Versionen
+* Behebt einen Crash verursacht durch verändertes Intent-Handling in neueren Android Versionen
 
 ## Version 1.3.2
 
