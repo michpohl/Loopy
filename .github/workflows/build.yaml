@@ -11,28 +11,47 @@ jobs:
     steps:
       - name: Checkout repo
         id: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Expose version name
         uses: michpohl/android-expose-version-name-action@v1.0.0
         with:
           expose-version-name: 'true'
           expose-version-code: 'true'
 
-      - name: Combine env vars
-        uses: michpohl/action-concatenate-strings@v1.0.0
-        with:
-          first: ${{ env.ANDROID_VERSION_NAME }}
-          second: ${{ github.run_number }}
-          separator: '.'
-          output-var-name: 'COMBINED_OUTPUT'
+      - name: Update version name and code
+        id: expose
+        run: |
+          
+          buildGradlePath="./app/build.gradle"
+          versionCodeLine=$(grep "versionCode" $buildGradlePath)
+          
+          newCodeLine="        versionCode ${{ github.run_number }}"
+          sed -i -r "s/$versionCodeLine/$newCodeLine/g" $buildGradlePath
+          
+          versionNameLine=$(grep "versionName" $buildGradlePath)
+          
+          oldVersionName=${versionNameLine#*versionName }
+          oldVersionName=${oldVersionName%\"*}
+          oldVersionName=${oldVersionName#\"*}
+          
+          if [[ $oldVersionName == *..* ]]; then
+          oldVersionName=${oldVersionName//../.}
+          fi
+          
+          newNameLine="        versionName \"$oldVersionName.${{ github.run_number }}\""
+          sed -i -r "s/$versionNameLine/$newNameLine/g" $buildGradlePath
+          
+          echo "versionCode updated to $newVersionCode"
+          echo "versionName updated to $oldVersionName.$newVersionName"
 
-      - name: Set new version code and number
-        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
-        with:
-          build-gradle-path: app/build.gradle
-          version-code: ${{ github.run_number }}
-          version-name: '${{ env.COMBINED_OUTPUT }}'
-          print-file: 'true'
+      - name: Print build.gradle for checking
+        id: print
+        run: |
+          buildGradlePath="./app/build.gradle"
+
+          while IFS= read -r line; do
+          echo "$line"
+          done < "$buildGradlePath"
 
       - name: Build the app
         id: build
