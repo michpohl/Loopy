@@ -1,8 +1,12 @@
 ### Changelog
 
+## Version 1.3.5
+
+* Behebt einen Crash, wenn leere Ordner angezeigt werden
+* 
 ## Version 1.3.4
 
-* Behebt einmen Bug, der auf Geräten mit älteren Android-Versionen zum Crash führen kann 
+* Behebt einen Bug, der auf Geräten mit älteren Android-Versionen zum Crash führen kann 
 
 ## Version 1.3.3
 

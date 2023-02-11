@@ -1,5 +1,9 @@
 ### Changelog
 
+## Version 1.3.5
+
+* Fixes a crash when displaying empty folders
+
 ## Version 1.3.4
 
 * Fixes a bug that can cause devices running older Android OS versions to crash
