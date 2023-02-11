@@ -48,18 +48,37 @@ jobs:
           echo "$line"
           done < "$buildGradlePath"
 
-#- name: Build the app
-#        id: build
-#        run: ./gradlew build
-#      - name: Sign app APK
-#        uses: r0adkll/sign-android-release@v1
-#        id: sign
+      - name: Build the app
+        id: build
+        run: ./gradlew build
+
+      - name: Sign app APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          alias: ${{ secrets.KS_A }}
+          keyStorePassword: ${{ secrets.KS_PW }}
+          keyPassword: ${{ secrets.KS_PR_PW }}
+
+      - name: Check release
+        run: |
+          ls app/build/outputs/apk/release
+
+#      - name: Publish release
+#        uses: pipe-cd/actions-gh-release@v2.3.4
 #        with:
-#          releaseDirectory: app/build/outputs/apk/release
-#          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-#          alias: ${{ secrets.KS_A }}
-#          keyStorePassword: ${{ secrets.KS_PW }}
-#          keyPassword: ${{ secrets.KS_PR_PW }}
+#          release_file: 'app/build/outputs/apk/release/app-release-unsigned-signed.apk'
+#          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: fnkr/github-action-ghr@v1
+        env:
+          GHR_COMPRESS: xz
+          GHR_PATH: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 #      - name: Deploy to Google
 #        id: deploy
