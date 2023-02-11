@@ -58,11 +58,7 @@ class ExternalStorageManager(val context: Context) {
     fun getPathContent(
         path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false
     ): List<File> {
-        val file = File(path)
-        Timber.d("My file should be: $path")
-        Timber.d("what's in my path: ${file.listFiles().map { it.name }}")
-
-        return file.listFiles().orEmpty().filter { showHiddenFiles || !it.name.startsWith(".") }
+        return File(path).listFiles().orEmpty().filter { showHiddenFiles || !it.name.startsWith(".") }
             .filter { !onlyFolders || it.isDirectory }.toList()
     }
 
@@ -160,4 +156,3 @@ class ExternalStorageManager(val context: Context) {
         const val STANDARD_SET_FOLDER_NAME = "standard"
     }
 }
-
