@@ -37,6 +37,7 @@ android {
     dataBinding {
         enabled = true
     }
+    namespace 'com.michaelpohl.loopyplayer2'
 
 }
 
