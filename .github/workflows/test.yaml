@@ -1,0 +1,39 @@
+name: Test stuff
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Helloworld
+        run: |
+          echo "Hello, wrold!"  
+      - name: Expose version name
+        id: expose
+        uses: ./.github/actions/expose
+        with:
+          expose-version-name: 'true'
+          expose-version-code: 'true'
+          path: app/build.gradle
+      - name: verify
+        run: |
+          echo ${{ steps.expose.outputs.version-name }}
+          echo ${{ steps.expose.outputs.version-code }}
+
+  
+# on:
+#   push:
+    
+# jobs:
+#   test-job:
+#     runs-on: ubuntu-latest
+#     steps:
+#         uses: actions/checkout@v3
+#       - name: Expose version name
+#         uses: ./github/actions/expose
+#         with:
+#           expose-version-name: 'true'
+#           expose-version-code: 'true'

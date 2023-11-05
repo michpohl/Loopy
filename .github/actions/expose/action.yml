@@ -1,0 +1,46 @@
+name: Expose Android version code and name
+description: Finds the version code and version name in your build.gradle or build.gradle.kts file and returns them as an output.
+author: Michael Pohl
+inputs:
+  path:
+    required: false
+    description: Path to your app's build.gradle or build.gradle.kts
+    default: 'app/build.gradle.kts'
+  expose-version-code:
+    required: true
+    description: Expose version code
+  expose-version-name:
+    required: true
+    description: Expose version name
+# outputs:
+#   version-code:
+#     description: The version code as a string
+#   version-name:
+#     description: The version name as a string 
+runs:
+  using: composite
+  steps:
+  - name: Expose version  
+    shell: bash
+    run: |
+      file=${{ inputs.path }}
+      if [[ -f $file ]]; then
+        echo "$file exists"
+        versionCode="$(grep "versionCode" $file |sed 's/.*\ //')"
+        versionName="$(grep "versionName" $file |sed 's/.*\ //')"
+
+        if [ ${{ inputs.expose-version-code == 'true' }} ]; then
+          echo "code $versionCode"
+          echo "version-code=$versionCode" >> $GITHUB_OUTPUT
+        fi
+        if [ ${{ inputs.expose-version-name == 'true' }} ]; then
+          echo "name $versionName"
+          echo "version-name=$versionName" >> $GITHUB_OUTPUT
+        fi
+      else
+        echo "$FILE does not exist. Aborting"
+        exit 1
+      fi
+  
+
+
