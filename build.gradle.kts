@@ -21,11 +21,6 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.18.1"
 }
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven("https://jitpack.io")
-    }
     apply(from = "$rootDir/detekt/detekt.gradle")
 }
 
