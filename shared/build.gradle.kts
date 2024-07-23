@@ -1,0 +1,64 @@
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("com.google.devtools.ksp") version "1.6.20-1.0.5"
+}
+
+android {
+    compileSdkVersion(33)
+    buildToolsVersion("30.0.3")
+
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(32)
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    namespace = "com.michaelpohl.shared"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("com.google.android.material:material:1.6.1")
+    testImplementation("junit:junit:4.+")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+
+    // Coroutines
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+
+    // Logging
+    api("com.jakewharton.timber:timber:4.7.1")
+
+    // JSON parsing
+    api("com.squareup.moshi:moshi:1.13.0")
+    api("com.squareup.moshi:moshi-adapters:1.12.0")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
+
+    // Dependency injection
+    api("org.koin:koin-android:2.1.6")
+    api("org.koin:koin-android-viewmodel:2.1.5")
+}

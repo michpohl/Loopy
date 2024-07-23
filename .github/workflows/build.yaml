@@ -44,7 +44,7 @@ jobs:
           echo "versionCode updated to $newVersionCode"
           echo "versionName updated to $oldVersionName.$newVersionName"
 
-      - name: Print build.gradle for checking
+      - name: Print build.gradle.kts for checking
         id: print
         run: |
           buildGradlePath="./app/build.gradle"
